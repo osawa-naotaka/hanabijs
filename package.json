@@ -20,8 +20,8 @@
     "@biomejs/biome": "1.9.4",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@types/bun": "^1.2.4",
     "@types/node": "^22.13.10",
-    "@types/ws": "^8",
     "rollup": "^4.35.0",
     "rollup-plugin-dts": "^6.1.1",
     "tslib": "^2.8.1",
@@ -29,8 +29,7 @@
   },
   "dependencies": {
     "chokidar": "^4.0.3",
-    "glob": "^11.0.1",
-    "ws": "^8.18.1"
+    "glob": "^11.0.1"
   },
   "packageManager": "yarn@4.7.0"
 }

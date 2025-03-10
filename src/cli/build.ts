@@ -55,7 +55,7 @@ export async function build() {
                 ]);
 
                 const html = DOCTYPE() + stringifyToHtml(inserted);
-                Bun.write(html_name, html, { flag: "w+" });
+                Bun.write(html_name, html);
                 const css = stringifyToCss(page);
                 Bun.write(path.join(dist_dir, css_name), css);
             }

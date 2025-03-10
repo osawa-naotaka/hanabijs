@@ -1,4 +1,3 @@
-import type { Http2ServerRequest } from "node:http2";
 import path from "node:path";
 import { glob } from "glob";
 import type { Attribute } from "../lib/element";
@@ -15,7 +14,7 @@ export type Route = {
     params: Attribute;
 };
 
-export type Router = (req: Http2ServerRequest) => Route | Error;
+export type Router = (req: Request) => Route | Error;
 
 export async function createRouter(base: string): Promise<Router> {
     const route_table: RouteTable[] = (await glob("**/*.ts", { cwd: base })).map((file_path) => {
