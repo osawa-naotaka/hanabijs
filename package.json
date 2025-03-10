@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "description": "lightweight static site generator for typescript",
   "type": "module",
-  "main": "dist/hanabijs-lib.js",
+  "main": "build/hanabijs-lib.js",
   "bin": {
-    "hanabi": "dist/hanabijs-bin.js"
+    "hanabi": "build/hanabijs-bin.js"
   },
   "scripts": {
     "build": "rollup --config rollup.config.mjs",

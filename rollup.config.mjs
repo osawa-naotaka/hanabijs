@@ -5,7 +5,7 @@ import { dts } from "rollup-plugin-dts";
 export default [{
 	input: 'src/main.ts',
 	output: {
-		file: 'dist/hanabijs-lib.d.ts',
+		file: 'build/hanabijs-lib.d.ts',
 		format: 'es',
 	},
 	plugins: [typescript(), dts()],
@@ -13,7 +13,7 @@ export default [{
 {
 	input: 'src/main.ts',
 	output: {
-		file: 'dist/hanabijs-lib.js',
+		file: 'build/hanabijs-lib.js',
 		format: 'es',
 	},
 	plugins: [typescript(), terser()],
@@ -21,7 +21,7 @@ export default [{
 {
 	input: 'src/bin.ts',
 	output: {
-		file: 'dist/hanabijs-bin.js',
+		file: 'build/hanabijs-bin.js',
 		format: 'es'
 	},
 	plugins: [typescript(), terser()],
