@@ -1,0 +1,9 @@
+/.vscode
+/node_modules
+/test
+/src
+shell.nix
+tsconfig.json
+rollup.config.bin.json
+rollup.config.lib.json
+biome.json

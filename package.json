@@ -1,0 +1,26 @@
+{
+  "name": "hanabijs",
+  "version": "0.1.0",
+  "description": "lightweight static site generator for typescript",
+  "type": "module",
+  "main": "hanabijs-lib.js",
+  "bin": {
+    "hanabi": "dist/hanabijs-bin.js"
+  },
+  "scripts": {
+    "build": "tsc && rollup --config rollup.config.lib.mjs && rollup --config rollup.config.bin.mjs"
+  },
+  "author": "osawa naotaka",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/node": "^22.13.10",
+    "rollup": "^4.35.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "glob": "^11.0.1"
+  }
+}
