@@ -7,6 +7,7 @@
   "bin": {
     "hanabi": "build/hanabijs-bin.js"
   },
+  "types": "build/hanabijs-lib.d.ts",
   "scripts": {
     "build": "rollup --config rollup.config.mjs",
     "dev": "bun --hot src/bin.ts dev",
@@ -16,6 +17,14 @@
   },
   "author": "osawa naotaka",
   "license": "MIT",
+  "homepage": "https://github.com/osawa-naotaka/hanabijs",
+  "bugs": {
+    "url": "https://github.com/osawa-naotaka/hanabijs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osawa-naotaka/hanabijs.git"
+  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@rollup/plugin-terser": "^0.4.4",

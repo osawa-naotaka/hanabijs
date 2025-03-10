@@ -1,9 +1,11 @@
 /.vscode
+/dist
 /node_modules
-/test
+/site
 /src
+/test
+biome.json
+bun.lock
+rollup.config.json
 shell.nix
 tsconfig.json
-rollup.config.bin.json
-rollup.config.lib.json
-biome.json
