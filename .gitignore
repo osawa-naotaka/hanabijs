@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+build
 *.local
 
 ref/bitap-wasm/target
@@ -23,11 +24,3 @@ ref/bitap-wasm/target
 *.sln
 *.sw?
 
-# Yarn
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions

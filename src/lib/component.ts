@@ -4,32 +4,27 @@ import type { Rule } from "./style";
 
 // Component
 export type Component<T> = (attribute: T, ...args: (Rule[] | HNode)[]) => Elem;
-export type HOComponent<A, T> = (
-	attribute: T,
-	...args: (Rule[] | HNode)[]
-) => HOElem<A>;
+export type HOComponent<A, T> = (attribute: T, ...args: (Rule[] | HNode)[]) => HOElem<A>;
 
-export function createComponent<T>(
-	fn: (attribute: T, style: Rule[], child: HNode[]) => Elem,
-): Component<T> {
-	return (attribute: T, ...cargs: (Rule[] | HNode)[]) => {
-		const { style, child } = classifyElemArgs(cargs);
-		return fn(attribute, style, child);
-	};
+export function createComponent<T>(fn: (attribute: T, style: Rule[], child: HNode[]) => Elem): Component<T> {
+    return (attribute: T, ...cargs: (Rule[] | HNode)[]) => {
+        const { style, child } = classifyElemArgs(cargs);
+        return fn(attribute, style, child);
+    };
 }
 
 export function createHOComponent<A, T>(
-	fn: (attribute: T, style: Rule[], child: HNode[]) => (args: A) => Elem,
+    fn: (attribute: T, style: Rule[], child: HNode[]) => (args: A) => Elem,
 ): HOComponent<A, T> {
-	return (attribute: T, ...cargs: (Rule[] | HNode)[]) =>
-		(arg: A) => {
-			const { style, child } = classifyElemArgs(cargs);
-			return fn(attribute, style, child)(arg);
-		};
+    return (attribute: T, ...cargs: (Rule[] | HNode)[]) =>
+        (arg: A) => {
+            const { style, child } = classifyElemArgs(cargs);
+            return fn(attribute, style, child)(arg);
+        };
 }
 
 function gt(tag: Tag): Component<Attribute> {
-	return (attribute: Attribute, ...args) => createElem(tag, attribute, args);
+    return (attribute: Attribute, ...args) => createElem(tag, attribute, args);
 }
 
 export const Meta = gt("meta");
