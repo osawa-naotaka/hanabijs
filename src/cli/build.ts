@@ -2,12 +2,11 @@ import { existsSync } from "node:fs";
 import { rmdir } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
-import { glob } from "glob";
 import { dist_subdir, page_subdir } from "../config";
 import { Link } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
-import { replaceExt } from "../lib/util";
+import { replaceExt, globTs } from "../lib/util";
 
 export async function build() {
     const root = cwd();
@@ -18,7 +17,7 @@ export async function build() {
         await rmdir(dist_dir, { recursive: true });
     }
 
-    for (const file of await glob("**/*.ts", { cwd: page_dir })) {
+    for await (const file of globTs(page_dir)) {
         const page_fn = await import(`${page_dir}/${file}`);
         if (typeof page_fn.default === "function") {
             const fullpath = path.join(dist_dir, file);

@@ -28,8 +28,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "chokidar": "^4.0.3",
-    "glob": "^11.0.1"
+    "chokidar": "^4.0.3"
   },
   "packageManager": "yarn@4.7.0"
 }

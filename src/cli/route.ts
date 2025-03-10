@@ -1,5 +1,5 @@
 import path from "node:path";
-import { glob } from "glob";
+import { globTs } from "../lib/util";
 import type { Attribute } from "../lib/element";
 
 export type RouteTable = {
@@ -17,7 +17,7 @@ export type Route = {
 export type Router = (req: Request) => Route | Error;
 
 export async function createRouter(base: string): Promise<Router> {
-    const route_table: RouteTable[] = (await glob("**/*.ts", { cwd: base })).map((file_path) => {
+    const route_table: RouteTable[] = (await Array.fromAsync(globTs(base))).map((file_path) => {
         const p = path.parse(file_path);
         const url_exact_woext = p.dir !== "" ? `/${p.dir}/${p.name}` : `/${p.name}`;
         const param_names = Array.from(url_exact_woext.matchAll(/\[(?<key>[^\]]+)\]/g)).map((m) => m.groups?.key || "");

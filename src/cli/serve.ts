@@ -1,6 +1,6 @@
 import { cwd } from "node:process";
 import chokidar from "chokidar";
-import { page_subdir, plugin_subdir } from "../config";
+import { page_subdir } from "../config";
 import { Link, Script } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
@@ -10,7 +10,6 @@ import { createRouter } from "./route";
 export async function serve() {
     const root = cwd();
     const page_dir = `${root}/${page_subdir}`;
-    const plugin_dir = `${root}/${plugin_subdir}`;
 
     const watcher = chokidar.watch(page_dir, { persistent: true });
 
@@ -71,17 +70,18 @@ export async function serve() {
                 });
             }
 
-            // find plugin folder
-            const plugin_path = `${plugin_dir}${new URL(req.url).pathname}`;
-            const file = Bun.file(plugin_path);
-            if (!(await file.exists())) {
-                return new Response("Route Not Found", { status: 404 });
+            // plugin
+            if(new URL(req.url).pathname.endsWith("/reload.js")) {
+                const reload = "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { console.log('reloader message:', event.data); if (event.data === 'reload') { location.reload(); } }";
+
+                return new Response(reload, {
+                    headers: {
+                        "Content-Type": "application/javascript",
+                    },
+                });    
             }
-            return new Response(file, {
-                headers: {
-                    "Content-Type": plugin_path.endsWith(".js") ? "application/javascript" : "text/plain",
-                },
-            });
+
+            return new Response("Route Not Found", { status: 404 });
         },
         port: 4132,
         hostname: "localhost",
