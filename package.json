@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "description": "lightweight static site generator for typescript",
   "type": "module",
-  "main": "build/hanabijs-lib.js",
+  "main": "build/hanabi-lib.js",
   "bin": {
-    "hanabi": "build/hanabijs-bin.js"
+    "hanabi-build": "build/hanabi-build.js",
+    "hanabi-serve": "build/hanabi-serve.js"
   },
-  "types": "build/hanabijs-lib.d.ts",
+  "types": "build/hanabi-lib.d.ts",
   "scripts": {
     "build": "rollup --config rollup.config.ts",
-    "dev": "bun --hot src/bin.ts dev",
-    "site-build": "bun src/bin.ts build",
+    "dev": "bun run --hot src/cli/serve.ts",
+    "site-build": "bun run src/cli/build.ts",
     "check": "biome check ./src ./site",
     "check-write": "biome check --write ./src ./site"
   },

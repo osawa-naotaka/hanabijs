@@ -1,3 +1,5 @@
+#!/usr/bin/env -S bun --hot
+
 import { cwd } from "node:process";
 import chokidar from "chokidar";
 import { page_subdir } from "../config";
@@ -92,3 +94,5 @@ export async function serve() {
         },
     });
 }
+
+await serve();

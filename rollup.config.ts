@@ -7,7 +7,7 @@ const config: RollupOptions[] = [
     {
         input: "src/main.ts",
         output: {
-            file: "build/hanabijs-lib.d.ts",
+            file: "build/hanabi-lib.d.ts",
             format: "es",
         },
         plugins: [typescript(), dts()],
@@ -15,15 +15,23 @@ const config: RollupOptions[] = [
     {
         input: "src/main.ts",
         output: {
-            file: "build/hanabijs-lib.js",
+            file: "build/hanabi-lib.js",
             format: "es",
         },
         plugins: [typescript(), terser()],
     },
     {
-        input: "src/bin.ts",
+        input: "src/cli/build.ts",
         output: {
-            file: "build/hanabijs-bin.js",
+            file: "build/hanabi-build.js",
+            format: "es",
+        },
+        plugins: [typescript(), terser()],
+    },
+    {
+        input: "src/cli/serve.ts",
+        output: {
+            file: "build/hanabi-serve.js",
             format: "es",
         },
         plugins: [typescript(), terser()],
