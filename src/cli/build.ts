@@ -6,7 +6,7 @@ import { dist_subdir, page_subdir } from "../config";
 import { Link } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
-import { replaceExt, globTs } from "../lib/util";
+import { globTs, replaceExt } from "../lib/util";
 
 export async function build() {
     const root = cwd();

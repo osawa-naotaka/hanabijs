@@ -1,6 +1,6 @@
 import path from "node:path";
-import { globTs } from "../lib/util";
 import type { Attribute } from "../lib/element";
+import { globTs } from "../lib/util";
 
 export type RouteTable = {
     url_regexp_woext: RegExp;

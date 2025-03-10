@@ -71,14 +71,15 @@ export async function serve() {
             }
 
             // plugin
-            if(new URL(req.url).pathname.endsWith("/reload.js")) {
-                const reload = "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { console.log('reloader message:', event.data); if (event.data === 'reload') { location.reload(); } }";
+            if (new URL(req.url).pathname.endsWith("/reload.js")) {
+                const reload =
+                    "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { console.log('reloader message:', event.data); if (event.data === 'reload') { location.reload(); } }";
 
                 return new Response(reload, {
                     headers: {
                         "Content-Type": "application/javascript",
                     },
-                });    
+                });
             }
 
             return new Response("Route Not Found", { status: 404 });
