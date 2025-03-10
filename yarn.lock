@@ -5,6 +5,24 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@babel/code-frame@npm:^7.24.2":
+  version: 7.26.2
+  resolution: "@babel/code-frame@npm:7.26.2"
+  dependencies:
+    "@babel/helper-validator-identifier": "npm:^7.25.9"
+    js-tokens: "npm:^4.0.0"
+    picocolors: "npm:^1.0.0"
+  checksum: 10c0/7d79621a6849183c415486af99b1a20b84737e8c11cd55b6544f688c51ce1fd710e6d869c3dd21232023da272a79b91efb3e83b5bc2dc65c1187c5fcd1b72ea8
+  languageName: node
+  linkType: hard
+
+"@babel/helper-validator-identifier@npm:^7.25.9":
+  version: 7.25.9
+  resolution: "@babel/helper-validator-identifier@npm:7.25.9"
+  checksum: 10c0/4fc6f830177b7b7e887ad3277ddb3b91d81e6c4a24151540d9d1023e8dc6b1c0505f0f0628ae653601eb4388a8db45c1c14b2c07a9173837aef7e4116456259d
+  languageName: node
+  linkType: hard
+
 "@biomejs/biome@npm:1.9.4":
   version: 1.9.4
   resolution: "@biomejs/biome@npm:1.9.4"
@@ -154,7 +172,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jridgewell/sourcemap-codec@npm:^1.4.10, @jridgewell/sourcemap-codec@npm:^1.4.14":
+"@jridgewell/sourcemap-codec@npm:^1.4.10, @jridgewell/sourcemap-codec@npm:^1.4.14, @jridgewell/sourcemap-codec@npm:^1.5.0":
   version: 1.5.0
   resolution: "@jridgewell/sourcemap-codec@npm:1.5.0"
   checksum: 10c0/2eb864f276eb1096c3c11da3e9bb518f6d9fc0023c78344cdc037abadc725172c70314bdb360f2d4b7bffec7f5d657ce006816bc5d4ecb35e61b66132db00c18
@@ -721,6 +739,7 @@ __metadata:
     chokidar: "npm:^4.0.3"
     glob: "npm:^11.0.1"
     rollup: "npm:^4.35.0"
+    rollup-plugin-dts: "npm:^6.1.1"
     tslib: "npm:^2.8.1"
     typescript: "npm:^5.8.2"
     ws: "npm:^8.18.1"
@@ -843,6 +862,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"js-tokens@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "js-tokens@npm:4.0.0"
+  checksum: 10c0/e248708d377aa058eacf2037b07ded847790e6de892bbad3dac0abba2e759cb9f121b00099a65195616badcb6eca8d14d975cb3e89eb1cfda644756402c8aeed
+  languageName: node
+  linkType: hard
+
 "jsbn@npm:1.1.0":
   version: 1.1.0
   resolution: "jsbn@npm:1.1.0"
@@ -861,6 +887,15 @@ __metadata:
   version: 11.0.2
   resolution: "lru-cache@npm:11.0.2"
   checksum: 10c0/c993b8e06ead0b24b969c1dbb5b301716aed66e320e9014a80012f5febe280b438f28ff50046b2c55ff404e889351ccb332ff91f8dd175a21f5eae80e3fb155f
+  languageName: node
+  linkType: hard
+
+"magic-string@npm:^0.30.10":
+  version: 0.30.17
+  resolution: "magic-string@npm:0.30.17"
+  dependencies:
+    "@jridgewell/sourcemap-codec": "npm:^1.5.0"
+  checksum: 10c0/16826e415d04b88378f200fe022b53e638e3838b9e496edda6c0e086d7753a44a6ed187adc72d19f3623810589bf139af1a315541cd6a26ae0771a0193eaf7b8
   languageName: node
   linkType: hard
 
@@ -1080,6 +1115,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"picocolors@npm:^1.0.0":
+  version: 1.1.1
+  resolution: "picocolors@npm:1.1.1"
+  checksum: 10c0/e2e3e8170ab9d7c7421969adaa7e1b31434f789afb9b3f115f6b96d91945041ac3ceb02e9ec6fe6510ff036bcc0bf91e69a1772edc0b707e12b19c0f2d6bcf58
+  languageName: node
+  linkType: hard
+
 "picomatch@npm:^4.0.2":
   version: 4.0.2
   resolution: "picomatch@npm:4.0.2"
@@ -1161,6 +1203,22 @@ __metadata:
   bin:
     rimraf: dist/esm/bin.mjs
   checksum: 10c0/7da4fd0e15118ee05b918359462cfa1e7fe4b1228c7765195a45b55576e8c15b95db513b8466ec89129666f4af45ad978a3057a02139afba1a63512a2d9644cc
+  languageName: node
+  linkType: hard
+
+"rollup-plugin-dts@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "rollup-plugin-dts@npm:6.1.1"
+  dependencies:
+    "@babel/code-frame": "npm:^7.24.2"
+    magic-string: "npm:^0.30.10"
+  peerDependencies:
+    rollup: ^3.29.4 || ^4
+    typescript: ^4.5 || ^5.0
+  dependenciesMeta:
+    "@babel/code-frame":
+      optional: true
+  checksum: 10c0/2b042198ff00fb10c9c70087bbac9013f748dc34be0dbfcca82c6353884ead1467b4a8a37bafe9a8b9356479d43715c7cbc591eeb8e4112c583452431c1cb0a0
   languageName: node
   linkType: hard
 

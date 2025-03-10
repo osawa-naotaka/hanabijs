@@ -35,11 +35,33 @@ const RAW_RUNTIME_STATE =
           ["chokidar", "npm:4.0.3"],\
           ["glob", "npm:11.0.1"],\
           ["rollup", "npm:4.35.0"],\
+          ["rollup-plugin-dts", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:6.1.1"],\
           ["tslib", "npm:2.8.1"],\
           ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"],\
           ["ws", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.18.1"]\
         ],\
         "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@babel/code-frame", [\
+      ["npm:7.26.2", {\
+        "packageLocation": "../.yarn/berry/cache/@babel-code-frame-npm-7.26.2-4902b56813-10c0.zip/node_modules/@babel/code-frame/",\
+        "packageDependencies": [\
+          ["@babel/code-frame", "npm:7.26.2"],\
+          ["@babel/helper-validator-identifier", "npm:7.25.9"],\
+          ["js-tokens", "npm:4.0.0"],\
+          ["picocolors", "npm:1.1.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@babel/helper-validator-identifier", [\
+      ["npm:7.25.9", {\
+        "packageLocation": "../.yarn/berry/cache/@babel-helper-validator-identifier-npm-7.25.9-2634b947a4-10c0.zip/node_modules/@babel/helper-validator-identifier/",\
+        "packageDependencies": [\
+          ["@babel/helper-validator-identifier", "npm:7.25.9"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@biomejs/biome", [\
@@ -893,6 +915,7 @@ const RAW_RUNTIME_STATE =
           ["chokidar", "npm:4.0.3"],\
           ["glob", "npm:11.0.1"],\
           ["rollup", "npm:4.35.0"],\
+          ["rollup-plugin-dts", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:6.1.1"],\
           ["tslib", "npm:2.8.1"],\
           ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"],\
           ["ws", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.18.1"]\
@@ -1025,6 +1048,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["js-tokens", [\
+      ["npm:4.0.0", {\
+        "packageLocation": "../.yarn/berry/cache/js-tokens-npm-4.0.0-0ac852e9e2-10c0.zip/node_modules/js-tokens/",\
+        "packageDependencies": [\
+          ["js-tokens", "npm:4.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["jsbn", [\
       ["npm:1.1.0", {\
         "packageLocation": "../.yarn/berry/cache/jsbn-npm-1.1.0-1da0181838-10c0.zip/node_modules/jsbn/",\
@@ -1046,6 +1078,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/lru-cache-npm-11.0.2-72e1eedbe6-10c0.zip/node_modules/lru-cache/",\
         "packageDependencies": [\
           ["lru-cache", "npm:11.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["magic-string", [\
+      ["npm:0.30.17", {\
+        "packageLocation": "../.yarn/berry/cache/magic-string-npm-0.30.17-da1b7593b1-10c0.zip/node_modules/magic-string/",\
+        "packageDependencies": [\
+          ["magic-string", "npm:0.30.17"],\
+          ["@jridgewell/sourcemap-codec", "npm:1.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1281,6 +1323,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["picocolors", [\
+      ["npm:1.1.1", {\
+        "packageLocation": "../.yarn/berry/cache/picocolors-npm-1.1.1-4fede47cf1-10c0.zip/node_modules/picocolors/",\
+        "packageDependencies": [\
+          ["picocolors", "npm:1.1.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["picomatch", [\
       ["npm:4.0.2", {\
         "packageLocation": "../.yarn/berry/cache/picomatch-npm-4.0.2-e93516ddf2-10c0.zip/node_modules/picomatch/",\
@@ -1386,6 +1437,34 @@ const RAW_RUNTIME_STATE =
           ["@rollup/rollup-win32-x64-msvc", "npm:4.35.0"],\
           ["@types/estree", "npm:1.0.6"],\
           ["fsevents", "patch:fsevents@npm%3A2.3.3#optional!builtin<compat/fsevents>::version=2.3.3&hash=df0bf1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["rollup-plugin-dts", [\
+      ["npm:6.1.1", {\
+        "packageLocation": "../.yarn/berry/cache/rollup-plugin-dts-npm-6.1.1-f13d240779-10c0.zip/node_modules/rollup-plugin-dts/",\
+        "packageDependencies": [\
+          ["rollup-plugin-dts", "npm:6.1.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:6.1.1", {\
+        "packageLocation": "./.yarn/__virtual__/rollup-plugin-dts-virtual-1883584825/2/.yarn/berry/cache/rollup-plugin-dts-npm-6.1.1-f13d240779-10c0.zip/node_modules/rollup-plugin-dts/",\
+        "packageDependencies": [\
+          ["rollup-plugin-dts", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:6.1.1"],\
+          ["@babel/code-frame", "npm:7.26.2"],\
+          ["@types/rollup", null],\
+          ["@types/typescript", null],\
+          ["magic-string", "npm:0.30.17"],\
+          ["rollup", "npm:4.35.0"],\
+          ["typescript", "patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"]\
+        ],\
+        "packagePeers": [\
+          "@types/rollup",\
+          "@types/typescript",\
+          "rollup",\
+          "typescript"\
         ],\
         "linkType": "HARD"\
       }]\
