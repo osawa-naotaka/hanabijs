@@ -1,9 +1,3 @@
 {
-    "files.insertFinalNewline": true,
-    "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "quickfix.biome": "always",
-        "source.organizeImports.biome": "always"
-    }
+    "files.insertFinalNewline": true
 }

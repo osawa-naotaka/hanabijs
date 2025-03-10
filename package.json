@@ -9,7 +9,7 @@
   },
   "types": "build/hanabijs-lib.d.ts",
   "scripts": {
-    "build": "rollup --config rollup.config.mjs",
+    "build": "rollup --config rollup.config.ts",
     "dev": "bun --hot src/bin.ts dev",
     "site-build": "bun src/bin.ts build",
     "check": "biome check ./src ./site",

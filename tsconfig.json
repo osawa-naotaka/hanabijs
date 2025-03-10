@@ -20,9 +20,10 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
+    // config for VSCode
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
   },
-  "include": ["src"]
+  "include": ["./src/**/*", "./site/**/*"]
 }
