@@ -1,3 +1,3 @@
-export const dist_subdir = "dist";
-export const page_subdir = "src/pages";
+export const dist_subdir = "build";
+export const page_subdir = "site/pages";
 export const plugin_subdir = "src/plugin";
