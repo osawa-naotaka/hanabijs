@@ -1,3 +1,5 @@
+#!/usr/bin/env bun
+
 import { build } from "./cli/build";
 import { serve } from "./cli/serve";
 
