@@ -13,6 +13,9 @@ export type HOElem<A> = (arg: A) => Elem;
 export type Attribute = Record<string, unknown>;
 
 export type Tag =
+    | "dimension"
+    | "decoration"
+    | "layout"
     | "a"
     | "h1"
     | "h2"
