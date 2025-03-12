@@ -117,10 +117,8 @@ export function stringifyToHtml(node: HNode): string {
 function attributeToString(attribute: Attribute): string {
     return Object.entries(attribute)
         .map(([raw_key, value]) => {
-            if (typeof value === "string") {
-                const key = (raw_key === "className" ? "class" : raw_key).replace("_", "-");
-                return value === "" || value === null ? ` ${key}"` : ` ${key}="${value}"`;
-            }
+            const key = (raw_key === "className" ? "class" : raw_key).replaceAll("_", "-");
+            return value === "" || value === null ? ` ${key}"` : Array.isArray(value) ? ` ${key}="${value.join(" ")}"` : ` ${key}="${value}"`;
         })
         .join("");
 }

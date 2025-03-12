@@ -26,7 +26,7 @@ export type Properties = Record<string, string[] | string>;
 
 export function style(rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]): Rule[] {
     return rules.map(([selectors, properties]) => ({
-        selectorlist: selectors.map((s) => createSelector(s.length > 0 && s[0] === "&" ? s : ["*", " ", ...s])),
+        selectorlist: selectors.map((s) => createSelector(s[0] === ":root" ? s : ["*", " ", ...s])),
         properties,
     }));
 }
@@ -97,6 +97,6 @@ function selectorToString(selector: Selector): string {
 
 function propatiesToString(properties: Properties): string {
     return Object.entries(properties)
-        .map(([key, value]) => `${key.replace("_", "-")}: ${typeof value === "string" ? value : value.join(" ")};`)
+        .map(([key, value]) => `${key.replaceAll("_", "-")}: ${typeof value === "string" ? value : value.join(" ")};`)
         .join(" ");
 }

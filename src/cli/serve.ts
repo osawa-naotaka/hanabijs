@@ -2,7 +2,7 @@
 
 import { cwd } from "node:process";
 import chokidar from "chokidar";
-import { page_subdir } from "../config";
+import { site_subdir, page_subdir } from "../config";
 import { Link, Script } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
@@ -12,8 +12,10 @@ import { createRouter } from "./route";
 export async function serve() {
     const root = cwd();
     const page_dir = `${root}/${page_subdir}`;
+    const site_dir = `${root}/${site_subdir}`;
 
-    const watcher = chokidar.watch(page_dir, { persistent: true });
+
+    const watcher = chokidar.watch(site_dir, { persistent: true });
 
     let router = await createRouter(page_dir);
 
@@ -21,12 +23,12 @@ export async function serve() {
         websocket: {
             open(ws) {
                 console.log("Client connected");
-                watcher.on("change", async (p) => {
+                watcher.on("change", async () => {
                     router = await createRouter(page_dir);
                     ws.send("reload");
                 });
             },
-            message(ws, message) {
+            message(_ws, message) {
                 console.log("Received:", message);
             },
         },

@@ -22,7 +22,8 @@
 
     // config for VSCode
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@site/*": ["./site/*"],
     },
   },
   "include": ["./src/**/*", "./site/**/*"]
