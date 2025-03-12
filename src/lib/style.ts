@@ -44,7 +44,10 @@ export function style(propaties: Properties): Rule[] {
     ];
 }
 
-export function style1(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&", propaties: Properties): Rule {
+export function style1(
+    selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&",
+    propaties: Properties,
+): Rule {
     return {
         selectorlist: isSelf(selector) ? [["&"]] : [createSelector(selector)],
         properties: propaties,

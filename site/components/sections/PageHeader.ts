@@ -7,7 +7,7 @@ const PageHeaderTop = createSemantic("page-header", "header");
 
 export const PageHeader = createComponent<{ title: string }>((attribute) =>
     PageHeaderTop(
-        { class: attribute.class },
+        { class: new Array("container", attribute.class || "") },
         style({
             position: "sticky",
             top: "0",

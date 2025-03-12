@@ -82,11 +82,6 @@ export const Page = createComponent<{ title: string }>((attribute, _style, child
             ],
         ),
         PageHead(attribute),
-        Body(
-            { id: "top-of-page" },
-            PageHeader({ class: "container", title: site.name }),
-            ...child,
-            PageFooter({ site_name: site.name }),
-        ),
+        Body({ id: "top-of-page" }, PageHeader({ title: site.name }), ...child, PageFooter({ site_name: site.name })),
     ),
 );

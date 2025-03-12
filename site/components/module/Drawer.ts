@@ -49,5 +49,5 @@ export const Drawer = createComponent<{ title: HNode; header_space: HNode; menu_
                 ],
                 ...attribute.main,
             ),
-        )
+        ),
 );
