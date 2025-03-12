@@ -6,7 +6,7 @@ const DrawerHeaderSpace = createSemantic("drawer-header-space");
 const DrawerMenu = createSemantic("drawer-menu");
 
 export const Drawer = createComponent<{ title: HNode; header_space: HNode; menu_button: HNode; main: HNode[] }>(
-    (attribute, _style) =>
+    (attribute) =>
         DrawerTop(
             { class: attribute.class },
             style({ overflow: "hidden" }),
@@ -49,5 +49,5 @@ export const Drawer = createComponent<{ title: HNode; header_space: HNode; menu_
                 ],
                 ...attribute.main,
             ),
-        ),
+        )
 );

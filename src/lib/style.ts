@@ -108,7 +108,8 @@ function rulesToString(elem: Elem): string {
 
 function stringifySelector(current: Elem, selector: CompoundSelector): string {
     if (selector.length === 1 && selector[0] === "&") {
-        return `.${current.attribute.class}`;
+        const selfClass = Array.isArray(current.attribute.class) ? current.attribute.class[0] : current.attribute.class;
+        return `.${selfClass}`;
     }
     return selector.join("");
 }

@@ -45,7 +45,8 @@ export type Tag =
     | "footer"
     | "input"
     | "label"
-    | "nav";
+    | "nav"
+    | "em";
 
 export type HNode = string | Elem;
 

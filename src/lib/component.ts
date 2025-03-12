@@ -75,3 +75,4 @@ export const P = gt("p");
 export const Input = gt("input");
 export const Label = gt("label");
 export const Nav = gt("nav");
+export const Em = gt("em");
