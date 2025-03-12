@@ -67,12 +67,12 @@ const PageHead = createComponent<{ title: string; description: string }>(
 
 const PageHeader = createComponent<{ title: string }>((attribute) =>
 	Header(
-		{ className: "page-header" },
+		{ class: "page-header" },
 		style([[[[".page-header"]], { width: "100%" }]]),
 		H1({}, A({ href: "/" }, attribute.title)),
 	),
 );
 
 const PageFooter = createComponent(() =>
-	Footer({ className: "page-footer" }, "&copy; 2025 lulliecat"),
+	Footer({ class: "page-footer" }, "&copy; 2025 lulliecat"),
 );

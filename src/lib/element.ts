@@ -42,7 +42,10 @@ export type Tag =
     | "title"
     | "script"
     | "header"
-    | "footer";
+    | "footer"
+    | "input"
+    | "label"
+    | "nav";
 
 export type HNode = string | Elem;
 
@@ -117,7 +120,7 @@ export function stringifyToHtml(node: HNode): string {
 function attributeToString(attribute: Attribute): string {
     return Object.entries(attribute)
         .map(([raw_key, value]) => {
-            const key = (raw_key === "className" ? "class" : raw_key).replaceAll("_", "-");
+            const key = raw_key.replaceAll("_", "-");
             return value === "" || value === null ? ` ${key}"` : Array.isArray(value) ? ` ${key}="${value.join(" ")}"` : ` ${key}="${value}"`;
         })
         .join("");
@@ -166,10 +169,10 @@ function matchCompoundSelector(selector: CompoundSelector, element: Elem): boole
 }
 
 function hasClass(className: string, attribute: Attribute): boolean {
-    if (attribute.className === undefined || typeof attribute.className !== "string") {
+    if (attribute.class === undefined || typeof attribute.class !== "string") {
         return false;
     }
-    return attribute.className.includes(className);
+    return attribute.class.includes(className);
 }
 
 function selectElementsCombinator(nodes: HNode[], index: number, selector: ComplexSelector): Elem[] {

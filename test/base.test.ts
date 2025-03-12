@@ -38,18 +38,18 @@ describe("selectElement test", () => {
     const root = Html( { lang: "ja" }, [],
         Head({}, [], Title({}, [], "title")),
         Body({}, [],
-            Header({ className: "page-header" }, [], 
+            Header({ class: "page-header" }, [], 
                 H1({}, [], "header"),
             ),
             Main({}, [],
-                Section({ className: "content articles" }, [],
+                Section({ class: "content articles" }, [],
                     H2({}, [], "blog"),
                     Article({}, [],
                         Header({}, [],
-                            H3({ className: "article-title" }, [], "article title 1")
+                            H3({ class: "article-title" }, [], "article title 1")
                         ),
                         Header({}, [],
-                            H3({ className: "article-title" }, [], "article title 1")
+                            H3({ class: "article-title" }, [], "article title 1")
                         ),
                         Section({}, [], 
                             P({}, [], "text1"),
@@ -60,13 +60,13 @@ describe("selectElement test", () => {
                             P({}, [], "text4"),
                         ),
                         Footer({}, [], 
-                            Span({ className: "tag" }, [], "tag1"),
-                            Span({ className: "tag" }, [], "tag2"),
+                            Span({ class: "tag" }, [], "tag1"),
+                            Span({ class: "tag" }, [], "tag2"),
                         ),
                     ),
                     Article({}, [], 
                         Header({}, [],
-                            H3({ className: "article-title" }, [], "article title 2")
+                            H3({ class: "article-title" }, [], "article title 2")
                         ),
                         Section({}, [], 
                             P({}, [], "text5"),
@@ -74,16 +74,16 @@ describe("selectElement test", () => {
                         ),
                         Section({}, [], 
                             P({}, [], "text7"),
-                            P({ className: "page-header" }, [], "text8"),
+                            P({ class: "page-header" }, [], "text8"),
                         ),
                         Footer({}, [], 
-                            Span({ className: "tag" }, [], "tag3"),
-                            Span({ className: "tag" }, [], "tag4"),
+                            Span({ class: "tag" }, [], "tag3"),
+                            Span({ class: "tag" }, [], "tag4"),
                         ),
                     ),
                 ),
             ),
-            Footer({ className: "page-footer" }, [], "&amp; lulliecat"),
+            Footer({ class: "page-footer" }, [], "&amp; lulliecat"),
         )
     );
     
@@ -97,17 +97,17 @@ describe("selectElement test", () => {
 
     test("select headers", () =>
         expect(selectElements([root], createSelector(["*", " ", "header"]))).toEqual([
-            Header({ className: "page-header" }, [], 
+            Header({ class: "page-header" }, [], 
                 H1({}, [], "header"),
             ),
             Header({}, [],
-                H3({ className: "article-title" }, [], "article title 1")
+                H3({ class: "article-title" }, [], "article title 1")
             ),
             Header({}, [],
-                H3({ className: "article-title" }, [], "article title 1")
+                H3({ class: "article-title" }, [], "article title 1")
             ),
             Header({}, [],
-                H3({ className: "article-title" }, [], "article title 2")
+                H3({ class: "article-title" }, [], "article title 2")
             ),
         ])
     );
@@ -115,20 +115,20 @@ describe("selectElement test", () => {
     test("select article header", () =>
         expect(selectElements([root], createSelector(["*", " ", "article", " ", "header"]))).toEqual([
             Header({}, [],
-                H3({ className: "article-title" }, [], "article title 1")
+                H3({ class: "article-title" }, [], "article title 1")
             ),
             Header({}, [],
-                H3({ className: "article-title" }, [], "article title 1")
+                H3({ class: "article-title" }, [], "article title 1")
             ),
             Header({}, [],
-                H3({ className: "article-title" }, [], "article title 2")
+                H3({ class: "article-title" }, [], "article title 2")
             ),
         ])
     );
 
     test("select body > header", () =>
         expect(selectElements([root], createSelector(["*", " ", "body", ">", "header"]))).toEqual([
-            Header({ className: "page-header" }, [], 
+            Header({ class: "page-header" }, [], 
                 H1({}, [], "header"),
             ),
         ])
@@ -136,15 +136,15 @@ describe("selectElement test", () => {
 
     test("select .page-header", () =>
         expect(selectElements([root], createSelector(["*", " ", ".page-header"]))).toEqual([
-            Header({ className: "page-header" }, [], 
+            Header({ class: "page-header" }, [], 
                 H1({}, [], "header"),
             ),
-            P({ className: "page-header" }, [], "text8"),        ])
+            P({ class: "page-header" }, [], "text8"),        ])
     );
 
     test("select header.page-header", () =>
         expect(selectElements([root], createSelector(["*", " ", ["header", ".page-header"]]))).toEqual([
-            Header({ className: "page-header" }, [], 
+            Header({ class: "page-header" }, [], 
                 H1({}, [], "header"),
             ),
         ])
@@ -154,10 +154,10 @@ describe("selectElement test", () => {
         expect(selectElements([root], createSelector(["*", " ", "section", ">", "*", "+", "*"]))).toEqual([
             Article({}, [],
                 Header({}, [],
-                    H3({ className: "article-title" }, [], "article title 1")
+                    H3({ class: "article-title" }, [], "article title 1")
                 ),
                 Header({}, [],
-                    H3({ className: "article-title" }, [], "article title 1")
+                    H3({ class: "article-title" }, [], "article title 1")
                 ),
                 Section({}, [], 
                     P({}, [], "text1"),
@@ -168,13 +168,13 @@ describe("selectElement test", () => {
                     P({}, [], "text4"),
                 ),
                 Footer({}, [], 
-                    Span({ className: "tag" }, [], "tag1"),
-                    Span({ className: "tag" }, [], "tag2"),
+                    Span({ class: "tag" }, [], "tag1"),
+                    Span({ class: "tag" }, [], "tag2"),
                 ),
             ),
             Article({}, [], 
                 Header({}, [],
-                    H3({ className: "article-title" }, [], "article title 2")
+                    H3({ class: "article-title" }, [], "article title 2")
                 ),
                 Section({}, [], 
                     P({}, [], "text5"),
@@ -182,17 +182,17 @@ describe("selectElement test", () => {
                 ),
                 Section({}, [], 
                     P({}, [], "text7"),
-                    P({ className: "page-header" }, [], "text8"),
+                    P({ class: "page-header" }, [], "text8"),
                 ),
                 Footer({}, [], 
-                    Span({ className: "tag" }, [], "tag3"),
-                    Span({ className: "tag" }, [], "tag4"),
+                    Span({ class: "tag" }, [], "tag3"),
+                    Span({ class: "tag" }, [], "tag4"),
                 ),
             ),
             P({}, [], "text2"),
             P({}, [], "text4"),
             P({}, [], "text6"),
-            P({ className: "page-header" }, [], "text8"),
+            P({ class: "page-header" }, [], "text8"),
         ])
     );
 });
@@ -201,10 +201,10 @@ describe("selectElement test", () => {
     const root = Html( { lang: "ja" }, [],
         Head({}, [], Title({}, [], "title")),
         Body({}, [],
-            Header({ className: "page-header" }, [], 
+            Header({ class: "page-header" }, [], 
                 H1({}, [], "header"),
             ),
-            Footer({ className: "page-footer" }, [], "&amp; lulliecat"),
+            Footer({ class: "page-footer" }, [], "&amp; lulliecat"),
         )
     );
 
@@ -218,10 +218,10 @@ describe("selectElement test", () => {
                     Script({ type: "module", src: ".hmr.js" }),
                 ),
                 Body({}, [],
-                    Header({ className: "page-header" }, [], 
+                    Header({ class: "page-header" }, [], 
                         H1({}, [], "header"),
                     ),
-                    Footer({ className: "page-footer" }, [], "&amp; lulliecat"),
+                    Footer({ class: "page-footer" }, [], "&amp; lulliecat"),
                 )
             )
         )
@@ -234,11 +234,11 @@ describe("selectElement test", () => {
                     Title({}, [], "title"),
                 ),
                 Body({}, [],
-                    Header({ className: "page-header" }, [], 
+                    Header({ class: "page-header" }, [], 
                         H1({}, [], "header"),
                         Script({ type: "module", src: ".hmr.js" }),
                     ),
-                    Footer({ className: "page-footer" }, [], "&amp; lulliecat"),
+                    Footer({ class: "page-footer" }, [], "&amp; lulliecat"),
                 )
             )
         )

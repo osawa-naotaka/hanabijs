@@ -10,7 +10,7 @@
   },
   "types": "build/hanabi-lib.d.ts",
   "scripts": {
-    "build": "rollup --config rollup.config.ts",
+    "build": "tsc && rollup --config rollup.config.ts",
     "dev": "bun run --hot src/cli/serve.ts",
     "site-build": "bun run src/cli/build.ts",
     "check": "biome check ./src ./site",
