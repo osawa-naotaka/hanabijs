@@ -1,5 +1,6 @@
 import { createComponent, H1, Header, A, style } from "@/main";
 import { site } from "@site/config/site.config";
+import { SVGIcon } from "../element/SVGIcon";
 
 export const PageHeader = createComponent(() =>
     Header(
@@ -17,7 +18,8 @@ export const PageHeader = createComponent(() =>
                     font_size: "2rem"
                 }]
             ]),
-            A({ href: "/" }, site.name)
+            A({ href: "/" }, site.name),
         ),
+        SVGIcon({ name: "menu-bar-icon" }),
     ),
 );

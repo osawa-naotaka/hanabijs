@@ -8,7 +8,7 @@ import { dist_subdir, page_subdir } from "../config";
 import { Link } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
-import { globTs, replaceExt } from "../lib/util";
+import { globExt, replaceExt } from "../lib/util";
 
 export async function build() {
     const root = cwd();
@@ -19,7 +19,7 @@ export async function build() {
         await rmdir(dist_dir, { recursive: true });
     }
 
-    for await (const file of globTs(page_dir)) {
+    for await (const file of globExt(page_dir, ".ts")) {
         const page_fn = await import(`${page_dir}/${file}`);
         if (typeof page_fn.default === "function") {
             const fullpath = path.join(dist_dir, file);

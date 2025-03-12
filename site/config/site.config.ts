@@ -1,5 +1,3 @@
-import { main } from "bun";
-
 export const site = {
     lang: "ja",
     name: "lulliecat",

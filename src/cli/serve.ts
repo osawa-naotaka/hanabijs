@@ -2,29 +2,33 @@
 
 import { cwd } from "node:process";
 import chokidar from "chokidar";
-import { site_subdir, page_subdir } from "../config";
+import { site_subdir, page_subdir, public_subdir } from "../config";
 import { Link, Script } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
-import { replaceExt } from "../lib/util";
-import { createRouter } from "./route";
+import { replaceExt, contentType } from "../lib/util";
+import { createPageRouter, createStaticRouter } from "./route";
+import { readFile } from "node:fs/promises";
 
 export async function serve() {
     const root = cwd();
     const page_dir = `${root}/${page_subdir}`;
+    const public_dir = `${root}/${public_subdir}`;
     const site_dir = `${root}/${site_subdir}`;
 
 
     const watcher = chokidar.watch(site_dir, { persistent: true });
 
-    let router = await createRouter(page_dir);
+    let page_router = await createPageRouter(page_dir);
+    let public_router = await createStaticRouter(public_dir);
 
     const server = Bun.serve({
         websocket: {
             open(ws) {
                 console.log("Client connected");
                 watcher.on("change", async () => {
-                    router = await createRouter(page_dir);
+                    page_router = await createPageRouter(page_dir);
+                    public_router = await createPageRouter(public_dir);
                     ws.send("reload");
                 });
             },
@@ -36,13 +40,15 @@ export async function serve() {
             if (server.upgrade(req)) {
                 return new Response(null, { status: 101 });
             }
-            const match = router(req);
-            if (!(match instanceof Error)) {
-                if (match.req_ext === "" || match.req_ext === ".html") {
-                    const page = await import(`${page_dir}/${match.file_path}`);
+
+            // Page router
+            const match_page = page_router(req);
+            if (!(match_page instanceof Error)) {
+                if (match_page.req_ext === "" || match_page.req_ext === ".html") {
+                    const page = await import(`${page_dir}/${match_page.file_path}`);
                     if (typeof page.default === "function") {
-                        const css_name = replaceExt(match.file_path, ".css");
-                        const html = insertElements(page.default(match.params), createSelector(["*", " ", "head"]), [
+                        const css_name = replaceExt(match_page.file_path, ".css");
+                        const html = insertElements(page.default(match_page.params), createSelector(["*", " ", "head"]), [
                             Script({ type: "module", src: "/reload.js" }, ""),
                             Link({ href: css_name, rel: "stylesheet" }, ""),
                         ]);
@@ -53,24 +59,33 @@ export async function serve() {
                             },
                         });
                     }
-                    return new Response(`${match.file_path} does not have default export.`, {
+                    return new Response(`${match_page.file_path} does not have default export.`, {
                         status: 404,
                     });
                 }
-                if (match.req_ext === ".css") {
-                    const page = await import(`${page_dir}/${match.file_path}`);
+                if (match_page.req_ext === ".css") {
+                    const page = await import(`${page_dir}/${match_page.file_path}`);
                     if (typeof page.default === "function") {
-                        const css = page.default(match.params);
+                        const css = page.default(match_page.params);
                         return new Response(stringifyToCss(css), {
-                            headers: { "Content-Type": "text/css" },
+                            headers: { "Content-Type": contentType(match_page.req_ext) },
                         });
                     }
-                    return new Response(`${match.file_path} does not have default export.`, {
+                    return new Response(`${match_page.file_path} does not have default export.`, {
                         status: 404,
                     });
                 }
-                return new Response(`unsupported extension: ${match.req_ext}`, {
+                return new Response(`unsupported extension: ${match_page.req_ext}`, {
                     status: 404,
+                });
+            }
+
+            // Public router
+            const match_public = public_router(req);
+            if (!(match_public instanceof Error)) {
+                const content = await readFile(`${public_dir}/${match_public.file_path}`);
+                return new Response(content, {
+                    headers: { "Content-Type": contentType(match_public.req_ext) },
                 });
             }
 
