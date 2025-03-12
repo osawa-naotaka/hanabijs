@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { rmdir } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
-import { dist_subdir, page_subdir } from "../config";
+import { dist_subdir, page_subdir, public_subdir } from "../config";
 import { Link } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
@@ -14,6 +14,7 @@ export async function build() {
     const root = cwd();
     const dist_dir = path.join(root, dist_subdir);
     const page_dir = path.join(root, page_subdir);
+    const public_dir = path.join(root, public_subdir);
 
     if (existsSync(dist_dir)) {
         await rmdir(dist_dir, { recursive: true });
@@ -61,6 +62,12 @@ export async function build() {
                 Bun.write(path.join(dist_dir, css_name), css);
             }
         }
+    }
+
+    // copy public
+    for await (const src of globExt(public_dir, "")) {
+        const file = Bun.file(path.join(public_dir, src));
+        await Bun.write(path.join(dist_dir, src), file);
     }
 }
 
