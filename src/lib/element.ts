@@ -121,7 +121,11 @@ function attributeToString(attribute: Attribute): string {
     return Object.entries(attribute)
         .map(([raw_key, value]) => {
             const key = raw_key.replaceAll("_", "-");
-            return value === "" || value === null ? ` ${key}"` : Array.isArray(value) ? ` ${key}="${value.join(" ")}"` : ` ${key}="${value}"`;
+            return value === "" || value === null
+                ? ` ${key}"`
+                : Array.isArray(value)
+                  ? ` ${key}="${value.join(" ")}"`
+                  : ` ${key}="${value}"`;
         })
         .join("");
 }

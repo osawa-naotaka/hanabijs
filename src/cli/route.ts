@@ -19,15 +19,13 @@ export type Router = (req: Request) => Route | Error;
 export async function createPageRouter(pagedir: string): Promise<Router> {
     const page_route_table = await createPageRouteTable(pagedir);
 
-    return (req) =>
-        pageRouter(page_route_table, path.parse(new URL(req.url).pathname));
+    return (req) => pageRouter(page_route_table, path.parse(new URL(req.url).pathname));
 }
 
 export async function createStaticRouter(staticdir: string): Promise<Router> {
     const static_route_table = await createStaticRouteTable(staticdir);
 
-    return (req) =>
-        publicRouter(static_route_table, path.parse(new URL(req.url).pathname));
+    return (req) => publicRouter(static_route_table, path.parse(new URL(req.url).pathname));
 }
 
 async function createPageRouteTable(pagedir: string): Promise<RouteTable[]> {
@@ -52,7 +50,8 @@ async function createStaticRouteTable(publicdir: string): Promise<RouteTable[]> 
 function pageRouter(route_table: RouteTable[], req_url_pathname: path.ParsedPath): Route | Error {
     const req_ext = req_url_pathname.ext;
     const name =
-        (req_url_pathname.dir === "/" ? "" : `${req_url_pathname.dir}`) + (req_url_pathname.name === "" ? "/index" : `/${req_url_pathname.name}/index`);
+        (req_url_pathname.dir === "/" ? "" : `${req_url_pathname.dir}`) +
+        (req_url_pathname.name === "" ? "/index" : `/${req_url_pathname.name}/index`);
 
     if (req_ext === "" || req_ext === ".html") {
         for (const { url_regexp_woext, file_path } of route_table) {
@@ -62,7 +61,10 @@ function pageRouter(route_table: RouteTable[], req_url_pathname: path.ParsedPath
             }
         }
     } else if (req_ext === ".css" || req_ext === ".js") {
-        const target = req_url_pathname.dir === "/" ? `/${req_url_pathname.name}` : `${req_url_pathname.dir}/${req_url_pathname.name}`;
+        const target =
+            req_url_pathname.dir === "/"
+                ? `/${req_url_pathname.name}`
+                : `${req_url_pathname.dir}/${req_url_pathname.name}`;
         for (const { url_exact_woext, file_path } of route_table) {
             if (target === url_exact_woext) {
                 return { file_path, req_ext, params: {} };
@@ -72,15 +74,19 @@ function pageRouter(route_table: RouteTable[], req_url_pathname: path.ParsedPath
         return new Error(`Unsupported extension ${req_ext}`);
     }
     return new Error("Path Not Found.");
-};
+}
 
 function publicRouter(route_table: RouteTable[], req_url_pathname: path.ParsedPath): Route | Error {
     const req_ext = req_url_pathname.ext;
     const name =
-        (req_url_pathname.dir === "/" ? "" : `${req_url_pathname.dir}`) + (req_url_pathname.name === "" ? "/index" : `/${req_url_pathname.name}/index`);
+        (req_url_pathname.dir === "/" ? "" : `${req_url_pathname.dir}`) +
+        (req_url_pathname.name === "" ? "/index" : `/${req_url_pathname.name}/index`);
 
     // check if exact name matches
-    const target = req_url_pathname.dir === "/" ? `/${req_url_pathname.name}${req_ext}` : `${req_url_pathname.dir}/${req_url_pathname.name}${req_ext}`;
+    const target =
+        req_url_pathname.dir === "/"
+            ? `/${req_url_pathname.name}${req_ext}`
+            : `${req_url_pathname.dir}/${req_url_pathname.name}${req_ext}`;
     for (const { file_path } of route_table) {
         if (target === file_path) {
             return { file_path, req_ext, params: {} };
@@ -90,10 +96,10 @@ function publicRouter(route_table: RouteTable[], req_url_pathname: path.ParsedPa
     // check if / (=index.html) matches
     if (req_ext === "") {
         for (const { file_path } of route_table) {
-            if(file_path === name) {
+            if (file_path === name) {
                 return { file_path, req_ext, params: {} };
             }
         }
     }
     return new Error("Path Not Found.");
-};
+}

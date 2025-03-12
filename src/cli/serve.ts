@@ -1,21 +1,20 @@
 #!/usr/bin/env -S bun --hot
 
+import { readFile } from "node:fs/promises";
 import { cwd } from "node:process";
 import chokidar from "chokidar";
-import { site_subdir, page_subdir, public_subdir } from "../config";
+import { page_subdir, public_subdir, site_subdir } from "../config";
 import { Link, Script } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
-import { replaceExt, contentType } from "../lib/util";
+import { contentType, replaceExt } from "../lib/util";
 import { createPageRouter, createStaticRouter } from "./route";
-import { readFile } from "node:fs/promises";
 
 export async function serve() {
     const root = cwd();
     const page_dir = `${root}/${page_subdir}`;
     const public_dir = `${root}/${public_subdir}`;
     const site_dir = `${root}/${site_subdir}`;
-
 
     const watcher = chokidar.watch(site_dir, { persistent: true });
 
@@ -48,10 +47,14 @@ export async function serve() {
                     const page = await import(`${page_dir}/${match_page.file_path}`);
                     if (typeof page.default === "function") {
                         const css_name = replaceExt(match_page.file_path, ".css");
-                        const html = insertElements(page.default(match_page.params), createSelector(["*", " ", "head"]), [
-                            Script({ type: "module", src: "/reload.js" }, ""),
-                            Link({ href: css_name, rel: "stylesheet" }, ""),
-                        ]);
+                        const html = insertElements(
+                            page.default(match_page.params),
+                            createSelector(["*", " ", "head"]),
+                            [
+                                Script({ type: "module", src: "/reload.js" }, ""),
+                                Link({ href: css_name, rel: "stylesheet" }, ""),
+                            ],
+                        );
                         const html_text = DOCTYPE() + stringifyToHtml(html);
                         return new Response(html_text, {
                             headers: {

@@ -1,4 +1,4 @@
-import { createComponent, Head, Meta, Link, Title } from "@/main";
+import { Head, Link, Meta, Title, createComponent } from "@/main";
 import { site } from "@site/config/site.config";
 
 export const PageHead = createComponent<{ title: string }>((attribute) =>

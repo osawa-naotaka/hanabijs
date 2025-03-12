@@ -1,4 +1,4 @@
-import type { HNode } from "./element";
+import type { Elem, HNode } from "./element";
 
 // Style
 export type Rule = {
@@ -26,14 +26,30 @@ export type Properties = Record<string, string[] | string>;
 
 export function style(...rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]): Rule[] {
     return rules.map(([selectors, properties]) => ({
-        selectorlist: selectors.map((s) => createSelector(s[0] === ":root" ? s : ["*", " ", ...s])),
+        selectorlist: selectors.map(createSelector),
         properties,
     }));
 }
 
-export function rule(selector: (SimpleSelector | CompoundSelector | Combinator)[], propaties: Properties): Rule {
+function isSelf(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&"): selector is "&" {
+    return typeof selector === "string" && selector === "&";
+}
+
+export function rule(
+    selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&",
+    propaties: Properties,
+): Rule[] {
+    return [
+        {
+            selectorlist: isSelf(selector) ? [["&"]] : [createSelector(selector)],
+            properties: propaties,
+        },
+    ];
+}
+
+export function rule1(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&", propaties: Properties): Rule {
     return {
-        selectorlist: [createSelector(selector)],
+        selectorlist: isSelf(selector) ? [["&"]] : [createSelector(selector)],
         properties: propaties,
     };
 }
@@ -79,13 +95,13 @@ export function stringifyToCss(node: HNode): string {
         return "";
     }
 
-    return [rulesToString(node.style), node.child.map(stringifyToCss).join("")].join("");
+    return [rulesToString(node), node.child.map(stringifyToCss).join("")].join("");
 }
 
-export function rulesToString(rules: Rule[]): string {
+function rulesToString(elem: Elem): string {
     const res: string[] = [];
-    for (const rule of rules) {
-        const selectors_string = rule.selectorlist.map(selectorToString).join(", ");
+    for (const rule of elem.style) {
+        const selectors_string = rule.selectorlist.map(selectorToString(elem)).join(", ");
         const propaties_string = propatiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }
@@ -93,13 +109,22 @@ export function rulesToString(rules: Rule[]): string {
     return res.join("");
 }
 
-function selectorToString(selector: Selector): string {
-    if (isCompoundSelector(selector)) {
-        return selector.join("");
+function stringifySelector(current: Elem, selector: CompoundSelector): string {
+    if (selector.length === 1 && selector[0] === "&") {
+        return `.${current.attribute.class}`;
     }
-    return selector.combinator === " "
-        ? `${selector.compound.join("")} ${selectorToString(selector.descendant)}`
-        : `${selector.compound.join("")} ${selector.combinator} ${selectorToString(selector.descendant)}`;
+    return selector.join("");
+}
+
+function selectorToString(current: Elem): (selector: Selector) => string {
+    return (selector: Selector) => {
+        if (isCompoundSelector(selector)) {
+            return stringifySelector(current, selector);
+        }
+        return selector.combinator === " "
+            ? `${stringifySelector(current, selector.compound)} ${selectorToString(current)(selector.descendant)}`
+            : `${stringifySelector(current, selector.compound)} ${selector.combinator} ${selectorToString(current)(selector.descendant)}`;
+    };
 }
 
 function propatiesToString(properties: Properties): string {

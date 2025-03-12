@@ -6,8 +6,10 @@ import type { Rule } from "./style";
 export type Component<T> = (attribute: T, ...args: (Rule[] | HNode)[]) => Elem;
 export type HOComponent<A, T> = (attribute: T, ...args: (Rule[] | HNode)[]) => HOElem<A>;
 
-export function createComponent<T>(fn: (attribute: T, style: Rule[], child: HNode[]) => Elem): Component<T> {
-    return (attribute: T, ...cargs: (Rule[] | HNode)[]) => {
+export function createComponent<T>(
+    fn: (attribute: T & { class?: string }, style: Rule[], child: HNode[]) => Elem,
+): Component<T & { class?: string }> {
+    return (attribute: T & { class?: string }, ...cargs: (Rule[] | HNode)[]) => {
         const { style, child } = classifyElemArgs(cargs);
         return fn(attribute, style, child);
     };
@@ -21,6 +23,22 @@ export function createHOComponent<A, T>(
             const { style, child } = classifyElemArgs(cargs);
             return fn(attribute, style, child)(arg);
         };
+}
+
+function addClassToAttribute(attribute: Attribute, className: string): Attribute {
+    const new_attribute = JSON.parse(JSON.stringify(attribute));
+    if (attribute.class !== undefined) {
+        new_attribute.class = Array.isArray(attribute.class)
+            ? [className, ...attribute.class]
+            : [className, attribute.class];
+    } else {
+        new_attribute.class = className;
+    }
+    return new_attribute;
+}
+
+export function createSemantic(className: string, tag: Tag = "div"): Component<Attribute> {
+    return (attribute: Attribute, ...args) => createElem(tag, addClassToAttribute(attribute, className), args);
 }
 
 function gt(tag: Tag): Component<Attribute> {

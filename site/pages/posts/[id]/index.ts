@@ -7,6 +7,5 @@ export async function getStaticPaths() {
 }
 
 export default function Top(arg: Attribute): HNode {
-    return Page({ title: `${arg.id} | ${site.name}` },
-    );
+    return Page({ title: `${arg.id} | ${site.name}` });
 }
