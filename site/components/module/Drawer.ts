@@ -44,7 +44,7 @@ export const Drawer = createComponent<{ title: HNode; header_space: HNode; menu_
                         height: "0",
                         transition: ["height", "0.25s"],
                     }),
-                    rule1([["#drawer-toggle-button", ":checked"], "~", ".drawer-menu"], {
+                    rule1([["#drawer-toggle-button", ":checked"], "~", "&"], {
                         height: "calc-size(fit-content, size)",
                     }),
                 ],
