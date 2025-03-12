@@ -24,11 +24,18 @@ export type Combinator = " " | ">" | "+" | "~" | "||";
 
 export type Properties = Record<string, string[] | string>;
 
-export function style(rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]): Rule[] {
+export function style(...rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]): Rule[] {
     return rules.map(([selectors, properties]) => ({
         selectorlist: selectors.map((s) => createSelector(s[0] === ":root" ? s : ["*", " ", ...s])),
         properties,
     }));
+}
+
+export function rule(selector: (SimpleSelector | CompoundSelector | Combinator)[], propaties: Properties): Rule {
+    return {
+        selectorlist: [createSelector(selector)],
+        properties: propaties,
+    };
 }
 
 export function createSelector(selector: (SimpleSelector | CompoundSelector | Combinator)[]): Selector {

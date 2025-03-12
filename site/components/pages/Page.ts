@@ -7,7 +7,7 @@ import { appearence, site } from "@site/config/site.config";
 export const Page = createComponent<{ title: string }>((attribute, _style, child) =>
     Html(
         { lang: site.lang },
-        style([
+        style(
             // reset CSS
             [[[""]], {
                 margin: "0",
@@ -33,7 +33,8 @@ export const Page = createComponent<{ title: string }>((attribute, _style, child
                 text_indent: "1rem"
             }],
             [[["body"]], {
-                color: appearence.color.main
+                color: appearence.color.main,
+                background_color: appearence.color.background,
             }],
 
             // container
@@ -48,7 +49,7 @@ export const Page = createComponent<{ title: string }>((attribute, _style, child
                 width: "100%",
                 padding_inline: appearence.layout.content_padding
             }]
-        ]),
+        ),
         PageHead(attribute),
         Body({ id: "top-of-page" }, PageHeader(attribute), ...child, PageFooter({ site_name: site.name})),
     ),
