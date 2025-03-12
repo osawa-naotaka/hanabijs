@@ -1,4 +1,4 @@
-import { Body, Html, createComponent, style } from "@/main";
+import { Body, Html, createComponent, createStyles } from "@/main";
 import { appearence, site } from "@site/config/site.config";
 import { PageFooter } from "../sections/PageFooter";
 import { PageHeader } from "../sections/PageHeader";
@@ -7,7 +7,7 @@ import { PageHead } from "./PageHead";
 export const Page = createComponent<{ title: string }>((attribute, _style, child) =>
     Html(
         { lang: site.lang },
-        style(
+        createStyles(
             // reset CSS
             [
                 [["*"]],

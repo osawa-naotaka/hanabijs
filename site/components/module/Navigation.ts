@@ -1,4 +1,4 @@
-import { A, createComponent, createSemantic, rule } from "@/main";
+import { A, createComponent, createSemantic, style } from "@/main";
 import { navigation } from "@site/config/site.config";
 import { SVGIcon } from "../element/SVGIcon";
 
@@ -9,13 +9,13 @@ const NavigationItem = createSemantic("navigation-item", "li");
 export const Navigation = createComponent((attribute) =>
     NavigationTop(
         { class: attribute.class },
-        rule("&", {
+        style({
             font_weight: "bold",
             font_size: "1.4rem",
         }),
         NavigationList(
             {},
-            rule("&", {
+            style({
                 display: "flex",
                 justify_content: "center",
                 align_items: "center",

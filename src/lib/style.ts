@@ -24,7 +24,7 @@ export type Combinator = " " | ">" | "+" | "~" | "||";
 
 export type Properties = Record<string, string[] | string>;
 
-export function style(...rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]): Rule[] {
+export function createStyles(...rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]): Rule[] {
     return rules.map(([selectors, properties]) => ({
         selectorlist: selectors.map(createSelector),
         properties,
@@ -35,19 +35,16 @@ function isSelf(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "
     return typeof selector === "string" && selector === "&";
 }
 
-export function rule(
-    selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&",
-    propaties: Properties,
-): Rule[] {
+export function style(propaties: Properties): Rule[] {
     return [
         {
-            selectorlist: isSelf(selector) ? [["&"]] : [createSelector(selector)],
+            selectorlist: [["&"]],
             properties: propaties,
         },
     ];
 }
 
-export function rule1(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&", propaties: Properties): Rule {
+export function style1(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&", propaties: Properties): Rule {
     return {
         selectorlist: isSelf(selector) ? [["&"]] : [createSelector(selector)],
         properties: propaties,
