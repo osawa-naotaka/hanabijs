@@ -48,7 +48,7 @@ export async function serve() {
                     if (typeof page.default === "function") {
                         const css_name = replaceExt(match_page.file_path, ".css");
                         const html = insertElements(
-                            page.default(match_page.params),
+                            await page.default(match_page.params),
                             createSelector(["*", " ", "head"]),
                             [
                                 Script({ type: "module", src: "/reload.js" }, ""),
@@ -69,7 +69,7 @@ export async function serve() {
                 if (match_page.req_ext === ".css") {
                     const page = await import(`${page_dir}/${match_page.file_path}`);
                     if (typeof page.default === "function") {
-                        const css = page.default(match_page.params);
+                        const css = await page.default(match_page.params);
                         return new Response(stringifyToCss(css), {
                             headers: { "Content-Type": contentType(match_page.req_ext) },
                         });

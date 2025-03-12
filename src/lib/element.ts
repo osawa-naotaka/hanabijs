@@ -13,6 +13,7 @@ export type HOElem<A> = (arg: A) => Elem;
 export type Attribute = Record<string, unknown>;
 
 export type Tag =
+    | "raw"
     | "dimension"
     | "decoration"
     | "layout"
@@ -111,6 +112,9 @@ function isStyle(arg: Rule[] | HNode): arg is Rule[] {
 export function stringifyToHtml(node: HNode): string {
     if (typeof node === "string") {
         return node;
+    }
+    if (node.tag === "raw") {
+        return node.child.join("");
     }
     if (node.child.length === 0) {
         return `<${node.tag}${attributeToString(node.attribute)} />`;

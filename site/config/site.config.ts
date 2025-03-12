@@ -24,3 +24,5 @@ export const appearence = {
         space_block_large: "4rem",
     },
 };
+
+export const posts_dir = "site/contents/posts/";
