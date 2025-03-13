@@ -21,6 +21,7 @@ export async function build() {
     }
 
     for await (const file of globExt(page_dir, ".ts")) {
+        let start = performance.now();
         const page_fn = await import(path.join(page_dir, file));
         if (typeof page_fn.default === "function") {
             const fullpath = path.join(dist_dir, file);
@@ -32,7 +33,8 @@ export async function build() {
                 );
 
                 for (const param of param_list) {
-                    const replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param.params[c]), fullpath);
+                    const file_replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param.params[c]), file);
+                    const replaced = path.join(dist_dir, file_replaced);
                     const html_name = replaceExt(replaced, ".html");
                     const page = await page_fn.default(param.params);
                     const css_name = path.join("/", replaceExt(file, ".css"));
@@ -42,11 +44,16 @@ export async function build() {
 
                     const html = DOCTYPE() + stringifyToHtml(inserted);
                     Bun.write(html_name, html);
+                    const end = performance.now();
+                    console.log(`process ${file}: ${file_replaced} in ${(end - start).toFixed(2)}ms`);
+                    start = end;
                 }
 
-                const css_name = replaceExt(fullpath, ".css");
+                const file_css = replaceExt(file, ".css");
+                const css_name = path.join(dist_dir, file_css);
                 const css = stringifyToCss(await page_fn.default(param_list[0].params));
                 Bun.write(css_name, css);
+                console.log(`process ${file_css} in ${(performance.now() - start).toFixed(2)}ms`);
             } else {
                 const page = await page_fn.default();
                 const html_name = path.join(dist_dir, replaceExt(file, ".html"));
@@ -60,15 +67,18 @@ export async function build() {
                 Bun.write(html_name, html);
                 const css = stringifyToCss(page);
                 Bun.write(path.join(dist_dir, css_name), css);
+                console.log(`process ${file} in ${(performance.now() - start).toFixed(2)}ms`);
             }
         }
     }
 
     // copy public
+    const start = performance.now();
     for await (const src of globExt(public_dir, "")) {
         const file = Bun.file(path.join(public_dir, src));
         await Bun.write(path.join(dist_dir, src), file);
     }
+    console.log(`process public in ${(performance.now() - start).toFixed(2)}ms`);
 }
 
 await build();

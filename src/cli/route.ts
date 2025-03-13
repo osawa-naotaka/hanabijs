@@ -56,7 +56,6 @@ function pageRouter(route_table: RouteTable[], req_url_path: string): Route | Er
     const name = path.join("/", p.dir, p.name, p.ext === "" ? "index" : "");
 
     if (req_ext === "" || req_ext === ".html") {
-        console.log(name)
         for (const { path_regexp, target_file } of route_table) {
             const match = name.match(path_regexp);
             if (match) {

@@ -95,7 +95,7 @@ export async function serve() {
             // plugin
             if (new URL(req.url).pathname.endsWith("/reload.js")) {
                 const reload =
-                    "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { console.log('reloader message:', event.data); if (event.data === 'reload') { location.reload(); } }";
+                    "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { if (event.data === 'reload') { location.reload(); } }";
 
                 return new Response(reload, {
                     headers: {
