@@ -9,12 +9,13 @@ import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
 import { contentType, replaceExt } from "../lib/util";
 import { createPageRouter, createStaticRouter } from "./route";
+import path from "node:path";
 
 export async function serve() {
     const root = cwd();
-    const page_dir = `${root}/${page_subdir}`;
-    const public_dir = `${root}/${public_subdir}`;
-    const site_dir = `${root}/${site_subdir}`;
+    const page_dir = path.join(root, page_subdir);
+    const public_dir = path.join(root, public_subdir);
+    const site_dir = path.join(root, site_subdir);
 
     const watcher = chokidar.watch(site_dir, { persistent: true });
 
@@ -24,7 +25,6 @@ export async function serve() {
     const server = Bun.serve({
         websocket: {
             open(ws) {
-                console.log("Client connected");
                 watcher.on("change", async () => {
                     page_router = await createPageRouter(page_dir);
                     public_router = await createPageRouter(public_dir);
@@ -44,9 +44,9 @@ export async function serve() {
             const match_page = page_router(req);
             if (!(match_page instanceof Error)) {
                 if (match_page.req_ext === "" || match_page.req_ext === ".html") {
-                    const page = await import(`${page_dir}/${match_page.file_path}`);
+                    const page = await import(path.join(page_dir, match_page.target_file));
                     if (typeof page.default === "function") {
-                        const css_name = replaceExt(match_page.file_path, ".css");
+                        const css_name = replaceExt(match_page.target_file, ".css");
                         const html = insertElements(
                             await page.default(match_page.params),
                             createSelector(["*", " ", "head"]),
@@ -62,19 +62,19 @@ export async function serve() {
                             },
                         });
                     }
-                    return new Response(`${match_page.file_path} does not have default export.`, {
+                    return new Response(`${match_page.target_file} does not have default export.`, {
                         status: 404,
                     });
                 }
                 if (match_page.req_ext === ".css") {
-                    const page = await import(`${page_dir}/${match_page.file_path}`);
+                    const page = await import(`${page_dir}/${match_page.target_file}`);
                     if (typeof page.default === "function") {
                         const css = await page.default(match_page.params);
                         return new Response(stringifyToCss(css), {
                             headers: { "Content-Type": contentType(match_page.req_ext) },
                         });
                     }
-                    return new Response(`${match_page.file_path} does not have default export.`, {
+                    return new Response(`${match_page.target_file} does not have default export.`, {
                         status: 404,
                     });
                 }
@@ -86,7 +86,7 @@ export async function serve() {
             // Public router
             const match_public = public_router(req);
             if (!(match_public instanceof Error)) {
-                const content = await readFile(`${public_dir}/${match_public.file_path}`);
+                const content = await readFile(path.join(public_dir, match_public.target_file));
                 return new Response(content, {
                     headers: { "Content-Type": contentType(match_public.req_ext) },
                 });

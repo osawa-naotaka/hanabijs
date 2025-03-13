@@ -3,71 +3,70 @@ import type { Attribute } from "../lib/element";
 import { globExt } from "../lib/util";
 
 export type RouteTable = {
-    url_regexp_woext: RegExp;
-    url_exact_woext: string;
-    file_path: string;
+    path_regexp: RegExp;
+    path_exact: string;
+    target_file: string;
 };
 
 export type Route = {
-    file_path: string;
+    target_file: string;
     req_ext: string;
     params: Attribute;
 };
 
 export type Router = (req: Request) => Route | Error;
 
-export async function createPageRouter(pagedir: string): Promise<Router> {
-    const page_route_table = await createPageRouteTable(pagedir);
+export async function createPageRouter(rootdir: string): Promise<Router> {
+    const page_route_table = await createPageRouteTable(rootdir);
 
-    return (req) => pageRouter(page_route_table, path.parse(new URL(req.url).pathname));
+    return (req) => pageRouter(page_route_table, new URL(req.url).pathname);
 }
 
-export async function createStaticRouter(staticdir: string): Promise<Router> {
-    const static_route_table = await createStaticRouteTable(staticdir);
+export async function createStaticRouter(rootdir: string): Promise<Router> {
+    const static_route_table = await createStaticRouteTable(rootdir);
 
-    return (req) => publicRouter(static_route_table, path.parse(new URL(req.url).pathname));
+    return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
 }
 
-async function createPageRouteTable(pagedir: string): Promise<RouteTable[]> {
-    return (await Array.fromAsync(globExt(pagedir, ".ts"))).map((file_path) => {
-        const p = path.parse(file_path);
-        const url_exact_woext = p.dir !== "" ? `/${p.dir}/${p.name}` : `/${p.name}`;
-        const param_names = Array.from(url_exact_woext.matchAll(/\[(?<key>[^\]]+)\]/g)).map((m) => m.groups?.key || "");
-        const regexp_str = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, `(?<${c}>.+)`), url_exact_woext);
-        const url_regexp_woext = new RegExp(`^${regexp_str}$`);
-        return { url_regexp_woext, url_exact_woext, file_path: `/${file_path}` };
+async function createPageRouteTable(rootdir: string): Promise<RouteTable[]> {
+    return (await Array.fromAsync(globExt(rootdir, ".ts"))).map((name) => {
+        const target_file = path.join("/", name);
+        const p = path.parse(target_file);
+
+        const path_exact = path.join("/", p.dir, p.name);
+        const param_names = Array.from(path_exact.matchAll(/\[(?<key>[^\]]+)\]/g)).map((m) => m.groups?.key || "");
+        const regexp_str = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, `(?<${c}>.+)`), path_exact);
+        const path_regexp = new RegExp(`^${regexp_str}$`);
+        return { path_regexp, path_exact, target_file };
     });
 }
 
-async function createStaticRouteTable(publicdir: string): Promise<RouteTable[]> {
-    return (await Array.fromAsync(globExt(publicdir, ""))).map((file_path) => {
-        const url_exact = `/${file_path}`;
-        const url_regexp = new RegExp(`^${url_exact}$`);
-        return { url_regexp_woext: url_regexp, url_exact_woext: url_exact, file_path: `/${file_path}` };
+async function createStaticRouteTable(rootdir: string): Promise<RouteTable[]> {
+    return (await Array.fromAsync(globExt(rootdir, ""))).map((name) => {
+        const target_file = path.join("/", name)
+        const path_exact = target_file;
+        const path_regexp = new RegExp(`^${path_exact}$`);
+        return { path_regexp, path_exact, target_file };
     });
 }
 
-function pageRouter(route_table: RouteTable[], req_url_pathname: path.ParsedPath): Route | Error {
-    const req_ext = req_url_pathname.ext;
-    const name =
-        (req_url_pathname.dir === "/" ? "" : `${req_url_pathname.dir}`) +
-        (req_url_pathname.name === "" ? "/index" : `/${req_url_pathname.name}/index`);
+function pageRouter(route_table: RouteTable[], req_url_path: string): Route | Error {
+    const p = path.parse(req_url_path);
+    const req_ext = p.ext;
+    const name = path.join("/", p.dir, p.name, p.ext === "" ? "index" : "");
 
     if (req_ext === "" || req_ext === ".html") {
-        for (const { url_regexp_woext, file_path } of route_table) {
-            const match = name.match(url_regexp_woext);
+        console.log(name)
+        for (const { path_regexp, target_file } of route_table) {
+            const match = name.match(path_regexp);
             if (match) {
-                return { file_path, req_ext, params: match.groups || {} };
+                return { target_file, req_ext, params: match.groups || {} };
             }
         }
     } else if (req_ext === ".css" || req_ext === ".js") {
-        const target =
-            req_url_pathname.dir === "/"
-                ? `/${req_url_pathname.name}`
-                : `${req_url_pathname.dir}/${req_url_pathname.name}`;
-        for (const { url_exact_woext, file_path } of route_table) {
-            if (target === url_exact_woext) {
-                return { file_path, req_ext, params: {} };
+        for (const { path_exact, target_file } of route_table) {
+            if (name === path_exact) {
+                return { target_file, req_ext, params: {} };
             }
         }
     } else {
@@ -76,28 +75,21 @@ function pageRouter(route_table: RouteTable[], req_url_pathname: path.ParsedPath
     return new Error("Path Not Found.");
 }
 
-function publicRouter(route_table: RouteTable[], req_url_pathname: path.ParsedPath): Route | Error {
-    const req_ext = req_url_pathname.ext;
-    const name =
-        (req_url_pathname.dir === "/" ? "" : `${req_url_pathname.dir}`) +
-        (req_url_pathname.name === "" ? "/index" : `/${req_url_pathname.name}/index`);
-
-    // check if exact name matches
-    const target =
-        req_url_pathname.dir === "/"
-            ? `/${req_url_pathname.name}${req_ext}`
-            : `${req_url_pathname.dir}/${req_url_pathname.name}${req_ext}`;
-    for (const { file_path } of route_table) {
-        if (target === file_path) {
-            return { file_path, req_ext, params: {} };
+function staticRouter(route_table: RouteTable[], req_url_path: string): Route | Error {
+    const req_url_path_persed = path.parse(req_url_path);
+    const req_ext = req_url_path_persed.ext;
+    for (const { target_file } of route_table) {
+        if (target_file === req_url_path) {
+            return { target_file, req_ext, params: {} };
         }
     }
 
     // check if / (=index.html) matches
     if (req_ext === "") {
-        for (const { file_path } of route_table) {
-            if (file_path === name) {
-                return { file_path, req_ext, params: {} };
+        const index_name = path.join(req_url_path_persed.dir, req_url_path_persed.name, "index.html");
+        for (const { target_file } of route_table) {
+            if (target_file === index_name) {
+                return { target_file, req_ext: ".html", params: {} };
             }
         }
     }

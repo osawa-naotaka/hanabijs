@@ -11,7 +11,7 @@ import matter from "gray-matter";
 
 export async function getStaticPaths() {
     const items = globExt(path.join(cwd(), posts_dir), ".md");
-    return (await Array.fromAsync(items)).map((x) => ({ params: { id: path.basename(x) } }));
+    return (await Array.fromAsync(items)).map((x) => ({ params: { id: path.basename(x, ".md") } }));
 }
 
 export default async function Top(arg: Attribute): Promise<HNode> {

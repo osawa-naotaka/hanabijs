@@ -21,7 +21,7 @@ export async function build() {
     }
 
     for await (const file of globExt(page_dir, ".ts")) {
-        const page_fn = await import(`${page_dir}/${file}`);
+        const page_fn = await import(path.join(page_dir, file));
         if (typeof page_fn.default === "function") {
             const fullpath = path.join(dist_dir, file);
 
@@ -34,8 +34,8 @@ export async function build() {
                 for (const param of param_list) {
                     const replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param.params[c]), fullpath);
                     const html_name = replaceExt(replaced, ".html");
-                    const page = page_fn.default(param.params);
-                    const css_name = `/${replaceExt(file, ".css")}`;
+                    const page = await page_fn.default(param.params);
+                    const css_name = path.join("/", replaceExt(file, ".css"));
                     const inserted = insertElements(page, createSelector(["*", " ", "head"]), [
                         Link({ href: css_name, rel: "stylesheet" }, ""),
                     ]);
@@ -45,13 +45,13 @@ export async function build() {
                 }
 
                 const css_name = replaceExt(fullpath, ".css");
-                const css = stringifyToCss(page_fn.default(param_list[0].params));
+                const css = stringifyToCss(await page_fn.default(param_list[0].params));
                 Bun.write(css_name, css);
             } else {
-                const page = page_fn.default();
+                const page = await page_fn.default();
                 const html_name = path.join(dist_dir, replaceExt(file, ".html"));
 
-                const css_name = `/${replaceExt(file, ".css")}`;
+                const css_name = path.join("/", replaceExt(file, ".css"));
                 const inserted = insertElements(page, createSelector(["*", " ", "head"]), [
                     Link({ href: css_name, rel: "stylesheet" }, ""),
                 ]);
