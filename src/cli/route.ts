@@ -43,7 +43,7 @@ async function createPageRouteTable(rootdir: string): Promise<RouteTable[]> {
 
 async function createStaticRouteTable(rootdir: string): Promise<RouteTable[]> {
     return (await Array.fromAsync(globExt(rootdir, ""))).map((name) => {
-        const target_file = path.join("/", name)
+        const target_file = path.join("/", name);
         const path_exact = target_file;
         const path_regexp = new RegExp(`^${path_exact}$`);
         return { path_regexp, path_exact, target_file };

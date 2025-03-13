@@ -1,6 +1,7 @@
 #!/usr/bin/env -S bun --hot
 
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { cwd } from "node:process";
 import chokidar from "chokidar";
 import { page_subdir, public_subdir, site_subdir } from "../config";
@@ -9,7 +10,6 @@ import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
 import { contentType, replaceExt } from "../lib/util";
 import { createPageRouter, createStaticRouter } from "./route";
-import path from "node:path";
 
 export async function serve() {
     const root = cwd();
