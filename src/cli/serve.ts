@@ -3,6 +3,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
+import { ErrorPage } from "@/page/error";
 import chokidar from "chokidar";
 import { page_subdir, public_subdir, site_subdir } from "../config";
 import { Link, Script } from "../lib/component";
@@ -67,20 +68,16 @@ export async function serve() {
                     });
                 }
                 if (match_page.req_ext === ".css") {
-                    const page = await import(`${page_dir}/${match_page.target_file}`);
+                    const page = await import(path.join(page_dir, match_page.target_file));
                     if (typeof page.default === "function") {
                         const css = await page.default(match_page.params);
                         return new Response(stringifyToCss(css), {
                             headers: { "Content-Type": contentType(match_page.req_ext) },
                         });
                     }
-                    return new Response(`${match_page.target_file} does not have default export.`, {
-                        status: 404,
-                    });
+                    return await errorResponse("500", `${match_page.target_file} does not have default export.`);
                 }
-                return new Response(`unsupported extension: ${match_page.req_ext}`, {
-                    status: 404,
-                });
+                return await errorResponse("404", `unsupported extension: ${match_page.req_ext}`);
             }
 
             // Public router
@@ -103,15 +100,30 @@ export async function serve() {
                     },
                 });
             }
+            if (new URL(req.url).pathname.endsWith("/default.css")) {
+                const default_css = await readFile(path.join(root, "src/page/default.css"));
 
-            return new Response("Route Not Found", { status: 404 });
+                return new Response(default_css, {
+                    headers: {
+                        "Content-Type": "text/css",
+                    },
+                });
+            }
+
+            return await errorResponse("404", "Route Not Found");
         },
         port: 4132,
         hostname: "localhost",
-        error(error) {
+        async error(error) {
             console.error(error);
-            return new Response("Internal Server Error", { status: 500 });
+            return await errorResponse(error.name, error.message);
         },
+    });
+}
+
+async function errorResponse(name: string, cause: string): Promise<Response> {
+    return new Response(stringifyToHtml(await ErrorPage({ name, cause })), {
+        headers: { "Content-Type": "text/html" },
     });
 }
 

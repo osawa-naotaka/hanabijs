@@ -1,0 +1,25 @@
+import { A, Body, Div, Footer, H1, Head, Header, Html, Link, Meta, Script, Title, createComponent } from "@/main";
+
+export const Page = createComponent<{ lang: string; title: string; description: string }>((attribute, _style, child) =>
+    Html(
+        { lang: attribute.lang },
+        Head(
+            {},
+            Meta({ charset: "utf-8" }),
+            Meta({
+                name: "viewport",
+                content: "width=device-width,initial-scale=1.0",
+            }),
+
+            Title({}, attribute.title),
+            Script({ type: "module", src: "/reload.js" }, ""),
+            Link({ href: "/default.css", rel: "stylesheet" }, ""),
+        ),
+        Body(
+            { id: "top-of-page" },
+            Header({ class: ["page-header", "container"] }, H1({}, A({ href: "/" }, attribute.title))),
+            ...child,
+            Footer({ class: "page-footer" }, Div({ class: "page-footer-copyright" }, `&copy; 2025 ${attribute.title}`)),
+        ),
+    ),
+);
