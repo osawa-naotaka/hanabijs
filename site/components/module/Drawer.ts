@@ -1,4 +1,5 @@
-import { type HNode, Input, Label, createComponent, createSemantic, style, style1 } from "@/main";
+import { Input, Label, createComponent, createSemantic, style, style1 } from "@/main";
+import type { HNode } from "@/main";
 
 const DrawerTop = createSemantic("drawer");
 const DrawerTitle = createSemantic("drawer-title");
