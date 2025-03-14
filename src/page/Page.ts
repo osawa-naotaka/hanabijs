@@ -1,8 +1,14 @@
 import { A, Body, Div, Footer, H1, Head, Header, Html, Link, Meta, Script, Title, createComponent } from "@/main";
 
-export const Page = createComponent<{ lang: string; title: string; description: string }>((attribute, _style, child) =>
+const site = {
+    lang: "en",
+    name: "hanabi.js",
+    description: "fast, light-weight static site generator",
+};
+
+export const Page = createComponent((_attribute, _style, child) =>
     Html(
-        { lang: attribute.lang },
+        { lang: site.lang },
         Head(
             {},
             Meta({ charset: "utf-8" }),
@@ -11,15 +17,15 @@ export const Page = createComponent<{ lang: string; title: string; description: 
                 content: "width=device-width,initial-scale=1.0",
             }),
 
-            Title({}, attribute.title),
+            Title({}, site.name),
             Script({ type: "module", src: "/reload.js" }, ""),
             Link({ href: "/default.css", rel: "stylesheet" }, ""),
         ),
         Body(
             { id: "top-of-page" },
-            Header({ class: ["page-header", "container"] }, H1({}, A({ href: "/" }, attribute.title))),
+            Header({ class: ["page-header", "container"] }, H1({}, A({ href: "/" }, site.name))),
             ...child,
-            Footer({ class: "page-footer" }, Div({ class: "page-footer-copyright" }, `&copy; 2025 ${attribute.title}`)),
+            Footer({ class: "page-footer" }, Div({ class: "page-footer-copyright" }, `&copy; 2025 ${site.name}`)),
         ),
     ),
 );
