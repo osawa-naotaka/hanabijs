@@ -1,5 +1,6 @@
-#!/usr/bin/env bun
+#!/usr/bin/env -S bun --watch
 
+import { exit } from "node:process";
 import { build } from "./cli/build";
 import { serve } from "./cli/serve";
 
@@ -8,6 +9,7 @@ async function main() {
 
     if (cmd === "build") {
         await build();
+        exit(0);
     } else if (cmd === "dev") {
         await serve();
     } else {

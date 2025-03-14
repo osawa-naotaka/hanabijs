@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { rmdir } from "node:fs/promises";
 import path from "node:path";
-import { cwd } from "node:process";
+import { cwd, exit } from "node:process";
 import { dist_subdir, page_subdir, public_subdir } from "../config";
 import { Link } from "../lib/component";
 import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
@@ -18,6 +18,10 @@ export async function build() {
         await rmdir(dist_dir, { recursive: true });
     }
 
+    if (!existsSync(page_dir)) {
+        console.log("hanabi: no page directory.");
+        exit(-1);
+    }
     for await (const file of globExt(page_dir, ".ts")) {
         let start = performance.now();
         const page_fn = await import(path.join(page_dir, file));
@@ -71,12 +75,12 @@ export async function build() {
     }
 
     // copy public
-    const start = performance.now();
-    for await (const src of globExt(public_dir, "")) {
-        const file = Bun.file(path.join(public_dir, src));
-        await Bun.write(path.join(dist_dir, src), file);
+    if (existsSync(public_dir)) {
+        const start = performance.now();
+        for await (const src of globExt(public_dir, "")) {
+            const file = Bun.file(path.join(public_dir, src));
+            await Bun.write(path.join(dist_dir, src), file);
+        }
+        console.log(`process public in ${(performance.now() - start).toFixed(2)}ms`);
     }
-    console.log(`process public in ${(performance.now() - start).toFixed(2)}ms`);
 }
-
-await build();

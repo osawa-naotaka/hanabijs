@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import path from "node:path";
 import type { Attribute } from "../lib/element";
 import { globExt } from "../lib/util";
@@ -17,15 +18,23 @@ export type Route = {
 export type Router = (req: Request) => Route | Error;
 
 export async function createPageRouter(rootdir: string): Promise<Router> {
-    const page_route_table = await createPageRouteTable(rootdir);
+    if (existsSync(rootdir)) {
+        const page_route_table = await createPageRouteTable(rootdir);
 
-    return (req) => pageRouter(page_route_table, new URL(req.url).pathname);
+        return (req) => pageRouter(page_route_table, new URL(req.url).pathname);
+    }
+
+    return () => new Error("Path Not Found.");
 }
 
 export async function createStaticRouter(rootdir: string): Promise<Router> {
-    const static_route_table = await createStaticRouteTable(rootdir);
+    if (existsSync(rootdir)) {
+        const static_route_table = await createStaticRouteTable(rootdir);
 
-    return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
+        return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
+    }
+
+    return () => new Error("Path Not Found.");
 }
 
 async function createPageRouteTable(rootdir: string): Promise<RouteTable[]> {

@@ -98,7 +98,7 @@ export function stringifyToCss(node: HNode): string {
     return [rulesToString(node), node.child.map(stringifyToCss).join("")].join("");
 }
 
-function rulesToString(elem: Elem): string {
+export function rulesToString(elem: Elem): string {
     const res: string[] = [];
     for (const rule of elem.style) {
         const selectors_string = rule.selectorlist.map(selectorToString(elem)).join(", ");

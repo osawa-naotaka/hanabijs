@@ -122,5 +122,3 @@ async function errorResponse(name: string, cause: string): Promise<Response> {
         headers: { "Content-Type": "text/html" },
     });
 }
-
-await serve();
