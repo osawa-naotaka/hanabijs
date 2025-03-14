@@ -21,17 +21,9 @@ const config: RollupOptions[] = [
         plugins: [typescript(), terser()],
     },
     {
-        input: "src/cli/build.ts",
+        input: "src/bin.ts",
         output: {
-            file: "build/hanabi-build.js",
-            format: "es",
-        },
-        plugins: [typescript(), terser()],
-    },
-    {
-        input: "src/cli/serve.ts",
-        output: {
-            file: "build/hanabi-serve.js",
+            file: "build/hanabi.js",
             format: "es",
         },
         plugins: [typescript(), terser()],

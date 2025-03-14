@@ -5,8 +5,7 @@
   "type": "module",
   "main": "build/hanabi-lib.js",
   "bin": {
-    "hanabi-build": "build/hanabi-build.js",
-    "hanabi-serve": "build/hanabi-serve.js"
+    "hanabi": "build/hanabi.js"
   },
   "types": "build/hanabi-lib.d.ts",
   "scripts": {

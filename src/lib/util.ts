@@ -1,11 +1,10 @@
-import { Glob } from "bun";
 
 export function replaceExt(filename: string, ext: string) {
     return filename.replace(/\.[^/.]+$/, ext);
 }
 
 export function globExt(base: string, ext: string): AsyncIterableIterator<string> {
-    const glob = new Glob(`**/*${ext}`);
+    const glob = new Bun.Glob(`**/*${ext}`);
     return glob.scan(base);
 }
 
