@@ -63,9 +63,7 @@ export async function serve() {
                             },
                         });
                     }
-                    return new Response(`${match_page.target_file} does not have default export.`, {
-                        status: 404,
-                    });
+                    return await errorResponse("500", `${match_page.target_file} does not have default export.`);
                 }
                 if (match_page.req_ext === ".css") {
                     const page = await import(path.join(page_dir, match_page.target_file));
