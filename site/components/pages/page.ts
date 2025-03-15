@@ -1,11 +1,14 @@
 import { registerComponent } from "@/lib/repository";
 import { Body, type HNode, Html, createStyles } from "@/main";
 import { appearence } from "@site/config/site.config";
-import { PageFooter } from "../sections/PageFooter";
-import { PageHeader } from "../sections/PageHeader";
+import { pageFooter } from "../sections/pageFooter";
+import { pageHeader } from "../sections/pageHeader";
 import { PageHead } from "./PageHead";
 
-export function Page(attribute: { title: string; description: string; lang: string; name: string }, ...child: HNode[]) {
+export function page(): (
+    attribute: { title: string; description: string; lang: string; name: string },
+    ...child: HNode[]
+) => HNode {
     registerComponent(
         "page",
         createStyles(
@@ -83,14 +86,17 @@ export function Page(attribute: { title: string; description: string; lang: stri
             ],
         ),
     );
-    return Html(
-        { lang: attribute.lang },
-        PageHead(attribute),
-        Body(
-            { id: "top-of-page" },
-            PageHeader({ title: attribute.name }),
-            ...child,
-            PageFooter({ site_name: attribute.name }),
-        ),
-    );
+    const PageHeader = pageHeader();
+    const PageFooter = pageFooter();
+    return (attribute, ...child) =>
+        Html(
+            { lang: attribute.lang },
+            PageHead(attribute),
+            Body(
+                { id: "top-of-page" },
+                PageHeader({ title: attribute.name }),
+                ...child,
+                PageFooter({ site_name: attribute.name }),
+            ),
+        );
 }

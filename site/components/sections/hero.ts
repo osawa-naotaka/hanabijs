@@ -3,7 +3,7 @@ import { Div, Em, createStyles } from "@/main";
 import type { HNode } from "@/main";
 import { appearence } from "@site/config/site.config";
 
-export function Hero(attribute: { class?: string }): HNode {
+export function hero(): (attribute: { class?: string }) => HNode {
     registerComponent(
         "hero",
         createStyles(
@@ -26,8 +26,9 @@ export function Hero(attribute: { class?: string }): HNode {
             ],
         ),
     );
-    return Div(
-        { class: `hero container ${attribute.class || ""}` },
-        Div({ class: "hero-text content" }, "LULLIECA", Em({}, "T"), " IS ", Em({}, "A"), "LIVE"),
+    return (attribute) =>
+        Div(
+            { class: `hero container ${attribute.class || ""}` },
+            Div({ class: "hero-text content" }, "LULLIECA", Em({}, "T"), " IS ", Em({}, "A"), "LIVE"),
     );
 }

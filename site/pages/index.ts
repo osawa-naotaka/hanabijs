@@ -4,8 +4,8 @@ import { cwd } from "node:process";
 import { globExt } from "@/lib/util";
 import { A, Li, Main, Ul } from "@/main";
 import type { HNode } from "@/main";
-import { Page } from "@site/components/pages/Page";
-import { Hero } from "@site/components/sections/Hero";
+import { page } from "@site/components/pages/page";
+import { hero } from "@site/components/sections/hero";
 import { posts_dir, site } from "@site/config/site.config";
 import matter from "gray-matter";
 
@@ -24,6 +24,9 @@ export default async function Top(): Promise<HNode> {
             }),
         )
     ).sort((a, b) => a.slug.localeCompare(b.slug));
+
+    const Page = page();
+    const Hero = hero();
 
     return Page(
         { title: site.name, description: site.description, lang: site.lang, name: site.name },

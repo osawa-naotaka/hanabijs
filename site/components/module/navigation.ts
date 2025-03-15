@@ -1,10 +1,10 @@
 import { registerComponent } from "@/lib/repository";
 import { A, Li, Nav, Ul, createStyles } from "@/main";
 import type { HNode } from "@/main";
-import { navigation } from "@site/config/site.config";
-import { SVGIcon } from "../element/SVGIcon";
+import { navitem } from "@site/config/site.config";
+import { svgIcon } from "../element/SvgIcon";
 
-export function Navigation(): HNode {
+export function navigation(): () => HNode {
     registerComponent(
         "navigation",
         createStyles(
@@ -28,12 +28,14 @@ export function Navigation(): HNode {
         ),
     );
 
-    return Nav(
-        { class: "navigation" },
-        Ul(
-            { class: "navigation-list" },
-            Li({}, A({ href: "/posts" }, "BLOG")),
-            ...navigation.map((item) => Li({}, A({ href: item.url, target: "__blank" }, SVGIcon({ name: item.icon })))),
-        ),
-    );
+    const SVGIcon = svgIcon();
+    return () =>
+        Nav(
+            { class: "navigation" },
+            Ul(
+                { class: "navigation-list" },
+                Li({}, A({ href: "/posts" }, "BLOG")),
+                ...navitem.map((item) => Li({}, A({ href: item.url, target: "__blank" }, SVGIcon({ name: item.icon })))),
+            ),
+        );
 }

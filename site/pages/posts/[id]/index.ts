@@ -5,7 +5,7 @@ import { markdownToHtml } from "@/lib/markdown";
 import { globExt } from "@/lib/util";
 import { Article, H2, Main, RawHTML } from "@/main";
 import type { Attribute, HNode } from "@/main";
-import { Page } from "@site/components/pages/Page";
+import { page } from "@site/components/pages/page";
 import { site } from "@site/config/site.config";
 import { posts_dir } from "@site/config/site.config";
 import matter from "gray-matter";
@@ -24,6 +24,7 @@ export default async function Top(arg: Attribute): Promise<HNode> {
 
     const raw_html = await markdownToHtml(markdown);
 
+    const Page = page();
     return Page(
         {
             title: `${data.title || ""} | ${site.name}`,

@@ -3,7 +3,7 @@ import { Div, Footer, createStyles } from "@/main";
 import type { HNode } from "@/main";
 import { appearence } from "@site/config/site.config";
 
-export function PageFooter(attribute: { class?: string; site_name: string }): HNode {
+export function pageFooter(): (attribute: { class?: string; site_name: string }) => HNode {
     registerComponent(
         "page-footer",
         createStyles(
@@ -34,9 +34,10 @@ export function PageFooter(attribute: { class?: string; site_name: string }): HN
             ],
         ),
     );
-    return Footer(
-        { class: `page-footer ${attribute.class || ""}` },
-        Div({ class: "page-footer-content" }),
-        Div({ class: "page-footer-copyright" }, `&copy; 2025 ${attribute.site_name}`),
-    );
+    return (attribute) =>
+        Footer(
+            { class: `page-footer ${attribute.class || ""}` },
+            Div({ class: "page-footer-content" }),
+            Div({ class: "page-footer-copyright" }, `&copy; 2025 ${attribute.site_name}`),
+        );
 }

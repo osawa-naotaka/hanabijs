@@ -10,7 +10,7 @@ type DrawerAttribute = {
     main: HNode[];
 };
 
-export function Drawer(attribute: DrawerAttribute): HNode {
+export function drawer(): (attribute: DrawerAttribute) => HNode {
     registerComponent(
         "drawer",
         createStyles(
@@ -64,18 +64,19 @@ export function Drawer(attribute: DrawerAttribute): HNode {
         ),
     );
 
-    return Div(
-        { class: `drawer ${attribute.class || ""}` },
-        Input({ class: "drawer-open-state", type: "checkbox", id: "drawer-toggle-button" }),
+    return (attribute) =>
         Div(
-            { class: "drawer-title" },
-            attribute.title,
+            { class: `drawer ${attribute.class || ""}` },
+            Input({ class: "drawer-open-state", type: "checkbox", id: "drawer-toggle-button" }),
             Div(
-                { class: "drawer-header-space" },
-                attribute.header_space,
-                Label({ class: "drawer-open-button", for: "drawer-toggle-button" }, attribute.menu_button),
+                { class: "drawer-title" },
+                attribute.title,
+                Div(
+                    { class: "drawer-header-space" },
+                    attribute.header_space,
+                    Label({ class: "drawer-open-button", for: "drawer-toggle-button" }, attribute.menu_button),
+                ),
             ),
-        ),
-        Div({ class: "drawer-content" }, ...attribute.main),
-    );
+            Div({ class: "drawer-content" }, ...attribute.main),
+        );
 }
