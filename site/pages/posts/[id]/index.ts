@@ -4,7 +4,7 @@ import { cwd } from "node:process";
 import { markdownToHtml } from "@/lib/markdown";
 import { globExt } from "@/lib/util";
 import { Article, H2, Main, RawHTML } from "@/main";
-import type { Attribute, HTopComponent } from "@/main";
+import type { Attribute, HNode } from "@/main";
 import { Page } from "@site/components/pages/Page";
 import { site } from "@site/config/site.config";
 import { posts_dir } from "@site/config/site.config";
@@ -15,30 +15,22 @@ export async function getStaticPaths() {
     return (await Array.fromAsync(items)).map((x) => ({ params: { id: path.basename(x, ".md") } }));
 }
 
-export default function Top(arg: Attribute): HTopComponent {
-    return {
-        name: "top",
-        attribute: {},
-        style: [],
-        using: [Page],
-        dom_gen: async () => {
-            const markdown =
-                arg.id === undefined ? "" : await readFile(path.join(cwd(), posts_dir, `${arg.id}.md`), "utf-8");
-            const { data } = matter(markdown);
+export default async function Top(arg: Attribute): Promise<HNode> {
+    const markdown =
+        arg === undefined || arg.id === undefined
+            ? ""
+            : await readFile(path.join(cwd(), posts_dir, `${arg.id}.md`), "utf-8");
+    const { data } = matter(markdown);
 
-            const raw_html = await markdownToHtml(markdown);
-            return Page.dom_gen(
-                {
-                    title: `${data.title || ""} | ${site.name}`,
-                    description: site.description,
-                    lang: site.lang,
-                    name: site.name,
-                },
-                Main(
-                    { class: "container" },
-                    Article({ class: "content" }, H2({}, data.title || ""), RawHTML({}, raw_html)),
-                ),
-            );
+    const raw_html = await markdownToHtml(markdown);
+
+    return Page(
+        {
+            title: `${data.title || ""} | ${site.name}`,
+            description: site.description,
+            lang: site.lang,
+            name: site.name,
         },
-    };
+        Main({ class: "container" }, Article({ class: "content" }, H2({}, data.title || ""), RawHTML({}, raw_html))),
+    );
 }

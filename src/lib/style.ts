@@ -93,20 +93,7 @@ export function isCompoundSelector(s: Selector): s is CompoundSelector {
 
 // Stringify
 export function stringifyToCss(components: HComponent[]): string {
-    const using_components = components.flatMap(listupUsing);
-    return using_components.map(rulesToString).join("");
-}
-
-function listupUsing(component: HComponent): HComponent[] {
-    const res = new Set<HComponent>();
-    res.add(component);
-    for (const child of component.using) {
-        for (const c of listupUsing(child)) {
-            res.add(c);
-        }
-    }
-
-    return Array.from(res);
+    return components.map(rulesToString).join("");
 }
 
 export function rulesToString(component: HComponent): string {

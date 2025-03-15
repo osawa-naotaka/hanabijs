@@ -1,11 +1,9 @@
+import { registerComponent } from "@/lib/repository";
 import { Img } from "@/main";
-import type { HComponent } from "@/main";
+import type { HNode } from "@/main";
 
-export const SVGIcon: HComponent<{ name: string; class?: string }> = {
-    name: "svgicon",
-    attribute: {},
-    style: [],
-    using: [],
-    dom_gen: (attribute) =>
-        Img({ src: `/images/icons/${attribute.name}-icon.svg`, name: attribute.name, class: attribute.class || "" }),
-};
+export function SVGIcon(attribute: { name: string }): HNode {
+    const name = `svg-icon-${attribute.name}`;
+    registerComponent(name, []);
+    return Img({ src: `/images/icons/${attribute.name}-icon.svg`, class: name });
+}

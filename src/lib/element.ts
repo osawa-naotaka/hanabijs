@@ -9,22 +9,9 @@ export type HElement<T extends Attribute = Attribute> = {
     child: HNode[];
 };
 
-export type HComponent<T extends Attribute = Attribute> = {
+export type HComponent = {
     name: string;
-    attribute: Attribute;
     style: StyleRule[];
-    // biome-ignore lint: ad-hock using any
-    using: HComponent<any>[];
-    dom_gen: HDomGenFn<T>;
-};
-
-export type HTopComponent<T extends Attribute = Attribute> = {
-    name: string;
-    attribute: T;
-    style: StyleRule[];
-    // biome-ignore lint: ad-hock using any
-    using: HComponent<any>[];
-    dom_gen: (arg: T) => Promise<HNode<T>>;
 };
 
 export type HDomGenFn<T extends Attribute = Attribute> = (attribute: T, ...child: HNode[]) => HNode;
@@ -70,31 +57,13 @@ export type Tag =
 
 export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 
-// Component
-export function createComponent<T extends Attribute>(
-    name: string,
-    attribute: T,
-    style: StyleRule[],
-    // biome-ignore lint: ad-hock using any
-    using: HComponent<any>[],
-    dom_gen: HDomGenFn<T>,
-): HComponent<T> {
-    return {
-        name,
-        attribute: addClassToAttribute<T>(attribute, name),
-        style,
-        using,
-        dom_gen,
-    };
-}
-
 // Element
 export function DOCTYPE(): string {
     return "<!DOCTYPE html>";
 }
 
 // add attribute
-function addClassToAttribute<T extends Attribute = Attribute>(attribute: T, className: string): T {
+export function addClassToAttribute<T extends Attribute = Attribute>(attribute: T, className: string): T {
     const new_attribute = JSON.parse(JSON.stringify(attribute));
     if (attribute.class !== undefined) {
         new_attribute.class = Array.isArray(attribute.class)

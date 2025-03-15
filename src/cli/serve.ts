@@ -1,14 +1,15 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
+import { createPageRouter, createStaticRouter } from "@/cli/route";
+import { page_subdir, public_subdir, site_subdir } from "@/config";
+import { Link, Script } from "@/lib/element";
+import { DOCTYPE, insertNodes, stringifyToHtml } from "@/lib/element";
+import { clearRepository, getRepository } from "@/lib/repository";
+import { createSelector, stringifyToCss } from "@/lib/style";
+import { contentType, replaceExt } from "@/lib/util";
 import { ErrorPage } from "@/page/error";
 import chokidar from "chokidar";
-import { page_subdir, public_subdir, site_subdir } from "../config";
-import { Link, Script } from "../lib/element";
-import { DOCTYPE, insertNodes, stringifyToHtml } from "../lib/element";
-import { createSelector, stringifyToCss } from "../lib/style";
-import { contentType, replaceExt } from "../lib/util";
-import { createPageRouter, createStaticRouter } from "./route";
 
 export async function serve() {
     const root = cwd();
@@ -43,11 +44,12 @@ export async function serve() {
             const match_page = page_router(req);
             if (!(match_page instanceof Error)) {
                 if (match_page.req_ext === "" || match_page.req_ext === ".html") {
+                    clearRepository();
                     const page_fn = await import(path.join(page_dir, match_page.target_file));
                     if (typeof page_fn.default === "function") {
                         const css_name = replaceExt(match_page.target_file, ".css");
-                        const top_component = page_fn.default(match_page.params);
-                        const html = insertNodes(await top_component.dom_gen(), createSelector(["*", " ", "head"]), [
+                        const top_component = await page_fn.default(match_page.params);
+                        const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
                             Script({ type: "module", src: "/reload.js" }, ""),
                             Link({ href: css_name, rel: "stylesheet" }, ""),
                         ]);
@@ -61,10 +63,11 @@ export async function serve() {
                     return await errorResponse("500", `${match_page.target_file} does not have default export.`);
                 }
                 if (match_page.req_ext === ".css") {
+                    clearRepository();
                     const page_fn = await import(path.join(page_dir, match_page.target_file));
                     if (typeof page_fn.default === "function") {
-                        const top_component = page_fn.default();
-                        return new Response(stringifyToCss(top_component.using), {
+                        await page_fn.default();
+                        return new Response(stringifyToCss(Array.from(getRepository().values())), {
                             headers: { "Content-Type": contentType(match_page.req_ext) },
                         });
                     }

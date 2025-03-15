@@ -2,11 +2,12 @@ import { existsSync } from "node:fs";
 import { rmdir } from "node:fs/promises";
 import path from "node:path";
 import { cwd, exit } from "node:process";
-import { dist_subdir, page_subdir, public_subdir } from "../config";
-import { Link } from "../lib/element";
-import { DOCTYPE, insertNodes, stringifyToHtml } from "../lib/element";
-import { createSelector, stringifyToCss } from "../lib/style";
-import { globExt, replaceExt } from "../lib/util";
+import { dist_subdir, page_subdir, public_subdir } from "@/config";
+import { Link } from "@/lib/element";
+import { DOCTYPE, insertNodes, stringifyToHtml } from "@/lib/element";
+import { clearRepository, getRepository } from "@/lib/repository";
+import { createSelector, stringifyToCss } from "@/lib/style";
+import { globExt, replaceExt } from "@/lib/util";
 
 export async function build() {
     const root = cwd();
@@ -24,6 +25,8 @@ export async function build() {
     }
     for await (const file of globExt(page_dir, ".ts")) {
         let start = performance.now();
+
+        clearRepository();
         const page_fn = await import(path.join(page_dir, file));
         if (typeof page_fn.default === "function") {
             const fullpath = path.join(dist_dir, file);
@@ -38,9 +41,9 @@ export async function build() {
                     const file_replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param.params[c]), file);
                     const replaced = path.join(dist_dir, file_replaced);
                     const html_name = replaceExt(replaced, ".html");
-                    const top_component = page_fn.default(param.params);
+                    const top_component = await page_fn.default(param.params);
                     const css_name = path.join("/", replaceExt(file, ".css"));
-                    const inserted = insertNodes(await top_component.dom_gen(), createSelector(["*", " ", "head"]), [
+                    const inserted = insertNodes(top_component, createSelector(["*", " ", "head"]), [
                         Link({ href: css_name, rel: "stylesheet" }, ""),
                     ]);
 
@@ -53,22 +56,21 @@ export async function build() {
 
                 const file_css = replaceExt(file, ".css");
                 const css_name = path.join(dist_dir, file_css);
-                const top_component = page_fn.default();
-                const css = stringifyToCss(top_component.using);
+                const css = stringifyToCss(Array.from(getRepository().values()));
                 Bun.write(css_name, css);
                 console.log(`process ${file_css} in ${(performance.now() - start).toFixed(2)}ms`);
             } else {
-                const top_component = page_fn.default();
+                const top_component = await page_fn.default();
                 const html_name = path.join(dist_dir, replaceExt(file, ".html"));
 
                 const css_name = path.join("/", replaceExt(file, ".css"));
-                const inserted = insertNodes(await top_component.dom_gen(), createSelector(["*", " ", "head"]), [
+                const inserted = insertNodes(top_component, createSelector(["*", " ", "head"]), [
                     Link({ href: css_name, rel: "stylesheet" }, ""),
                 ]);
 
                 const html = DOCTYPE() + stringifyToHtml(inserted);
                 Bun.write(html_name, html);
-                const css = stringifyToCss(top_component.using);
+                const css = stringifyToCss(Array.from(getRepository().values()));
                 Bun.write(path.join(dist_dir, css_name), css);
                 console.log(`process ${file} in ${(performance.now() - start).toFixed(2)}ms`);
             }
