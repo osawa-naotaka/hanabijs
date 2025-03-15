@@ -38,10 +38,10 @@ export const Page: HComponent<{ title: string; description: string; lang: string
             {
                 font_size: "18px",
                 font_family: [
-                    "Helvetica Neue",
+                    "'Helvetica Neue'",
                     "Arial",
-                    "Hiragino Kaku Gothic ProN",
-                    "Hiragino Sans",
+                    "'Hiragino Kaku Gothic ProN'",
+                    "'Hiragino Sans'",
                     "Meiryo",
                     "sans-serif",
                 ],
