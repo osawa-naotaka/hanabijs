@@ -6,8 +6,8 @@ type DrawerAttribute = {
     class?: string;
     title: HNode;
     header_space: HNode;
-    menu_button: HNode;
-    main: HNode[];
+    open_button: HNode;
+    content: HNode[];
 };
 
 export function drawer(): (attribute: DrawerAttribute) => HNode {
@@ -74,9 +74,9 @@ export function drawer(): (attribute: DrawerAttribute) => HNode {
                 Div(
                     { class: "drawer-header-space" },
                     attribute.header_space,
-                    Label({ class: "drawer-open-button", for: "drawer-toggle-button" }, attribute.menu_button),
+                    Label({ class: "drawer-open-button", for: "drawer-toggle-button" }, attribute.open_button),
                 ),
             ),
-            Div({ class: "drawer-content" }, ...attribute.main),
+            Div({ class: "drawer-content" }, ...attribute.content),
         );
 }

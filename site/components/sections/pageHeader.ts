@@ -29,8 +29,8 @@ export function pageHeader(): (attribute: { class?: string; title: string }) => 
                 class: "content",
                 title: H1({}, A({ href: "/" }, attribute.title)),
                 header_space: "",
-                menu_button: SvgIcon({ name: "menu-bar" }),
-                main: [Navigation()],
+                open_button: SvgIcon({ name: "menu-bar" }),
+                content: [Navigation()],
             }),
         );
 }
