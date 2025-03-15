@@ -1,6 +1,5 @@
-import type { ComplexSelector, CompoundSelector, Selector } from "./style";
+import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./style";
 import { isCompoundSelector } from "./style";
-import type { StyleRule } from "./style";
 
 export type Attribute = Record<string, unknown> & { class?: string | string[]; id?: string };
 
@@ -10,7 +9,26 @@ export type HElement<T extends Attribute = Attribute> = {
     child: HNode[];
 };
 
-export type HComponent<T extends Attribute = Attribute> = [HElement<T>, StyleRule[]];
+export type HComponent<T extends Attribute = Attribute> = {
+    name: string;
+    attribute: Attribute;
+    style: StyleRule[];
+    // biome-ignore lint: ad-hock using any
+    using: HComponent<any>[];
+    dom_gen: HDomGenFn<T>;
+};
+
+export type HTopComponent<T extends Attribute = Attribute> = {
+    name: string;
+    attribute: T;
+    style: StyleRule[];
+    // biome-ignore lint: ad-hock using any
+    using: HComponent<any>[];
+    dom_gen: (arg: T) => Promise<HNode<T>>;
+};
+
+export type HDomGenFn<T extends Attribute = Attribute> = (attribute: T, ...child: HNode[]) => HNode;
+
 export type HComponentFn<T extends Attribute = Attribute> = (attribute: T, ...child: HNode[]) => HComponent;
 
 export type Tag =
@@ -50,15 +68,24 @@ export type Tag =
     | "nav"
     | "em";
 
-export type HNode<T extends Attribute = Attribute> = string | HComponent<T>;
+export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 
 // Component
-export function createSemantic<T extends Attribute>(
-    className: string,
-    style: StyleRule[] = [],
-    tag: Tag = "div",
-): HComponentFn<T> {
-    return (attribute, ...child) => [{ tag, attribute: addClassToAttribute<T>(attribute, className), child }, style];
+export function createComponent<T extends Attribute>(
+    name: string,
+    attribute: T,
+    style: StyleRule[],
+    // biome-ignore lint: ad-hock using any
+    using: HComponent<any>[],
+    dom_gen: HDomGenFn<T>,
+): HComponent<T> {
+    return {
+        name,
+        attribute: addClassToAttribute<T>(attribute, name),
+        style,
+        using,
+        dom_gen,
+    };
 }
 
 // Element
@@ -67,7 +94,7 @@ export function DOCTYPE(): string {
 }
 
 // add attribute
-export function addClassToAttribute<T extends Attribute = Attribute>(attribute: T, className: string): T {
+function addClassToAttribute<T extends Attribute = Attribute>(attribute: T, className: string): T {
     const new_attribute = JSON.parse(JSON.stringify(attribute));
     if (attribute.class !== undefined) {
         new_attribute.class = Array.isArray(attribute.class)
@@ -84,13 +111,13 @@ export function stringifyToHtml(node: HNode): string {
     if (typeof node === "string") {
         return node;
     }
-    if (node[0].tag === "raw") {
-        return node[0].child.join("");
+    if (node.tag === "raw") {
+        return node.child.join("");
     }
-    if (node[0].child.length === 0) {
-        return `<${node[0].tag}${attributeToString(node[0].attribute)} />`;
+    if (node.child.length === 0) {
+        return `<${node.tag}${attributeToString(node.attribute)} />`;
     }
-    return `<${node[0].tag}${attributeToString(node[0].attribute)}>${node[0].child.map(stringifyToHtml).join("")}</${node[0].tag}>`;
+    return `<${node.tag}${attributeToString(node.attribute)}>${node.child.map(stringifyToHtml).join("")}</${node.tag}>`;
 }
 
 function attributeToString(attribute: Attribute): string {
@@ -107,21 +134,21 @@ function attributeToString(attribute: Attribute): string {
 }
 
 // Traverser
-export function selectComponent(nodes: HNode[], selector: Selector, search_deep = false): HComponent[] {
-    const result = new Set<HComponent>();
+export function selectNode(nodes: HNode[], selector: Selector, search_deep = false): HNode[] {
+    const result = new Set<HNode>();
 
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
         if (typeof node !== "string") {
             if (isCompoundSelector(selector)) {
-                if (matchCompoundSelector(selector, node[0])) {
+                if (matchCompoundSelector(selector, node)) {
                     result.add(node);
                 }
             } else {
-                if (matchCompoundSelector(selector.compound, node[0])) {
-                    selectComponentsCombinator(nodes, i, selector).map((e) => result.add(e));
+                if (matchCompoundSelector(selector.compound, node)) {
+                    selectNodeCombinator(nodes, i, selector).map((e) => result.add(e));
                 } else if (search_deep) {
-                    selectComponent(node[0].child, selector, true).map((e) => result.add(e));
+                    selectNode(node.child, selector, true).map((e) => result.add(e));
                 }
             }
         }
@@ -155,8 +182,8 @@ function hasClass(className: string, attribute: Attribute): boolean {
     return attribute.class.includes(className);
 }
 
-function selectComponentsCombinator(nodes: HNode[], index: number, selector: ComplexSelector): HComponent[] {
-    const result = new Set<HComponent>();
+function selectNodeCombinator(nodes: HNode[], index: number, selector: ComplexSelector): HNode[] {
+    const result = new Set<HNode>();
     const parent = nodes[index];
 
     if (typeof parent === "string") {
@@ -165,17 +192,17 @@ function selectComponentsCombinator(nodes: HNode[], index: number, selector: Com
 
     switch (selector.combinator) {
         case " ":
-            selectComponent(parent[0].child, selector.descendant, true).map((e) => result.add(e));
-            selectComponent(parent[0].child, selector, true).map((e) => result.add(e));
+            selectNode(parent.child, selector.descendant, true).map((e) => result.add(e));
+            selectNode(parent.child, selector, true).map((e) => result.add(e));
             break;
         case ">":
-            selectComponent(parent[0].child, selector.descendant).map((e) => result.add(e));
+            selectNode(parent.child, selector.descendant).map((e) => result.add(e));
             break;
         case "+":
             if (nodes.length > index + 1) {
                 const next_node = nodes[index + 1];
                 if (typeof next_node !== "string") {
-                    selectComponent([next_node], selector.descendant).map((e) => result.add(e));
+                    selectNode([next_node], selector.descendant).map((e) => result.add(e));
                 }
             }
             break;
@@ -183,7 +210,7 @@ function selectComponentsCombinator(nodes: HNode[], index: number, selector: Com
             for (let i = index + 1; i < nodes.length; i++) {
                 const next_node = nodes[i];
                 if (typeof next_node !== "string") {
-                    selectComponent([next_node], selector.descendant).map((e) => result.add(e));
+                    selectNode([next_node], selector.descendant).map((e) => result.add(e));
                 }
             }
             break;
@@ -200,31 +227,25 @@ export function insertNodes(root: HNode, selector: Selector, insert: HNode[], se
 
     if (typeof result !== "string") {
         if (isCompoundSelector(selector)) {
-            if (matchCompoundSelector(selector, result[0])) {
+            if (matchCompoundSelector(selector, result)) {
                 result = JSON.parse(JSON.stringify(root));
                 if (typeof result !== "string") {
-                    result[0].child.push(...insert);
+                    result.child.push(...insert);
                 }
             }
         } else {
-            if (matchCompoundSelector(selector.compound, result[0])) {
-                result = [
-                    {
-                        tag: result[0].tag,
-                        attribute: result[0].attribute,
-                        child: result[0].child.map((e) => insertNodesCombinator(e, selector, insert)),
-                    },
-                    result[1],
-                ];
+            if (matchCompoundSelector(selector.compound, result)) {
+                result = {
+                    tag: result.tag,
+                    attribute: result.attribute,
+                    child: result.child.map((e) => insertNodesCombinator(e, selector, insert)),
+                };
             } else if (search_deep) {
-                result = [
-                    {
-                        tag: result[0].tag,
-                        attribute: result[0].attribute,
-                        child: result[0].child.map((e) => insertNodes(e, selector, insert, true)),
-                    },
-                    result[1],
-                ];
+                result = {
+                    tag: result.tag,
+                    attribute: result.attribute,
+                    child: result.child.map((e) => insertNodes(e, selector, insert, true)),
+                };
             }
         }
     }
@@ -253,9 +274,9 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
     return result;
 }
 
-// HTML Element Components
-function gt<T extends Attribute = Attribute>(tag: Tag): HComponentFn<T> {
-    return (attribute, ...child) => [{ tag, attribute, child }, []];
+// HTML Element DOM Generator
+function gt<T extends Attribute = Attribute>(tag: Tag): HDomGenFn<T> {
+    return (attribute, ...child) => ({ tag, attribute, child });
 }
 
 export const Meta = gt("meta");

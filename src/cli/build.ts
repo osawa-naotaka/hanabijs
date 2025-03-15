@@ -38,9 +38,9 @@ export async function build() {
                     const file_replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param.params[c]), file);
                     const replaced = path.join(dist_dir, file_replaced);
                     const html_name = replaceExt(replaced, ".html");
-                    const page = await page_fn.default(param.params);
+                    const top_component = page_fn.default(param.params);
                     const css_name = path.join("/", replaceExt(file, ".css"));
-                    const inserted = insertNodes(page, createSelector(["*", " ", "head"]), [
+                    const inserted = insertNodes(await top_component.dom_gen(), createSelector(["*", " ", "head"]), [
                         Link({ href: css_name, rel: "stylesheet" }, ""),
                     ]);
 
@@ -53,21 +53,22 @@ export async function build() {
 
                 const file_css = replaceExt(file, ".css");
                 const css_name = path.join(dist_dir, file_css);
-                const css = stringifyToCss(await page_fn.default(param_list[0].params));
+                const top_component = page_fn.default();
+                const css = stringifyToCss(top_component.using);
                 Bun.write(css_name, css);
                 console.log(`process ${file_css} in ${(performance.now() - start).toFixed(2)}ms`);
             } else {
-                const page = await page_fn.default();
+                const top_component = page_fn.default();
                 const html_name = path.join(dist_dir, replaceExt(file, ".html"));
 
                 const css_name = path.join("/", replaceExt(file, ".css"));
-                const inserted = insertNodes(page, createSelector(["*", " ", "head"]), [
+                const inserted = insertNodes(await top_component.dom_gen(), createSelector(["*", " ", "head"]), [
                     Link({ href: css_name, rel: "stylesheet" }, ""),
                 ]);
 
                 const html = DOCTYPE() + stringifyToHtml(inserted);
                 Bun.write(html_name, html);
-                const css = stringifyToCss(page);
+                const css = stringifyToCss(top_component.using);
                 Bun.write(path.join(dist_dir, css_name), css);
                 console.log(`process ${file} in ${(performance.now() - start).toFixed(2)}ms`);
             }

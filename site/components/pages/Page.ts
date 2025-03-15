@@ -1,13 +1,13 @@
-import { Body, createSemantic, createStyles } from "@/main";
-import type { HComponentFn } from "@/main";
-import { appearence, site } from "@site/config/site.config";
+import { Body, type HComponent, Html, createStyles } from "@/main";
+import { appearence } from "@site/config/site.config";
 import { PageFooter } from "../sections/PageFooter";
 import { PageHeader } from "../sections/PageHeader";
 import { PageHead } from "./PageHead";
 
-const PageTop = createSemantic(
-    "html",
-    createStyles(
+export const Page: HComponent<{ title: string; description: string; lang: string; name: string }> = {
+    name: "page",
+    attribute: { class: "page" },
+    style: createStyles(
         // reset CSS
         [
             [["*"]],
@@ -81,12 +81,16 @@ const PageTop = createSemantic(
             },
         ],
     ),
-    "html",
-);
-
-export const Page: HComponentFn<{ title: string }> = (attribute, ...child) =>
-    PageTop(
-        { lang: site.lang },
-        PageHead(attribute),
-        Body({ id: "top-of-page" }, PageHeader({ title: site.name }), ...child, PageFooter({ site_name: site.name })),
-    );
+    using: [PageHead, PageHeader, PageFooter],
+    dom_gen: (attribute, ...child) =>
+        Html(
+            { lang: attribute.lang },
+            PageHead.dom_gen(attribute),
+            Body(
+                { id: "top-of-page" },
+                PageHeader.dom_gen({ title: attribute.name }),
+                ...child,
+                PageFooter.dom_gen({ site_name: attribute.name }),
+            ),
+        ),
+};

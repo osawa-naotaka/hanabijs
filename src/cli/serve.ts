@@ -43,17 +43,14 @@ export async function serve() {
             const match_page = page_router(req);
             if (!(match_page instanceof Error)) {
                 if (match_page.req_ext === "" || match_page.req_ext === ".html") {
-                    const page = await import(path.join(page_dir, match_page.target_file));
-                    if (typeof page.default === "function") {
+                    const page_fn = await import(path.join(page_dir, match_page.target_file));
+                    if (typeof page_fn.default === "function") {
                         const css_name = replaceExt(match_page.target_file, ".css");
-                        const html = insertNodes(
-                            await page.default(match_page.params),
-                            createSelector(["*", " ", "head"]),
-                            [
-                                Script({ type: "module", src: "/reload.js" }, ""),
-                                Link({ href: css_name, rel: "stylesheet" }, ""),
-                            ],
-                        );
+                        const top_component = page_fn.default(match_page.params);
+                        const html = insertNodes(await top_component.dom_gen(), createSelector(["*", " ", "head"]), [
+                            Script({ type: "module", src: "/reload.js" }, ""),
+                            Link({ href: css_name, rel: "stylesheet" }, ""),
+                        ]);
                         const html_text = DOCTYPE() + stringifyToHtml(html);
                         return new Response(html_text, {
                             headers: {
@@ -64,10 +61,10 @@ export async function serve() {
                     return await errorResponse("500", `${match_page.target_file} does not have default export.`);
                 }
                 if (match_page.req_ext === ".css") {
-                    const page = await import(path.join(page_dir, match_page.target_file));
-                    if (typeof page.default === "function") {
-                        const css = await page.default(match_page.params);
-                        return new Response(stringifyToCss(css), {
+                    const page_fn = await import(path.join(page_dir, match_page.target_file));
+                    if (typeof page_fn.default === "function") {
+                        const top_component = page_fn.default();
+                        return new Response(stringifyToCss(top_component.using), {
                             headers: { "Content-Type": contentType(match_page.req_ext) },
                         });
                     }

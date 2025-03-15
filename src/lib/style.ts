@@ -1,4 +1,4 @@
-import type { HComponent, HElement, HNode } from "./element";
+import type { HComponent } from "./element";
 
 // Style
 export type StyleRule = {
@@ -92,18 +92,27 @@ export function isCompoundSelector(s: Selector): s is CompoundSelector {
 }
 
 // Stringify
-export function stringifyToCss(node: HNode): string {
-    if (typeof node === "string") {
-        return "";
+export function stringifyToCss(components: HComponent[]): string {
+    const using_components = components.flatMap(listupUsing);
+    return using_components.map(rulesToString).join("");
+}
+
+function listupUsing(component: HComponent): HComponent[] {
+    const res = new Set<HComponent>();
+    res.add(component);
+    for (const child of component.using) {
+        for (const c of listupUsing(child)) {
+            res.add(c);
+        }
     }
 
-    return [rulesToString(node), node[0].child.map(stringifyToCss).join("")].join("");
+    return Array.from(res);
 }
 
 export function rulesToString(component: HComponent): string {
     const res: string[] = [];
-    for (const rule of component[1]) {
-        const selectors_string = rule.selectorlist.map(selectorToString(component[0])).join(", ");
+    for (const rule of component.style) {
+        const selectors_string = rule.selectorlist.map(selectorToString(component)).join(", ");
         const propaties_string = propatiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }
@@ -111,15 +120,14 @@ export function rulesToString(component: HComponent): string {
     return res.join("");
 }
 
-function stringifySelector(current: HElement, selector: CompoundSelector): string {
+function stringifySelector(current: HComponent, selector: CompoundSelector): string {
     if (selector.length === 1 && selector[0] === "&") {
-        const selfClass = Array.isArray(current.attribute.class) ? current.attribute.class[0] : current.attribute.class;
-        return `.${selfClass}`;
+        return `.${current.name}`;
     }
     return selector.join("");
 }
 
-function selectorToString(current: HElement): (selector: Selector) => string {
+function selectorToString(current: HComponent): (selector: Selector) => string {
     return (selector: Selector) => {
         if (isCompoundSelector(selector)) {
             return stringifySelector(current, selector);
