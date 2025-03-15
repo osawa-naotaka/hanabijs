@@ -3,7 +3,7 @@ import { rmdir } from "node:fs/promises";
 import path from "node:path";
 import { cwd, exit } from "node:process";
 import { dist_subdir, page_subdir, public_subdir } from "../config";
-import { Link } from "../lib/component";
+import { Link } from "../lib/element";
 import { DOCTYPE, insertNodes, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
 import { globExt, replaceExt } from "../lib/util";

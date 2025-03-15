@@ -1,9 +1,10 @@
-import { A, ComponentFn, createSemantic, style } from "@/main";
+import { A, type HComponentFn, createSemantic, style } from "@/main";
 import { SVGIcon } from "../element/SVGIcon";
 import { Drawer } from "../module/Drawer";
 import { Navigation } from "../module/Navigation";
 
-const PageHeaderTop = createSemantic("page-header", 
+const PageHeaderTop = createSemantic(
+    "page-header",
     style({
         position: "sticky",
         top: "0",
@@ -11,11 +12,12 @@ const PageHeaderTop = createSemantic("page-header",
         width: "100%",
         margin_block_end: "2rem",
     }),
-    "header");
+    "header",
+);
 
 const PageHeaderH1 = createSemantic("page-header-h1", style({ font_size: "2rem" }), "h1");
 
-export const PageHeader: ComponentFn<{ class?: string, title: string }> = (attribute) =>
+export const PageHeader: HComponentFn<{ class?: string; title: string }> = (attribute) =>
     PageHeaderTop(
         { class: new Array("container", attribute.class || "") },
         Drawer({

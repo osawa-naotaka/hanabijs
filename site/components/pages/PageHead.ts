@@ -1,7 +1,7 @@
-import { ComponentFn, Head, Link, Meta, Title } from "@/main";
+import { type HComponentFn, Head, Link, Meta, Title } from "@/main";
 import { site } from "@site/config/site.config";
 
-export const PageHead: ComponentFn<{ title: string }> = (attribute) =>
+export const PageHead: HComponentFn<{ title: string }> = (attribute) =>
     Head(
         {},
         // Global Metadata

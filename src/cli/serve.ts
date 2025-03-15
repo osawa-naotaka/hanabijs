@@ -4,7 +4,7 @@ import { cwd } from "node:process";
 import { ErrorPage } from "@/page/error";
 import chokidar from "chokidar";
 import { page_subdir, public_subdir, site_subdir } from "../config";
-import { Link, Script } from "../lib/component";
+import { Link, Script } from "../lib/element";
 import { DOCTYPE, insertNodes, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
 import { contentType, replaceExt } from "../lib/util";

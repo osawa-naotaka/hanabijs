@@ -1,5 +1,5 @@
 import type { HNode } from "@/main";
-import { H2, Main, P } from "../lib/component";
+import { H2, Main, P } from "../lib/element";
 import { Page } from "./Page";
 
 export async function ErrorPage(arg: { name: string; cause: string }): Promise<HNode> {

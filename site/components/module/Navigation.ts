@@ -1,15 +1,18 @@
-import { A, ComponentFn, createSemantic, style } from "@/main";
+import { A, type HComponentFn, createSemantic, style } from "@/main";
 import { navigation } from "@site/config/site.config";
 import { SVGIcon } from "../element/SVGIcon";
 
-const NavigationTop = createSemantic("navigation",
+const NavigationTop = createSemantic(
+    "navigation",
     style({
         font_weight: "bold",
         font_size: "1.4rem",
     }),
-    "nav");
+    "nav",
+);
 
-const NavigationList = createSemantic("navigation-list", 
+const NavigationList = createSemantic(
+    "navigation-list",
     style({
         display: "flex",
         justify_content: "center",
@@ -17,11 +20,12 @@ const NavigationList = createSemantic("navigation-list",
         list_style_type: "none",
         gap: "2rem",
     }),
-    "ul");
+    "ul",
+);
 
 const NavigationItem = createSemantic("navigation-item", [], "li");
 
-export const Navigation: ComponentFn = (attribute) =>
+export const Navigation: HComponentFn = (attribute) =>
     NavigationTop(
         { class: attribute.class || "" },
         NavigationList(

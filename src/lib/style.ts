@@ -1,7 +1,7 @@
-import type { Component, Elem, HNode } from "./element";
+import type { HComponent, HElement, HNode } from "./element";
 
 // Style
-export type Rule = {
+export type StyleRule = {
     selectorlist: SelectorList;
     properties: Properties;
 };
@@ -24,7 +24,9 @@ export type Combinator = " " | ">" | "+" | "~" | "||";
 
 export type Properties = Record<string, string[] | string>;
 
-export function createStyles(...rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]): Rule[] {
+export function createStyles(
+    ...rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]
+): StyleRule[] {
     return rules.map(([selectors, properties]) => ({
         selectorlist: selectors.map(createSelector),
         properties,
@@ -35,7 +37,7 @@ function isSelf(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "
     return typeof selector === "string" && selector === "&";
 }
 
-export function style(propaties: Properties): Rule[] {
+export function style(propaties: Properties): StyleRule[] {
     return [
         {
             selectorlist: [["&"]],
@@ -47,7 +49,7 @@ export function style(propaties: Properties): Rule[] {
 export function style1(
     selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&",
     propaties: Properties,
-): Rule {
+): StyleRule {
     return {
         selectorlist: isSelf(selector) ? [["&"]] : [createSelector(selector)],
         properties: propaties,
@@ -98,7 +100,7 @@ export function stringifyToCss(node: HNode): string {
     return [rulesToString(node), node[0].child.map(stringifyToCss).join("")].join("");
 }
 
-export function rulesToString(component: Component): string {
+export function rulesToString(component: HComponent): string {
     const res: string[] = [];
     for (const rule of component[1]) {
         const selectors_string = rule.selectorlist.map(selectorToString(component[0])).join(", ");
@@ -109,7 +111,7 @@ export function rulesToString(component: Component): string {
     return res.join("");
 }
 
-function stringifySelector(current: Elem, selector: CompoundSelector): string {
+function stringifySelector(current: HElement, selector: CompoundSelector): string {
     if (selector.length === 1 && selector[0] === "&") {
         const selfClass = Array.isArray(current.attribute.class) ? current.attribute.class[0] : current.attribute.class;
         return `.${selfClass}`;
@@ -117,7 +119,7 @@ function stringifySelector(current: Elem, selector: CompoundSelector): string {
     return selector.join("");
 }
 
-function selectorToString(current: Elem): (selector: Selector) => string {
+function selectorToString(current: HElement): (selector: Selector) => string {
     return (selector: Selector) => {
         if (isCompoundSelector(selector)) {
             return stringifySelector(current, selector);

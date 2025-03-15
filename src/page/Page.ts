@@ -1,4 +1,5 @@
-import { A, Body, ComponentFn, Div, Footer, H1, Head, Header, Html, Link, Meta, Script, Title } from "@/main";
+import { A, Body, Div, Footer, H1, Head, Header, Html, Link, Meta, Script, Title } from "@/main";
+import type { HComponentFn } from "@/main";
 
 const site = {
     lang: "en",
@@ -6,7 +7,7 @@ const site = {
     description: "fast, light-weight static site generator",
 };
 
-export const Page: ComponentFn = (_attribute, ...child) =>
+export const Page: HComponentFn = (_attribute, ...child) =>
     Html(
         { lang: site.lang },
         Head(
