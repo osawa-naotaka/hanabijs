@@ -4,7 +4,7 @@ import path from "node:path";
 import { cwd, exit } from "node:process";
 import { dist_subdir, page_subdir, public_subdir } from "../config";
 import { Link } from "../lib/component";
-import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
+import { DOCTYPE, insertNodes, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
 import { globExt, replaceExt } from "../lib/util";
 
@@ -40,7 +40,7 @@ export async function build() {
                     const html_name = replaceExt(replaced, ".html");
                     const page = await page_fn.default(param.params);
                     const css_name = path.join("/", replaceExt(file, ".css"));
-                    const inserted = insertElements(page, createSelector(["*", " ", "head"]), [
+                    const inserted = insertNodes(page, createSelector(["*", " ", "head"]), [
                         Link({ href: css_name, rel: "stylesheet" }, ""),
                     ]);
 
@@ -61,7 +61,7 @@ export async function build() {
                 const html_name = path.join(dist_dir, replaceExt(file, ".html"));
 
                 const css_name = path.join("/", replaceExt(file, ".css"));
-                const inserted = insertElements(page, createSelector(["*", " ", "head"]), [
+                const inserted = insertNodes(page, createSelector(["*", " ", "head"]), [
                     Link({ href: css_name, rel: "stylesheet" }, ""),
                 ]);
 

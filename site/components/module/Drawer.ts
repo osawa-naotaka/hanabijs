@@ -1,54 +1,58 @@
-import { Input, Label, createComponent, createSemantic, style, style1 } from "@/main";
-import type { HNode } from "@/main";
+import { createSemantic, style, style1 } from "@/main";
+import type { ComponentFn, HNode } from "@/main";
 
-const DrawerTop = createSemantic("drawer");
-const DrawerTitle = createSemantic("drawer-title");
-const DrawerHeaderSpace = createSemantic("drawer-header-space");
-const DrawerMenu = createSemantic("drawer-menu");
+const DrawerTop = createSemantic("drawer", style({ overflow: "hidden" }));
+const DrawerTitle = createSemantic("drawer-title",
+    style({
+        display: "flex",
+        justify_content: "space-between",
+        align_items: "center",
+    }));
+const DrawerHeaderSpace = createSemantic("drawer-header-space",
+    style({
+        display: "flex",
+        gap: "1rem",
+        align_items: "center",
+    }));
+const DrawerContent = createSemantic("drawer-content",
+    [
+        style1("&", {
+            height: "0",
+            transition: ["height", "0.25s"],
+        }),
+        style1([["#drawer-toggle-button", ":checked"], "~", "&"], {
+            height: "calc-size(fit-content, size)",
+        }),
+    ]);
+const DrawerOpenState = createSemantic("drawer-open-state", style({ display: "none" }), "input");
+const DrawerOpenButton = createSemantic("drawer-open-button", style({ cursor: "pointer" }), "label");
 
-export const Drawer = createComponent<{ title: HNode; header_space: HNode; menu_button: HNode; main: HNode[] }>(
+type DrawerAttribute = {
+    title: HNode;
+    header_space: HNode;
+    menu_button: HNode;
+    main: HNode[];
+};
+
+export const Drawer: ComponentFn<{ class?: string } & DrawerAttribute> =
     (attribute) =>
         DrawerTop(
-            { class: attribute.class },
-            style({ overflow: "hidden" }),
-            Input({ type: "checkbox", id: "drawer-toggle-button" }, [
-                style1(["#drawer-toggle-button"], { display: "none" }),
-            ]),
+            { class: attribute.class || "" },
+            DrawerOpenState({ type: "checkbox", id: "drawer-toggle-button" }),
             DrawerTitle(
                 {},
-                style({
-                    display: "flex",
-                    justify_content: "space-between",
-                    align_items: "center",
-                }),
                 attribute.title,
                 DrawerHeaderSpace(
                     {},
-                    style({
-                        display: "flex",
-                        gap: "1rem",
-                        align_items: "center",
-                    }),
                     attribute.header_space,
-                    Label(
+                    DrawerOpenButton(
                         { class: "drawer-menu-open", for: "drawer-toggle-button" },
-                        style({ cursor: "pointer" }),
-                        attribute.menu_button,
+                        attribute.menu_button
                     ),
                 ),
             ),
-            DrawerMenu(
+            DrawerContent(
                 {},
-                [
-                    style1("&", {
-                        height: "0",
-                        transition: ["height", "0.25s"],
-                    }),
-                    style1([["#drawer-toggle-button", ":checked"], "~", "&"], {
-                        height: "calc-size(fit-content, size)",
-                    }),
-                ],
                 ...attribute.main,
             ),
-        ),
-);
+        );

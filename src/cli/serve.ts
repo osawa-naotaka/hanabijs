@@ -5,7 +5,7 @@ import { ErrorPage } from "@/page/error";
 import chokidar from "chokidar";
 import { page_subdir, public_subdir, site_subdir } from "../config";
 import { Link, Script } from "../lib/component";
-import { DOCTYPE, insertElements, stringifyToHtml } from "../lib/element";
+import { DOCTYPE, insertNodes, stringifyToHtml } from "../lib/element";
 import { createSelector, stringifyToCss } from "../lib/style";
 import { contentType, replaceExt } from "../lib/util";
 import { createPageRouter, createStaticRouter } from "./route";
@@ -46,7 +46,7 @@ export async function serve() {
                     const page = await import(path.join(page_dir, match_page.target_file));
                     if (typeof page.default === "function") {
                         const css_name = replaceExt(match_page.target_file, ".css");
-                        const html = insertElements(
+                        const html = insertNodes(
                             await page.default(match_page.params),
                             createSelector(["*", " ", "head"]),
                             [

@@ -1,7 +1,7 @@
-import { Head, Link, Meta, Title, createComponent } from "@/main";
+import { ComponentFn, Head, Link, Meta, Title } from "@/main";
 import { site } from "@site/config/site.config";
 
-export const PageHead = createComponent<{ title: string }>((attribute) =>
+export const PageHead: ComponentFn<{ title: string }> = (attribute) =>
     Head(
         {},
         // Global Metadata
@@ -27,5 +27,4 @@ export const PageHead = createComponent<{ title: string }>((attribute) =>
             content:
                 "default-src 'self' 'unsafe-inline'; img-src 'self' https://img.youtube.com; frame-src https://www.youtube.com;",
         }),
-    ),
-);
+    );

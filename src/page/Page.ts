@@ -1,4 +1,4 @@
-import { A, Body, Div, Footer, H1, Head, Header, Html, Link, Meta, Script, Title, createComponent } from "@/main";
+import { A, Body, ComponentFn, Div, Footer, H1, Head, Header, Html, Link, Meta, Script, Title } from "@/main";
 
 const site = {
     lang: "en",
@@ -6,7 +6,7 @@ const site = {
     description: "fast, light-weight static site generator",
 };
 
-export const Page = createComponent((_attribute, _style, child) =>
+export const Page: ComponentFn = (_attribute, ...child) =>
     Html(
         { lang: site.lang },
         Head(
@@ -27,5 +27,4 @@ export const Page = createComponent((_attribute, _style, child) =>
             ...child,
             Footer({ class: "page-footer" }, Div({ class: "page-footer-copyright" }, `&copy; 2025 ${site.name}`)),
         ),
-    ),
-);
+    );

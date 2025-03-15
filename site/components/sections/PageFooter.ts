@@ -1,29 +1,30 @@
-import { createComponent, createSemantic, style } from "@/main";
+import { ComponentFn, createSemantic, style } from "@/main";
 import { appearence } from "@site/config/site.config";
 
-const PageFooterTop = createSemantic("page-footer", "footer");
-const PageFooterContent = createSemantic("page-footer-content");
-const PageFooterCopyright = createSemantic("page-footer-copyright");
+const PageFooterTop = createSemantic("page-footer", 
+    style({
+        position: "fixed",
+        bottom: "0",
+        left: "0",
+        width: "100%",
+        background_color: appearence.color.main,
+        color: appearence.color.background,
+    }),
+    "footer");
+const PageFooterContent = createSemantic("page-footer-content",
+    style({
+        position: "relative",
+        max_width: appearence.layout.content_width,
+        margin_inline: "auto",
+    }));
 
-export const PageFooter = createComponent<{ site_name: string }>((attribute) =>
+const PageFooterCopyright = createSemantic("page-footer-copyright", style({ text_align: "center" }));
+
+export const PageFooter: ComponentFn<{ class?: string, site_name: string }> = (attribute) =>
     PageFooterTop(
-        { class: attribute.class },
-        style({
-            position: "fixed",
-            bottom: "0",
-            left: "0",
-            width: "100%",
-            background_color: appearence.color.main,
-            color: appearence.color.background,
-        }),
+        { class: attribute.class || "" },
         PageFooterContent(
             {},
-            style({
-                position: "relative",
-                max_width: appearence.layout.content_width,
-                margin_inline: "auto",
-            }),
         ),
-        PageFooterCopyright({}, style({ text_align: "center" }), `&copy; 2025 ${attribute.site_name}`),
-    ),
-);
+        PageFooterCopyright({}, `&copy; 2025 ${attribute.site_name}`),
+    );

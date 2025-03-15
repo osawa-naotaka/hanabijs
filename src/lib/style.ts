@@ -1,4 +1,4 @@
-import type { Elem, HNode } from "./element";
+import type { Component, Elem, HNode } from "./element";
 
 // Style
 export type Rule = {
@@ -95,13 +95,13 @@ export function stringifyToCss(node: HNode): string {
         return "";
     }
 
-    return [rulesToString(node), node.child.map(stringifyToCss).join("")].join("");
+    return [rulesToString(node), node[0].child.map(stringifyToCss).join("")].join("");
 }
 
-export function rulesToString(elem: Elem): string {
+export function rulesToString(component: Component): string {
     const res: string[] = [];
-    for (const rule of elem.style) {
-        const selectors_string = rule.selectorlist.map(selectorToString(elem)).join(", ");
+    for (const rule of component[1]) {
+        const selectors_string = rule.selectorlist.map(selectorToString(component[0])).join(", ");
         const propaties_string = propatiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }

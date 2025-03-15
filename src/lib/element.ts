@@ -1,16 +1,18 @@
-import type { ComplexSelector, CompoundSelector, Rule, Selector } from "./style";
+import type { ComplexSelector, CompoundSelector, Selector } from "./style";
 import { isCompoundSelector } from "./style";
+import type { Rule } from "./style";
 
-export type Elem = {
+export type Attribute = Record<string, unknown> & { class?: string | string[], id?: string };
+
+export type Elem<T extends Attribute = Attribute> = {
     tag: Tag;
-    attribute: Attribute;
-    style: Rule[];
+    attribute: T;
     child: HNode[];
 };
 
-export type HOElem<A> = (arg: A) => Elem;
+export type Component<T extends Attribute = Attribute> = [Elem<T>, Rule[]];
+export type ComponentFn<T extends Attribute = Attribute> = (attribute: T, ...child: HNode[]) => Component;
 
-export type Attribute = Record<string, unknown>;
 
 export type Tag =
     | "raw"
@@ -49,77 +51,39 @@ export type Tag =
     | "nav"
     | "em";
 
-export type HNode = string | Elem;
+export type HNode<T extends Attribute = Attribute> = string | Component<T>;
 
 // Element
 export function DOCTYPE(): string {
     return "<!DOCTYPE html>";
 }
 
-export function createElem(tag: Tag, attribute: Attribute, args: (Rule[] | HNode)[]): Elem {
-    const { style, child } = classifyElemArgs(args);
-    return { tag, attribute, style, child };
+// add attribute
+export function addClassToAttribute<T extends Attribute = Attribute>(attribute: T, className: string): T {
+    const new_attribute = JSON.parse(JSON.stringify(attribute));
+    if (attribute.class !== undefined) {
+        new_attribute.class = Array.isArray(attribute.class)
+            ? [className, ...attribute.class]
+            : [className, attribute.class];
+    } else {
+        new_attribute.class = className;
+    }
+    return new_attribute;
 }
 
-export function classifyElemArgs(args: (Rule[] | HNode)[]): {
-    style: Rule[];
-    child: HNode[];
-} {
-    let style: Rule[] = [];
-    const child: HNode[] = [];
-
-    for (const arg of args) {
-        if (isNode(arg)) {
-            child.push(arg);
-        } else if (isStyle(arg)) {
-            style = arg;
-        }
-    }
-
-    return { style, child };
-}
-
-function isNode(arg: Rule[] | HNode): arg is HNode {
-    if (typeof arg === "string") {
-        return true;
-    }
-
-    if (Array.isArray(arg)) {
-        return false;
-    }
-
-    return (
-        Object.hasOwn(arg, "tag") &&
-        Object.hasOwn(arg, "attribute") &&
-        Object.hasOwn(arg, "style") &&
-        Object.hasOwn(arg, "child")
-    );
-}
-
-function isStyle(arg: Rule[] | HNode): arg is Rule[] {
-    if (Array.isArray(arg)) {
-        for (const a of arg) {
-            if (!Object.hasOwn(a, "selectorlist") || !Object.hasOwn(a, "properties")) {
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
-}
 
 // Strigify
 export function stringifyToHtml(node: HNode): string {
     if (typeof node === "string") {
         return node;
     }
-    if (node.tag === "raw") {
-        return node.child.join("");
+    if (node[0].tag === "raw") {
+        return node[0].child.join("");
     }
-    if (node.child.length === 0) {
-        return `<${node.tag}${attributeToString(node.attribute)} />`;
+    if (node[0].child.length === 0) {
+        return `<${node[0].tag}${attributeToString(node[0].attribute)} />`;
     }
-    return `<${node.tag}${attributeToString(node.attribute)}>${node.child.map(stringifyToHtml).join("")}</${node.tag}>`;
+    return `<${node[0].tag}${attributeToString(node[0].attribute)}>${node[0].child.map(stringifyToHtml).join("")}</${node[0].tag}>`;
 }
 
 function attributeToString(attribute: Attribute): string {
@@ -136,21 +100,21 @@ function attributeToString(attribute: Attribute): string {
 }
 
 // Traverser
-export function selectElements(nodes: HNode[], selector: Selector, search_deep = false): Elem[] {
-    const result = new Set<Elem>();
+export function selectComponent(nodes: HNode[], selector: Selector, search_deep = false): Component[] {
+    const result = new Set<Component>();
 
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
         if (typeof node !== "string") {
             if (isCompoundSelector(selector)) {
-                if (matchCompoundSelector(selector, node)) {
+                if (matchCompoundSelector(selector, node[0])) {
                     result.add(node);
                 }
             } else {
-                if (matchCompoundSelector(selector.compound, node)) {
-                    selectElementsCombinator(nodes, i, selector).map((e) => result.add(e));
+                if (matchCompoundSelector(selector.compound, node[0])) {
+                    selectComponentsCombinator(nodes, i, selector).map((e) => result.add(e));
                 } else if (search_deep) {
-                    selectElements(node.child, selector, true).map((e) => result.add(e));
+                    selectComponent(node[0].child, selector, true).map((e) => result.add(e));
                 }
             }
         }
@@ -184,8 +148,8 @@ function hasClass(className: string, attribute: Attribute): boolean {
     return attribute.class.includes(className);
 }
 
-function selectElementsCombinator(nodes: HNode[], index: number, selector: ComplexSelector): Elem[] {
-    const result = new Set<Elem>();
+function selectComponentsCombinator(nodes: HNode[], index: number, selector: ComplexSelector): Component[] {
+    const result = new Set<Component>();
     const parent = nodes[index];
 
     if (typeof parent === "string") {
@@ -194,17 +158,17 @@ function selectElementsCombinator(nodes: HNode[], index: number, selector: Compl
 
     switch (selector.combinator) {
         case " ":
-            selectElements(parent.child, selector.descendant, true).map((e) => result.add(e));
-            selectElements(parent.child, selector, true).map((e) => result.add(e));
+            selectComponent(parent[0].child, selector.descendant, true).map((e) => result.add(e));
+            selectComponent(parent[0].child, selector, true).map((e) => result.add(e));
             break;
         case ">":
-            selectElements(parent.child, selector.descendant).map((e) => result.add(e));
+            selectComponent(parent[0].child, selector.descendant).map((e) => result.add(e));
             break;
         case "+":
             if (nodes.length > index + 1) {
                 const next_node = nodes[index + 1];
                 if (typeof next_node !== "string") {
-                    selectElements([next_node], selector.descendant).map((e) => result.add(e));
+                    selectComponent([next_node], selector.descendant).map((e) => result.add(e));
                 }
             }
             break;
@@ -212,44 +176,42 @@ function selectElementsCombinator(nodes: HNode[], index: number, selector: Compl
             for (let i = index + 1; i < nodes.length; i++) {
                 const next_node = nodes[i];
                 if (typeof next_node !== "string") {
-                    selectElements([next_node], selector.descendant).map((e) => result.add(e));
+                    selectComponent([next_node], selector.descendant).map((e) => result.add(e));
                 }
             }
             break;
         default:
-            throw new Error("selectElementsCombinator: unsupported combinator.");
+            throw new Error("selectComponentsCombinator: unsupported combinator.");
     }
 
     return Array.from(result);
 }
 
 // Inserter
-export function insertElements(root: HNode, selector: Selector, insert: HNode[], search_deep = false): HNode {
+export function insertNodes(root: HNode, selector: Selector, insert: HNode[], search_deep = false): HNode {
     let result = root;
 
     if (typeof result !== "string") {
         if (isCompoundSelector(selector)) {
-            if (matchCompoundSelector(selector, result)) {
+            if (matchCompoundSelector(selector, result[0])) {
                 result = JSON.parse(JSON.stringify(root));
                 if (typeof result !== "string") {
-                    result.child.push(...insert);
+                    result[0].child.push(...insert);
                 }
             }
         } else {
-            if (matchCompoundSelector(selector.compound, result)) {
-                result = {
-                    tag: result.tag,
-                    attribute: result.attribute,
-                    style: result.style,
-                    child: result.child.map((e) => insertElementsCombinator(e, selector, insert)),
-                };
+            if (matchCompoundSelector(selector.compound, result[0])) {
+                result = [{
+                    tag: result[0].tag,
+                    attribute: result[0].attribute,
+                    child: result[0].child.map((e) => insertNodesCombinator(e, selector, insert)),
+                }, result[1]];
             } else if (search_deep) {
-                result = {
-                    tag: result.tag,
-                    attribute: result.attribute,
-                    style: result.style,
-                    child: result.child.map((e) => insertElements(e, selector, insert, true)),
-                };
+                result = [{
+                    tag: result[0].tag,
+                    attribute: result[0].attribute,
+                    child: result[0].child.map((e) => insertNodes(e, selector, insert, true)),
+                }, result[1]];
             }
         }
     }
@@ -257,7 +219,7 @@ export function insertElements(root: HNode, selector: Selector, insert: HNode[],
     return result;
 }
 
-function insertElementsCombinator(root: HNode, selector: ComplexSelector, insert: HNode[]): HNode {
+function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: HNode[]): HNode {
     let result = root;
 
     if (typeof result === "string") {
@@ -266,10 +228,10 @@ function insertElementsCombinator(root: HNode, selector: ComplexSelector, insert
 
     switch (selector.combinator) {
         case " ":
-            result = insertElements(result, selector.descendant, insert, true);
+            result = insertNodes(result, selector.descendant, insert, true);
             break;
         case ">":
-            result = insertElements(result, selector.descendant, insert);
+            result = insertNodes(result, selector.descendant, insert);
             break;
         default:
             throw new Error("insertElementsCombinator: unsupported combinator.");
