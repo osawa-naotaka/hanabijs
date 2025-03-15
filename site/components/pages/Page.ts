@@ -1,4 +1,5 @@
-import { Body, type HComponent, Html, createStyles } from "@/main";
+import { Body, Html, createStyles } from "@/main";
+import type { HComponent } from "@/main";
 import { appearence } from "@site/config/site.config";
 import { PageFooter } from "../sections/PageFooter";
 import { PageHeader } from "../sections/PageHeader";

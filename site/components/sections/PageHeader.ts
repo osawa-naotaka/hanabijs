@@ -1,4 +1,5 @@
-import { A, H1, type HComponent, Header, createStyles } from "@/main";
+import { A, H1, Header, createStyles } from "@/main";
+import type { HComponent } from "@/main";
 import { SVGIcon } from "../element/SVGIcon";
 import { Drawer } from "../module/Drawer";
 import { Navigation } from "../module/Navigation";

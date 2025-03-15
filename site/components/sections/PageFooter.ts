@@ -1,4 +1,5 @@
-import { Div, Footer, type HComponent, createStyles } from "@/main";
+import { Div, Footer, createStyles } from "@/main";
+import type { HComponent } from "@/main";
 import { appearence } from "@site/config/site.config";
 
 export const PageFooter: HComponent<{ class?: string; site_name: string }> = {

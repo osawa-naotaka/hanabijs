@@ -1,4 +1,5 @@
-import { Div, Em, type HComponent, createStyles } from "@/main";
+import { Div, Em, createStyles } from "@/main";
+import type { HComponent } from "@/main";
 import { appearence } from "@site/config/site.config";
 
 export const Hero: HComponent<{ class?: string }> = {

@@ -1,4 +1,5 @@
-import { type HComponent, Head, Link, Meta, Title } from "@/main";
+import { Head, Link, Meta, Title } from "@/main";
+import type { HComponent } from "@/main";
 
 export const PageHead: HComponent<{ title: string; description: string }> = {
     name: "page-head",
