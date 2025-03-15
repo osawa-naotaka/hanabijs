@@ -30,5 +30,5 @@ export function hero(): (attribute: { class?: string }) => HNode {
         Div(
             { class: `hero container ${attribute.class || ""}` },
             Div({ class: "hero-text content" }, "LULLIECA", Em({}, "T"), " IS ", Em({}, "A"), "LIVE"),
-    );
+        );
 }

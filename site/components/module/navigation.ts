@@ -28,14 +28,16 @@ export function navigation(): () => HNode {
         ),
     );
 
-    const SVGIcon = svgIcon();
+    const SvgIcon = svgIcon();
     return () =>
         Nav(
             { class: "navigation" },
             Ul(
                 { class: "navigation-list" },
                 Li({}, A({ href: "/posts" }, "BLOG")),
-                ...navitem.map((item) => Li({}, A({ href: item.url, target: "__blank" }, SVGIcon({ name: item.icon })))),
+                ...navitem.map((item) =>
+                    Li({}, A({ href: item.url, target: "__blank" }, SvgIcon({ name: item.icon }))),
+                ),
             ),
         );
 }
