@@ -5,7 +5,15 @@ import { svgIcon } from "../element/svgIcon";
 import { drawer } from "../module/drawer";
 import { navigation } from "../module/navigation";
 
-export function pageHeader(): (attribute: { title: string } & Attribute) => HNode {
+export type PageHeaderAttribute = {
+    title: string;
+    navitem: {
+        url: string;
+        icon: string;
+    }[];
+} & Attribute;
+
+export function pageHeader(): (attribute: PageHeaderAttribute) => HNode {
     registerComponent("page-header", [
         style("&", {
             position: "sticky",
@@ -27,7 +35,7 @@ export function pageHeader(): (attribute: { title: string } & Attribute) => HNod
                 title: H1({}, A({ href: "/" }, attribute.title)),
                 header_space: "",
                 open_button: SvgIcon({ name: "menu-bar" }),
-                content: [Navigation({})],
+                content: [Navigation(attribute)],
             }),
         );
 }

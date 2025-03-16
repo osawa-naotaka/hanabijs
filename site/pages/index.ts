@@ -6,7 +6,7 @@ import { A, Li, Main, Ul } from "@/main";
 import type { HNode } from "@/main";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
-import { posts_dir, site } from "@site/config/site.config";
+import { navitem, posts_dir, site } from "@site/config/site.config";
 import matter from "gray-matter";
 
 export default async function Top(): Promise<HNode> {
@@ -29,7 +29,7 @@ export default async function Top(): Promise<HNode> {
     const Hero = hero();
 
     return Page(
-        { title: site.name, description: site.description, lang: site.lang, name: site.name },
+        { title: site.name, description: site.description, lang: site.lang, name: site.name, navitem: navitem },
         Hero({}),
         Main(
             { class: "container" },

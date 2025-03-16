@@ -11,6 +11,10 @@ export type PageAttribute = {
     description: string;
     lang: string;
     name: string;
+    navitem: {
+        url: string;
+        icon: string;
+    }[];
 } & Attribute;
 
 export function page(): (attribute: PageAttribute, ...child: HNode[]) => HNode {
@@ -71,7 +75,7 @@ export function page(): (attribute: PageAttribute, ...child: HNode[]) => HNode {
             PageHead(attribute),
             Body(
                 { id: "top-of-page" },
-                PageHeader({ title: attribute.name }),
+                PageHeader({ title: attribute.name, navitem: attribute.navitem }),
                 ...child,
                 PageFooter({ site_name: attribute.name }),
             ),

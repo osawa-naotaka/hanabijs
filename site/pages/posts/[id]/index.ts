@@ -6,7 +6,7 @@ import { globExt } from "@/lib/util";
 import { Article, H2, Main, RawHTML } from "@/main";
 import type { Attribute, HNode } from "@/main";
 import { page } from "@site/components/pages/page";
-import { site } from "@site/config/site.config";
+import { navitem, site } from "@site/config/site.config";
 import { posts_dir } from "@site/config/site.config";
 import matter from "gray-matter";
 
@@ -31,6 +31,7 @@ export default async function Top(arg: Attribute): Promise<HNode> {
             description: site.description,
             lang: site.lang,
             name: site.name,
+            navitem: navitem,
         },
         Main({ class: "container" }, Article({ class: "content" }, H2({}, data.title || ""), RawHTML({}, raw_html))),
     );

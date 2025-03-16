@@ -15,8 +15,8 @@ import {
     Section,
     Span,
     Title,
-} from "../src/lib/component";
-import { insertElements, selectElements } from "../src/lib/element";
+} from "../src/lib/element";
+import { insertNodes, selectNode } from "../src/lib/element";
 import { createSelector, rulesToString } from "../src/lib/style";
 
 describe("createSelector test", () => {
@@ -36,12 +36,10 @@ describe("ruleToString test", () => {
     test("Sigle Selector, string", () => {
         expect(
             rulesToString({
-                tag: "div",
+                component_name: "div",
                 style: [
                     { selectorlist: [createSelector(["div"])], properties: { color: "red", border_radius: "10px" } },
                 ],
-                attribute: {},
-                child: [],
             }),
         ).toEqual("div { color: red; border-radius: 10px; }\n");
     });
@@ -49,15 +47,13 @@ describe("ruleToString test", () => {
     test("Single Selector, Combinator, Single Selector", () => {
         expect(
             rulesToString({
-                tag: "div",
+                component_name: "div",
                 style: [
                     {
                         selectorlist: [createSelector(["div", ">", ".show"])],
                         properties: { color: "red", border_radius: "10px" },
                     },
                 ],
-                attribute: {},
-                child: [],
             }),
         ).toEqual("div > .show { color: red; border-radius: 10px; }\n");
     });
@@ -65,15 +61,13 @@ describe("ruleToString test", () => {
     test("Single Selector, Combinator, Single Selector", () => {
         expect(
             rulesToString({
-                tag: "div",
+                component_name: "div",
                 style: [
                     {
                         selectorlist: [createSelector(["div", " ", ".show"])],
                         properties: { color: "red", border_radius: "10px" },
                     },
                 ],
-                attribute: {},
-                child: [],
             }),
         ).toEqual("div .show { color: red; border-radius: 10px; }\n");
     });
@@ -82,151 +76,131 @@ describe("ruleToString test", () => {
 describe("selectElement test", () => {
     const root = Html(
         { lang: "ja" },
-        [],
-        Head({}, [], Title({}, [], "title")),
+        Head({}, Title({}, "title")),
         Body(
             {},
-            [],
-            Header({ class: "page-header" }, [], H1({}, [], "header")),
+            Header({ class: "page-header" }, H1({}, "header")),
             Main(
                 {},
-                [],
                 Section(
                     { class: "content articles" },
-                    [],
-                    H2({}, [], "blog"),
+                    H2({}, "blog"),
                     Article(
                         {},
-                        [],
-                        Header({}, [], H3({ class: "article-title" }, [], "article title 1")),
-                        Header({}, [], H3({ class: "article-title" }, [], "article title 1")),
-                        Section({}, [], P({}, [], "text1"), P({}, [], "text2")),
-                        Section({}, [], P({}, [], "text3"), P({}, [], "text4")),
-                        Footer({}, [], Span({ class: "tag" }, [], "tag1"), Span({ class: "tag" }, [], "tag2")),
+                        Header({}, H3({ class: "article-title" }, "article title 1")),
+                        Header({}, H3({ class: "article-title" }, "article title 1")),
+                        Section({}, P({}, "text1"), P({}, "text2")),
+                        Section({}, P({}, "text3"), P({}, "text4")),
+                        Footer({}, Span({ class: "tag" }, "tag1"), Span({ class: "tag" }, "tag2")),
                     ),
                     Article(
                         {},
-                        [],
-                        Header({}, [], H3({ class: "article-title" }, [], "article title 2")),
-                        Section({}, [], P({}, [], "text5"), P({}, [], "text6")),
-                        Section({}, [], P({}, [], "text7"), P({ class: "page-header" }, [], "text8")),
-                        Footer({}, [], Span({ class: "tag" }, [], "tag3"), Span({ class: "tag" }, [], "tag4")),
+                        Header({}, H3({ class: "article-title" }, "article title 2")),
+                        Section({}, P({}, "text5"), P({}, "text6")),
+                        Section({}, P({}, "text7"), P({ class: "page-header" }, "text8")),
+                        Footer({}, Span({ class: "tag" }, "tag3"), Span({ class: "tag" }, "tag4")),
                     ),
                 ),
             ),
-            Footer({ class: "page-footer" }, [], "&amp; lulliecat"),
+            Footer({ class: "page-footer" }, "&amp; lulliecat"),
         ),
     );
 
     test("select div, results in no elements", () =>
-        expect(selectElements([root], createSelector(["*", " ", "div"]))).toEqual([]));
+        expect(selectNode([root], createSelector(["*", " ", "div"]))).toEqual([]));
 
-    test("select h1", () =>
-        expect(selectElements([root], createSelector(["*", " ", "h1"]))).toEqual([H1({}, [], "header")]));
+    test("select h1", () => expect(selectNode([root], createSelector(["*", " ", "h1"]))).toEqual([H1({}, "header")]));
 
     test("select headers", () =>
-        expect(selectElements([root], createSelector(["*", " ", "header"]))).toEqual([
-            Header({ class: "page-header" }, [], H1({}, [], "header")),
-            Header({}, [], H3({ class: "article-title" }, [], "article title 1")),
-            Header({}, [], H3({ class: "article-title" }, [], "article title 1")),
-            Header({}, [], H3({ class: "article-title" }, [], "article title 2")),
+        expect(selectNode([root], createSelector(["*", " ", "header"]))).toEqual([
+            Header({ class: "page-header" }, H1({}, "header")),
+            Header({}, H3({ class: "article-title" }, "article title 1")),
+            Header({}, H3({ class: "article-title" }, "article title 1")),
+            Header({}, H3({ class: "article-title" }, "article title 2")),
         ]));
 
     test("select article header", () =>
-        expect(selectElements([root], createSelector(["*", " ", "article", " ", "header"]))).toEqual([
-            Header({}, [], H3({ class: "article-title" }, [], "article title 1")),
-            Header({}, [], H3({ class: "article-title" }, [], "article title 1")),
-            Header({}, [], H3({ class: "article-title" }, [], "article title 2")),
+        expect(selectNode([root], createSelector(["*", " ", "article", " ", "header"]))).toEqual([
+            Header({}, H3({ class: "article-title" }, "article title 1")),
+            Header({}, H3({ class: "article-title" }, "article title 1")),
+            Header({}, H3({ class: "article-title" }, "article title 2")),
         ]));
 
     test("select body > header", () =>
-        expect(selectElements([root], createSelector(["*", " ", "body", ">", "header"]))).toEqual([
-            Header({ class: "page-header" }, [], H1({}, [], "header")),
+        expect(selectNode([root], createSelector(["*", " ", "body", ">", "header"]))).toEqual([
+            Header({ class: "page-header" }, H1({}, "header")),
         ]));
 
     test("select .page-header", () =>
-        expect(selectElements([root], createSelector(["*", " ", ".page-header"]))).toEqual([
-            Header({ class: "page-header" }, [], H1({}, [], "header")),
-            P({ class: "page-header" }, [], "text8"),
+        expect(selectNode([root], createSelector(["*", " ", ".page-header"]))).toEqual([
+            Header({ class: "page-header" }, H1({}, "header")),
+            P({ class: "page-header" }, "text8"),
         ]));
 
     test("select header.page-header", () =>
-        expect(selectElements([root], createSelector(["*", " ", ["header", ".page-header"]]))).toEqual([
-            Header({ class: "page-header" }, [], H1({}, [], "header")),
+        expect(selectNode([root], createSelector(["*", " ", ["header", ".page-header"]]))).toEqual([
+            Header({ class: "page-header" }, H1({}, "header")),
         ]));
 
     test("select section > * + *", () =>
-        expect(selectElements([root], createSelector(["*", " ", "section", ">", "*", "+", "*"]))).toEqual([
+        expect(selectNode([root], createSelector(["*", " ", "section", ">", "*", "+", "*"]))).toEqual([
             Article(
                 {},
-                [],
-                Header({}, [], H3({ class: "article-title" }, [], "article title 1")),
-                Header({}, [], H3({ class: "article-title" }, [], "article title 1")),
-                Section({}, [], P({}, [], "text1"), P({}, [], "text2")),
-                Section({}, [], P({}, [], "text3"), P({}, [], "text4")),
-                Footer({}, [], Span({ class: "tag" }, [], "tag1"), Span({ class: "tag" }, [], "tag2")),
+                Header({}, H3({ class: "article-title" }, "article title 1")),
+                Header({}, H3({ class: "article-title" }, "article title 1")),
+                Section({}, P({}, "text1"), P({}, "text2")),
+                Section({}, P({}, "text3"), P({}, "text4")),
+                Footer({}, Span({ class: "tag" }, "tag1"), Span({ class: "tag" }, "tag2")),
             ),
             Article(
                 {},
-                [],
-                Header({}, [], H3({ class: "article-title" }, [], "article title 2")),
-                Section({}, [], P({}, [], "text5"), P({}, [], "text6")),
-                Section({}, [], P({}, [], "text7"), P({ class: "page-header" }, [], "text8")),
-                Footer({}, [], Span({ class: "tag" }, [], "tag3"), Span({ class: "tag" }, [], "tag4")),
+                Header({}, H3({ class: "article-title" }, "article title 2")),
+                Section({}, P({}, "text5"), P({}, "text6")),
+                Section({}, P({}, "text7"), P({ class: "page-header" }, "text8")),
+                Footer({}, Span({ class: "tag" }, "tag3"), Span({ class: "tag" }, "tag4")),
             ),
-            P({}, [], "text2"),
-            P({}, [], "text4"),
-            P({}, [], "text6"),
-            P({ class: "page-header" }, [], "text8"),
+            P({}, "text2"),
+            P({}, "text4"),
+            P({}, "text6"),
+            P({ class: "page-header" }, "text8"),
         ]));
 });
 
 describe("selectElement test", () => {
     const root = Html(
         { lang: "ja" },
-        [],
-        Head({}, [], Title({}, [], "title")),
+        Head({}, Title({}, "title")),
         Body(
             {},
-            [],
-            Header({ class: "page-header" }, [], H1({}, [], "header")),
-            Footer({ class: "page-footer" }, [], "&amp; lulliecat"),
+            Header({ class: "page-header" }, H1({}, "header")),
+            Footer({ class: "page-footer" }, "&amp; lulliecat"),
         ),
     );
 
     const insert = [Script({ type: "module", src: ".hmr.js" })];
 
     test("insert script to head", () =>
-        expect(insertElements(root, createSelector(["*", " ", "head"]), insert)).toEqual(
+        expect(insertNodes(root, createSelector(["*", " ", "head"]), insert)).toEqual(
             Html(
                 { lang: "ja" },
-                [],
-                Head({}, [], Title({}, [], "title"), Script({ type: "module", src: ".hmr.js" })),
+                Head({}, Title({}, "title"), Script({ type: "module", src: ".hmr.js" })),
                 Body(
                     {},
-                    [],
-                    Header({ class: "page-header" }, [], H1({}, [], "header")),
-                    Footer({ class: "page-footer" }, [], "&amp; lulliecat"),
+                    Header({ class: "page-header" }, H1({}, "header")),
+                    Footer({ class: "page-footer" }, "&amp; lulliecat"),
                 ),
             ),
         ));
 
     test("insert script to header", () =>
-        expect(insertElements(root, createSelector(["*", " ", "body", ">", "header"]), insert)).toEqual(
+        expect(insertNodes(root, createSelector(["*", " ", "body", ">", "header"]), insert)).toEqual(
             Html(
                 { lang: "ja" },
-                [],
-                Head({}, [], Title({}, [], "title")),
+                Head({}, Title({}, "title")),
                 Body(
                     {},
-                    [],
-                    Header(
-                        { class: "page-header" },
-                        [],
-                        H1({}, [], "header"),
-                        Script({ type: "module", src: ".hmr.js" }),
-                    ),
-                    Footer({ class: "page-footer" }, [], "&amp; lulliecat"),
+                    Header({ class: "page-header" }, H1({}, "header"), Script({ type: "module", src: ".hmr.js" })),
+                    Footer({ class: "page-footer" }, "&amp; lulliecat"),
                 ),
             ),
         ));

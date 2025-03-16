@@ -1,10 +1,16 @@
 import { registerComponent } from "@/lib/repository";
 import { A, createSemantic, createSimpleSemantic, style } from "@/main";
 import type { Attribute, HNode } from "@/main";
-import { navitem } from "@site/config/site.config";
 import { svgIcon } from "../element/svgIcon";
 
-export function navigation(): (attribute: Attribute) => HNode {
+export type NavigationAttribute = {
+    navitem: {
+        url: string;
+        icon: string;
+    }[];
+} & Attribute;
+
+export function navigation(): (attribute: NavigationAttribute) => HNode {
     registerComponent("navigation", [
         style(".navigation", {
             font_weight: "bold",
@@ -29,7 +35,7 @@ export function navigation(): (attribute: Attribute) => HNode {
             { class: attribute.class },
             NavigationList(
                 NavigationListItem(A({ href: "/posts" }, "BLOG")),
-                ...navitem.map((item) =>
+                ...attribute.navitem.map((item) =>
                     NavigationListItem(A({ href: item.url, target: "__blank" }, SvgIcon({ name: item.icon }))),
                 ),
             ),
