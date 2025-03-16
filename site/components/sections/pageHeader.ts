@@ -1,24 +1,21 @@
 import { registerComponent } from "@/lib/repository";
-import { A, H1, createSimpleSemantic, createStyles } from "@/main";
+import { A, H1, createSimpleSemantic, style } from "@/main";
 import type { Attribute, HNode } from "@/main";
 import { svgIcon } from "../element/svgIcon";
 import { drawer } from "../module/drawer";
 import { navigation } from "../module/navigation";
 
 export function pageHeader(): (attribute: { title: string } & Attribute) => HNode {
-    registerComponent(
-        "page-header",
-        createStyles([
-            [[".page-header"]],
-            {
-                position: "sticky",
-                top: "0",
-                left: "0",
-                width: "100%",
-                margin_block_end: "2rem",
-            },
-        ]),
-    );
+    registerComponent("page-header", [
+        style("&", {
+            position: "sticky",
+            top: "0",
+            left: "0",
+            width: "100%",
+            margin_block_end: "2rem",
+        }),
+    ]);
+
     const Drawer = drawer();
     const SvgIcon = svgIcon();
     const Navigation = navigation();

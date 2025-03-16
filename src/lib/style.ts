@@ -37,7 +37,7 @@ function isSelf(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "
     return typeof selector === "string" && selector === "&";
 }
 
-export function style(propaties: Properties): StyleRule[] {
+export function selfStyle(propaties: Properties): StyleRule[] {
     return [
         {
             selectorlist: [["&"]],
@@ -46,7 +46,14 @@ export function style(propaties: Properties): StyleRule[] {
     ];
 }
 
-export function style1(
+export function style(selector: SimpleSelector | "&", propaties: Properties): StyleRule {
+    return {
+        selectorlist: selector === "&" ? [["&"]] : [createSelector([selector])],
+        properties: propaties,
+    };
+}
+
+export function compoundStyle(
     selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&",
     propaties: Properties,
 ): StyleRule {

@@ -1,4 +1,4 @@
-import { A, Body, createSimpleSemantic, H1, Head, Html, Link, Meta, Script, Title } from "@/main";
+import { A, Body, H1, Head, Html, Link, Meta, Script, Title, createSimpleSemantic } from "@/main";
 import type { Attribute, HNode } from "@/main";
 
 const site = {
@@ -8,7 +8,7 @@ const site = {
 };
 
 export function page(): (attribute: Attribute, ...child: HNode[]) => HNode {
-    const PageHeader = createSimpleSemantic("page-header", { class_names: ["container"] , tag: "header" });
+    const PageHeader = createSimpleSemantic("page-header", { class_names: ["container"], tag: "header" });
     const PageFooter = createSimpleSemantic("page-footer", { tag: "footer" });
     const PageFooterCopyright = createSimpleSemantic("page-footer-copyright");
 

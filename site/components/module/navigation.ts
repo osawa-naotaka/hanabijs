@@ -1,32 +1,23 @@
 import { registerComponent } from "@/lib/repository";
-import { A, createSemantic, createSimpleSemantic, createStyles } from "@/main";
+import { A, createSemantic, createSimpleSemantic, style } from "@/main";
 import type { Attribute, HNode } from "@/main";
 import { navitem } from "@site/config/site.config";
 import { svgIcon } from "../element/svgIcon";
 
 export function navigation(): (attribute: Attribute) => HNode {
-    registerComponent(
-        "navigation",
-        createStyles(
-            [
-                [[".navigation"]],
-                {
-                    font_weight: "bold",
-                    font_size: "1.4rem",
-                },
-            ],
-            [
-                [[".navigation-list"]],
-                {
-                    display: "flex",
-                    justify_content: "center",
-                    align_items: "center",
-                    list_style_type: "none",
-                    gap: "2rem",
-                },
-            ],
-        ),
-    );
+    registerComponent("navigation", [
+        style(".navigation", {
+            font_weight: "bold",
+            font_size: "1.4rem",
+        }),
+        style(".navigation-list", {
+            display: "flex",
+            justify_content: "center",
+            align_items: "center",
+            list_style_type: "none",
+            gap: "2rem",
+        }),
+    ]);
 
     const Navigation = createSemantic("navigation", { tag: "nav" });
     const NavigationList = createSimpleSemantic("navigation-list", { tag: "ul" });
