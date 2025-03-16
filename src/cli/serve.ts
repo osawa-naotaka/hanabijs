@@ -11,6 +11,9 @@ import { createSelector, stringifyToCss } from "@/lib/style";
 import { contentType, replaceExt } from "@/lib/util";
 import { ErrorPage } from "@/page/error";
 import chokidar from "chokidar";
+import { rollup } from "rollup";
+import virtual from "@rollup/plugin-virtual";
+import typescript from "@rollup/plugin-typescript";
 
 export async function serve() {
     const root = cwd();
@@ -54,6 +57,7 @@ export async function serve() {
                         const top_component = await root_page_fn(match_page.params);
                         const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
                             Script({ type: "module", src: "/reload.js" }, ""),
+                            Script({ type: "module", src: "/glue.js" }, ""),
                             Link({ href: css_name, rel: "stylesheet" }, ""),
                         ]);
                         const html_text = DOCTYPE() + stringifyToHtml(html);
@@ -95,6 +99,25 @@ export async function serve() {
                     "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { if (event.data === 'reload') { location.reload(); } }";
 
                 return new Response(reload, {
+                    headers: {
+                        "Content-Type": "application/javascript",
+                    },
+                });
+            }
+            if (new URL(req.url).pathname.endsWith("/glue.js")) {
+                const glue = 'import clientScript from "./site/client/client.ts"; clientScript(document);';
+                const bundle = await rollup({
+                    input: "entry.ts",
+                    plugins: [
+                        virtual({
+                            "entry.ts": glue,
+                        }),
+                        typescript(),
+                    ],
+                });
+                const { output } = await bundle.generate({ format: "iife" });
+
+                return new Response(output[0].code, {
                     headers: {
                         "Content-Type": "application/javascript",
                     },

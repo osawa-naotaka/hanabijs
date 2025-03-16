@@ -37,6 +37,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@rollup/plugin-virtual": "^3.0.2",
     "chokidar": "^4.0.3",
     "gray-matter": "^4.0.3",
     "prismjs": "^1.30.0",

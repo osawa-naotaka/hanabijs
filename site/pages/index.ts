@@ -7,6 +7,7 @@ import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
 import { navitem, posts_dir, site } from "@site/config/site.config";
 import matter from "gray-matter";
+import { client } from "@site/client/client";
 
 export default function Root(repo: Repository): HRootPageFn<void> {
     const Page = page(repo);
@@ -14,6 +15,7 @@ export default function Root(repo: Repository): HRootPageFn<void> {
     const PageMainArea = createSimpleSemantic("page-main-area", { class_names: ["container"], tag: "main" });
     const ArticleList = createSimpleSemantic("article-list", { class_names: ["content"], tag: "ul" });
     const ArticleListItem = createSimpleSemantic("article-list-item", { tag: "li" });
+    const Client = client(repo);
 
     return async () => {
         const items = globExt(path.join(cwd(), posts_dir), ".md");
@@ -34,7 +36,9 @@ export default function Root(repo: Repository): HRootPageFn<void> {
         return Page(
             { title: site.name, description: site.description, lang: site.lang, name: site.name, navitem: navitem },
             Hero({}),
-            PageMainArea(ArticleList(...slugs.map((x) => ArticleListItem(A({ href: `/posts/${x.slug}` }, x.title))))),
+            PageMainArea(
+                Client({}),
+                ArticleList(...slugs.map((x) => ArticleListItem(A({ href: `/posts/${x.slug}` }, x.title))))),
         );
     };
 }
