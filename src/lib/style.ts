@@ -109,7 +109,7 @@ export function rulesToString(component: HComponent): string {
 
 function stringifySelector(current: HComponent, selector: CompoundSelector): string {
     if (selector.length === 1 && selector[0] === "&") {
-        return `.${current.name}`;
+        return `.${current.component_name}`;
     }
     return selector.join("");
 }
