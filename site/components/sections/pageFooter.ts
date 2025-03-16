@@ -1,5 +1,5 @@
 import { registerComponent } from "@/lib/repository";
-import { Div, Footer, createSemantic, createSimpleSemantic, createStyles, mergeAttribute } from "@/main";
+import { createSemantic, createSimpleSemantic, createStyles } from "@/main";
 import type { HNode } from "@/main";
 import { appearence } from "@site/config/site.config";
 

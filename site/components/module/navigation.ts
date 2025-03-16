@@ -1,5 +1,5 @@
 import { registerComponent } from "@/lib/repository";
-import { A, createSemantic, createSimpleSemantic, createStyles, mergeClassToAttribute } from "@/main";
+import { A, createSemantic, createSimpleSemantic, createStyles } from "@/main";
 import type { HNode } from "@/main";
 import { navitem } from "@site/config/site.config";
 import { svgIcon } from "../element/SvgIcon";

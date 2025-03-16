@@ -1,5 +1,5 @@
 import { registerComponent } from "@/lib/repository";
-import { A, H1, Header, createSemantic, createSimpleSemantic, createStyles } from "@/main";
+import { A, H1, createSemantic, createStyles } from "@/main";
 import type { HNode } from "@/main";
 import { svgIcon } from "../element/SvgIcon";
 import { drawer } from "../module/drawer";
