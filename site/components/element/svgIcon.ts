@@ -1,8 +1,12 @@
 import { Img, registerComponent } from "@/main";
-import type { Attribute, HNode } from "@/main";
+import type { HComponentFn, Repository } from "@/main";
 
-export function svgIcon(): (attribute: Attribute & { name: string }) => HNode {
-    registerComponent("svg-icon", []);
+export type SvgIconAttribute = {
+    name: string;
+};
+
+export function svgIcon(repo: Repository): HComponentFn<SvgIconAttribute> {
+    registerComponent(repo, "svg-icon", []);
     return (attribute) =>
         Img({
             src: `/images/icons/${attribute.name}-icon.svg`,

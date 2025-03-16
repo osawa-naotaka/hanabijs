@@ -1,15 +1,15 @@
 import { Input, Label, compoundStyle, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
-import type { Attribute, HNode } from "@/main";
+import type { HComponentFn, HNode, Repository } from "@/main";
 
 export type DrawerAttribute = {
     title: HNode;
     header_space: HNode;
     open_button: HNode;
     content: HNode[];
-} & Attribute;
+};
 
-export function drawer(button_id: string): (attribute: DrawerAttribute) => HNode {
-    registerComponent("drawer", [
+export function drawer(repo: Repository, button_id: string): HComponentFn<DrawerAttribute> {
+    registerComponent(repo, "drawer", [
         style("&", { overflow: "hidden" }),
         style(".drawer-title", {
             display: "flex",

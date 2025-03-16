@@ -1,5 +1,5 @@
 import { A, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
-import type { Attribute, HNode } from "@/main";
+import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
 export type NavigationAttribute = {
@@ -7,11 +7,11 @@ export type NavigationAttribute = {
         url: string;
         icon: string;
     }[];
-} & Attribute;
+};
 
-export function navigation(): (attribute: NavigationAttribute) => HNode {
-    registerComponent("navigation", [
-        style(".navigation", {
+export function navigation(repo: Repository): HComponentFn<NavigationAttribute> {
+    registerComponent(repo, "navigation", [
+        style("&", {
             font_weight: "bold",
             font_size: "1.4rem",
         }),
@@ -28,7 +28,7 @@ export function navigation(): (attribute: NavigationAttribute) => HNode {
     const NavigationList = createSimpleSemantic("navigation-list", { tag: "ul" });
     const NavigationListItem = createSimpleSemantic("navigation-list-item", { tag: "li" });
 
-    const SvgIcon = svgIcon();
+    const SvgIcon = svgIcon(repo);
     return (attribute) =>
         Navigation(
             { class: attribute.class },

@@ -1,16 +1,28 @@
-import { Body, H1, Head, Html, Title } from "hanabijs";
-import type { Attribute, HNode } from "hanabijs";
-import { style } from "hanabijs";
+import { H2, createSimpleSemantic, registerComponent, style } from "hanabijs";
+import type { HPath, HRootPageFn, Repository } from "hanabijs";
+import page from "../../../components/page";
+import { site } from "../../../config";
 
-export async function getStaticPaths() {
+type RootParameter = {
+    id: string;
+};
+
+export async function getStaticPaths(): Promise<HPath<RootParameter>> {
     return [{ params: { id: "1" } }, { params: { id: "2" } }, { params: { id: "3" } }];
 }
 
-export default function Top(arg: Attribute): HNode {
-    const title = `Post Page ${arg.id}`;
-    return Html(
-        { lang: "en" },
-        Head({}, Title({}, title)),
-        Body({}, H1({ class: "h1 " }, style({ color: "red" }), title)),
-    );
+export default function Root(repo: Repository): HRootPageFn<RootParameter> {
+    registerComponent(repo, "page-main-area", [
+        style("h2", {
+            color: "red",
+        }),
+    ]);
+    const Page = page(repo);
+    const PageMainArea = createSimpleSemantic("page-main-area", { tag: "main" });
+
+    return async (parameter) => {
+        const title = `Post Page ${parameter.id}`;
+
+        return Page({ title: site.title, description: site.description }, PageMainArea(H2({}, title)));
+    };
 }

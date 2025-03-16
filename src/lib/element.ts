@@ -59,8 +59,10 @@ export function DOCTYPE(): string {
     return "<!DOCTYPE html>";
 }
 
-export type HComponentFn<T> = (attribute: T, ...child: HNode[]) => HNode;
+export type HComponentFn<T = Attribute> = (attribute: T & Attribute, ...child: HNode[]) => HNode;
 export type HSimpleComponentFn = (...child: HNode[]) => HNode;
+export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
+export type HPath<T> = { params: T }[];
 
 // add attribute
 export function addClassToAttribute<T extends { class?: string | string[] }>(attribute: T, className: string): T {
@@ -260,10 +262,10 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
     return result;
 }
 
-export function createSemantic(
+export function createSemantic<T>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
-): HComponentFn<Attribute> {
+): HComponentFn<T> {
     return (attribute, ...child) => ({
         element_name,
         tag,

@@ -1,6 +1,6 @@
 import { Body, Html, registerComponent, style } from "@/main";
-import type { Attribute, HNode } from "@/main";
-import { PageHead } from "@site/components/pages/PageHead";
+import type { HComponentFn, Repository } from "@/main";
+import { pageHead } from "@site/components/pages/pageHead";
 import { pageFooter } from "@site/components/sections/pageFooter";
 import { pageHeader } from "@site/components/sections/pageHeader";
 import { appearence } from "@site/config/site.config";
@@ -14,10 +14,10 @@ export type PageAttribute = {
         url: string;
         icon: string;
     }[];
-} & Attribute;
+};
 
-export function page(): (attribute: PageAttribute, ...child: HNode[]) => HNode {
-    registerComponent("page", [
+export function page(repo: Repository): HComponentFn<PageAttribute> {
+    registerComponent(repo, "page", [
         style("*", {
             margin: "0",
             padding: "0",
@@ -66,8 +66,9 @@ export function page(): (attribute: PageAttribute, ...child: HNode[]) => HNode {
         }),
     ]);
 
-    const PageHeader = pageHeader();
-    const PageFooter = pageFooter();
+    const PageHead = pageHead(repo);
+    const PageHeader = pageHeader(repo);
+    const PageFooter = pageFooter(repo);
     return (attribute, ...child) =>
         Html(
             { lang: attribute.lang },

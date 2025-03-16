@@ -1,5 +1,5 @@
 import { A, H1, createSimpleSemantic, registerComponent, style } from "@/main";
-import type { Attribute, HNode } from "@/main";
+import type { Attribute, HNode, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
@@ -12,8 +12,8 @@ export type PageHeaderAttribute = {
     }[];
 } & Attribute;
 
-export function pageHeader(): (attribute: PageHeaderAttribute) => HNode {
-    registerComponent("page-header", [
+export function pageHeader(repo: Repository): (attribute: PageHeaderAttribute) => HNode {
+    registerComponent(repo, "page-header", [
         style("&", {
             position: "sticky",
             top: "0",
@@ -23,9 +23,9 @@ export function pageHeader(): (attribute: PageHeaderAttribute) => HNode {
         }),
     ]);
 
-    const Drawer = drawer("page-header-toggle-button");
-    const SvgIcon = svgIcon();
-    const Navigation = navigation();
+    const Drawer = drawer(repo, "page-header-toggle-button");
+    const SvgIcon = svgIcon(repo);
+    const Navigation = navigation(repo);
     const PageHeader = createSimpleSemantic("page-header", { class_names: ["container"], tag: "header" });
     return (attribute) =>
         PageHeader(
