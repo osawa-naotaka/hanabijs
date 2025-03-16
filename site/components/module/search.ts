@@ -3,9 +3,7 @@ import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
 
-export type SearchAttribute = {};
-
-export function search(repo: Repository): HComponentFn<SearchAttribute> {
+export function search(repo: Repository): HComponentFn {
     registerStyle(repo, "search", [
         style(".search-bar", {
             display: "flex",

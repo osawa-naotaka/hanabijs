@@ -33,7 +33,7 @@ export function navigation(repo: Repository): HComponentFn<NavigationAttribute> 
         Navigation(
             { class: attribute.class },
             NavigationList(
-                NavigationListItem(A({ href: "/posts" }, "BLOG")),
+                NavigationListItem(A({ href: "/posts" }, "blog")),
                 ...attribute.navitem.map((item) =>
                     NavigationListItem(A({ href: item.url, target: "__blank" }, SvgIcon({ name: item.icon }))),
                 ),
