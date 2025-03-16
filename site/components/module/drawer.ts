@@ -1,15 +1,13 @@
 import { registerComponent } from "@/lib/repository";
 import { Input, Label, createSemantic, createSimpleSemantic, createStyles } from "@/main";
-import type { HNode } from "@/main";
+import type { Attribute, HNode } from "@/main";
 
-type DrawerAttribute = {
-    class?: string;
-    id?: string;
+export type DrawerAttribute = {
     title: HNode;
     header_space: HNode;
     open_button: HNode;
     content: HNode[];
-};
+} & Attribute;
 
 export function drawer(): (attribute: DrawerAttribute) => HNode {
     registerComponent(
@@ -72,7 +70,7 @@ export function drawer(): (attribute: DrawerAttribute) => HNode {
 
     return (attribute) =>
         Drawer(
-            attribute,
+            { class: attribute.class },
             Input({ class: "drawer-open-state", type: "checkbox", id: "drawer-toggle-button" }),
             DrawerTitle(
                 attribute.title,

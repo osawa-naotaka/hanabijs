@@ -4,13 +4,14 @@ import { isCompoundSelector } from "./style";
 export type Attribute = Record<string, unknown> & { class?: string | string[]; id?: string };
 
 export type HElement<T extends Attribute = Attribute> = {
+    element_name: string;
     tag: Tag;
     attribute: T;
     child: HNode[];
 };
 
 export type HComponent = {
-    name: string;
+    component_name: string;
     style: StyleRule[];
 };
 
@@ -219,12 +220,14 @@ export function insertNodes(root: HNode, selector: Selector, insert: HNode[], se
         } else {
             if (matchCompoundSelector(selector.compound, result)) {
                 result = {
+                    element_name: result.element_name,
                     tag: result.tag,
                     attribute: result.attribute,
                     child: result.child.map((e) => insertNodesCombinator(e, selector, insert)),
                 };
             } else if (search_deep) {
                 result = {
+                    element_name: result.element_name,
                     tag: result.tag,
                     attribute: result.attribute,
                     child: result.child.map((e) => insertNodes(e, selector, insert, true)),
@@ -257,24 +260,23 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
     return result;
 }
 
-export function createComponent<T1 extends Attribute, T2 extends Attribute>(
-    className: string,
-    attr_fn: (attr: T1) => T2,
-    tag: Tag = "div",
-): HComponentFn<T1> {
-    return (attribute, ...child) => ({ tag, attribute: attr_fn(addClassToAttribute<T1>(attribute, className)), child });
-}
-
-export function createSemantic(name: string | string[], tag: Tag = "div"): HComponentFn<Attribute> {
+export function createSemantic(
+    element_name: string,
+    { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
+): HComponentFn<Attribute> {
     return (attribute, ...child) => ({
+        element_name,
         tag,
-        attribute: mergeAttribute(attribute, { class: addClass(attribute, name) }),
+        attribute: mergeAttribute(attribute, { class: addClass(attribute, [element_name, ...class_names]) }),
         child,
     });
 }
 
-export function createSimpleSemantic(name: string | string[], tag: Tag = "div"): HSimpleComponentFn {
-    return (...child) => ({ tag, attribute: { class: name }, child });
+export function createSimpleSemantic(
+    element_name: string,
+    { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
+): HSimpleComponentFn {
+    return (...child) => ({ element_name, tag, attribute: { class: [element_name, ...class_names] }, child });
 }
 
 export function mergeClassToAttribute<T extends Attribute>(attribute: T, className: string) {
@@ -282,7 +284,7 @@ export function mergeClassToAttribute<T extends Attribute>(attribute: T, classNa
 }
 
 function gt(tag: Tag): HComponentFn<Attribute> {
-    return (attribute, ...child) => ({ tag, attribute, child });
+    return (attribute, ...child) => ({ element_name: tag, tag, attribute, child });
 }
 
 export const Meta = gt("meta");

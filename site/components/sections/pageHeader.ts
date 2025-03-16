@@ -1,11 +1,11 @@
 import { registerComponent } from "@/lib/repository";
-import { A, H1, createSemantic, createStyles } from "@/main";
-import type { HNode } from "@/main";
-import { svgIcon } from "../element/SvgIcon";
+import { A, H1, createSimpleSemantic, createStyles } from "@/main";
+import type { Attribute, HNode } from "@/main";
+import { svgIcon } from "../element/svgIcon";
 import { drawer } from "../module/drawer";
 import { navigation } from "../module/navigation";
 
-export function pageHeader(): (attribute: { class?: string; title: string }) => HNode {
+export function pageHeader(): (attribute: { title: string } & Attribute) => HNode {
     registerComponent(
         "page-header",
         createStyles([
@@ -22,10 +22,9 @@ export function pageHeader(): (attribute: { class?: string; title: string }) => 
     const Drawer = drawer();
     const SvgIcon = svgIcon();
     const Navigation = navigation();
-    const PageHeader = createSemantic(["page-header", "container"], "header");
+    const PageHeader = createSimpleSemantic("page-header", { class_names: ["container"], tag: "header" });
     return (attribute) =>
         PageHeader(
-            attribute,
             Drawer({
                 class: "content",
                 title: H1({}, A({ href: "/" }, attribute.title)),

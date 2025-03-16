@@ -1,14 +1,18 @@
 import { registerComponent } from "@/lib/repository";
-import { Body, type HNode, Html, createStyles } from "@/main";
+import { type Attribute, Body, type HNode, Html, createStyles } from "@/main";
 import { appearence } from "@site/config/site.config";
 import { pageFooter } from "../sections/pageFooter";
 import { pageHeader } from "../sections/pageHeader";
 import { PageHead } from "./PageHead";
 
-export function page(): (
-    attribute: { title: string; description: string; lang: string; name: string },
-    ...child: HNode[]
-) => HNode {
+export type PageAttribute = {
+    title: string;
+    description: string;
+    lang: string;
+    name: string;
+} & Attribute;
+
+export function page(): (attribute: PageAttribute, ...child: HNode[]) => HNode {
     registerComponent(
         "page",
         createStyles(

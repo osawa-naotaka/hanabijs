@@ -1,10 +1,10 @@
 import { registerComponent } from "@/lib/repository";
 import { A, createSemantic, createSimpleSemantic, createStyles } from "@/main";
-import type { HNode } from "@/main";
+import type { Attribute, HNode } from "@/main";
 import { navitem } from "@site/config/site.config";
-import { svgIcon } from "../element/SvgIcon";
+import { svgIcon } from "../element/svgIcon";
 
-export function navigation(): (attribute: Record<string, unknown>) => HNode {
+export function navigation(): (attribute: Attribute) => HNode {
     registerComponent(
         "navigation",
         createStyles(
@@ -28,14 +28,14 @@ export function navigation(): (attribute: Record<string, unknown>) => HNode {
         ),
     );
 
-    const Navigation = createSemantic("navigation", "nav");
-    const NavigationList = createSimpleSemantic("navigation-list", "ul");
-    const NavigationListItem = createSimpleSemantic("navigation-list-item", "li");
+    const Navigation = createSemantic("navigation", { tag: "nav" });
+    const NavigationList = createSimpleSemantic("navigation-list", { tag: "ul" });
+    const NavigationListItem = createSimpleSemantic("navigation-list-item", { tag: "li" });
 
     const SvgIcon = svgIcon();
     return (attribute) =>
         Navigation(
-            attribute,
+            { class: attribute.class },
             NavigationList(
                 NavigationListItem(A({ href: "/posts" }, "BLOG")),
                 ...navitem.map((item) =>
