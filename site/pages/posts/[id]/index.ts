@@ -24,9 +24,9 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
 
     return async (parameter) => {
         const markdown = await readFile(path.join(cwd(), posts_dir, `${parameter.id}.md`), "utf-8");
-        const { data } = matter(markdown);
+        const { data, content } = matter(markdown);
 
-        const raw_html = await markdownToHtml(markdown);
+        const raw_html = await markdownToHtml(content);
         return Page(
             {
                 title: `${data.title || ""} | ${site.name}`,
