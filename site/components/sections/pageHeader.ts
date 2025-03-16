@@ -1,5 +1,5 @@
 import { A, H1, createSimpleSemantic, registerStyle, style } from "@/main";
-import type { Attribute, HNode, Repository } from "@/main";
+import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
@@ -12,9 +12,9 @@ export type PageHeaderAttribute = {
         url: string;
         icon: string;
     }[];
-} & Attribute;
+};
 
-export function pageHeader(repo: Repository): (attribute: PageHeaderAttribute) => HNode {
+export function pageHeader(repo: Repository): HComponentFn<PageHeaderAttribute> {
     registerStyle(repo, "page-header", [
         style("&", {
             position: "sticky",
