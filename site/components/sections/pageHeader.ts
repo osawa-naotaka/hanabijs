@@ -4,6 +4,7 @@ import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
 import { popover } from "../module/popover";
+import { search } from "../module/search";
 
 export type PageHeaderAttribute = {
     title: string;
@@ -29,6 +30,8 @@ export function pageHeader(repo: Repository): (attribute: PageHeaderAttribute) =
     const SvgIcon = svgIcon(repo);
     const Navigation = navigation(repo);
     const PageHeader = createSimpleSemantic("page-header", { class_names: ["container"], tag: "header" });
+    const Search = search(repo);
+
     return (attribute) =>
         PageHeader(
             Drawer({
@@ -39,7 +42,7 @@ export function pageHeader(repo: Repository): (attribute: PageHeaderAttribute) =
                         open_button: SvgIcon({ name: "magnifier-glass" }),
                         close_button: SvgIcon({ name: "close-button" }),
                     },
-                    "Popover Area",
+                    Search({}),
                 ),
                 open_button: SvgIcon({ name: "menu-bar" }),
                 content: [Navigation(attribute)],
