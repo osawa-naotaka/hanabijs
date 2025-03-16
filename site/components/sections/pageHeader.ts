@@ -23,7 +23,7 @@ export function pageHeader(): (attribute: PageHeaderAttribute) => HNode {
         }),
     ]);
 
-    const Drawer = drawer();
+    const Drawer = drawer("page-header-toggle-button");
     const SvgIcon = svgIcon();
     const Navigation = navigation();
     const PageHeader = createSimpleSemantic("page-header", { class_names: ["container"], tag: "header" });
@@ -35,7 +35,6 @@ export function pageHeader(): (attribute: PageHeaderAttribute) => HNode {
                 header_space: "",
                 open_button: SvgIcon({ name: "menu-bar" }),
                 content: [Navigation(attribute)],
-                button_id: "page-header-toggle-button",
             }),
         );
 }

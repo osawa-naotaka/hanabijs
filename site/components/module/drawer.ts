@@ -6,10 +6,9 @@ export type DrawerAttribute = {
     header_space: HNode;
     open_button: HNode;
     content: HNode[];
-    button_id: string;
 } & Attribute;
 
-export function drawer(): (attribute: DrawerAttribute) => HNode {
+export function drawer(button_id: string): (attribute: DrawerAttribute) => HNode {
     registerComponent("drawer", [
         style("&", { overflow: "hidden" }),
         style(".drawer-title", {
@@ -25,7 +24,7 @@ export function drawer(): (attribute: DrawerAttribute) => HNode {
         style(".drawer-open-state", { display: "none" }),
         style(".drawer-open-button", { cursor: "pointer" }),
         style(".drawer-content", { height: "0", transition: ["height", "0.25s"] }),
-        compoundStyle([["#drawer-toggle-button", ":checked"], "~", ".drawer-content"], {
+        compoundStyle([[`#${button_id}`, ":checked"], "~", ".drawer-content"], {
             height: "calc-size(fit-content, size)",
         }),
     ]);
@@ -38,12 +37,12 @@ export function drawer(): (attribute: DrawerAttribute) => HNode {
     return (attribute) =>
         Drawer(
             { class: attribute.class },
-            Input({ class: "drawer-open-state", type: "checkbox", id: attribute.button_id }),
+            Input({ class: "drawer-open-state", type: "checkbox", id: button_id }),
             DrawerTitle(
                 attribute.title,
                 DrawerHeaderSpace(
                     attribute.header_space,
-                    Label({ class: "drawer-open-button", for: attribute.button_id }, attribute.open_button),
+                    Label({ class: "drawer-open-button", for: button_id }, attribute.open_button),
                 ),
             ),
             DrawerContent(...attribute.content),
