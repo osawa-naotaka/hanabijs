@@ -1,9 +1,10 @@
 import { registerComponent } from "@/lib/repository";
-import { Div, Input, Label, createStyles } from "@/main";
+import { Input, Label, createSemantic, createSimpleSemantic, createStyles, mergeClassToAttribute } from "@/main";
 import type { HNode } from "@/main";
 
 type DrawerAttribute = {
     class?: string;
+    id?: string;
     title: HNode;
     header_space: HNode;
     open_button: HNode;
@@ -64,19 +65,22 @@ export function drawer(): (attribute: DrawerAttribute) => HNode {
         ),
     );
 
+    const Drawer = createSemantic("drawer");
+    const DrawerTitle = createSimpleSemantic("drawer-title");
+    const DrawerHeaderSpace = createSimpleSemantic("drawer-header-space");
+    const DrawerContent = createSimpleSemantic("drawer-content");
+
     return (attribute) =>
-        Div(
-            { class: `drawer ${attribute.class || ""}` },
+        Drawer(
+            attribute,
             Input({ class: "drawer-open-state", type: "checkbox", id: "drawer-toggle-button" }),
-            Div(
-                { class: "drawer-title" },
+            DrawerTitle(
                 attribute.title,
-                Div(
-                    { class: "drawer-header-space" },
+                DrawerHeaderSpace(
                     attribute.header_space,
                     Label({ class: "drawer-open-button", for: "drawer-toggle-button" }, attribute.open_button),
                 ),
             ),
-            Div({ class: "drawer-content" }, ...attribute.content),
+            DrawerContent(...attribute.content),
         );
 }

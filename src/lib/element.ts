@@ -14,10 +14,6 @@ export type HComponent = {
     style: StyleRule[];
 };
 
-export type HDomGenFn<T extends Attribute = Attribute> = (attribute: T, ...child: HNode[]) => HNode;
-
-export type HComponentFn<T extends Attribute = Attribute> = (attribute: T, ...child: HNode[]) => HComponent;
-
 export type Tag =
     | "raw"
     | "dimension"
@@ -62,15 +58,33 @@ export function DOCTYPE(): string {
     return "<!DOCTYPE html>";
 }
 
+export type HComponentFn<T> = (attribute: T, ...child: HNode[]) => HNode;
+export type HSimpleComponentFn = (...child: HNode[]) => HNode;
+
 // add attribute
-export function addClassToAttribute<T extends Attribute = Attribute>(attribute: T, className: string): T {
+export function addClassToAttribute<T extends { class?: string | string[] }>(attribute: T, className: string): T {
     const new_attribute = JSON.parse(JSON.stringify(attribute));
+    new_attribute.class = addClass(attribute, className);
+    return new_attribute;
+}
+
+export function addClass<T extends { class?: string | string[] }>(
+    attribute: T,
+    className: string | string[],
+): string | string[] {
     if (attribute.class !== undefined) {
-        new_attribute.class = Array.isArray(attribute.class)
-            ? [className, ...attribute.class]
-            : [className, attribute.class];
-    } else {
-        new_attribute.class = className;
+        if (typeof className === "string") {
+            return Array.isArray(attribute.class) ? [className, ...attribute.class] : [className, attribute.class];
+        }
+        return Array.isArray(attribute.class) ? [...className, ...attribute.class] : [...className, attribute.class];
+    }
+    return className;
+}
+
+export function mergeAttribute<T1 extends Attribute, T2 extends Attribute>(attribute1: T1, attribute2: T2): T1 & T2 {
+    const new_attribute = JSON.parse(JSON.stringify(attribute1));
+    for (const [key, value] of Object.entries(attribute2)) {
+        new_attribute[key] = value;
     }
     return new_attribute;
 }
@@ -243,8 +257,31 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
     return result;
 }
 
-// HTML Element DOM Generator
-function gt<T extends Attribute = Attribute>(tag: Tag): HDomGenFn<T> {
+export function createComponent<T1 extends Attribute, T2 extends Attribute>(
+    className: string,
+    attr_fn: (attr: T1) => T2,
+    tag: Tag = "div",
+): HComponentFn<T1> {
+    return (attribute, ...child) => ({ tag, attribute: attr_fn(addClassToAttribute<T1>(attribute, className)), child });
+}
+
+export function createSemantic(name: string | string[], tag: Tag = "div"): HComponentFn<Attribute> {
+    return (attribute, ...child) => ({
+        tag,
+        attribute: mergeAttribute(attribute, { class: addClass(attribute, name) }),
+        child,
+    });
+}
+
+export function createSimpleSemantic(name: string | string[], tag: Tag = "div"): HSimpleComponentFn {
+    return (...child) => ({ tag, attribute: { class: name }, child });
+}
+
+export function mergeClassToAttribute<T extends Attribute>(attribute: T, className: string) {
+    return mergeAttribute(attribute, { class: addClass(attribute, className) });
+}
+
+function gt(tag: Tag): HComponentFn<Attribute> {
     return (attribute, ...child) => ({ tag, attribute, child });
 }
 

@@ -1,5 +1,5 @@
 import { registerComponent } from "@/lib/repository";
-import { Div, Em, createStyles } from "@/main";
+import { Div, Em, createSemantic, createSimpleSemantic, createStyles } from "@/main";
 import type { HNode } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -26,9 +26,9 @@ export function hero(): (attribute: { class?: string }) => HNode {
             ],
         ),
     );
-    return (attribute) =>
-        Div(
-            { class: `hero container ${attribute.class || ""}` },
-            Div({ class: "hero-text content" }, "LULLIECA", Em({}, "T"), " IS ", Em({}, "A"), "LIVE"),
-        );
+
+    const Hero = createSemantic(["hero", "container"]);
+    const HeroText = createSimpleSemantic(["hero-text", "content"]);
+
+    return (attribute) => Hero(attribute, HeroText("LULLIECA", Em({}, "T"), " IS ", Em({}, "A"), "LIVE"));
 }

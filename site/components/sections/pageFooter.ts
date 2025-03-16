@@ -1,5 +1,5 @@
 import { registerComponent } from "@/lib/repository";
-import { Div, Footer, createStyles } from "@/main";
+import { Div, Footer, createSemantic, createSimpleSemantic, createStyles, mergeAttribute } from "@/main";
 import type { HNode } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -34,10 +34,11 @@ export function pageFooter(): (attribute: { class?: string; site_name: string })
             ],
         ),
     );
+
+    const PageFooter = createSemantic("page-footer", "footer");
+    const PageFooterContent = createSimpleSemantic("page-footer-content");
+    const PageFooterCopyright = createSimpleSemantic("page-footer-copyright");
+
     return (attribute) =>
-        Footer(
-            { class: `page-footer ${attribute.class || ""}` },
-            Div({ class: "page-footer-content" }),
-            Div({ class: "page-footer-copyright" }, `&copy; 2025 ${attribute.site_name}`),
-        );
+        PageFooter(attribute, PageFooterContent(), PageFooterCopyright(`&copy; 2025 ${attribute.site_name}`));
 }
