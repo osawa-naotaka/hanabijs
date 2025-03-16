@@ -7,6 +7,7 @@ export type DrawerAttribute = {
     header_space: HNode;
     open_button: HNode;
     content: HNode[];
+    button_id: string;
 } & Attribute;
 
 export function drawer(): (attribute: DrawerAttribute) => HNode {
@@ -38,12 +39,12 @@ export function drawer(): (attribute: DrawerAttribute) => HNode {
     return (attribute) =>
         Drawer(
             { class: attribute.class },
-            Input({ class: "drawer-open-state", type: "checkbox", id: "drawer-toggle-button" }),
+            Input({ class: "drawer-open-state", type: "checkbox", id: attribute.button_id }),
             DrawerTitle(
                 attribute.title,
                 DrawerHeaderSpace(
                     attribute.header_space,
-                    Label({ class: "drawer-open-button", for: "drawer-toggle-button" }, attribute.open_button),
+                    Label({ class: "drawer-open-button", for: attribute.button_id }, attribute.open_button),
                 ),
             ),
             DrawerContent(...attribute.content),

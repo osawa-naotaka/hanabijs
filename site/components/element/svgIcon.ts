@@ -7,6 +7,7 @@ export function svgIcon(): (attribute: Attribute & { name: string }) => HNode {
     return (attribute) =>
         Img({
             src: `/images/icons/${attribute.name}-icon.svg`,
-            class: `svg-icon-${attribute.name}`,
+            class: ["svg-icon", `svg-icon-${attribute.name}`],
+            alt: `${attribute.name} icon`,
         });
 }

@@ -36,6 +36,7 @@ export function pageHeader(): (attribute: PageHeaderAttribute) => HNode {
                 header_space: "",
                 open_button: SvgIcon({ name: "menu-bar" }),
                 content: [Navigation(attribute)],
+                button_id: "page-header-toggle-button",
             }),
         );
 }
