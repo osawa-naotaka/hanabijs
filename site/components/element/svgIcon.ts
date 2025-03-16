@@ -1,5 +1,4 @@
-import { registerComponent } from "@/lib/repository";
-import { Img } from "@/main";
+import { Img, registerComponent } from "@/main";
 import type { Attribute, HNode } from "@/main";
 
 export function svgIcon(): (attribute: Attribute & { name: string }) => HNode {

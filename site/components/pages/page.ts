@@ -1,10 +1,9 @@
-import { registerComponent } from "@/lib/repository";
-import { Body, Html, style } from "@/main";
+import { Body, Html, registerComponent, style } from "@/main";
 import type { Attribute, HNode } from "@/main";
+import { PageHead } from "@site/components/pages/PageHead";
+import { pageFooter } from "@site/components/sections/pageFooter";
+import { pageHeader } from "@site/components/sections/pageHeader";
 import { appearence } from "@site/config/site.config";
-import { pageFooter } from "../sections/pageFooter";
-import { pageHeader } from "../sections/pageHeader";
-import { PageHead } from "./PageHead";
 
 export type PageAttribute = {
     title: string;

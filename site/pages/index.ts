@@ -1,8 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
-import { globExt } from "@/lib/util";
-import { A, Li, Main, Ul } from "@/main";
+import { A, Li, Main, Ul, globExt } from "@/main";
 import type { HNode } from "@/main";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";

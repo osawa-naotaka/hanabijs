@@ -1,7 +1,6 @@
-import { registerComponent } from "@/lib/repository";
-import { A, createSemantic, createSimpleSemantic, style } from "@/main";
+import { A, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
 import type { Attribute, HNode } from "@/main";
-import { svgIcon } from "../element/svgIcon";
+import { svgIcon } from "@site/components/element/svgIcon";
 
 export type NavigationAttribute = {
     navitem: {

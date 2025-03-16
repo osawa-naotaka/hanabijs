@@ -1,9 +1,8 @@
-import { registerComponent } from "@/lib/repository";
-import { A, H1, createSimpleSemantic, style } from "@/main";
+import { A, H1, createSimpleSemantic, registerComponent, style } from "@/main";
 import type { Attribute, HNode } from "@/main";
-import { svgIcon } from "../element/svgIcon";
-import { drawer } from "../module/drawer";
-import { navigation } from "../module/navigation";
+import { svgIcon } from "@site/components/element/svgIcon";
+import { drawer } from "@site/components/module/drawer";
+import { navigation } from "@site/components/module/navigation";
 
 export type PageHeaderAttribute = {
     title: string;

@@ -2,12 +2,10 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import { markdownToHtml } from "@/lib/markdown";
-import { globExt } from "@/lib/util";
-import { Article, H2, Main, RawHTML } from "@/main";
+import { Article, H2, Main, RawHTML, globExt } from "@/main";
 import type { Attribute, HNode } from "@/main";
 import { page } from "@site/components/pages/page";
-import { navitem, site } from "@site/config/site.config";
-import { posts_dir } from "@site/config/site.config";
+import { navitem, posts_dir, site } from "@site/config/site.config";
 import matter from "gray-matter";
 
 export async function getStaticPaths() {

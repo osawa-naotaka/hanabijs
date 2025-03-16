@@ -1,5 +1,4 @@
-import { registerComponent } from "@/lib/repository";
-import { Input, Label, compoundStyle, createSemantic, createSimpleSemantic, style } from "@/main";
+import { Input, Label, compoundStyle, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
 import type { Attribute, HNode } from "@/main";
 
 export type DrawerAttribute = {

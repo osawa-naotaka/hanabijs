@@ -1,5 +1,4 @@
-import { registerComponent } from "@/lib/repository";
-import { Em, compoundStyle, createSimpleSemantic, style } from "@/main";
+import { Em, compoundStyle, createSimpleSemantic, registerComponent, style } from "@/main";
 import type { Attribute, HNode } from "@/main";
 import { appearence } from "@site/config/site.config";
 
