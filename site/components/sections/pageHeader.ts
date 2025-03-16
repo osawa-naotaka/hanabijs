@@ -1,4 +1,4 @@
-import { A, H1, createSimpleSemantic, registerComponent, style } from "@/main";
+import { A, H1, createSimpleSemantic, registerStyle, style } from "@/main";
 import type { Attribute, HNode, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
@@ -13,7 +13,7 @@ export type PageHeaderAttribute = {
 } & Attribute;
 
 export function pageHeader(repo: Repository): (attribute: PageHeaderAttribute) => HNode {
-    registerComponent(repo, "page-header", [
+    registerStyle(repo, "page-header", [
         style("&", {
             position: "sticky",
             top: "0",

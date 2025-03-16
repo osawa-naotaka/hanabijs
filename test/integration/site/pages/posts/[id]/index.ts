@@ -1,4 +1,4 @@
-import { H2, createSimpleSemantic, registerComponent, style } from "hanabijs";
+import { H2, createSimpleSemantic, registerStyle, style } from "hanabijs";
 import type { HPath, HRootPageFn, Repository } from "hanabijs";
 import page from "../../../components/page";
 import { site } from "../../../config";
@@ -12,7 +12,7 @@ export async function getStaticPaths(): Promise<HPath<RootParameter>> {
 }
 
 export default function Root(repo: Repository): HRootPageFn<RootParameter> {
-    registerComponent(repo, "page-main-area", [
+    registerStyle(repo, "page-main-area", [
         style("h2", {
             color: "red",
         }),

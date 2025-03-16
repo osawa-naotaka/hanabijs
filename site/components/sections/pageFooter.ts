@@ -1,4 +1,4 @@
-import { createSimpleSemantic, registerComponent, style } from "@/main";
+import { createSimpleSemantic, registerStyle, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -7,7 +7,7 @@ export type PageFooterAttribute = {
 };
 
 export function pageFooter(repo: Repository): HComponentFn<PageFooterAttribute> {
-    registerComponent(repo, "page-footer", [
+    registerStyle(repo, "page-footer", [
         style("&", {
             position: "fixed",
             bottom: "0",
