@@ -50,7 +50,8 @@ export type Tag =
     | "input"
     | "label"
     | "nav"
-    | "em";
+    | "em"
+    | "button";
 
 export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 
@@ -111,7 +112,7 @@ function attributeToString(attribute: Attribute): string {
         .map(([raw_key, value]) => {
             const key = raw_key.replaceAll("_", "-");
             return value === "" || value === null
-                ? ` ${key}"`
+                ? ` ${key}`
                 : Array.isArray(value)
                   ? ` ${key}="${value.join(" ")}"`
                   : ` ${key}="${value}"`;
@@ -321,3 +322,4 @@ export const Label = gt("label");
 export const Nav = gt("nav");
 export const Em = gt("em");
 export const RawHTML = gt("raw");
+export const Button = gt("button");
