@@ -62,7 +62,7 @@ export async function serve() {
                             Link({ href: css_name, rel: "stylesheet" }, ""),
                         ]);
                         const html_text = DOCTYPE() + stringifyToHtml(html);
-                        return normalResponse(html_text, match_page.req_ext);
+                        return normalResponse(html_text, ".html");
                     }
                     return await errorResponse("500", `${match_page.target_file} does not have default export.`);
                 }
@@ -103,12 +103,6 @@ export async function serve() {
                 const reload =
                     "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { if (event.data === 'reload') { location.reload(); } }";
                 return normalResponse(reload, ".js");
-            }
-
-            // css file for error page
-            if (new URL(req.url).pathname.endsWith("/default.css")) {
-                const default_css = await readFile(path.join(root, "src/page/default.css"));
-                return normalResponse(default_css, ".css");
             }
 
             return await errorResponse("404", "Route Not Found");

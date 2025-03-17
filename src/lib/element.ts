@@ -52,7 +52,8 @@ export type Tag =
     | "label"
     | "nav"
     | "em"
-    | "button";
+    | "button"
+    | "style";
 
 export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 
@@ -324,3 +325,4 @@ export const Nav = gt("nav");
 export const Em = gt("em");
 export const RawHTML = gt("raw");
 export const Button = gt("button");
+export const Style = gt("style");
