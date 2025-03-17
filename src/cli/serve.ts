@@ -11,9 +11,7 @@ import { createSelector, stringifyToCss } from "@/lib/style";
 import { contentType, replaceExt } from "@/lib/util";
 import { ErrorPage } from "@/page/error";
 import chokidar from "chokidar";
-import { rollup } from "rollup";
-import virtual from "@rollup/plugin-virtual";
-import typescript from "@rollup/plugin-typescript";
+import esbuild from "esbuild";
 
 export async function serve() {
     const root = cwd();
@@ -105,19 +103,23 @@ export async function serve() {
                 });
             }
             if (new URL(req.url).pathname.endsWith("/glue.js")) {
-                const glue = 'import clientScript from "./site/client/client.ts"; clientScript(document);';
-                const bundle = await rollup({
-                    input: "entry.ts",
-                    plugins: [
-                        virtual({
-                            "entry.ts": glue,
-                        }),
-                        typescript(),
-                    ],
+                const entry = `import clientScript from "./site/client/client.ts"; clientScript(document);`;
+                const bundle = await esbuild.build({
+                    stdin: {
+                        contents: entry,
+                        loader: "ts",
+                        resolveDir: cwd(),
+                    },
+                    bundle: true,
+                    format: "iife",
+                    sourcemap: "inline",
+                    platform: "browser",
+                    target: "es2024",
+                    treeShaking: true,
+                    write: false,
                 });
-                const { output } = await bundle.generate({ format: "iife" });
 
-                return new Response(output[0].code, {
+                return new Response(bundle.outputFiles[0].text, {
                     headers: {
                         "Content-Type": "application/javascript",
                     },
