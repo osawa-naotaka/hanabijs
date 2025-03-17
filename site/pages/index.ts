@@ -3,11 +3,11 @@ import path from "node:path";
 import { cwd } from "node:process";
 import { A, createSimpleSemantic, globExt } from "@/main";
 import type { HRootPageFn, Repository } from "@/main";
+import { client } from "@site/client/client";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
 import { navitem, posts_dir, site } from "@site/config/site.config";
 import matter from "gray-matter";
-import { client } from "@site/client/client";
 
 export default function Root(repo: Repository): HRootPageFn<void> {
     const Page = page(repo);
@@ -38,7 +38,8 @@ export default function Root(repo: Repository): HRootPageFn<void> {
             Hero({}),
             PageMainArea(
                 Client({}),
-                ArticleList(...slugs.map((x) => ArticleListItem(A({ href: `/posts/${x.slug}` }, x.title))))),
+                ArticleList(...slugs.map((x) => ArticleListItem(A({ href: `/posts/${x.slug}` }, x.title)))),
+            ),
         );
     };
 }

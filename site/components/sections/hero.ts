@@ -1,9 +1,9 @@
-import { Em, compoundStyle, createSimpleSemantic, registerStyle, style } from "@/main";
+import { Em, compoundStyle, createSimpleSemantic, registerComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
 export function hero(repo: Repository): HComponentFn {
-    registerStyle(repo, "hero", [
+    registerComponent(repo, "hero", [
         style("&", {
             font_size: "min(17vw, 7rem)",
             font_weight: "bold",

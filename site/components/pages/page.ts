@@ -1,4 +1,4 @@
-import { Body, Html, registerStyle, style } from "@/main";
+import { Body, Html, registerComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { pageHead } from "@site/components/pages/pageHead";
 import { pageFooter } from "@site/components/sections/pageFooter";
@@ -17,7 +17,7 @@ export type PageAttribute = {
 };
 
 export function page(repo: Repository): HComponentFn<PageAttribute> {
-    registerStyle(repo, "page", [
+    registerComponent(repo, "page", [
         style("*", {
             margin: "0",
             padding: "0",

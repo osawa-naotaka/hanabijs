@@ -1,4 +1,4 @@
-import { A, createSemantic, createSimpleSemantic, registerStyle, style } from "@/main";
+import { A, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
@@ -10,7 +10,7 @@ export type NavigationAttribute = {
 };
 
 export function navigation(repo: Repository): HComponentFn<NavigationAttribute> {
-    registerStyle(repo, "navigation", [
+    registerComponent(repo, "navigation", [
         style("&", {
             font_weight: "bold",
             font_size: "1.4rem",

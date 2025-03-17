@@ -5,7 +5,7 @@ import {
     compoundStyle,
     createSemantic,
     createSimpleSemantic,
-    registerStyle,
+    registerComponent,
     style,
 } from "@/main";
 import { appearence } from "@site/config/site.config";
@@ -16,7 +16,7 @@ export type PopoverAttribute = {
 };
 
 export function popover(repo: Repository, button_id: string): HComponentFn<PopoverAttribute> {
-    registerStyle(repo, "popover", [
+    registerComponent(repo, "popover", [
         style("&", {
             display: "flex",
             align_items: "center",

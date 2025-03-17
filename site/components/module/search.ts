@@ -1,10 +1,10 @@
-import { compoundStyle, createSemantic, createSimpleSemantic, registerStyle, style } from "@/main";
+import { compoundStyle, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
 
 export function search(repo: Repository): HComponentFn {
-    registerStyle(repo, "search", [
+    registerComponent(repo, "search", [
         style(".search-bar", {
             display: "flex",
             align_items: "center",

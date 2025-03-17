@@ -50,12 +50,13 @@ export async function serve() {
                     const page_fn = await import(path.join(page_dir, match_page.target_file));
                     if (typeof page_fn.default === "function") {
                         const css_name = replaceExt(match_page.target_file, ".css");
+                        const js_name = replaceExt(match_page.target_file, ".js");
                         clearRepository(repository);
                         const root_page_fn = page_fn.default(repository);
                         const top_component = await root_page_fn(match_page.params);
                         const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
                             Script({ type: "module", src: "/reload.js" }, ""),
-                            Script({ type: "module", src: "/glue.js" }, ""),
+                            Script({ type: "module", src: js_name }, ""),
                             Link({ href: css_name, rel: "stylesheet" }, ""),
                         ]);
                         const html_text = DOCTYPE() + stringifyToHtml(html);
@@ -79,6 +80,44 @@ export async function serve() {
                     }
                     return await errorResponse("500", `${match_page.target_file} does not have default export.`);
                 }
+                if (match_page.req_ext === ".js") {
+                    const page_fn = await import(path.join(page_dir, match_page.target_file));
+                    if (typeof page_fn.default === "function") {
+                        clearRepository(repository);
+                        page_fn.default(repository);
+                        const script_files = Array.from(repository.values())
+                            .map((x) => x.path)
+                            .filter(Boolean);
+                        const entry = script_files
+                            .map((x, idx) => `import scr${idx} from "${x}"; scr${idx}(document);`)
+                            .join("\n");
+                        const bundle = await esbuild.build({
+                            stdin: {
+                                contents: entry,
+                                loader: "ts",
+                                resolveDir: cwd(),
+                            },
+                            // supress esbuild warning not to define import.meta in browser.
+                            define: {
+                                "import.meta.path": "undefined",
+                            },
+                            bundle: true,
+                            format: "iife",
+                            sourcemap: "inline",
+                            platform: "browser",
+                            target: "es2024",
+                            treeShaking: true,
+                            write: false,
+                        });
+
+                        return new Response(bundle.outputFiles[0].text, {
+                            headers: {
+                                "Content-Type": "application/javascript",
+                            },
+                        });
+                    }
+                    return await errorResponse("500", `${match_page.target_file} does not have default export.`);
+                }
                 return await errorResponse("404", `unsupported extension: ${match_page.req_ext}`);
             }
 
@@ -91,7 +130,7 @@ export async function serve() {
                 });
             }
 
-            // plugin
+            // reload plugin
             if (new URL(req.url).pathname.endsWith("/reload.js")) {
                 const reload =
                     "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { if (event.data === 'reload') { location.reload(); } }";
@@ -102,29 +141,8 @@ export async function serve() {
                     },
                 });
             }
-            if (new URL(req.url).pathname.endsWith("/glue.js")) {
-                const entry = `import clientScript from "./site/client/client.ts"; clientScript(document);`;
-                const bundle = await esbuild.build({
-                    stdin: {
-                        contents: entry,
-                        loader: "ts",
-                        resolveDir: cwd(),
-                    },
-                    bundle: true,
-                    format: "iife",
-                    sourcemap: "inline",
-                    platform: "browser",
-                    target: "es2024",
-                    treeShaking: true,
-                    write: false,
-                });
 
-                return new Response(bundle.outputFiles[0].text, {
-                    headers: {
-                        "Content-Type": "application/javascript",
-                    },
-                });
-            }
+            // css file for error page
             if (new URL(req.url).pathname.endsWith("/default.css")) {
                 const default_css = await readFile(path.join(root, "src/page/default.css"));
 

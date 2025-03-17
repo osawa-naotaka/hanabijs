@@ -12,6 +12,7 @@ export type HElement<T extends Attribute = Attribute> = {
 
 export type HComponent = {
     component_name: string;
+    path?: string;
     style: StyleRule[];
 };
 

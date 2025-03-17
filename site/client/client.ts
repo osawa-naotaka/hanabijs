@@ -1,7 +1,9 @@
 import type { HComponentFn, Repository } from "@/main";
-import { createSimpleSemantic } from "@/main";
+import { createSimpleSemantic, registerComponent } from "@/main";
 
-export function client(_repo: Repository): HComponentFn {
+export function client(repo: Repository): HComponentFn {
+    registerComponent(repo, "client", [], import.meta.path);
+
     const PlaceHolder = createSimpleSemantic("place-holder");
     const PlaceHolderButton = createSimpleSemantic("place-holder-button", { tag: "button" });
     const PlaceHolderResult = createSimpleSemantic("place-holder-result");
