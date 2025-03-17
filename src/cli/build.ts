@@ -4,7 +4,7 @@ import path from "node:path";
 import { cwd, exit } from "node:process";
 import { dist_subdir, page_subdir, public_subdir } from "@/config";
 import { Link, Script } from "@/lib/element";
-import type { HComponent } from "@/lib/element";
+import type { HComponent, HRootPageFn } from "@/lib/element";
 import { DOCTYPE, insertNodes, stringifyToHtml } from "@/lib/element";
 import { type Repository, clearRepository } from "@/lib/repository";
 import { createSelector, stringifyToCss } from "@/lib/style";
@@ -37,39 +37,18 @@ export async function build() {
         if (typeof page_fn.default === "function") {
             clearRepository(repository);
             const root_page_fn = page_fn.default(repository);
-            const [css_link, js_src] = await bundleAndWriteCssJs(file, dist_dir, repository);
+            const css_js = await bundleAndWriteCssJs(file, dist_dir, repository);
 
             if ("getStaticPaths" in page_fn) {
-                const fullpath = path.join(dist_dir, file);
                 const param_list = await page_fn.getStaticPaths();
-                const param_names = Array.from(fullpath.matchAll(/\[(?<key>[^\]]+)\]/g)).map(
-                    (m) => m.groups?.key || "",
-                );
+                const param_names = Array.from(file.matchAll(/\[(?<key>[^\]]+)\]/g)).map((m) => m.groups?.key || "");
 
                 for (const param of param_list) {
-                    const html_start = performance.now();
                     const file_replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param.params[c]), file);
-
-                    const top_component = await root_page_fn(param.params);
-                    const inserted = insertNodes(top_component, createSelector(["*", " ", "head"]), [
-                        css_link !== "" ? Link({ href: css_link, rel: "stylesheet" }, "") : "",
-                        js_src !== "" ? Script({ type: "module", src: js_src }, "") : "",
-                    ]);
-
-                    const html = DOCTYPE() + stringifyToHtml(inserted);
-                    writeToFile(html, file_replaced, dist_dir, ".html", html_start);
+                    await processAndWriteHtml(file_replaced, dist_dir, css_js, root_page_fn, param.params);
                 }
             } else {
-                // process html
-                const html_start = performance.now();
-                const top_component = await root_page_fn();
-                const inserted = insertNodes(top_component, createSelector(["*", " ", "head"]), [
-                    css_link !== "" ? Link({ href: css_link, rel: "stylesheet" }, "") : "",
-                    js_src !== "" ? Script({ type: "module", src: js_src }, "") : "",
-                ]);
-
-                const html = DOCTYPE() + stringifyToHtml(inserted);
-                writeToFile(html, file, dist_dir, ".html", html_start);
+                await processAndWriteHtml(file, dist_dir, css_js, root_page_fn, {});
             }
         }
     }
@@ -83,6 +62,25 @@ export async function build() {
         }
         console.log(`process public in ${(performance.now() - start).toFixed(2)}ms`);
     }
+}
+
+async function processAndWriteHtml(
+    file: string,
+    dist_dir: string,
+    [css_link, js_src]: [string, string],
+    root_page_fn: HRootPageFn<Record<string, unknown>>,
+    params: Record<string, string>,
+): Promise<void> {
+    const html_start = performance.now();
+
+    const top_component = await root_page_fn(params);
+    const inserted = insertNodes(top_component, createSelector(["*", " ", "head"]), [
+        css_link !== "" ? Link({ href: css_link, rel: "stylesheet" }, "") : "",
+        js_src !== "" ? Script({ type: "module", src: js_src }, "") : "",
+    ]);
+
+    const html = DOCTYPE() + stringifyToHtml(inserted);
+    writeToFile(html, file, dist_dir, ".html", html_start);
 }
 
 async function bundleAndWriteCssJs(file: string, dist_dir: string, repository: Repository): Promise<[string, string]> {
