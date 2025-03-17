@@ -47,48 +47,37 @@ export async function serve() {
             // Page router
             const match_page = page_router(req);
             if (!(match_page instanceof Error)) {
-                // HTML
-                if (match_page.req_ext === "" || match_page.req_ext === ".html") {
-                    const page_fn = await import(path.join(page_dir, match_page.target_file));
-                    if (typeof page_fn.default === "function") {
-                        const css_name = replaceExt(match_page.target_file, ".css");
-                        const js_name = replaceExt(match_page.target_file, ".js");
-                        clearRepository(repository);
-                        const root_page_fn = page_fn.default(repository);
-                        const top_component = await root_page_fn(match_page.params);
-                        const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
-                            Script({ type: "module", src: "/reload.js" }, ""),
-                            Script({ type: "module", src: js_name }, ""),
-                            Link({ href: css_name, rel: "stylesheet" }, ""),
-                        ]);
-                        const html_text = DOCTYPE() + stringifyToHtml(html);
-                        return normalResponse(html_text, ".html");
+                const page_fn = await import(path.join(page_dir, match_page.target_file));
+                if (typeof page_fn.default === "function") {
+                    clearRepository(repository);
+                    const root_page_fn = page_fn.default(repository);
+                    switch (match_page.req_ext) {
+                        case "":
+                        case ".html": {
+                            const top_component = await root_page_fn(match_page.params);
+                            const css_name = replaceExt(match_page.target_file, ".css");
+                            const js_name = replaceExt(match_page.target_file, ".js");
+                            const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
+                                Script({ type: "module", src: "/reload.js" }, ""),
+                                Script({ type: "module", src: js_name }, ""),
+                                Link({ href: css_name, rel: "stylesheet" }, ""),
+                            ]);
+                            const html_text = DOCTYPE() + stringifyToHtml(html);
+                            return normalResponse(html_text, ".html");
+                        }
+                        case ".css": {
+                            const css = stringifyToCss(Array.from(repository.values()));
+                            return normalResponse(css, match_page.req_ext);
+                        }
+                        case ".js": {
+                            const js = await bundleScript(repository, page_fn.default);
+                            return normalResponse(js, match_page.req_ext);
+                        }
+                        default:
+                            return await errorResponse("404", `unsupported extension: ${match_page.req_ext}`);
                     }
-                    return await errorResponse("500", `${match_page.target_file} does not have default export.`);
                 }
-
-                // CSS
-                if (match_page.req_ext === ".css") {
-                    const page_fn = await import(path.join(page_dir, match_page.target_file));
-                    if (typeof page_fn.default === "function") {
-                        clearRepository(repository);
-                        page_fn.default(repository);
-                        const css = stringifyToCss(Array.from(repository.values()));
-                        return normalResponse(css, match_page.req_ext);
-                    }
-                    return await errorResponse("500", `${match_page.target_file} does not have default export.`);
-                }
-
-                // JavaScript
-                if (match_page.req_ext === ".js") {
-                    const page_fn = await import(path.join(page_dir, match_page.target_file));
-                    if (typeof page_fn.default === "function") {
-                        const js = await bundleScript(repository, page_fn.default);
-                        return normalResponse(js, match_page.req_ext);
-                    }
-                    return await errorResponse("500", `${match_page.target_file} does not have default export.`);
-                }
-                return await errorResponse("404", `unsupported extension: ${match_page.req_ext}`);
+                return await errorResponse("500", `${match_page.target_file} does not have default export.`);
             }
 
             // Public router

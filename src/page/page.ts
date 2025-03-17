@@ -1,4 +1,4 @@
-import { A, Body, H1, Head, Html, Meta, Script, Title, Style, createSimpleSemantic } from "@/main";
+import { A, Body, H1, Head, Html, Meta, Script, Style, Title, createSimpleSemantic } from "@/main";
 import type { Attribute, HNode } from "@/main";
 
 const site = {

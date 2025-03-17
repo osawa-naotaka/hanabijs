@@ -34,9 +34,7 @@ export default function Root(repo: Repository): HRootPageFn<void> {
         return Page(
             { title: site.name, description: site.description, lang: site.lang, name: site.name, navitem: navitem },
             Hero({}),
-            PageMainArea(
-                ArticleList(...slugs.map((x) => ArticleListItem(A({ href: `/posts/${x.slug}` }, x.title)))),
-            ),
+            PageMainArea(ArticleList(...slugs.map((x) => ArticleListItem(A({ href: `/posts/${x.slug}` }, x.title))))),
         );
     };
 }
