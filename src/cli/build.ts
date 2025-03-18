@@ -15,6 +15,8 @@ import virtual from "@rollup/plugin-virtual";
 import { rollup } from "rollup";
 
 export async function build() {
+    const start = performance.now();
+
     const root = cwd();
     const dist_dir = path.join(root, dist_subdir);
     const page_dir = path.join(root, page_subdir);
@@ -62,6 +64,8 @@ export async function build() {
         }
         console.log(`process public in ${(performance.now() - start).toFixed(2)}ms`);
     }
+
+    console.log(`build in ${(performance.now() - start).toFixed(2)}ms`);
 }
 
 async function processAndWriteHtml(

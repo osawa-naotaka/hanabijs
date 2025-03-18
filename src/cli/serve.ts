@@ -51,12 +51,32 @@ export async function serve() {
                 if (typeof page_fn.default === "function") {
                     clearRepository(repository);
                     const root_page_fn = page_fn.default(repository);
+
+                    // auto generation of .css and .js from .html.ts
+                    if (match_page.auto_generate) {
+                        switch (match_page.req_ext) {
+                            case ".css": {
+                                const css = stringifyToCss(Array.from(repository.values()));
+                                return normalResponse(css, match_page.req_ext);
+                            }
+                            case ".js": {
+                                const js = await bundleScript(repository, page_fn.default);
+                                return normalResponse(js, match_page.req_ext);
+                            }
+                            default:
+                                return errorResponse(
+                                    "500",
+                                    `hanabi: server internal error. auto generation ${match_page.req_ext} is not supported.`,
+                                );
+                        }
+                    }
+
                     switch (match_page.req_ext) {
-                        case "":
                         case ".html": {
                             const top_component = await root_page_fn(match_page.params);
-                            const css_name = replaceExt(match_page.target_file, ".css");
-                            const js_name = replaceExt(match_page.target_file, ".js");
+                            const css_name = replaceExt(replaceExt(match_page.target_file, ""), ".css");
+                            const js_name = replaceExt(replaceExt(match_page.target_file, ""), ".js");
+                            
                             const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
                                 Script({ type: "module", src: "/reload.js" }, ""),
                                 Script({ type: "module", src: js_name }, ""),
@@ -64,14 +84,6 @@ export async function serve() {
                             ]);
                             const html_text = DOCTYPE() + stringifyToHtml(html);
                             return normalResponse(html_text, ".html");
-                        }
-                        case ".css": {
-                            const css = stringifyToCss(Array.from(repository.values()));
-                            return normalResponse(css, match_page.req_ext);
-                        }
-                        case ".js": {
-                            const js = await bundleScript(repository, page_fn.default);
-                            return normalResponse(js, match_page.req_ext);
                         }
                         default:
                             return await errorResponse("404", `unsupported extension: ${match_page.req_ext}`);
