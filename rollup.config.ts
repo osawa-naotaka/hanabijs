@@ -19,6 +19,15 @@ const config: RollupOptions[] = [
             format: "es",
         },
         plugins: [typescript(), terser()],
+        external: [
+            "rehype-stringify",
+            "remark-frontmatter",
+            "remark-gfm",
+            "remark-parse",
+            "remark-rehype",
+            "remark-toc",
+            "unified",
+        ]
     },
     {
         input: "src/bin.ts",
@@ -27,6 +36,21 @@ const config: RollupOptions[] = [
             format: "es",
         },
         plugins: [typescript(), terser()],
+        external: [
+            "node:process",
+            "node:fs",
+            "node:fs/promises",
+            "node:path",
+            "esbuild",
+            "chokidar",
+            "rehype-stringify",
+            "remark-frontmatter",
+            "remark-gfm",
+            "remark-parse",
+            "remark-rehype",
+            "remark-toc",
+            "unified",
+        ]
     },
 ];
 

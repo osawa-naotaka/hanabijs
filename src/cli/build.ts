@@ -9,13 +9,7 @@ import { DOCTYPE, insertNodes, stringifyToHtml } from "@/lib/element";
 import { type Repository, clearRepository } from "@/lib/repository";
 import { createSelector, stringifyToCss } from "@/lib/style";
 import { globExt, replaceExt } from "@/lib/util";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import terser from "@rollup/plugin-terser";
-import typescript from "@rollup/plugin-typescript";
-import virtual from "@rollup/plugin-virtual";
-import commonjs from "@rollup/plugin-commonjs";
 import esbuild from "esbuild";
-import { rollup } from "rollup";
 
 export async function build() {
     const start = performance.now();
@@ -139,7 +133,7 @@ async function bundleAndWriteCssJs(
     // process js
     const js_start = performance.now();
     let js_src = "";
-    const script_content = await bundleScript(repository);
+    const script_content = await bundleScriptEsbuild(repository);
     if (script_content !== null) {
         js_src = writeToFile(script_content, relative_path, dist_dir, ".js", js_start);
     }
@@ -154,36 +148,6 @@ function writeToFile(content: string, file_name: string, dist_dir: string, ext: 
     console.log(`process ${file_ext} in ${(performance.now() - start).toFixed(2)}ms`);
 
     return file_ext;
-}
-
-async function bundleScript(repository: Repository): Promise<string | null> {
-    const script_files = Array.from(repository.values())
-        .map((x) => x.path)
-        .filter(Boolean);
-
-    if (script_files.length > 0) {
-        const entry = script_files
-            .map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(document);`)
-            .join("\n");
-
-        const bundle = await rollup({
-            input: "entry.ts",
-            plugins: [
-                virtual({
-                    "entry.ts": entry,
-                }),
-                typescript(),
-                terser(),
-                nodeResolve(),
-                commonjs(),
-            ],
-        });
-
-        const { output } = await bundle.generate({ format: "esm" });
-        return output[0].code;
-    }
-
-    return null;
 }
 
 async function bundleScriptEsbuild(repository: Repository): Promise<string> {
