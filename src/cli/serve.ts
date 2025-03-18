@@ -41,7 +41,7 @@ export async function serve() {
             },
             close() {
                 watcher.removeAllListeners();
-            }
+            },
         },
         async fetch(req: Request): Promise<Response> {
             if (server.upgrade(req)) {

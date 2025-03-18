@@ -20,4 +20,9 @@ async function main() {
     }
 }
 
-main();
+try {
+    await main();
+} catch (e) {
+    console.error(e);
+    exit(-1);
+}
