@@ -5,22 +5,26 @@ describe("createPageRouteTable", async () => {
     const router = await createPageRouteTable("test/route");
 
     test("directory test", () =>
-        expect(JSON.stringify(router)).toStrictEqual(
-            JSON.stringify([
+        expect(
+            router.sort((a, b) =>
+                (a.path_regexp.toString() + a.target_ext).localeCompare(b.path_regexp.toString() + b.target_ext),
+            ),
+        ).toStrictEqual(
+            [
                 {
-                    path_regexp: new RegExp(/^\/index.css$/),
+                    path_regexp: new RegExp(/^\/index\.css$/),
                     target_file: "/index.html.ts",
                     target_ext: ".css",
                     auto_generate: true,
                 },
                 {
-                    path_regexp: new RegExp(/^\/index.js$/),
+                    path_regexp: new RegExp(/^\/index\.js$/),
                     target_file: "/index.html.ts",
                     target_ext: ".js",
                     auto_generate: true,
                 },
                 {
-                    path_regexp: new RegExp(/^\/index.html$/),
+                    path_regexp: new RegExp(/^\/index\.html$/),
                     target_file: "/index.html.ts",
                     target_ext: ".html",
                     auto_generate: false,
@@ -32,25 +36,31 @@ describe("createPageRouteTable", async () => {
                     auto_generate: false,
                 },
                 {
-                    path_regexp: new RegExp(/^\/root.css$/),
+                    path_regexp: new RegExp(/^$/),
+                    target_file: "/index.html.ts",
+                    target_ext: ".html",
+                    auto_generate: false,
+                },
+                {
+                    path_regexp: new RegExp(/^\/root\.css$/),
                     target_file: "/root.css.ts",
                     target_ext: ".css",
                     auto_generate: false,
                 },
                 {
-                    path_regexp: new RegExp(/^\/[id]\/index.css$/),
+                    path_regexp: new RegExp(/^\/\[id\]\/index\.css$/),
                     target_file: "/[id]/index.html.ts",
                     target_ext: ".css",
                     auto_generate: true,
                 },
                 {
-                    path_regexp: new RegExp(/^\/[id]\/index.js$/),
+                    path_regexp: new RegExp(/^\/\[id\]\/index\.js$/),
                     target_file: "/[id]/index.html.ts",
                     target_ext: ".js",
                     auto_generate: true,
                 },
                 {
-                    path_regexp: new RegExp(/^\/(?<id>.+)\/index.html$/),
+                    path_regexp: new RegExp(/^\/(?<id>.+)\/index\.html$/),
                     target_file: "/[id]/index.html.ts",
                     target_ext: ".html",
                     auto_generate: false,
@@ -62,12 +72,20 @@ describe("createPageRouteTable", async () => {
                     auto_generate: false,
                 },
                 {
-                    path_regexp: new RegExp(/^\/subdir\/index.js$/),
+                    path_regexp: new RegExp(/^\/(?<id>.+)$/),
+                    target_file: "/[id]/index.html.ts",
+                    target_ext: ".html",
+                    auto_generate: false,
+                },
+                {
+                    path_regexp: new RegExp(/^\/subdir\/index\.js$/),
                     target_file: "/subdir/index.js.ts",
                     target_ext: ".js",
                     auto_generate: false,
                 },
-            ]),
+            ].sort((a, b) =>
+                (a.path_regexp.toString() + a.target_ext).localeCompare(b.path_regexp.toString() + b.target_ext),
+            ),
         ));
 });
 
@@ -81,14 +99,14 @@ describe("createPageRouteTable", async () => {
             auto_generate: false,
             params: {},
         }));
-        
+
     test("route /index.css", () =>
-            expect(router(new Request("http://localhost/index.css"))).toEqual({
-                target_file: "/index.html.ts",
-                req_ext: ".css",
-                auto_generate: true,
-                params: {},
-            }));
+        expect(router(new Request("http://localhost/index.css"))).toEqual({
+            target_file: "/index.html.ts",
+            req_ext: ".css",
+            auto_generate: true,
+            params: {},
+        }));
 
     test("route /index.js", () =>
         expect(router(new Request("http://localhost/index.js"))).toEqual({
@@ -105,8 +123,4 @@ describe("createPageRouteTable", async () => {
             auto_generate: true,
             params: {},
         }));
-
-    test("simple regexp", () =>
-        expect(new RegExp("^\/\\[id\\]\/index.css$").exec("/[id]/index.css")).toBe(true));
-
 });

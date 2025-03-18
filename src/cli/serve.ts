@@ -76,7 +76,7 @@ export async function serve() {
                             const top_component = await root_page_fn(match_page.params);
                             const css_name = replaceExt(replaceExt(match_page.target_file, ""), ".css");
                             const js_name = replaceExt(replaceExt(match_page.target_file, ""), ".js");
-                            
+
                             const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
                                 Script({ type: "module", src: "/reload.js" }, ""),
                                 Script({ type: "module", src: js_name }, ""),
