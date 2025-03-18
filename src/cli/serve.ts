@@ -50,7 +50,7 @@ export async function serve() {
                 const page_fn = await import(path.join(page_dir, match_page.target_file));
                 if (typeof page_fn.default === "function") {
                     clearRepository(repository);
-                    const root_page_fn = page_fn.default(repository);
+                    const root_page_fn = await page_fn.default(repository);
 
                     // auto generation of .css and .js from .html.ts
                     if (match_page.auto_generate) {
@@ -86,7 +86,7 @@ export async function serve() {
                             return normalResponse(html_text, ".html");
                         }
                         default:
-                            return await errorResponse("404", `unsupported extension: ${match_page.req_ext}`);
+                            return normalResponse(await root_page_fn, match_page.req_ext);
                     }
                 }
                 return await errorResponse("500", `${match_page.target_file} does not have default export.`);
@@ -131,10 +131,10 @@ async function errorResponse(name: string, cause: string): Promise<Response> {
 
 async function bundleScript(
     repository: Repository,
-    page_fn: (repo: Repository) => HRootPageFn<Record<string, unknown>>,
+    page_fn: (repo: Repository) => Promise<HRootPageFn<Record<string, unknown>>>,
 ): Promise<string> {
     clearRepository(repository);
-    page_fn(repository);
+    await page_fn(repository);
     const script_files = Array.from(repository.values())
         .map((x) => x.path)
         .filter(Boolean);
