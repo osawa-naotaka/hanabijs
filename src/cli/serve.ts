@@ -29,6 +29,7 @@ export async function serve() {
     const server = Bun.serve({
         websocket: {
             open(ws) {
+                watcher.removeAllListeners();
                 watcher.on("change", async () => {
                     page_router = await createPageRouter(page_dir);
                     public_router = await createPageRouter(public_dir);
@@ -38,6 +39,9 @@ export async function serve() {
             message(_ws, message) {
                 console.log("Received:", message);
             },
+            close() {
+                watcher.removeAllListeners();
+            }
         },
         async fetch(req: Request): Promise<Response> {
             if (server.upgrade(req)) {
