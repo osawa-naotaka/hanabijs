@@ -4,33 +4,38 @@ import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
 
 export function search(repo: Repository): HComponentFn {
-    registerComponent(repo, "search", [
-        style(".search-bar", {
-            display: "flex",
-            align_items: "center",
-            gap: "0.5rem",
-            padding_block_end: "0.25rem",
-            border_block_end: ["2px", "solid"],
-        }),
-        style(".search-input", {
-            width: "100%",
-            height: "1.5rem",
-            border: ["0", "none"],
-            outline: "none",
-            font_size: "1rem",
-            background_color: appearence.color.background,
-        }),
-        compoundStyle([[".search-input", "::placeholder"]], {
-            opacity: "0.5",
-        }),
-        style(".search-result", {
-            margin_block: "2rem",
-            list_style_type: "none",
-        }),
-        style(".search-result-item", {
-            margin_block: "2rem",
-        }),
-    ]);
+    registerComponent(
+        repo,
+        "search",
+        [
+            style(".search-bar", {
+                display: "flex",
+                align_items: "center",
+                gap: "0.5rem",
+                padding_block_end: "0.25rem",
+                border_block_end: ["2px", "solid"],
+            }),
+            style(".search-input", {
+                width: "100%",
+                height: "1.5rem",
+                border: ["0", "none"],
+                outline: "none",
+                font_size: "1rem",
+                background_color: appearence.color.background,
+            }),
+            compoundStyle([[".search-input", "::placeholder"]], {
+                opacity: "0.5",
+            }),
+            style(".search-result", {
+                margin_block: "2rem",
+                list_style_type: "none",
+            }),
+            style(".search-result-item", {
+                margin_block: "2rem",
+            }),
+        ],
+        import.meta.path,
+    );
 
     const Search = createSemantic("search", { class_names: ["content"] });
     const SearchBar = createSimpleSemantic("search-bar");
@@ -48,4 +53,15 @@ export function search(repo: Repository): HComponentFn {
             ),
             SearchResult(SearchResultItem("no result.")),
         );
+}
+
+import { createSearchFn } from "staticseek";
+
+export default async function clientFunction(d: Document): Promise<void> {
+    const search_fn = createSearchFn("/search-index.json");
+    const result_element = d.querySelector<HTMLUListElement>(".search-result");
+    if (result_element !== null) {
+        const result = await search_fn("staticseek");
+        console.log(result);
+    }
 }

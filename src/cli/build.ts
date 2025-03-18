@@ -9,9 +9,11 @@ import { DOCTYPE, insertNodes, stringifyToHtml } from "@/lib/element";
 import { type Repository, clearRepository } from "@/lib/repository";
 import { createSelector, stringifyToCss } from "@/lib/style";
 import { globExt, replaceExt } from "@/lib/util";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import virtual from "@rollup/plugin-virtual";
+import esbuild from "esbuild";
 import { rollup } from "rollup";
 
 export async function build() {
@@ -39,9 +41,9 @@ export async function build() {
         const relative_path = replaceExt(path.join("/", filename_in_dir), "");
         if (typeof page_fn.default === "function") {
             if (path.extname(relative_path) === ".html") {
-                processHtmlDotTs(repository, relative_path, dist_dir, page_fn);
+                await processHtmlDotTs(repository, relative_path, dist_dir, page_fn);
             } else {
-                processAnyDotTs(repository, relative_path, dist_dir, page_fn);
+                await processAnyDotTs(repository, relative_path, dist_dir, page_fn);
             }
         } else {
             console.log(`${filename_in_dir} has no default export. skip processing.`);
@@ -136,7 +138,7 @@ async function bundleAndWriteCssJs(
     // process js
     const js_start = performance.now();
     let js_src = "";
-    const script_content = await bundleScript(repository);
+    const script_content = await bundleScriptEsbuild(repository);
     if (script_content !== null) {
         js_src = writeToFile(script_content, relative_path, dist_dir, ".js", js_start);
     }
@@ -159,7 +161,9 @@ async function bundleScript(repository: Repository): Promise<string | null> {
         .filter(Boolean);
 
     if (script_files.length > 0) {
-        const entry = script_files.map((x, idx) => `import scr${idx} from "${x}"; scr${idx}(document);`).join("\n");
+        const entry = script_files
+            .map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(document);`)
+            .join("\n");
 
         const bundle = await rollup({
             input: "entry.ts",
@@ -169,12 +173,41 @@ async function bundleScript(repository: Repository): Promise<string | null> {
                 }),
                 typescript(),
                 terser(),
+                nodeResolve(),
             ],
         });
 
-        const { output } = await bundle.generate({ format: "iife" });
+        const { output } = await bundle.generate({ format: "esm" });
         return output[0].code;
     }
 
     return null;
+}
+
+async function bundleScriptEsbuild(repository: Repository): Promise<string> {
+    const script_files = Array.from(repository.values())
+        .map((x) => x.path)
+        .filter(Boolean);
+    const entry = script_files.map((x, idx) => `import scr${idx} from "${x}"; scr${idx}(document);`).join("\n");
+    const bundle = await esbuild.build({
+        stdin: {
+            contents: entry,
+            loader: "ts",
+            resolveDir: cwd(),
+        },
+        // supress esbuild warning not to define import.meta in browser.
+        define: {
+            "import.meta.path": "undefined",
+        },
+        bundle: true,
+        format: "esm",
+        platform: "browser",
+        target: "es2024",
+        treeShaking: true,
+        sourcemap: false,
+        write: false,
+        minify: true,
+    });
+
+    return bundle.outputFiles[0].text;
 }
