@@ -13,6 +13,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import virtual from "@rollup/plugin-virtual";
+import commonjs from "@rollup/plugin-commonjs";
 import esbuild from "esbuild";
 import { rollup } from "rollup";
 
@@ -138,7 +139,7 @@ async function bundleAndWriteCssJs(
     // process js
     const js_start = performance.now();
     let js_src = "";
-    const script_content = await bundleScriptEsbuild(repository);
+    const script_content = await bundleScript(repository);
     if (script_content !== null) {
         js_src = writeToFile(script_content, relative_path, dist_dir, ".js", js_start);
     }
@@ -174,6 +175,7 @@ async function bundleScript(repository: Repository): Promise<string | null> {
                 typescript(),
                 terser(),
                 nodeResolve(),
+                commonjs(),
             ],
         });
 
