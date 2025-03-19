@@ -1,5 +1,6 @@
 import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./style";
 import { isCompoundSelector } from "./style";
+import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
 export type Attribute = Record<string, unknown> & { class?: string | string[]; id?: string };
 
@@ -21,6 +22,7 @@ export type Tag =
     | "dimension"
     | "decoration"
     | "layout"
+    | "unwrap"
     | "a"
     | "h1"
     | "h2"
@@ -96,28 +98,59 @@ export function mergeAttribute<T1 extends Attribute, T2 extends Attribute>(attri
 }
 
 // Strigify
-export function stringifyToHtml(node: HNode): string {
-    if (typeof node === "string") {
-        return node;
-    }
-    if (node.tag === "raw") {
-        return node.child.join("");
-    }
-    if (node.child.length === 0) {
-        return `<${node.tag}${attributeToString(node.attribute)} />`;
-    }
-    return `<${node.tag}${attributeToString(node.attribute)}>${node.child.map(stringifyToHtml).join("")}</${node.tag}>`;
+export function stringifyToHtml(depth: number): (node: HNode) => string {
+    return (node: HNode) => {
+        if (depth > 64) {
+            throw new Error("stringifyToHtml: html element nesting depth must be under 64.");
+        }
+
+        if (typeof node === "string") {
+            return sanitizeBasic(node);
+        }
+
+        if (node.tag === "raw") {
+            return node.child.join("");
+        }
+
+        if (!validateElementName(node.tag)) {
+            throw new Error(`stringifyToHtml: invalid element name ${node.tag}.`);
+        }
+
+        if (node.tag === "unwrap") {
+            return node.child.map(stringifyToHtml(depth + 1)).join("");
+        }
+
+        if (node.child.length === 0) {
+            return `<${node.tag}${attributeToString(node.attribute)} />`;
+        }
+        return `<${node.tag}${attributeToString(node.attribute)}>${node.child.map(stringifyToHtml(depth + 1)).join("")}</${node.tag}>`;
+    };
 }
 
 function attributeToString(attribute: Attribute): string {
     return Object.entries(attribute)
         .map(([raw_key, value]) => {
             const key = raw_key.replaceAll("_", "-");
-            return value === "" || value === null
-                ? ` ${key}`
-                : Array.isArray(value)
-                  ? ` ${key}="${value.join(" ")}"`
-                  : ` ${key}="${value}"`;
+
+            if (!validateAttributeKey(key)) {
+                throw new Error(`attributeToString: invalid attribute key ${key}.`);
+            }
+
+            if (value === "" || value === null || value === undefined) {
+                return ` ${key}`;
+            }
+
+            if (typeof value !== "string" && !Array.isArray(value)) {
+                throw new Error(
+                    `attributeToString: invalid attribute value type ${value}. only string value or array of string value is allowd.`,
+                );
+            }
+
+            const sanitized = Array.isArray(value)
+                ? value.map(sanitizeAttributeValue(key))
+                : [sanitizeAttributeValue(key)(value)];
+
+            return ` ${key}="${sanitized.join(" ")}"`;
         })
         .join("");
 }
@@ -326,3 +359,4 @@ export const Em = gt("em");
 export const RawHTML = gt("raw");
 export const Button = gt("button");
 export const Style = gt("style");
+export const Unwrap = gt("unwrap");

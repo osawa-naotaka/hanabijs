@@ -113,7 +113,7 @@ async function processAndWriteHtml(
         js_src !== "" ? Script({ type: "module", src: js_src }, "") : "",
     ]);
 
-    const html = DOCTYPE() + stringifyToHtml(inserted);
+    const html = DOCTYPE() + stringifyToHtml(0)(inserted);
     writeToFile(html, relative_path, dist_dir, ".html", html_start);
 }
 

@@ -10,6 +10,7 @@
   "types": "build/hanabi-lib.d.ts",
   "scripts": {
     "build": "tsc && rollup --config rollup.config.ts",
+    "tsup": "tsc && tsup --config tsup.config.ts",
     "dev": "bun run --hot src/bin.ts dev",
     "site": "bun run --hot src/bin.ts build",
     "check": "biome check ./src ./site ./test",
@@ -35,6 +36,7 @@
     "rollup-plugin-dts": "^6.1.1",
     "staticseek": "^2.7.1",
     "tslib": "^2.8.1",
+    "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "valibot": "^1.0.0-rc.4"
   },

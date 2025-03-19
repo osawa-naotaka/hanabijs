@@ -86,7 +86,7 @@ export async function serve() {
                                 Script({ type: "module", src: js_name }, ""),
                                 Link({ href: css_name, rel: "stylesheet" }, ""),
                             ]);
-                            const html_text = DOCTYPE() + stringifyToHtml(html);
+                            const html_text = DOCTYPE() + stringifyToHtml(0)(html);
                             return normalResponse(html_text, ".html");
                         }
                         default:
@@ -128,7 +128,7 @@ function normalResponse(content: string | Buffer<ArrayBufferLike>, ext: string):
 }
 
 async function errorResponse(name: string, cause: string): Promise<Response> {
-    return new Response(stringifyToHtml(await ErrorPage({ name, cause })), {
+    return new Response(stringifyToHtml(0)(await ErrorPage({ name, cause })), {
         headers: { "Content-Type": "text/html" },
     });
 }
