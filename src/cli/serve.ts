@@ -142,7 +142,7 @@ async function bundleScript(
     const script_files = Array.from(repository.values())
         .map((x) => x.path)
         .filter(Boolean);
-    const entry = script_files.map((x, idx) => `import scr${idx} from "${x}"; scr${idx}(document);`).join("\n");
+    const entry = script_files.map((x, idx) => `import scr${idx} from "${x}"; scr${idx}();`).join("\n");
     const bundle = await esbuild.build({
         stdin: {
             contents: entry,

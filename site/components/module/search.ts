@@ -57,9 +57,9 @@ export function search(repo: Repository): HComponentFn {
 
 import { createSearchFn } from "staticseek";
 
-export default async function clientFunction(d: Document): Promise<void> {
+export default async function clientFunction(): Promise<void> {
     const search_fn = createSearchFn("/search-index.json");
-    const result_element = d.querySelector<HTMLUListElement>(".search-result");
+    const result_element = document.querySelector<HTMLUListElement>(".search-result");
     if (result_element !== null) {
         const result = await search_fn("staticseek");
         console.log(result);
