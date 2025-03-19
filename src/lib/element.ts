@@ -158,6 +158,73 @@ function attributeToString(attribute: Attribute): string {
         .join("");
 }
 
+// DOM Builder
+export function createDom(depth: number, d: Document = document): (node: HNode) => Node[] {
+    return (node: HNode) => {
+        if (depth > 64) {
+            throw new Error("stringifyToHtml: html element nesting depth must be under 64.");
+        }
+
+        if (typeof node === "string") {
+            return [d.createTextNode(sanitizeBasic(node))];
+        }
+
+        // ad-hock tag "raw". this tag must be removed for security.
+        if (node.tag === "raw") {
+            const p = new DOMParser();
+            return node.child.map((c) => {
+                if (typeof c === "string") {
+                    return p.parseFromString(c, "text/html");
+                }
+                throw new Error("Raw node must be string.");
+            });
+        }
+
+        if (!validateElementName(node.tag)) {
+            throw new Error(`stringifyToHtml: invalid element name ${node.tag}.`);
+        }
+
+        if (node.tag === "unwrap") {
+            return node.child.flatMap(createDom(depth + 1, d));
+        }
+
+        const e = d.createElement(node.tag);
+        setAttribute(e, node.attribute);
+
+        for (const c of node.child) {
+            for (const cd of createDom(depth + 1, d)(c)) {
+                e.appendChild(cd);
+            }
+        }
+        return [e];
+    };
+}
+
+function setAttribute(element: HTMLElement, attribute: Attribute): void {
+    for (const [raw_key, value] of Object.entries(attribute)) {
+        const key = raw_key.replaceAll("_", "-");
+
+        if (!validateAttributeKey(key)) {
+            throw new Error(`attributeToString: invalid attribute key ${key}.`);
+        }
+
+        if (value === "" || value === null || value === undefined) {
+            element.setAttribute(key, "");
+            return;
+        }
+
+        if (typeof value !== "string" && !Array.isArray(value)) {
+            throw new Error(
+                `attributeToString: invalid attribute value type ${value}. only string value or array of string value is allowd.`,
+            );
+        }
+
+        for (const v of Array.isArray(value) ? value : [value]) {
+            element.setAttribute(key, sanitizeAttributeValue(key)(v));
+        }
+    }
+}
+
 // Traverser
 export function selectNode(nodes: HNode[], selector: Selector, search_deep = false): HNode[] {
     const result = new Set<HNode>();
