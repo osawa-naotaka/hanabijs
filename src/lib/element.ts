@@ -2,7 +2,10 @@ import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./s
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
-export type Attribute = Record<string, unknown> & { class?: string | string[]; id?: string };
+export type AttributeValue = string | string[] | unknown;
+export type BaseAttribute = { class?: string | string[]; id?: string };
+
+export type Attribute = Record<string, AttributeValue> & BaseAttribute;
 
 export type HElement<T extends Attribute = Attribute> = {
     element_name: string;
@@ -178,14 +181,14 @@ export function selectNode(nodes: HNode[], selector: Selector, search_deep = fal
     return Array.from(result);
 }
 
-function matchCompoundSelector(selector: CompoundSelector, element: HElement): boolean {
+function matchCompoundSelector(selector: CompoundSelector, element: HElement<{ id?: string }>): boolean {
     for (const s of selector) {
         if (s.startsWith(".")) {
             if (!hasClass(s.slice(1), element.attribute)) {
                 return false;
             }
         } else if (s.startsWith("#")) {
-            if (element.attribute.id !== s.slice(1)) {
+            if (element.attribute.id === undefined || element.attribute.id !== s.slice(1)) {
                 return false;
             }
         } else if (s !== "*") {

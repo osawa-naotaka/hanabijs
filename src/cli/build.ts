@@ -102,7 +102,7 @@ async function processAndWriteHtml(
     relative_path: string,
     dist_dir: string,
     [css_link, js_src]: [string, string],
-    root_page_fn: HRootPageFn<Record<string, unknown>>,
+    root_page_fn: HRootPageFn<Attribute>,
     params: Record<string, string>,
 ): Promise<void> {
     const html_start = performance.now();
