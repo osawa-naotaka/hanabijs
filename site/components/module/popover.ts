@@ -1,12 +1,5 @@
-import {
-    type HComponentFn,
-    type HNode,
-    type Repository,
-    compoundStyle,
-    registerComponent,
-    component,
-    style,
-} from "@/main";
+import { component, compoundStyle, registerComponent, style } from "@/main";
+import type { HComponentFn, HNode, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
 export type PopoverArgument = {

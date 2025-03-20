@@ -1,11 +1,4 @@
-import {
-    Input,
-    Label,
-    compoundStyle,
-    registerComponent,
-    component,
-    style,
-} from "@/main";
+import { Input, Label, component, compoundStyle, registerComponent, style } from "@/main";
 import type { HComponentFn, HNode, Repository } from "@/main";
 
 export type DrawerArgument = {

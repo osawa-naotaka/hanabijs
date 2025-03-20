@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
-import { A, globExt, component } from "@/main";
+import { A, component, globExt } from "@/main";
 import type { HRootPageFn, Repository } from "@/main";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
@@ -34,7 +34,10 @@ export default function Root(repo: Repository): HRootPageFn<void> {
         return Page(
             { title: site.name, description: site.description, lang: site.lang, name: site.name, navitem: navitem },
             Hero({}),
-            PageMainArea({}, ArticleList({}, ...slugs.map((x) => ArticleListItem({}, A({ href: `/posts/${x.slug}` }, x.title))))),
+            PageMainArea(
+                {},
+                ArticleList({}, ...slugs.map((x) => ArticleListItem({}, A({ href: `/posts/${x.slug}` }, x.title)))),
+            ),
         );
     };
 }

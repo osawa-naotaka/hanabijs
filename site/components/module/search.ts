@@ -1,11 +1,4 @@
-import {
-    A,
-    compoundStyle,
-    createDom,
-    registerComponent,
-    component,
-    style,
-} from "@/main";
+import { A, component, compoundStyle, createDom, registerComponent, style } from "@/main";
 import type { HArgument, HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";

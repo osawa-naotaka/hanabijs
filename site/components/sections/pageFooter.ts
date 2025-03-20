@@ -1,4 +1,4 @@
-import { registerComponent, component, style } from "@/main";
+import { component, registerComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -30,5 +30,6 @@ export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
     const PageFooterContent = component("page-footer-content");
     const PageFooterCopyright = component("page-footer-copyright");
 
-    return ({ site_name }) => PageFooter({}, PageFooterContent({}), PageFooterCopyright({}, `&copy; 2025 ${site_name}`));
+    return ({ site_name }) =>
+        PageFooter({}, PageFooterContent({}), PageFooterCopyright({}, `&copy; 2025 ${site_name}`));
 }

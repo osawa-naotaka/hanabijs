@@ -1,4 +1,4 @@
-import { A, registerComponent, component, style } from "@/main";
+import { A, component, registerComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 

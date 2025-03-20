@@ -1,4 +1,4 @@
-import { A, Body, H1, Html, Link, Meta, Title, registerComponent, component, style } from "hanabijs";
+import { A, Body, H1, Html, Link, Meta, Title, component, registerComponent, style } from "hanabijs";
 import type { HComponentFn, Repository } from "hanabijs";
 
 export type PageAttribute = {

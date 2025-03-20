@@ -1,4 +1,4 @@
-import { H2, registerComponent, component, style } from "hanabijs";
+import { H2, component, registerComponent, style } from "hanabijs";
 import type { HPath, HRootPageFn, Repository } from "hanabijs";
 import page from "../../../components/page";
 import { site } from "../../../config";

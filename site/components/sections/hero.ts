@@ -1,4 +1,4 @@
-import { Em, compoundStyle, registerComponent, component, style } from "@/main";
+import { Em, component, compoundStyle, registerComponent, style } from "@/main";
 import type { HArgument, HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
