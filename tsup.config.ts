@@ -1,5 +1,4 @@
 import { defineConfig } from "tsup";
-import { unlink } from "node:fs/promises";
 
 export default defineConfig({
     entry: {

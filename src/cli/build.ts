@@ -3,7 +3,7 @@ import { rmdir } from "node:fs/promises";
 import path from "node:path";
 import { cwd, exit } from "node:process";
 import { dist_subdir, page_subdir, public_subdir } from "@/config";
-import { Link, Script } from "@/lib/element";
+import { Link, Script } from "@/lib/define";
 import type { Attribute, HComponent, HRootPageFn } from "@/lib/element";
 import { DOCTYPE, insertNodes, stringifyToHtml } from "@/lib/element";
 import { type Repository, clearRepository } from "@/lib/repository";

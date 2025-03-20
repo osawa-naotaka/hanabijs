@@ -1,15 +1,13 @@
+import type { AttributeValue, HanabiTag, Tag } from "./define";
 import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./style";
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
-export type AttributeValue = string | string[] | unknown;
-export type BaseAttribute = { class?: string | string[]; id?: string };
-
-export type Attribute = Record<string, AttributeValue> & BaseAttribute;
+export type Attribute = Record<string, AttributeValue>;
 
 export type HElement<T extends Attribute = Attribute> = {
     element_name: string;
-    tag: Tag;
+    tag: Tag | HanabiTag;
     attribute: T;
     child: HNode[];
 };
@@ -19,45 +17,6 @@ export type HComponent = {
     path?: string;
     style: StyleRule[];
 };
-
-export type Tag =
-    | "raw"
-    | "dimension"
-    | "decoration"
-    | "layout"
-    | "unwrap"
-    | "a"
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "h5"
-    | "h6"
-    | "meta"
-    | "link"
-    | "head"
-    | "body"
-    | "html"
-    | "div"
-    | "span"
-    | "main"
-    | "aside"
-    | "section"
-    | "article"
-    | "ul"
-    | "ol"
-    | "li"
-    | "p"
-    | "img"
-    | "title"
-    | "script"
-    | "header"
-    | "footer"
-    | "input"
-    | "label"
-    | "nav"
-    | "em"
-    | "button";
 
 export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 
@@ -394,42 +353,3 @@ export function createSimpleSemantic(
 export function mergeClassToAttribute<T extends Attribute>(attribute: T, className: string) {
     return mergeAttribute(attribute, { class: addClass(attribute, className) });
 }
-
-function gt(tag: Tag): HComponentFn<Attribute> {
-    return (attribute, ...child) => ({ element_name: tag, tag, attribute, child });
-}
-
-export const Meta = gt("meta");
-export const Link = gt("link");
-export const Head = gt("head");
-export const Body = gt("body");
-export const Html = gt("html");
-export const Div = gt("div");
-export const Span = gt("span");
-export const Main = gt("main");
-export const Aside = gt("aside");
-export const Section = gt("section");
-export const Article = gt("article");
-export const Ul = gt("ul");
-export const Ol = gt("ol");
-export const Li = gt("li");
-export const Img = gt("img");
-export const Title = gt("title");
-export const Script = gt("script");
-export const H1 = gt("h1");
-export const H2 = gt("h2");
-export const H3 = gt("h3");
-export const H4 = gt("h4");
-export const H5 = gt("h5");
-export const H6 = gt("h6");
-export const Header = gt("header");
-export const Footer = gt("footer");
-export const A = gt("a");
-export const P = gt("p");
-export const Input = gt("input");
-export const Label = gt("label");
-export const Nav = gt("nav");
-export const Em = gt("em");
-export const RawHTML = gt("raw");
-export const Button = gt("button");
-export const Unwrap = gt("unwrap");

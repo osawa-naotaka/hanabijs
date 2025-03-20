@@ -1,3 +1,5 @@
+import { attribute_names, hanabi_tags, tags } from "./define";
+
 export function replaceExt(filename: string, ext: string) {
     return filename.replace(/\.[^/.]+$/, ext);
 }
@@ -24,129 +26,16 @@ export function contentType(ext: string): string {
     return contentTypes.find((c) => c[0] === ext)?.[1] || "text/plain";
 }
 
-// 許可されたHTML要素のリスト
-const ALLOWED_ELEMENTS = new Set([
-    "div",
-    "span",
-    "p",
-    "a",
-    "img",
-    "ul",
-    "ol",
-    "li",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    "table",
-    "tr",
-    "td",
-    "th",
-    "thead",
-    "tbody",
-    "button",
-    "input",
-    "select",
-    "option",
-    "form",
-    "label",
-    "strong",
-    "em",
-    "br",
-    "hr",
-    "pre",
-    "code",
-    "blockquote",
-    "script",
-    "link",
-    "meta",
-    "html",
-    "head",
-    "title",
-    "body",
-    "nav",
-    "header",
-    "footer",
-    "article",
-    "section",
-    "aside",
-    "main",
-    // その他許可する要素
-    // hanabi独自要素
-    "unwrap",
-]);
+const allowed_elements = new Set<string>([...tags, ...hanabi_tags]);
 
-// 要素名の検証
 export function validateElementName(name: string): boolean {
-    return ALLOWED_ELEMENTS.has(name.toLowerCase());
+    return allowed_elements.has(name.toLowerCase());
 }
 
-// 許可された属性のリスト
-const ALLOWED_ATTRIBUTES = new Set([
-    // 基本属性
-    "id",
-    "class",
-    "name",
-    "title",
+const allowed_attribute_names = new Set<string>(attribute_names);
 
-    // アクセシビリティ
-    "aria-label",
-    "aria-hidden",
-    "aria-expanded",
-    "aria-controls",
-    "aria-haspopup",
-    "role",
-    "tabindex",
-
-    // リンク関連
-    "href",
-    "target",
-    "rel",
-    "download",
-
-    // メディア関連
-    "src",
-    "srcset",
-    "alt",
-    "loading",
-    "width",
-    "height",
-
-    // フォーム関連
-    "type",
-    "value",
-    "placeholder",
-    "disabled",
-    "required",
-    "readonly",
-    "checked",
-    "selected",
-    "maxlength",
-    "minlength",
-    "max",
-    "min",
-    "step",
-
-    // テーブル関連
-    "colspan",
-    "rowspan",
-
-    // その他
-    "lang",
-    "dir",
-    "charset",
-    "content",
-    "http-equiv",
-    "popover",
-    "popovertarget",
-    "for",
-]);
-
-// 属性名の検証
 export function validateAttributeKey(key: string): boolean {
-    return ALLOWED_ATTRIBUTES.has(key.toLowerCase()) || key.toLowerCase().startsWith("data-");
+    return allowed_attribute_names.has(key.toLowerCase()) || key.toLowerCase().startsWith("data-");
 }
 
 export function sanitizeAttributeValue(key: string): (value: string) => string {

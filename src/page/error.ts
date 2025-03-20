@@ -1,4 +1,4 @@
-import { H2, Main, P } from "@/lib/element";
+import { H2, Main, P } from "@/lib/define";
 import type { HNode } from "@/main";
 import { page } from "@/page/page";
 

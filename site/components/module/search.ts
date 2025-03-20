@@ -47,11 +47,11 @@ export function search(repo: Repository): HComponentFn {
                 color: appearence.color.background,
                 font_weight: "bold",
                 padding_inline: "0.5rem",
-                border_radius: "4px",                                
+                border_radius: "4px",
             }),
             style(".search-result-item-description", {
-                font_size: "0.7rem"
-            })
+                font_size: "0.7rem",
+            }),
         ],
         import.meta.path,
     );
@@ -125,8 +125,6 @@ function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
     const SearchResultItemTag = createSimpleSemantic("search-result-item-tag");
     const SearchResultItemTitle = createSimpleSemantic("search-result-item-title");
     const SearchResultItemDescription = createSimpleSemantic("search-result-item-description");
-
-
 
     return (attribute) => {
         const key = v.parse(SearchKeySchema, attribute.result.key);

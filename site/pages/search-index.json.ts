@@ -31,7 +31,10 @@ export default async function createSearchIndex(): Promise<string> {
         posts.push({ id: path.basename(file, ".md"), data: frontmatter, content });
     }
 
-    const index = createIndex(LinearIndex, posts, { key_fields: ["id", "data"], search_targets: ["data.title", "content"] });
+    const index = createIndex(LinearIndex, posts, {
+        key_fields: ["id", "data"],
+        search_targets: ["data.title", "content"],
+    });
     if (index instanceof StaticSeekError) throw index;
     return JSON.stringify(indexToObject(index));
 }

@@ -3,7 +3,7 @@ import path from "node:path";
 import { cwd } from "node:process";
 import { createPageRouter, createStaticRouter } from "@/cli/route";
 import { page_subdir, public_subdir, site_subdir } from "@/config";
-import { Link, Script } from "@/lib/element";
+import { Link, Script } from "@/lib/define";
 import type { HComponent, HRootPageFn } from "@/lib/element";
 import { DOCTYPE, insertNodes, stringifyToHtml } from "@/lib/element";
 import { clearRepository } from "@/lib/repository";
