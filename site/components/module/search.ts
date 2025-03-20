@@ -1,4 +1,4 @@
-import { compoundStyle, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
+import { A, compoundStyle, createDom, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
@@ -55,13 +55,57 @@ export function search(repo: Repository): HComponentFn {
         );
 }
 
-import { createSearchFn } from "staticseek";
+import { StaticSeekError, createSearchFn } from "staticseek";
+import type { SearchResult } from "staticseek";
 
 export default async function clientFunction(): Promise<void> {
     const search_fn = createSearchFn("/search-index.json");
-    const result_element = document.querySelector<HTMLUListElement>(".search-result");
-    if (result_element !== null) {
-        const result = await search_fn("staticseek");
-        console.log(result);
+    const search_result_e = document.querySelector<HTMLUListElement>(".search-result");
+    const search_input_e = document.querySelector<HTMLInputElement>(".search-input");
+    if (search_result_e === null || search_input_e === null) {
+        throw new Error("search element not found.");
     }
+    const SearchResultItem = searchResultItem();
+
+    search_input_e.addEventListener("input", async () => {
+        const result = await search_fn(search_input_e.value);
+        if (result instanceof StaticSeekError) {
+            search_result_e.innerHTML = "<li>search function internal errror</li>";
+        } else {
+            search_result_e.innerText = "";
+            for (const r of result) {
+                const node = SearchResultItem({ result: r });
+                for (const n of createDom(node)) {
+                    search_result_e.appendChild(n);
+                }
+            }
+        }
+    });
+}
+
+import * as v from "valibot";
+
+export const SearchKeySchema = v.object({
+    id: v.string(),
+    data: v.object({
+        title: v.string(),
+    }),
+});
+
+type SearchResultItemAttribute = {
+    result: SearchResult;
+};
+
+function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
+    const SearchResultItem = createSimpleSemantic("search-result-item", { tag: "li" });
+    const SearchResultItemTitle = createSimpleSemantic("search-result-item-title");
+    const SearchResultItemDescription = createSimpleSemantic("search-result-item-description");
+
+    return (attribute) => {
+        const key = v.parse(SearchKeySchema, attribute.result.key);
+        return SearchResultItem(
+            SearchResultItemTitle(A({ href: `/posts/${key.id}` }, key.data.title)),
+            SearchResultItemDescription(attribute.result.refs[0].wordaround || ""),
+        );
+    };
 }

@@ -58,7 +58,7 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
             { class: attribute.class },
             PopoverButton({ type: "button", popovertarget: button_id }, attribute.open_button),
             PopoverContainer(
-                { popover: undefined, id: button_id },
+                { popover: null, id: button_id },
                 PopoverContent(
                     PopoverCloseArea(
                         PopoverButton({ type: "button", popovertarget: button_id }, attribute.close_button),

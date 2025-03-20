@@ -8,21 +8,26 @@ import { LinearIndex, StaticSeekError, createIndex, indexToObject } from "static
 import * as v from "valibot";
 
 export default async function createSearchIndex(): Promise<string> {
-    const schema = v.object({
-        data: v.object({
-            title: v.string(),
-        }),
+    const frontmatterSchema = v.object({
+        title: v.string(),
+    });
+    const markdownSchema = v.object({
+        id: v.string(),
+        data: frontmatterSchema,
         content: v.string(),
     });
 
-    type PostType = v.InferInput<typeof schema>;
+    type PostType = v.InferInput<typeof markdownSchema>;
     const posts: PostType[] = [];
 
     const files = globExt(posts_dir, ".md");
     for await (const file of files) {
-        posts.push(v.parse(schema, matter(await readFile(path.join(cwd(), posts_dir, file)))));
+        const { data, content } = matter(await readFile(path.join(cwd(), posts_dir, file)));
+        const frontmatter = v.parse(frontmatterSchema, data);
+        posts.push({ id: path.basename(file, ".md"), data: frontmatter, content });
     }
-    const index = createIndex(LinearIndex, posts, { key_fields: ["data.title"] });
+
+    const index = createIndex(LinearIndex, posts, { key_fields: ["id", "data.title"] });
     if (index instanceof StaticSeekError) throw index;
     return JSON.stringify(indexToObject(index));
 }

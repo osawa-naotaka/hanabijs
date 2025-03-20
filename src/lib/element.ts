@@ -111,6 +111,7 @@ export function stringifyToHtml(depth: number): (node: HNode) => string {
             return sanitizeBasic(node);
         }
 
+        // ad-hock tag "raw". this tag must be removed for security.
         if (node.tag === "raw") {
             return node.child.join("");
         }
@@ -139,7 +140,7 @@ function attributeToString(attribute: Attribute): string {
                 throw new Error(`attributeToString: invalid attribute key ${key}.`);
             }
 
-            if (value === "" || value === null || value === undefined) {
+            if (value === "" || value === null) {
                 return ` ${key}`;
             }
 
@@ -159,7 +160,11 @@ function attributeToString(attribute: Attribute): string {
 }
 
 // DOM Builder
-export function createDom(depth: number, d: Document = document): (node: HNode) => Node[] {
+export function createDom(node: HNode, d: Document = document): Node[] {
+    return createDomInternal(0, d)(node);
+}
+
+function createDomInternal(depth: number, d: Document = document): (node: HNode) => Node[] {
     return (node: HNode) => {
         if (depth > 64) {
             throw new Error("stringifyToHtml: html element nesting depth must be under 64.");
@@ -171,10 +176,10 @@ export function createDom(depth: number, d: Document = document): (node: HNode) 
 
         // ad-hock tag "raw". this tag must be removed for security.
         if (node.tag === "raw") {
-            const p = new DOMParser();
-            return node.child.map((c) => {
-                if (typeof c === "string") {
-                    return p.parseFromString(c, "text/html");
+            const parser = new DOMParser();
+            return node.child.map((child) => {
+                if (typeof child === "string") {
+                    return parser.parseFromString(child, "text/html");
                 }
                 throw new Error("Raw node must be string.");
             });
@@ -185,18 +190,18 @@ export function createDom(depth: number, d: Document = document): (node: HNode) 
         }
 
         if (node.tag === "unwrap") {
-            return node.child.flatMap(createDom(depth + 1, d));
+            return node.child.flatMap(createDomInternal(depth + 1, d));
         }
 
-        const e = d.createElement(node.tag);
-        setAttribute(e, node.attribute);
+        const element = d.createElement(node.tag);
+        setAttribute(element, node.attribute);
 
-        for (const c of node.child) {
-            for (const cd of createDom(depth + 1, d)(c)) {
-                e.appendChild(cd);
+        for (const child of node.child) {
+            for (const child_element of createDomInternal(depth + 1, d)(child)) {
+                element.appendChild(child_element);
             }
         }
-        return [e];
+        return [element];
     };
 }
 
@@ -208,7 +213,7 @@ function setAttribute(element: HTMLElement, attribute: Attribute): void {
             throw new Error(`attributeToString: invalid attribute key ${key}.`);
         }
 
-        if (value === "" || value === null || value === undefined) {
+        if (value === "" || value === null) {
             element.setAttribute(key, "");
             return;
         }
