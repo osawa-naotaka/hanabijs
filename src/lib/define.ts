@@ -1403,7 +1403,8 @@ export type WbrAttribute = Record<CommonAttributeName, AttributeValue>;
 export const wbr_attribute_names: WbrAttributeName[] = common_attribute_names;
 
 function gt<T extends Attribute>(tag: Tag | HanabiTag): HComponentFn<Partial<T>> {
-    return (argument, ...child) => ({ element_name: tag, tag, attribute: argument, child });
+    return (argument) =>
+        (...child) => ({ element_name: tag, tag, attribute: argument, child });
 }
 
 // add here

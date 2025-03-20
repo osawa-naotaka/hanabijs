@@ -132,8 +132,10 @@ function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
                 SearchResultItemMeta({})(
                     key.data.author,
                     key.data.date,
-                    ...key.data.principalTag.map((tag) => SearchResultItemTag({})(tag)),
-                    ...(key.data.associatedTags || []).map((tag) => SearchResultItemTag({})(tag)),
+                    ...key.data.principalTag.map((tag) => SearchResultItemTag({})(A({ href: `/tags/${tag}` })(tag))),
+                    ...(key.data.associatedTags || []).map((tag) =>
+                        SearchResultItemTag({})(A({ href: `/tags/${tag}` })(tag)),
+                    ),
                 ),
                 SearchResultItemTitle({})(A({ href: `/posts/${key.id}` })(key.data.title)),
                 SearchResultItemDescription({})(result.refs[0].wordaround || ""),

@@ -33,6 +33,6 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
             lang: site.lang,
             name: site.name,
             navitem: navitem,
-        })(PageMainArea({})(Article({})(H2({})(data.title || "", RawHTML({})(raw_html)))));
+        })(PageMainArea({})(Article({})(H2({})(data.title || ""), RawHTML({})(raw_html))));
     };
 }

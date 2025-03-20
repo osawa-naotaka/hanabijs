@@ -83,9 +83,9 @@ export async function serve() {
                             const js_name = replaceExt(replaceExt(match_page.target_file, ""), ".js");
 
                             const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
-                                Script({ type: "module", src: "/reload.js" }, ""),
-                                Script({ type: "module", src: js_name }, ""),
-                                Link({ href: css_name, rel: "stylesheet" }, ""),
+                                Script({ type: "module", src: "/reload.js" })(""),
+                                Script({ type: "module", src: js_name })(""),
+                                Link({ href: css_name, rel: "stylesheet" })(""),
                             ]);
                             const html_text = DOCTYPE() + stringifyToHtml(0)(html);
                             return normalResponse(html_text, ".html");
