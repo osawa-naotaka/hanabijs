@@ -1,11 +1,11 @@
-import { Input, Label, compoundStyle, registerComponent, semantic, style } from "@/main";
+import { Input, Label, compoundStyle, layout, registerComponent, semantic, style } from "@/main";
 import type { HComponentFn, HNode, Repository } from "@/main";
 
 export type DrawerArgument = {
     title: HNode;
     header_space: HNode;
     open_button: HNode;
-    content: HNode[];
+    content: HNode;
 };
 
 export function drawer(repo: Repository, button_id: string): HComponentFn<DrawerArgument> {
@@ -31,8 +31,8 @@ export function drawer(repo: Repository, button_id: string): HComponentFn<Drawer
 
     const Drawer = semantic("drawer");
     const DrawerTitle = semantic("drawer-title");
-    const DrawerHeaderSpace = semantic("drawer-header-space");
-    const DrawerContent = semantic("drawer-content");
+    const DrawerHeaderSpace = layout("drawer-header-space");
+    const DrawerContent = layout("drawer-content");
 
     return (argument) => () =>
         Drawer({ class: argument.class })(
@@ -44,6 +44,6 @@ export function drawer(repo: Repository, button_id: string): HComponentFn<Drawer
                     Label({ class: "drawer-open-button", for: button_id })(argument.open_button),
                 ),
             ),
-            DrawerContent({})(...argument.content),
+            DrawerContent({})(argument.content),
         );
 }

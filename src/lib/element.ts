@@ -359,6 +359,21 @@ export function semantic<T extends Attribute>(
         });
 }
 
+// on layout Component, argument is attribute.
+// layout component is constructed with div tag.
+export function layout<T extends Attribute>(
+    element_name: string,
+    { class_names = [] }: { class_names?: string[] } = {},
+): HComponentFn<T> {
+    return (argument) =>
+        (...child) => ({
+            element_name,
+            tag: "div",
+            attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
+            child,
+        });
+}
+
 export function mergeClassToRecord<T extends Record<string | number | symbol, unknown>>(
     attribute: T,
     className: string,

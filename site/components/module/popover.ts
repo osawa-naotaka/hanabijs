@@ -1,10 +1,11 @@
-import { compoundStyle, registerComponent, semantic, style } from "@/main";
+import { compoundStyle, layout, registerComponent, semantic, style } from "@/main";
 import type { HComponentFn, HNode, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
 export type PopoverArgument = {
     open_button: HNode;
     close_button: HNode;
+    body: HNode;
 };
 
 export function popover(repo: Repository, button_id: string): HComponentFn<PopoverArgument> {
@@ -41,21 +42,20 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
 
     const Popover = semantic("popover");
     const PopoverButton = semantic("popover-button", { tag: "button" });
-    const PopoverCloseArea = semantic("popover-close-area");
-    const PopoverContainer = semantic("popover-container", { class_names: ["container"] });
-    const PopoverContent = semantic("popover-content", { class_names: ["content"] });
+    const PopoverCloseArea = layout("popover-close-area");
+    const PopoverContainer = layout("popover-container", { class_names: ["container"] });
+    const PopoverContent = layout("popover-content", { class_names: ["content"] });
 
-    return (argument) =>
-        (...child) =>
-            Popover({ class: argument.class })(
-                PopoverButton({ type: "button", popovertarget: button_id })(argument.open_button),
-                PopoverContainer({ popover: "", id: button_id })(
-                    PopoverContent({})(
-                        PopoverCloseArea({})(
-                            PopoverButton({ type: "button", popovertarget: button_id })(argument.close_button),
-                        ),
-                        ...child,
+    return (argument) => () =>
+        Popover({ class: argument.class })(
+            PopoverButton({ type: "button", popovertarget: button_id })(argument.open_button),
+            PopoverContainer({ popover: "", id: button_id })(
+                PopoverContent({})(
+                    PopoverCloseArea({})(
+                        PopoverButton({ type: "button", popovertarget: button_id })(argument.close_button),
                     ),
+                    argument.body,
                 ),
-            );
+            ),
+        );
 }

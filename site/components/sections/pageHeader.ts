@@ -41,9 +41,10 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
                     header_space: Popover({
                         open_button: SvgIcon({ name: "magnifier-glass" })(),
                         close_button: SvgIcon({ name: "close-button" })(),
-                    })(Search({})()),
+                        body: Search({})(),
+                    })(),
                     open_button: SvgIcon({ name: "menu-bar" })(),
-                    content: [Navigation({ navitem })()],
+                    content: Navigation({ navitem })(),
                 })(),
             );
 }
