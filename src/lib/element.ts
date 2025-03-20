@@ -3,7 +3,6 @@ import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./s
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
-
 // HTML DOM Node = string or HTML Element
 export type HNode<T extends Attribute = Attribute> = string | HElement<Partial<T>>;
 
@@ -27,8 +26,11 @@ export type HComponent = {
 };
 
 // hanabi Component (is function)
-export type HComponentFn<T extends HArgument> = (argument: T & Partial<{ class: string | string[], id: string }>, ...child: HNode[]) => HNode;
-export type HArgument = Record<string, unknown> & Partial<{ class: string | string[], id: string }>;
+export type HComponentFn<T extends HArgument> = (
+    argument: T & Partial<{ class: string | string[]; id: string }>,
+    ...child: HNode[]
+) => HNode;
+export type HArgument = Record<string, unknown> & Partial<{ class: string | string[]; id: string }>;
 
 // hanabi Component, without argument
 export type HSimpleComponentFn = (...child: HNode[]) => HNode;
@@ -38,12 +40,10 @@ export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
 
 export type HPath<T> = { params: T }[];
 
-
 // Element
 export function DOCTYPE(): string {
     return "<!DOCTYPE html>";
 }
-
 
 // add attribute
 export function addClassToAttribute<T extends { class?: string | string[] }>(attribute: T, className: string): T {
@@ -346,19 +346,20 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
     return result;
 }
 
-export function createSemantic<T extends Attribute>(
+// on semantic Component, argument is attribute.
+export function semanticComponent<T extends Attribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HComponentFn<T> {
-    return (attribute, ...child) => ({
+    return (argument, ...child) => ({
         element_name,
         tag,
-        attribute: mergeAttribute(attribute, { class: addClass(attribute, [element_name, ...class_names]) }),
+        attribute: mergeAttribute(argument, { class: addClass(argument, [element_name, ...class_names]) }),
         child,
     });
 }
 
-export function createSimpleSemantic(
+export function simpleSemanticComponent(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HSimpleComponentFn {

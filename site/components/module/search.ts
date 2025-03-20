@@ -1,9 +1,15 @@
-import { A, compoundStyle, createDom, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
+import {
+    A,
+    compoundStyle,
+    createDom,
+    registerComponent,
+    semanticComponent,
+    simpleSemanticComponent,
+    style,
+} from "@/main";
 import type { HArgument, HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
-
-
 
 export function search(repo: Repository): HComponentFn<HArgument> {
     registerComponent(
@@ -58,12 +64,12 @@ export function search(repo: Repository): HComponentFn<HArgument> {
         import.meta.path,
     );
 
-    const Search = createSemantic("search", { class_names: ["content"] });
-    const SearchBar = createSimpleSemantic("search-bar");
-    const SearchInput = createSemantic("search-input", { tag: "input" });
+    const Search = semanticComponent("search", { class_names: ["content"] });
+    const SearchBar = simpleSemanticComponent("search-bar");
+    const SearchInput = semanticComponent("search-input", { tag: "input" });
     const SvgIcon = svgIcon(repo);
-    const SearchResult = createSimpleSemantic("search-result", { tag: "ul" });
-    const SearchResultItem = createSimpleSemantic("search-result-item", { tag: "li" });
+    const SearchResult = simpleSemanticComponent("search-result", { tag: "ul" });
+    const SearchResultItem = simpleSemanticComponent("search-result-item", { tag: "li" });
 
     return (argument) =>
         Search(
@@ -122,11 +128,11 @@ type SearchResultItemAttribute = {
 };
 
 function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
-    const SearchResultItem = createSimpleSemantic("search-result-item", { tag: "li" });
-    const SearchResultItemMeta = createSimpleSemantic("search-result-item-meta");
-    const SearchResultItemTag = createSimpleSemantic("search-result-item-tag");
-    const SearchResultItemTitle = createSimpleSemantic("search-result-item-title");
-    const SearchResultItemDescription = createSimpleSemantic("search-result-item-description");
+    const SearchResultItem = simpleSemanticComponent("search-result-item", { tag: "li" });
+    const SearchResultItemMeta = simpleSemanticComponent("search-result-item-meta");
+    const SearchResultItemTag = simpleSemanticComponent("search-result-item-tag");
+    const SearchResultItemTitle = simpleSemanticComponent("search-result-item-title");
+    const SearchResultItemDescription = simpleSemanticComponent("search-result-item-description");
 
     return (attribute) => {
         const key = v.parse(SearchKeySchema, attribute.result.key);

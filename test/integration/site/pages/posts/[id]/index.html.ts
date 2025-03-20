@@ -1,4 +1,4 @@
-import { H2, createSimpleSemantic, registerComponent, style } from "hanabijs";
+import { H2, registerComponent, simpleSemanticComponent, style } from "hanabijs";
 import type { HPath, HRootPageFn, Repository } from "hanabijs";
 import page from "../../../components/page";
 import { site } from "../../../config";
@@ -18,7 +18,7 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
         }),
     ]);
     const Page = page(repo);
-    const PageMainArea = createSimpleSemantic("page-main-area", { tag: "main" });
+    const PageMainArea = simpleSemanticComponent("page-main-area", { tag: "main" });
 
     return async (parameter) => {
         const title = `Post Page ${parameter.id}`;

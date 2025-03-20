@@ -5,7 +5,7 @@ import { pageFooter } from "@site/components/sections/pageFooter";
 import { pageHeader } from "@site/components/sections/pageHeader";
 import { appearence } from "@site/config/site.config";
 
-export type PageAttribute = {
+export type PageArgument = {
     title: string;
     description: string;
     lang: string;
@@ -16,7 +16,7 @@ export type PageAttribute = {
     }[];
 };
 
-export function page(repo: Repository): HComponentFn<PageAttribute> {
+export function page(repo: Repository): HComponentFn<PageArgument> {
     registerComponent(repo, "page", [
         style("*", {
             margin: "0",

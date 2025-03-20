@@ -1,12 +1,12 @@
-import { createSimpleSemantic, registerComponent, style } from "@/main";
+import { registerComponent, simpleSemanticComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
-export type PageFooterAttribute = {
+export type PageFooterArgument = {
     site_name: string;
 };
 
-export function pageFooter(repo: Repository): HComponentFn<PageFooterAttribute> {
+export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
     registerComponent(repo, "page-footer", [
         style("&", {
             position: "fixed",
@@ -26,9 +26,9 @@ export function pageFooter(repo: Repository): HComponentFn<PageFooterAttribute> 
         }),
     ]);
 
-    const PageFooter = createSimpleSemantic("page-footer", { tag: "footer" });
-    const PageFooterContent = createSimpleSemantic("page-footer-content");
-    const PageFooterCopyright = createSimpleSemantic("page-footer-copyright");
+    const PageFooter = simpleSemanticComponent("page-footer", { tag: "footer" });
+    const PageFooterContent = simpleSemanticComponent("page-footer-content");
+    const PageFooterCopyright = simpleSemanticComponent("page-footer-copyright");
 
     return (attribute) => PageFooter(PageFooterContent(), PageFooterCopyright(`&copy; 2025 ${attribute.site_name}`));
 }

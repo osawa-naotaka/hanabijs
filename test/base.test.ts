@@ -15,7 +15,7 @@ import {
     Section,
     Span,
     Title,
-} from "../src/lib/element";
+} from "../src/lib/define";
 import { insertNodes, selectNode } from "../src/lib/element";
 import { createSelector, rulesToString } from "../src/lib/style";
 

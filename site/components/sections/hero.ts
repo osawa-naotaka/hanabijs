@@ -1,8 +1,8 @@
-import { Em, compoundStyle, createSimpleSemantic, registerComponent, style } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import { Em, compoundStyle, registerComponent, simpleSemanticComponent, style } from "@/main";
+import type { HArgument, HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
-export function hero(repo: Repository): HComponentFn<{}> {
+export function hero(repo: Repository): HComponentFn<HArgument> {
     registerComponent(repo, "hero", [
         style("&", {
             font_size: "min(17vw, 7rem)",
@@ -17,8 +17,8 @@ export function hero(repo: Repository): HComponentFn<{}> {
         }),
     ]);
 
-    const Hero = createSimpleSemantic("hero", { class_names: ["container"] });
-    const HeroText = createSimpleSemantic("hero-text", { class_names: ["content"] });
+    const Hero = simpleSemanticComponent("hero", { class_names: ["container"] });
+    const HeroText = simpleSemanticComponent("hero-text", { class_names: ["content"] });
 
     return () => Hero(HeroText("LULLIECA", Em({}, "T"), " IS ", Em({}, "A"), "LIVE"));
 }

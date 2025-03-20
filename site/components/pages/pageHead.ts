@@ -1,12 +1,12 @@
 import { Head, Link, Meta, Title } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 
-export type PageHeadAttribute = {
+export type PageHeadArgument = {
     title: string;
     description: string;
 };
 
-export function pageHead(_repo: Repository): HComponentFn<PageHeadAttribute> {
+export function pageHead(_repo: Repository): HComponentFn<PageHeadArgument> {
     return (attribute) =>
         Head(
             { class: "page-head" },

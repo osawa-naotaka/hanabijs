@@ -3,19 +3,19 @@ import {
     type HNode,
     type Repository,
     compoundStyle,
-    createSemantic,
-    createSimpleSemantic,
     registerComponent,
+    semanticComponent,
+    simpleSemanticComponent,
     style,
 } from "@/main";
 import { appearence } from "@site/config/site.config";
 
-export type PopoverAttribute = {
+export type PopoverArgument = {
     open_button: HNode;
     close_button: HNode;
 };
 
-export function popover(repo: Repository, button_id: string): HComponentFn<PopoverAttribute> {
+export function popover(repo: Repository, button_id: string): HComponentFn<PopoverArgument> {
     registerComponent(repo, "popover", [
         style("&", {
             display: "flex",
@@ -47,11 +47,11 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
         }),
     ]);
 
-    const Popover = createSemantic("popover");
-    const PopoverButton = createSemantic("popover-button", { tag: "button" });
-    const PopoverCloseArea = createSimpleSemantic("popover-close-area");
-    const PopoverContainer = createSemantic("popover-container", { class_names: ["container"] });
-    const PopoverContent = createSimpleSemantic("popover-content", { class_names: ["content"] });
+    const Popover = semanticComponent("popover");
+    const PopoverButton = semanticComponent("popover-button", { tag: "button" });
+    const PopoverCloseArea = simpleSemanticComponent("popover-close-area");
+    const PopoverContainer = semanticComponent("popover-container", { class_names: ["container"] });
+    const PopoverContent = simpleSemanticComponent("popover-content", { class_names: ["content"] });
 
     return (attribute, ...child) =>
         Popover(

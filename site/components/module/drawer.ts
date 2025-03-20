@@ -1,14 +1,22 @@
-import { Input, Label, compoundStyle, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
+import {
+    Input,
+    Label,
+    compoundStyle,
+    registerComponent,
+    semanticComponent,
+    simpleSemanticComponent,
+    style,
+} from "@/main";
 import type { HComponentFn, HNode, Repository } from "@/main";
 
-export type DrawerAttribute = {
+export type DrawerArgument = {
     title: HNode;
     header_space: HNode;
     open_button: HNode;
     content: HNode[];
 };
 
-export function drawer(repo: Repository, button_id: string): HComponentFn<DrawerAttribute> {
+export function drawer(repo: Repository, button_id: string): HComponentFn<DrawerArgument> {
     registerComponent(repo, "drawer", [
         style("&", { overflow: "hidden" }),
         style(".drawer-title", {
@@ -29,10 +37,10 @@ export function drawer(repo: Repository, button_id: string): HComponentFn<Drawer
         }),
     ]);
 
-    const Drawer = createSemantic("drawer");
-    const DrawerTitle = createSimpleSemantic("drawer-title");
-    const DrawerHeaderSpace = createSimpleSemantic("drawer-header-space");
-    const DrawerContent = createSimpleSemantic("drawer-content");
+    const Drawer = semanticComponent("drawer");
+    const DrawerTitle = simpleSemanticComponent("drawer-title");
+    const DrawerHeaderSpace = simpleSemanticComponent("drawer-header-space");
+    const DrawerContent = simpleSemanticComponent("drawer-content");
 
     return (attribute) =>
         Drawer(

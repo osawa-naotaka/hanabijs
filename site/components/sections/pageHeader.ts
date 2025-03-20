@@ -1,4 +1,4 @@
-import { A, H1, createSimpleSemantic, registerComponent, style } from "@/main";
+import { A, H1, registerComponent, simpleSemanticComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
@@ -6,7 +6,7 @@ import { navigation } from "@site/components/module/navigation";
 import { popover } from "../module/popover";
 import { search } from "../module/search";
 
-export type PageHeaderAttribute = {
+export type PageHeaderArgument = {
     title: string;
     navitem: {
         url: string;
@@ -14,7 +14,7 @@ export type PageHeaderAttribute = {
     }[];
 };
 
-export function pageHeader(repo: Repository): HComponentFn<PageHeaderAttribute> {
+export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
     registerComponent(repo, "page-header", [
         style("&", {
             position: "sticky",
@@ -29,14 +29,14 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderAttribute> 
     const Popover = popover(repo, "search-popover");
     const SvgIcon = svgIcon(repo);
     const Navigation = navigation(repo);
-    const PageHeader = createSimpleSemantic("page-header", { class_names: ["container"], tag: "header" });
+    const PageHeader = simpleSemanticComponent("page-header", { class_names: ["container"], tag: "header" });
     const Search = search(repo);
 
-    return (attribute) =>
+    return (argument) =>
         PageHeader(
             Drawer({
                 class: "content",
-                title: H1({}, A({ href: "/" }, attribute.title)),
+                title: H1({}, A({ href: "/" }, argument.title)),
                 header_space: Popover(
                     {
                         open_button: SvgIcon({ name: "magnifier-glass" }),
@@ -45,7 +45,7 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderAttribute> 
                     Search({}),
                 ),
                 open_button: SvgIcon({ name: "menu-bar" }),
-                content: [Navigation(attribute)],
+                content: [Navigation(argument)],
             }),
         );
 }

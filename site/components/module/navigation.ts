@@ -1,15 +1,15 @@
-import { A, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
+import { A, registerComponent, semanticComponent, simpleSemanticComponent, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
-export type NavigationAttribute = {
+export type NavigationArgument = {
     navitem: {
         url: string;
         icon: string;
     }[];
 };
 
-export function navigation(repo: Repository): HComponentFn<NavigationAttribute> {
+export function navigation(repo: Repository): HComponentFn<NavigationArgument> {
     registerComponent(repo, "navigation", [
         style("&", {
             font_weight: "bold",
@@ -24,9 +24,9 @@ export function navigation(repo: Repository): HComponentFn<NavigationAttribute> 
         }),
     ]);
 
-    const Navigation = createSemantic("navigation", { tag: "nav" });
-    const NavigationList = createSimpleSemantic("navigation-list", { tag: "ul" });
-    const NavigationListItem = createSimpleSemantic("navigation-list-item", { tag: "li" });
+    const Navigation = semanticComponent("navigation", { tag: "nav" });
+    const NavigationList = simpleSemanticComponent("navigation-list", { tag: "ul" });
+    const NavigationListItem = simpleSemanticComponent("navigation-list-item", { tag: "li" });
 
     const SvgIcon = svgIcon(repo);
     return (attribute) =>

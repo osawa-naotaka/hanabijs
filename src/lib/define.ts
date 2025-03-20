@@ -1,4 +1,4 @@
-import type { HComponentFn, AttributeValue, Attribute } from "./element";
+import type { Attribute, AttributeValue, HComponentFn } from "./element";
 
 export type Tag =
     | "a"

@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import { markdownToHtml } from "@/lib/markdown";
-import { H2, RawHTML, createSimpleSemantic, globExt } from "@/main";
+import { H2, RawHTML, globExt, simpleSemanticComponent } from "@/main";
 import type { HPath, HRootPageFn, Repository } from "@/main";
 import { page } from "@site/components/pages/page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
@@ -19,8 +19,8 @@ export async function getStaticPaths(): Promise<HPath<RootParameter>> {
 
 export default function Root(repo: Repository): HRootPageFn<RootParameter> {
     const Page = page(repo);
-    const PageMainArea = createSimpleSemantic("page-main-area", { class_names: ["container"], tag: "main" });
-    const Article = createSimpleSemantic("article", { class_names: ["content"], tag: "article" });
+    const PageMainArea = simpleSemanticComponent("page-main-area", { class_names: ["container"], tag: "main" });
+    const Article = simpleSemanticComponent("article", { class_names: ["content"], tag: "article" });
 
     return async (parameter) => {
         const markdown = await readFile(path.join(cwd(), posts_dir, `${parameter.id}.md`), "utf-8");
