@@ -52,7 +52,7 @@ export function addClassToAttribute<T extends { class?: string | string[] }>(att
     return new_attribute;
 }
 
-export function addClass<T extends { class?: string | string[] }>(
+function addClass<T extends { class?: string | string[] }>(
     attribute: T,
     className: string | string[],
 ): string | string[] {
@@ -65,7 +65,7 @@ export function addClass<T extends { class?: string | string[] }>(
     return className;
 }
 
-export function mergeAttribute<T1 extends Attribute, T2 extends Attribute>(attribute1: T1, attribute2: T2): T1 & T2 {
+function mergeAttribute<T1 extends Attribute, T2 extends Attribute>(attribute1: T1, attribute2: T2): T1 & T2 {
     const new_attribute = JSON.parse(JSON.stringify(attribute1));
     for (const [key, value] of Object.entries(attribute2)) {
         new_attribute[key] = value;

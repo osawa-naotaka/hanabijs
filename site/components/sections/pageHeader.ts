@@ -3,8 +3,8 @@ import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
-import { popover } from "../module/popover";
-import { search } from "../module/search";
+import { popover } from "@site/components/module/popover";
+import { search } from "@site/components/module/search";
 
 export type PageHeaderArgument = {
     title: string;
