@@ -29,11 +29,15 @@ export default function Root(repo: Repository): HRootPageFn<void> {
             )
         ).sort((a, b) => a.slug.localeCompare(b.slug));
 
-        return Page(
-            { title: site.name, description: site.description, lang: site.lang, name: site.name, navitem: navitem },
-            PageMainArea(
-                {},
-                ArticleList({}, ...slugs.map((x) => ArticleListItem({}, A({ href: `/posts/${x.slug}` }, x.title)))),
+        return Page({
+            title: site.name,
+            description: site.description,
+            lang: site.lang,
+            name: site.name,
+            navitem: navitem,
+        })(
+            PageMainArea({})(
+                ArticleList({})(...slugs.map((x) => ArticleListItem({})(A({ href: `/posts/${x.slug}` })(x.title)))),
             ),
         );
     };

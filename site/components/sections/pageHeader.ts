@@ -33,20 +33,17 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
     const Search = search(repo);
 
     return ({ title, navitem }) =>
-        PageHeader(
-            {},
-            Drawer({
-                class: "content",
-                title: H1({}, A({ href: "/" }, title)),
-                header_space: Popover(
-                    {
-                        open_button: SvgIcon({ name: "magnifier-glass" }),
-                        close_button: SvgIcon({ name: "close-button" }),
-                    },
-                    Search({}),
-                ),
-                open_button: SvgIcon({ name: "menu-bar" }),
-                content: [Navigation({ navitem })],
-            }),
-        );
+        () =>
+            PageHeader({})(
+                Drawer({
+                    class: "content",
+                    title: H1({})(A({ href: "/" })(title)),
+                    header_space: Popover({
+                        open_button: SvgIcon({ name: "magnifier-glass" })(),
+                        close_button: SvgIcon({ name: "close-button" })(),
+                    })(Search({})()),
+                    open_button: SvgIcon({ name: "menu-bar" })(),
+                    content: [Navigation({ navitem })()],
+                })(),
+            );
 }

@@ -27,15 +27,12 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
         const { data, content } = matter(markdown);
 
         const raw_html = await markdownToHtml(content);
-        return Page(
-            {
-                title: `${data.title || ""} | ${site.name}`,
-                description: site.description,
-                lang: site.lang,
-                name: site.name,
-                navitem: navitem,
-            },
-            PageMainArea({}, Article({}, H2({}, data.title || ""), RawHTML({}, raw_html))),
-        );
+        return Page({
+            title: `${data.title || ""} | ${site.name}`,
+            description: site.description,
+            lang: site.lang,
+            name: site.name,
+            navitem: navitem,
+        })(PageMainArea({})(Article({})(H2({})(data.title || "", RawHTML({})(raw_html)))));
     };
 }

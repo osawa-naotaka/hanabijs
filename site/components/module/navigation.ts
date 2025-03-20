@@ -29,14 +29,12 @@ export function navigation(repo: Repository): HComponentFn<NavigationArgument> {
     const NavigationListItem = semantic("navigation-list-item", { tag: "li" });
 
     const SvgIcon = svgIcon(repo);
-    return (argument) =>
-        Navigation(
-            { class: argument.class },
-            NavigationList(
-                {},
-                NavigationListItem({}, A({ href: "/posts" }, "blog")),
+    return (argument) => () =>
+        Navigation({ class: argument.class })(
+            NavigationList({})(
+                NavigationListItem({})(A({ href: "/posts" })("blog")),
                 ...argument.navitem.map((item) =>
-                    NavigationListItem({}, A({ href: item.url, target: "__blank" }, SvgIcon({ name: item.icon }))),
+                    NavigationListItem({})(A({ href: item.url, target: "__blank" })(SvgIcon({ name: item.icon })())),
                 ),
             ),
         );

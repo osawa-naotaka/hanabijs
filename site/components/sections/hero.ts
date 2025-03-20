@@ -20,5 +20,5 @@ export function hero(repo: Repository): HComponentFn<HArgument> {
     const Hero = semantic("hero", { class_names: ["container"] });
     const HeroText = semantic("hero-text", { class_names: ["content"] });
 
-    return () => Hero({}, HeroText({}, "LULLIECA", Em({}, "T"), " IS ", Em({}, "A"), "LIVE"));
+    return () => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE"));
 }

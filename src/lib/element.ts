@@ -28,8 +28,7 @@ export type HComponent = {
 // hanabi Component (is function)
 export type HComponentFn<T extends HArgument> = (
     argument: T & { class?: string | string[]; id?: string },
-    ...child: HNode[]
-) => HNode;
+) => (...child: HNode[]) => HNode;
 export type HArgument = Record<string, unknown>;
 
 // hanabi HTML Top export function
@@ -351,12 +350,13 @@ export function semantic<T extends Attribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HComponentFn<T> {
-    return (argument, ...child) => ({
-        element_name,
-        tag,
-        attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
-        child,
-    });
+    return (argument) =>
+        (...child) => ({
+            element_name,
+            tag,
+            attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
+            child,
+        });
 }
 
 export function mergeClassToRecord<T extends Record<string | number | symbol, unknown>>(

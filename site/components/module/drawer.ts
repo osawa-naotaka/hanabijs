@@ -34,19 +34,16 @@ export function drawer(repo: Repository, button_id: string): HComponentFn<Drawer
     const DrawerHeaderSpace = semantic("drawer-header-space");
     const DrawerContent = semantic("drawer-content");
 
-    return (argument) =>
-        Drawer(
-            { class: argument.class },
-            Input({ class: "drawer-open-state", type: "checkbox", id: button_id }),
-            DrawerTitle(
-                {},
+    return (argument) => () =>
+        Drawer({ class: argument.class })(
+            Input({ class: "drawer-open-state", type: "checkbox", id: button_id })(),
+            DrawerTitle({})(
                 argument.title,
-                DrawerHeaderSpace(
-                    {},
+                DrawerHeaderSpace({})(
                     argument.header_space,
-                    Label({ class: "drawer-open-button", for: button_id }, argument.open_button),
+                    Label({ class: "drawer-open-button", for: button_id })(argument.open_button),
                 ),
             ),
-            DrawerContent({}, ...argument.content),
+            DrawerContent({})(...argument.content),
         );
 }

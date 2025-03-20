@@ -63,15 +63,13 @@ export function search(repo: Repository): HComponentFn<HArgument> {
     const SearchResult = semantic("search-result", { tag: "ul" });
     const SearchResultItem = semantic("search-result-item", { tag: "li" });
 
-    return (argument) =>
-        Search(
-            { class: argument.class },
-            SearchBar(
-                {},
-                SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" }),
-                SvgIcon({ name: "magnifier-glass" }),
+    return (argument) => () =>
+        Search({ class: argument.class })(
+            SearchBar({})(
+                SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(),
+                SvgIcon({ name: "magnifier-glass" })(),
             ),
-            SearchResult({}, SearchResultItem({}, "no result.")),
+            SearchResult({})(SearchResultItem({})("no result.")),
         );
 }
 
@@ -94,7 +92,7 @@ export default async function clientFunction(): Promise<void> {
         } else {
             search_result_e.innerText = "";
             for (const r of result) {
-                const node = SearchResultItem({ result: r });
+                const node = SearchResultItem({ result: r })();
                 for (const n of createDom(node)) {
                     search_result_e.appendChild(n);
                 }
@@ -127,19 +125,18 @@ function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
     const SearchResultItemTitle = semantic("search-result-item-title");
     const SearchResultItemDescription = semantic("search-result-item-description");
 
-    return ({ result }) => {
-        const key = v.parse(SearchKeySchema, result.key);
-        return SearchResultItem(
-            {},
-            SearchResultItemMeta(
-                {},
-                key.data.author,
-                key.data.date,
-                ...key.data.principalTag.map((tag) => SearchResultItemTag({}, tag)),
-                ...(key.data.associatedTags || []).map((tag) => SearchResultItemTag({}, tag)),
-            ),
-            SearchResultItemTitle({}, A({ href: `/posts/${key.id}` }, key.data.title)),
-            SearchResultItemDescription({}, result.refs[0].wordaround || ""),
-        );
-    };
+    return ({ result }) =>
+        () => {
+            const key = v.parse(SearchKeySchema, result.key);
+            return SearchResultItem({})(
+                SearchResultItemMeta({})(
+                    key.data.author,
+                    key.data.date,
+                    ...key.data.principalTag.map((tag) => SearchResultItemTag({})(tag)),
+                    ...(key.data.associatedTags || []).map((tag) => SearchResultItemTag({})(tag)),
+                ),
+                SearchResultItemTitle({})(A({ href: `/posts/${key.id}` })(key.data.title)),
+                SearchResultItemDescription({})(result.refs[0].wordaround || ""),
+            );
+        };
 }
