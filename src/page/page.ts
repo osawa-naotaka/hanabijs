@@ -1,4 +1,4 @@
-import { A, Body, H1, Head, Html, Link, Meta, Script, Title, component } from "@/main";
+import { A, Body, H1, Head, Html, Link, Meta, Script, Title, semantic } from "@/main";
 import type { Attribute, HNode } from "@/main";
 
 const site = {
@@ -8,9 +8,9 @@ const site = {
 };
 
 export function page(): (attribute: Attribute, ...child: HNode[]) => HNode {
-    const PageHeader = component("page-header", { class_names: ["container"], tag: "header" });
-    const PageFooter = component("page-footer", { tag: "footer" });
-    const PageFooterCopyright = component("page-footer-copyright");
+    const PageHeader = semantic("page-header", { class_names: ["container"], tag: "header" });
+    const PageFooter = semantic("page-footer", { tag: "footer" });
+    const PageFooterCopyright = semantic("page-footer-copyright");
 
     return (_attribute, ...child) =>
         Html(

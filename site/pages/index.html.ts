@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
-import { A, component, globExt } from "@/main";
+import { A, globExt, semantic } from "@/main";
 import type { HRootPageFn, Repository } from "@/main";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
@@ -11,9 +11,9 @@ import matter from "gray-matter";
 export default function Root(repo: Repository): HRootPageFn<void> {
     const Page = page(repo);
     const Hero = hero(repo);
-    const PageMainArea = component("page-main-area", { class_names: ["container"], tag: "main" });
-    const ArticleList = component("article-list", { class_names: ["content"], tag: "ul" });
-    const ArticleListItem = component("article-list-item", { tag: "li" });
+    const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
+    const ArticleList = semantic("article-list", { class_names: ["content"], tag: "ul" });
+    const ArticleListItem = semantic("article-list-item", { tag: "li" });
 
     return async () => {
         const items = globExt(path.join(cwd(), posts_dir), ".md");

@@ -1,4 +1,4 @@
-import { component, registerComponent, style } from "@/main";
+import { registerComponent, semantic, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -26,9 +26,9 @@ export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
         }),
     ]);
 
-    const PageFooter = component("page-footer", { tag: "footer" });
-    const PageFooterContent = component("page-footer-content");
-    const PageFooterCopyright = component("page-footer-copyright");
+    const PageFooter = semantic("page-footer", { tag: "footer" });
+    const PageFooterContent = semantic("page-footer-content");
+    const PageFooterCopyright = semantic("page-footer-copyright");
 
     return ({ site_name }) =>
         PageFooter({}, PageFooterContent({}), PageFooterCopyright({}, `&copy; 2025 ${site_name}`));

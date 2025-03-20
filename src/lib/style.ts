@@ -103,10 +103,10 @@ export function stringifyToCss(components: HComponent[]): string {
     return components.map(rulesToString).join("");
 }
 
-export function rulesToString(component: HComponent): string {
+export function rulesToString(semantic: HComponent): string {
     const res: string[] = [];
-    for (const rule of component.style) {
-        const selectors_string = rule.selectorlist.map(selectorToString(component)).join(", ");
+    for (const rule of semantic.style) {
+        const selectors_string = rule.selectorlist.map(selectorToString(semantic)).join(", ");
         const propaties_string = propatiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }

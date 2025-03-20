@@ -1,4 +1,4 @@
-import { A, component, compoundStyle, createDom, registerComponent, style } from "@/main";
+import { A, compoundStyle, createDom, registerComponent, semantic, style } from "@/main";
 import type { HArgument, HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
@@ -56,12 +56,12 @@ export function search(repo: Repository): HComponentFn<HArgument> {
         import.meta.path,
     );
 
-    const Search = component("search", { class_names: ["content"] });
-    const SearchBar = component("search-bar");
-    const SearchInput = component("search-input", { tag: "input" });
+    const Search = semantic("search", { class_names: ["content"] });
+    const SearchBar = semantic("search-bar");
+    const SearchInput = semantic("search-input", { tag: "input" });
     const SvgIcon = svgIcon(repo);
-    const SearchResult = component("search-result", { tag: "ul" });
-    const SearchResultItem = component("search-result-item", { tag: "li" });
+    const SearchResult = semantic("search-result", { tag: "ul" });
+    const SearchResultItem = semantic("search-result-item", { tag: "li" });
 
     return (argument) =>
         Search(
@@ -121,11 +121,11 @@ type SearchResultItemAttribute = {
 };
 
 function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
-    const SearchResultItem = component("search-result-item", { tag: "li" });
-    const SearchResultItemMeta = component("search-result-item-meta");
-    const SearchResultItemTag = component("search-result-item-tag");
-    const SearchResultItemTitle = component("search-result-item-title");
-    const SearchResultItemDescription = component("search-result-item-description");
+    const SearchResultItem = semantic("search-result-item", { tag: "li" });
+    const SearchResultItemMeta = semantic("search-result-item-meta");
+    const SearchResultItemTag = semantic("search-result-item-tag");
+    const SearchResultItemTitle = semantic("search-result-item-title");
+    const SearchResultItemDescription = semantic("search-result-item-description");
 
     return ({ result }) => {
         const key = v.parse(SearchKeySchema, result.key);

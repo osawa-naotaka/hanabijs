@@ -1,4 +1,4 @@
-import { A, Body, H1, Html, Link, Meta, Title, component, registerComponent, style } from "hanabijs";
+import { A, Body, H1, Html, Link, Meta, Title, registerComponent, semantic, style } from "hanabijs";
 import type { HComponentFn, Repository } from "hanabijs";
 
 export type PageAttribute = {
@@ -9,9 +9,9 @@ export type PageAttribute = {
 export default function page(repo: Repository): HComponentFn<PageAttribute> {
     registerComponent(repo, "page", [style(".page-header", { width: "100%" })]);
 
-    const PageHead = component("page-head", { tag: "head" });
-    const PageHeader = component("page-header", { tag: "header" });
-    const PageFooter = component("page-footer", { tag: "footer" });
+    const PageHead = semantic("page-head", { tag: "head" });
+    const PageHeader = semantic("page-header", { tag: "header" });
+    const PageFooter = semantic("page-footer", { tag: "footer" });
 
     return (attribute, ...child) =>
         Html(

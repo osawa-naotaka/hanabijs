@@ -1,4 +1,4 @@
-import { Em, component, compoundStyle, registerComponent, style } from "@/main";
+import { Em, compoundStyle, registerComponent, semantic, style } from "@/main";
 import type { HArgument, HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -17,8 +17,8 @@ export function hero(repo: Repository): HComponentFn<HArgument> {
         }),
     ]);
 
-    const Hero = component("hero", { class_names: ["container"] });
-    const HeroText = component("hero-text", { class_names: ["content"] });
+    const Hero = semantic("hero", { class_names: ["container"] });
+    const HeroText = semantic("hero-text", { class_names: ["content"] });
 
     return () => Hero({}, HeroText({}, "LULLIECA", Em({}, "T"), " IS ", Em({}, "A"), "LIVE"));
 }

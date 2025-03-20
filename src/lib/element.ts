@@ -18,7 +18,7 @@ export type HElement<T> = {
 export type Attribute = Record<string, AttributeValue>;
 export type AttributeValue = string | string[] | undefined;
 
-// hanabi component data structure for register component to repository, internal use only.
+// hanabi semantic data structure for register semantic to repository, internal use only.
 export type HComponent = {
     component_name: string;
     path?: string;
@@ -347,7 +347,7 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
 }
 
 // on semantic Component, argument is attribute.
-export function component<T extends Attribute>(
+export function semantic<T extends Attribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HComponentFn<T> {
@@ -358,13 +358,6 @@ export function component<T extends Attribute>(
         child,
     });
 }
-
-// export function component(
-//     element_name: string,
-//     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
-// ): HSimpleComponentFn {
-//     return (...child) => ({ element_name, tag, attribute: { class: [element_name, ...class_names] }, child });
-// }
 
 export function mergeClassToAttribute<T extends Attribute>(attribute: T, className: string) {
     return mergeAttribute(attribute, { class: addClass(attribute, className) });

@@ -1,4 +1,4 @@
-import { component, compoundStyle, registerComponent, style } from "@/main";
+import { compoundStyle, registerComponent, semantic, style } from "@/main";
 import type { HComponentFn, HNode, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -39,11 +39,11 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
         }),
     ]);
 
-    const Popover = component("popover");
-    const PopoverButton = component("popover-button", { tag: "button" });
-    const PopoverCloseArea = component("popover-close-area");
-    const PopoverContainer = component("popover-container", { class_names: ["container"] });
-    const PopoverContent = component("popover-content", { class_names: ["content"] });
+    const Popover = semantic("popover");
+    const PopoverButton = semantic("popover-button", { tag: "button" });
+    const PopoverCloseArea = semantic("popover-close-area");
+    const PopoverContainer = semantic("popover-container", { class_names: ["container"] });
+    const PopoverContent = semantic("popover-content", { class_names: ["content"] });
 
     return (argument, ...child) =>
         Popover(
