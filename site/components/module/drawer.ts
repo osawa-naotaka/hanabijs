@@ -42,17 +42,17 @@ export function drawer(repo: Repository, button_id: string): HComponentFn<Drawer
     const DrawerHeaderSpace = simpleSemanticComponent("drawer-header-space");
     const DrawerContent = simpleSemanticComponent("drawer-content");
 
-    return (attribute) =>
+    return (argument) =>
         Drawer(
-            { class: attribute.class },
+            { class: argument.class },
             Input({ class: "drawer-open-state", type: "checkbox", id: button_id }),
             DrawerTitle(
-                attribute.title,
+                argument.title,
                 DrawerHeaderSpace(
-                    attribute.header_space,
-                    Label({ class: "drawer-open-button", for: button_id }, attribute.open_button),
+                    argument.header_space,
+                    Label({ class: "drawer-open-button", for: button_id }, argument.open_button),
                 ),
             ),
-            DrawerContent(...attribute.content),
+            DrawerContent(...argument.content),
         );
 }

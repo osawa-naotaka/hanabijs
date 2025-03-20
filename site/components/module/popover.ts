@@ -53,15 +53,15 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
     const PopoverContainer = semanticComponent("popover-container", { class_names: ["container"] });
     const PopoverContent = simpleSemanticComponent("popover-content", { class_names: ["content"] });
 
-    return (attribute, ...child) =>
+    return (argument, ...child) =>
         Popover(
-            { class: attribute.class },
-            PopoverButton({ type: "button", popovertarget: button_id }, attribute.open_button),
+            { class: argument.class },
+            PopoverButton({ type: "button", popovertarget: button_id }, argument.open_button),
             PopoverContainer(
                 { popover: "", id: button_id },
                 PopoverContent(
                     PopoverCloseArea(
-                        PopoverButton({ type: "button", popovertarget: button_id }, attribute.close_button),
+                        PopoverButton({ type: "button", popovertarget: button_id }, argument.close_button),
                     ),
                     ...child,
                 ),

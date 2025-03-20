@@ -29,12 +29,12 @@ export function navigation(repo: Repository): HComponentFn<NavigationArgument> {
     const NavigationListItem = simpleSemanticComponent("navigation-list-item", { tag: "li" });
 
     const SvgIcon = svgIcon(repo);
-    return (attribute) =>
+    return (argument) =>
         Navigation(
-            { class: attribute.class },
+            { class: argument.class },
             NavigationList(
                 NavigationListItem(A({ href: "/posts" }, "blog")),
-                ...attribute.navitem.map((item) =>
+                ...argument.navitem.map((item) =>
                     NavigationListItem(A({ href: item.url, target: "__blank" }, SvgIcon({ name: item.icon }))),
                 ),
             ),

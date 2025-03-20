@@ -69,15 +69,15 @@ export function page(repo: Repository): HComponentFn<PageArgument> {
     const PageHead = pageHead(repo);
     const PageHeader = pageHeader(repo);
     const PageFooter = pageFooter(repo);
-    return (attribute, ...child) =>
+    return (argument, ...child) =>
         Html(
-            { lang: attribute.lang },
-            PageHead(attribute),
+            { lang: argument.lang },
+            PageHead(argument),
             Body(
                 { id: "top-of-page" },
-                PageHeader({ title: attribute.name, navitem: attribute.navitem }),
+                PageHeader({ title: argument.name, navitem: argument.navitem }),
                 ...child,
-                PageFooter({ site_name: attribute.name }),
+                PageFooter({ site_name: argument.name }),
             ),
         );
 }

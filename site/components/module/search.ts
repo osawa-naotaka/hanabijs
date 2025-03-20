@@ -134,8 +134,8 @@ function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
     const SearchResultItemTitle = simpleSemanticComponent("search-result-item-title");
     const SearchResultItemDescription = simpleSemanticComponent("search-result-item-description");
 
-    return (attribute) => {
-        const key = v.parse(SearchKeySchema, attribute.result.key);
+    return ({ result }) => {
+        const key = v.parse(SearchKeySchema, result.key);
         return SearchResultItem(
             SearchResultItemMeta(
                 key.data.author,
@@ -144,7 +144,7 @@ function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
                 ...(key.data.associatedTags || []).map((tag) => SearchResultItemTag(tag)),
             ),
             SearchResultItemTitle(A({ href: `/posts/${key.id}` }, key.data.title)),
-            SearchResultItemDescription(attribute.result.refs[0].wordaround || ""),
+            SearchResultItemDescription(result.refs[0].wordaround || ""),
         );
     };
 }

@@ -32,11 +32,11 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
     const PageHeader = simpleSemanticComponent("page-header", { class_names: ["container"], tag: "header" });
     const Search = search(repo);
 
-    return (argument) =>
+    return ({ title, navitem }) =>
         PageHeader(
             Drawer({
                 class: "content",
-                title: H1({}, A({ href: "/" }, argument.title)),
+                title: H1({}, A({ href: "/" }, title)),
                 header_space: Popover(
                     {
                         open_button: SvgIcon({ name: "magnifier-glass" }),
@@ -45,7 +45,7 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
                     Search({}),
                 ),
                 open_button: SvgIcon({ name: "menu-bar" }),
-                content: [Navigation(argument)],
+                content: [Navigation({ navitem })],
             }),
         );
 }

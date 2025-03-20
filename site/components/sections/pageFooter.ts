@@ -30,5 +30,5 @@ export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
     const PageFooterContent = simpleSemanticComponent("page-footer-content");
     const PageFooterCopyright = simpleSemanticComponent("page-footer-copyright");
 
-    return (attribute) => PageFooter(PageFooterContent(), PageFooterCopyright(`&copy; 2025 ${attribute.site_name}`));
+    return ({ site_name }) => PageFooter(PageFooterContent(), PageFooterCopyright(`&copy; 2025 ${site_name}`));
 }

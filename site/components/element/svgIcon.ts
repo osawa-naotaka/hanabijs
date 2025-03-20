@@ -7,10 +7,10 @@ export type SvgIconArgument = {
 
 export function svgIcon(repo: Repository): HComponentFn<SvgIconArgument> {
     registerComponent(repo, "svg-icon", []);
-    return (attribute) =>
+    return ({ name }) =>
         Img({
-            src: `/images/icons/${attribute.name}-icon.svg`,
-            class: ["svg-icon", `svg-icon-${attribute.name}`],
-            alt: `${attribute.name} icon`,
+            src: `/images/icons/${name}-icon.svg`,
+            class: ["svg-icon", `svg-icon-${name}`],
+            alt: `${name} icon`,
         });
 }

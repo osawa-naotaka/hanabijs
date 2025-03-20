@@ -7,7 +7,7 @@ export type PageHeadArgument = {
 };
 
 export function pageHead(_repo: Repository): HComponentFn<PageHeadArgument> {
-    return (attribute) =>
+    return ({ title, description }) =>
         Head(
             { class: "page-head" },
             // Global Metadata
@@ -26,8 +26,8 @@ export function pageHead(_repo: Repository): HComponentFn<PageHeadArgument> {
             }),
 
             // Primary Meta Tags
-            Title({}, attribute.title),
-            Meta({ name: "description", content: attribute.description }),
+            Title({}, title),
+            Meta({ name: "description", content: description }),
             Meta({
                 http_equiv: "Content-Security-Policy",
                 content:
