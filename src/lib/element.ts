@@ -42,14 +42,14 @@ export function DOCTYPE(): string {
     return "<!DOCTYPE html>";
 }
 
-// add attribute
-export function addClassToRecord<T extends { class?: string | string[] }>(attribute: T, className: string): T {
-    const new_attribute = JSON.parse(JSON.stringify(attribute));
-    new_attribute.class = addClass(attribute, className);
-    return new_attribute;
+// add class string to record.
+export function addClassInRecord<T extends { class?: string | string[] }>(record: T, className: string): T {
+    const new_record = JSON.parse(JSON.stringify(record));
+    new_record.class = addClassToHead(record, className);
+    return new_record;
 }
 
-function addClass<T extends { class?: string | string[] }>(
+function addClassToHead<T extends { class?: string | string[] }>(
     attribute: T,
     className: string | string[],
 ): string | string[] {
@@ -354,7 +354,7 @@ export function semantic<T extends Attribute>(
     return (argument, ...child) => ({
         element_name,
         tag,
-        attribute: mergeRecord(argument, { class: addClass(argument, [element_name, ...class_names]) }),
+        attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
         child,
     });
 }
@@ -363,5 +363,5 @@ export function mergeClassToRecord<T extends Record<string | number | symbol, un
     attribute: T,
     className: string,
 ) {
-    return mergeRecord(attribute, { class: addClass(attribute, className) });
+    return mergeRecord(attribute, { class: addClassToHead(attribute, className) });
 }
