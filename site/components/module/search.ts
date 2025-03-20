@@ -3,8 +3,7 @@ import {
     compoundStyle,
     createDom,
     registerComponent,
-    semanticComponent,
-    simpleSemanticComponent,
+    component,
     style,
 } from "@/main";
 import type { HArgument, HComponentFn, Repository } from "@/main";
@@ -64,21 +63,22 @@ export function search(repo: Repository): HComponentFn<HArgument> {
         import.meta.path,
     );
 
-    const Search = semanticComponent("search", { class_names: ["content"] });
-    const SearchBar = simpleSemanticComponent("search-bar");
-    const SearchInput = semanticComponent("search-input", { tag: "input" });
+    const Search = component("search", { class_names: ["content"] });
+    const SearchBar = component("search-bar");
+    const SearchInput = component("search-input", { tag: "input" });
     const SvgIcon = svgIcon(repo);
-    const SearchResult = simpleSemanticComponent("search-result", { tag: "ul" });
-    const SearchResultItem = simpleSemanticComponent("search-result-item", { tag: "li" });
+    const SearchResult = component("search-result", { tag: "ul" });
+    const SearchResultItem = component("search-result-item", { tag: "li" });
 
     return (argument) =>
         Search(
             { class: argument.class },
             SearchBar(
+                {},
                 SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" }),
                 SvgIcon({ name: "magnifier-glass" }),
             ),
-            SearchResult(SearchResultItem("no result.")),
+            SearchResult({}, SearchResultItem({}, "no result.")),
         );
 }
 
@@ -128,23 +128,25 @@ type SearchResultItemAttribute = {
 };
 
 function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
-    const SearchResultItem = simpleSemanticComponent("search-result-item", { tag: "li" });
-    const SearchResultItemMeta = simpleSemanticComponent("search-result-item-meta");
-    const SearchResultItemTag = simpleSemanticComponent("search-result-item-tag");
-    const SearchResultItemTitle = simpleSemanticComponent("search-result-item-title");
-    const SearchResultItemDescription = simpleSemanticComponent("search-result-item-description");
+    const SearchResultItem = component("search-result-item", { tag: "li" });
+    const SearchResultItemMeta = component("search-result-item-meta");
+    const SearchResultItemTag = component("search-result-item-tag");
+    const SearchResultItemTitle = component("search-result-item-title");
+    const SearchResultItemDescription = component("search-result-item-description");
 
     return ({ result }) => {
         const key = v.parse(SearchKeySchema, result.key);
         return SearchResultItem(
+            {},
             SearchResultItemMeta(
+                {},
                 key.data.author,
                 key.data.date,
-                ...key.data.principalTag.map((tag) => SearchResultItemTag(tag)),
-                ...(key.data.associatedTags || []).map((tag) => SearchResultItemTag(tag)),
+                ...key.data.principalTag.map((tag) => SearchResultItemTag({}, tag)),
+                ...(key.data.associatedTags || []).map((tag) => SearchResultItemTag({}, tag)),
             ),
-            SearchResultItemTitle(A({ href: `/posts/${key.id}` }, key.data.title)),
-            SearchResultItemDescription(result.refs[0].wordaround || ""),
+            SearchResultItemTitle({}, A({ href: `/posts/${key.id}` }, key.data.title)),
+            SearchResultItemDescription({}, result.refs[0].wordaround || ""),
         );
     };
 }

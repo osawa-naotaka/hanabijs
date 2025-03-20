@@ -1,4 +1,4 @@
-import { A, registerComponent, semanticComponent, simpleSemanticComponent, style } from "@/main";
+import { A, registerComponent, component, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
@@ -24,18 +24,19 @@ export function navigation(repo: Repository): HComponentFn<NavigationArgument> {
         }),
     ]);
 
-    const Navigation = semanticComponent("navigation", { tag: "nav" });
-    const NavigationList = simpleSemanticComponent("navigation-list", { tag: "ul" });
-    const NavigationListItem = simpleSemanticComponent("navigation-list-item", { tag: "li" });
+    const Navigation = component("navigation", { tag: "nav" });
+    const NavigationList = component("navigation-list", { tag: "ul" });
+    const NavigationListItem = component("navigation-list-item", { tag: "li" });
 
     const SvgIcon = svgIcon(repo);
     return (argument) =>
         Navigation(
             { class: argument.class },
             NavigationList(
-                NavigationListItem(A({ href: "/posts" }, "blog")),
+                {},
+                NavigationListItem({}, A({ href: "/posts" }, "blog")),
                 ...argument.navitem.map((item) =>
-                    NavigationListItem(A({ href: item.url, target: "__blank" }, SvgIcon({ name: item.icon }))),
+                    NavigationListItem({}, A({ href: item.url, target: "__blank" }, SvgIcon({ name: item.icon }))),
                 ),
             ),
         );

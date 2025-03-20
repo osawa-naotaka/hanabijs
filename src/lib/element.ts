@@ -347,7 +347,7 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
 }
 
 // on semantic Component, argument is attribute.
-export function semanticComponent<T extends Attribute>(
+export function component<T extends Attribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HComponentFn<T> {
@@ -359,12 +359,12 @@ export function semanticComponent<T extends Attribute>(
     });
 }
 
-export function simpleSemanticComponent(
-    element_name: string,
-    { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
-): HSimpleComponentFn {
-    return (...child) => ({ element_name, tag, attribute: { class: [element_name, ...class_names] }, child });
-}
+// export function component(
+//     element_name: string,
+//     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
+// ): HSimpleComponentFn {
+//     return (...child) => ({ element_name, tag, attribute: { class: [element_name, ...class_names] }, child });
+// }
 
 export function mergeClassToAttribute<T extends Attribute>(attribute: T, className: string) {
     return mergeAttribute(attribute, { class: addClass(attribute, className) });

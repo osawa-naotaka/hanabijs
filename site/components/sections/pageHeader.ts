@@ -1,4 +1,4 @@
-import { A, H1, registerComponent, simpleSemanticComponent, style } from "@/main";
+import { A, H1, registerComponent, component, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
@@ -29,11 +29,12 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
     const Popover = popover(repo, "search-popover");
     const SvgIcon = svgIcon(repo);
     const Navigation = navigation(repo);
-    const PageHeader = simpleSemanticComponent("page-header", { class_names: ["container"], tag: "header" });
+    const PageHeader = component("page-header", { class_names: ["container"], tag: "header" });
     const Search = search(repo);
 
     return ({ title, navitem }) =>
         PageHeader(
+            {},
             Drawer({
                 class: "content",
                 title: H1({}, A({ href: "/" }, title)),

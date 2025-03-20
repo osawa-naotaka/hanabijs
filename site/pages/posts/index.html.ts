@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
-import { A, globExt, simpleSemanticComponent } from "@/main";
+import { A, globExt, component } from "@/main";
 import type { HRootPageFn, Repository } from "@/main";
 import { page } from "@site/components/pages/page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
@@ -9,9 +9,9 @@ import matter from "gray-matter";
 
 export default function Root(repo: Repository): HRootPageFn<void> {
     const Page = page(repo);
-    const PageMainArea = simpleSemanticComponent("page-main-area", { class_names: ["container"], tag: "main" });
-    const ArticleList = simpleSemanticComponent("article-list", { class_names: ["content"], tag: "ul" });
-    const ArticleListItem = simpleSemanticComponent("article-list-item", { tag: "li" });
+    const PageMainArea = component("page-main-area", { class_names: ["container"], tag: "main" });
+    const ArticleList = component("article-list", { class_names: ["content"], tag: "ul" });
+    const ArticleListItem = component("article-list-item", { tag: "li" });
 
     return async () => {
         const items = globExt(path.join(cwd(), posts_dir), ".md");
@@ -31,7 +31,7 @@ export default function Root(repo: Repository): HRootPageFn<void> {
 
         return Page(
             { title: site.name, description: site.description, lang: site.lang, name: site.name, navitem: navitem },
-            PageMainArea(ArticleList(...slugs.map((x) => ArticleListItem(A({ href: `/posts/${x.slug}` }, x.title))))),
+            PageMainArea({}, ArticleList({}, ...slugs.map((x) => ArticleListItem({}, A({ href: `/posts/${x.slug}` }, x.title))))),
         );
     };
 }

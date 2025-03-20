@@ -3,8 +3,7 @@ import {
     Label,
     compoundStyle,
     registerComponent,
-    semanticComponent,
-    simpleSemanticComponent,
+    component,
     style,
 } from "@/main";
 import type { HComponentFn, HNode, Repository } from "@/main";
@@ -37,22 +36,24 @@ export function drawer(repo: Repository, button_id: string): HComponentFn<Drawer
         }),
     ]);
 
-    const Drawer = semanticComponent("drawer");
-    const DrawerTitle = simpleSemanticComponent("drawer-title");
-    const DrawerHeaderSpace = simpleSemanticComponent("drawer-header-space");
-    const DrawerContent = simpleSemanticComponent("drawer-content");
+    const Drawer = component("drawer");
+    const DrawerTitle = component("drawer-title");
+    const DrawerHeaderSpace = component("drawer-header-space");
+    const DrawerContent = component("drawer-content");
 
     return (argument) =>
         Drawer(
             { class: argument.class },
             Input({ class: "drawer-open-state", type: "checkbox", id: button_id }),
             DrawerTitle(
+                {},
                 argument.title,
                 DrawerHeaderSpace(
+                    {},
                     argument.header_space,
                     Label({ class: "drawer-open-button", for: button_id }, argument.open_button),
                 ),
             ),
-            DrawerContent(...argument.content),
+            DrawerContent({}, ...argument.content),
         );
 }

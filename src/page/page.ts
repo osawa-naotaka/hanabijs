@@ -1,4 +1,4 @@
-import { A, Body, H1, Head, Html, Link, Meta, Script, Title, simpleSemanticComponent } from "@/main";
+import { A, Body, H1, Head, Html, Link, Meta, Script, Title, component } from "@/main";
 import type { Attribute, HNode } from "@/main";
 
 const site = {
@@ -8,9 +8,9 @@ const site = {
 };
 
 export function page(): (attribute: Attribute, ...child: HNode[]) => HNode {
-    const PageHeader = simpleSemanticComponent("page-header", { class_names: ["container"], tag: "header" });
-    const PageFooter = simpleSemanticComponent("page-footer", { tag: "footer" });
-    const PageFooterCopyright = simpleSemanticComponent("page-footer-copyright");
+    const PageHeader = component("page-header", { class_names: ["container"], tag: "header" });
+    const PageFooter = component("page-footer", { tag: "footer" });
+    const PageFooterCopyright = component("page-footer-copyright");
 
     return (_attribute, ...child) =>
         Html(
@@ -29,9 +29,9 @@ export function page(): (attribute: Attribute, ...child: HNode[]) => HNode {
             ),
             Body(
                 { id: "top-of-page" },
-                PageHeader(H1({}, A({ href: "/" }, site.name))),
+                PageHeader({}, H1({}, A({ href: "/" }, site.name))),
                 ...child,
-                PageFooter(PageFooterCopyright(`&copy; 2025 ${site.name}`)),
+                PageFooter({}, PageFooterCopyright({}, `&copy; 2025 ${site.name}`)),
             ),
         );
 }

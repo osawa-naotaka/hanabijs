@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
     "dev": "bun run --hot src/bin.ts dev",
-    "site": "bun run --hot src/bin.ts build",
+    "site": "tsc && bun run --hot src/bin.ts build",
     "check": "biome check ./src ./site ./test",
     "check-write": "biome check --write ./src ./site ./test"
   },

@@ -4,8 +4,7 @@ import {
     type Repository,
     compoundStyle,
     registerComponent,
-    semanticComponent,
-    simpleSemanticComponent,
+    component,
     style,
 } from "@/main";
 import { appearence } from "@site/config/site.config";
@@ -47,11 +46,11 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
         }),
     ]);
 
-    const Popover = semanticComponent("popover");
-    const PopoverButton = semanticComponent("popover-button", { tag: "button" });
-    const PopoverCloseArea = simpleSemanticComponent("popover-close-area");
-    const PopoverContainer = semanticComponent("popover-container", { class_names: ["container"] });
-    const PopoverContent = simpleSemanticComponent("popover-content", { class_names: ["content"] });
+    const Popover = component("popover");
+    const PopoverButton = component("popover-button", { tag: "button" });
+    const PopoverCloseArea = component("popover-close-area");
+    const PopoverContainer = component("popover-container", { class_names: ["container"] });
+    const PopoverContent = component("popover-content", { class_names: ["content"] });
 
     return (argument, ...child) =>
         Popover(
@@ -60,7 +59,9 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
             PopoverContainer(
                 { popover: "", id: button_id },
                 PopoverContent(
+                    {},
                     PopoverCloseArea(
+                        {},
                         PopoverButton({ type: "button", popovertarget: button_id }, argument.close_button),
                     ),
                     ...child,
