@@ -109,8 +109,8 @@ async function processAndWriteHtml(
 
     const top_component = await root_page_fn(params);
     const inserted = insertNodes(top_component, createSelector(["*", " ", "head"]), [
-        css_link !== "" ? Link({ href: css_link, rel: "stylesheet" }, "") : "",
-        js_src !== "" ? Script({ type: "module", src: js_src }, "") : "",
+        css_link !== "" ? Link({ href: css_link, rel: "stylesheet" })("") : "",
+        js_src !== "" ? Script({ type: "module", src: js_src })("") : "",
     ]);
 
     const html = DOCTYPE() + stringifyToHtml(0)(inserted);
