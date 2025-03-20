@@ -1,9 +1,11 @@
 import { A, compoundStyle, createDom, createSemantic, createSimpleSemantic, registerComponent, style } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import type { HArgument, HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
 
-export function search(repo: Repository): HComponentFn {
+
+
+export function search(repo: Repository): HComponentFn<HArgument> {
     registerComponent(
         repo,
         "search",
@@ -63,9 +65,9 @@ export function search(repo: Repository): HComponentFn {
     const SearchResult = createSimpleSemantic("search-result", { tag: "ul" });
     const SearchResultItem = createSimpleSemantic("search-result-item", { tag: "li" });
 
-    return (attribute) =>
+    return (argument) =>
         Search(
-            { class: attribute.class },
+            { class: argument.class },
             SearchBar(
                 SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" }),
                 SvgIcon({ name: "magnifier-glass" }),

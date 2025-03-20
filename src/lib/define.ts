@@ -1,4 +1,4 @@
-import type { HComponentFn } from "./element";
+import type { HComponentFn, AttributeValue, Attribute } from "./element";
 
 export type Tag =
     | "a"
@@ -285,6 +285,7 @@ export type AttributeName =
     | "high"
     | "href"
     | "hreflang"
+    | "http_equiv"
     | "http-equiv"
     | "icon"
     | "id"
@@ -415,6 +416,7 @@ export const attribute_names: AttributeName[] = [
     "high",
     "href",
     "hreflang",
+    "http_equiv",
     "http-equiv",
     "icon",
     "id",
@@ -490,8 +492,6 @@ export const attribute_names: AttributeName[] = [
     "width",
     "wrap",
 ] as const;
-
-export type AttributeValue = string | string[] | unknown;
 
 // Common attribute_names (global attribute_names that can be used on any element)
 export type CommonAttributeName =
@@ -1044,11 +1044,12 @@ export type MenuAttributeName = "type" | CommonAttributeName;
 export type MenuAttribute = Record<MenuAttributeName, AttributeValue>;
 export const menu_attribute_names: MenuAttributeName[] = ["type", ...common_attribute_names];
 
-export type MetaAttributeName = "charset" | "content" | "http-equiv" | "name" | CommonAttributeName;
+export type MetaAttributeName = "charset" | "content" | "http_equiv" | "http-equiv" | "name" | CommonAttributeName;
 export type MetaAttribute = Record<MetaAttributeName, AttributeValue>;
 export const meta_attribute_names: MetaAttributeName[] = [
     "charset",
     "content",
+    "http_equiv",
     "http-equiv",
     "name",
     ...common_attribute_names,
@@ -1401,8 +1402,8 @@ export type WbrAttributeName = CommonAttributeName;
 export type WbrAttribute = Record<CommonAttributeName, AttributeValue>;
 export const wbr_attribute_names: WbrAttributeName[] = common_attribute_names;
 
-function gt<T>(tag: Tag | HanabiTag): HComponentFn<Partial<T>> {
-    return (attribute, ...child) => ({ element_name: tag, tag, attribute, child });
+function gt<T extends Attribute>(tag: Tag | HanabiTag): HComponentFn<Partial<T>> {
+    return (argument, ...child) => ({ element_name: tag, tag, attribute: argument, child });
 }
 
 // add here

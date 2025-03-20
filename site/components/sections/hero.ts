@@ -2,7 +2,7 @@ import { Em, compoundStyle, createSimpleSemantic, registerComponent, style } fro
 import type { HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 
-export function hero(repo: Repository): HComponentFn {
+export function hero(repo: Repository): HComponentFn<{}> {
     registerComponent(repo, "hero", [
         style("&", {
             font_size: "min(17vw, 7rem)",

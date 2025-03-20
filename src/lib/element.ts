@@ -1,34 +1,49 @@
-import type { AttributeValue, HanabiTag, Tag } from "./define";
+import type { HanabiTag, Tag } from "./define";
 import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./style";
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
-export type Attribute = Record<string, AttributeValue>;
 
-export type HElement<T extends Attribute = Attribute> = {
+// HTML DOM Node = string or HTML Element
+export type HNode<T extends Attribute = Attribute> = string | HElement<Partial<T>>;
+
+// HTML Element, with custon element name
+export type HElement<T> = {
     element_name: string;
     tag: Tag | HanabiTag;
     attribute: T;
-    child: HNode[];
+    child: HNode<Attribute>[];
 };
 
+// Attribute of HTML Element
+export type Attribute = Record<string, AttributeValue>;
+export type AttributeValue = string | string[] | undefined;
+
+// hanabi component data structure for register component to repository, internal use only.
 export type HComponent = {
     component_name: string;
     path?: string;
     style: StyleRule[];
 };
 
-export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
+// hanabi Component (is function)
+export type HComponentFn<T extends HArgument> = (argument: T & Partial<{ class: string | string[], id: string }>, ...child: HNode[]) => HNode;
+export type HArgument = Record<string, unknown> & Partial<{ class: string | string[], id: string }>;
+
+// hanabi Component, without argument
+export type HSimpleComponentFn = (...child: HNode[]) => HNode;
+
+// hanabi HTML Top export function
+export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
+
+export type HPath<T> = { params: T }[];
+
 
 // Element
 export function DOCTYPE(): string {
     return "<!DOCTYPE html>";
 }
 
-export type HComponentFn<T = Attribute> = (attribute: T & Attribute, ...child: HNode[]) => HNode;
-export type HSimpleComponentFn = (...child: HNode[]) => HNode;
-export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
-export type HPath<T> = { params: T }[];
 
 // add attribute
 export function addClassToAttribute<T extends { class?: string | string[] }>(attribute: T, className: string): T {
@@ -89,7 +104,7 @@ export function stringifyToHtml(depth: number): (node: HNode) => string {
     };
 }
 
-function attributeToString(attribute: Attribute): string {
+function attributeToString(attribute: Partial<Attribute>): string {
     return Object.entries(attribute)
         .map(([raw_key, value]) => {
             const key = raw_key.replaceAll("_", "-");
@@ -163,7 +178,7 @@ function createDomInternal(depth: number, d: Document = document): (node: HNode)
     };
 }
 
-function setAttribute(element: HTMLElement, attribute: Attribute): void {
+function setAttribute(element: HTMLElement, attribute: Partial<Attribute>): void {
     for (const [raw_key, value] of Object.entries(attribute)) {
         const key = raw_key.replaceAll("_", "-");
 
@@ -331,7 +346,7 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
     return result;
 }
 
-export function createSemantic<T>(
+export function createSemantic<T extends Attribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HComponentFn<T> {
