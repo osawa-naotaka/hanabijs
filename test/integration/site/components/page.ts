@@ -17,6 +17,7 @@ export default function page(repo: Repository): HComponentFn<PageAttribute> {
         Html(
             { lang: "en" },
             PageHead(
+                {},
                 // Global Metadata
                 Meta({ charset: "utf-8" }),
                 Meta({
@@ -43,9 +44,9 @@ export default function page(repo: Repository): HComponentFn<PageAttribute> {
             ),
             Body(
                 { id: "top-of-page" },
-                PageHeader(H1({}, A({ href: "/" }, attribute.title))),
+                PageHeader({}, H1({}, A({ href: "/" }, attribute.title))),
                 ...child,
-                PageFooter("&copy; 2025 lulliecat"),
+                PageFooter({}, "&copy; 2025 lulliecat"),
             ),
         );
 }

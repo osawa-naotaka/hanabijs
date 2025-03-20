@@ -6,7 +6,7 @@
     },
     "packageManager": "yarn@4.7.0",
     "scripts": {
-        "build": "hanabi build",
+        "build": "tsc && hanabi build",
         "dev": "hanabi dev"
     },
     "dependencies": {

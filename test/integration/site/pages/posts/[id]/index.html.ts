@@ -23,6 +23,6 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
     return async (parameter) => {
         const title = `Post Page ${parameter.id}`;
 
-        return Page({ title: site.title, description: site.description }, PageMainArea(H2({}, title)));
+        return Page({ title: site.title, description: site.description }, PageMainArea({}, H2({}, title)));
     };
 }
