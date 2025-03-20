@@ -9,8 +9,7 @@
   },
   "types": "build/hanabi-lib.d.ts",
   "scripts": {
-    "build": "tsc && rollup --config rollup.config.ts",
-    "tsup": "tsc && tsup --config tsup.config.ts",
+    "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
     "dev": "bun run --hot src/bin.ts dev",
     "site": "bun run --hot src/bin.ts build",
     "check": "biome check ./src ./site ./test",
@@ -28,12 +27,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.2",
     "@types/bun": "^1.2.4",
     "@types/node": "^22.13.10",
-    "rollup": "^4.36.0",
-    "rollup-plugin-dts": "^6.1.1",
     "staticseek": "^2.7.1",
     "tslib": "^2.8.1",
     "tsup": "^8.4.0",

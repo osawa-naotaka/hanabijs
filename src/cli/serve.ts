@@ -11,6 +11,7 @@ import type { Repository } from "@/lib/repository";
 import { createSelector, stringifyToCss } from "@/lib/style";
 import { contentType, replaceExt } from "@/lib/util";
 import { ErrorPage } from "@/page/error";
+import hanabi_error_css from "@/page/hanabi-error.css" assert { type: "text" };
 import chokidar from "chokidar";
 import esbuild from "esbuild";
 
@@ -108,6 +109,11 @@ export async function serve() {
                 const reload =
                     "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { if (event.data === 'reload') { location.reload(); } }";
                 return normalResponse(reload, ".js");
+            }
+
+            // css for error page
+            if (new URL(req.url).pathname.localeCompare("/hanabi-error.css") === 0) {
+                return normalResponse(hanabi_error_css, ".css");
             }
 
             return await errorResponse("404", "Route Not Found");
