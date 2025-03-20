@@ -27,13 +27,10 @@ export type HComponent = {
 
 // hanabi Component (is function)
 export type HComponentFn<T extends HArgument> = (
-    argument: T & Partial<{ class: string | string[]; id: string }>,
+    argument: T & { class?: string | string[]; id?: string },
     ...child: HNode[]
 ) => HNode;
-export type HArgument = Record<string, unknown> & Partial<{ class: string | string[]; id: string }>;
-
-// hanabi Component, without argument
-export type HSimpleComponentFn = (...child: HNode[]) => HNode;
+export type HArgument = Record<string, unknown>;
 
 // hanabi HTML Top export function
 export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
@@ -46,7 +43,7 @@ export function DOCTYPE(): string {
 }
 
 // add attribute
-export function addClassToAttribute<T extends { class?: string | string[] }>(attribute: T, className: string): T {
+export function addClassToRecord<T extends { class?: string | string[] }>(attribute: T, className: string): T {
     const new_attribute = JSON.parse(JSON.stringify(attribute));
     new_attribute.class = addClass(attribute, className);
     return new_attribute;
@@ -65,7 +62,10 @@ function addClass<T extends { class?: string | string[] }>(
     return className;
 }
 
-function mergeAttribute<T1 extends Attribute, T2 extends Attribute>(attribute1: T1, attribute2: T2): T1 & T2 {
+function mergeRecord<
+    T1 extends Record<string | number | symbol, unknown>,
+    T2 extends Record<string | number | symbol, unknown>,
+>(attribute1: T1, attribute2: T2): T1 & T2 {
     const new_attribute = JSON.parse(JSON.stringify(attribute1));
     for (const [key, value] of Object.entries(attribute2)) {
         new_attribute[key] = value;
@@ -354,11 +354,14 @@ export function semantic<T extends Attribute>(
     return (argument, ...child) => ({
         element_name,
         tag,
-        attribute: mergeAttribute(argument, { class: addClass(argument, [element_name, ...class_names]) }),
+        attribute: mergeRecord(argument, { class: addClass(argument, [element_name, ...class_names]) }),
         child,
     });
 }
 
-export function mergeClassToAttribute<T extends Attribute>(attribute: T, className: string) {
-    return mergeAttribute(attribute, { class: addClass(attribute, className) });
+export function mergeClassToRecord<T extends Record<string | number | symbol, unknown>>(
+    attribute: T,
+    className: string,
+) {
+    return mergeRecord(attribute, { class: addClass(attribute, className) });
 }
