@@ -1,5 +1,11 @@
 ---
 title: I Want to Search Even with Typos!
+author: producer
+date: 2025-03-03T00:00:00+09:00
+principalTag:
+    - techarticle
+associatedTags:
+    - staticseek
 ---
 ## Measure Before Optimizing
 

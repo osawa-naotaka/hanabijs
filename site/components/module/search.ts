@@ -33,6 +33,25 @@ export function search(repo: Repository): HComponentFn {
             style(".search-result-item", {
                 margin_block: "2rem",
             }),
+            style(".search-result-item-meta", {
+                display: "flex",
+                flex_wrap: "wrap",
+                align_items: "center",
+                gap: ["2px", "0.5rem"],
+                border_block_end: ["2px", "solid"],
+                padding_block_end: "2px",
+            }),
+            style(".search-result-item-tag", {
+                font_size: "0.8rem",
+                background_color: appearence.color.main,
+                color: appearence.color.background,
+                font_weight: "bold",
+                padding_inline: "0.5rem",
+                border_radius: "4px",                                
+            }),
+            style(".search-result-item-description", {
+                font_size: "0.7rem"
+            })
         ],
         import.meta.path,
     );
@@ -89,6 +108,10 @@ export const SearchKeySchema = v.object({
     id: v.string(),
     data: v.object({
         title: v.string(),
+        author: v.string(),
+        date: v.string(),
+        principalTag: v.array(v.string()),
+        associatedTags: v.optional(v.array(v.string())),
     }),
 });
 
@@ -98,12 +121,22 @@ type SearchResultItemAttribute = {
 
 function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
     const SearchResultItem = createSimpleSemantic("search-result-item", { tag: "li" });
+    const SearchResultItemMeta = createSimpleSemantic("search-result-item-meta");
+    const SearchResultItemTag = createSimpleSemantic("search-result-item-tag");
     const SearchResultItemTitle = createSimpleSemantic("search-result-item-title");
     const SearchResultItemDescription = createSimpleSemantic("search-result-item-description");
+
+
 
     return (attribute) => {
         const key = v.parse(SearchKeySchema, attribute.result.key);
         return SearchResultItem(
+            SearchResultItemMeta(
+                key.data.author,
+                key.data.date,
+                ...key.data.principalTag.map((tag) => SearchResultItemTag(tag)),
+                ...(key.data.associatedTags || []).map((tag) => SearchResultItemTag(tag)),
+            ),
             SearchResultItemTitle(A({ href: `/posts/${key.id}` }, key.data.title)),
             SearchResultItemDescription(attribute.result.refs[0].wordaround || ""),
         );

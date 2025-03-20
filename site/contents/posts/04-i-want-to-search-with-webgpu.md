@@ -1,5 +1,11 @@
 ---
 title: I Want to Search with WebGPU!
+author: producer
+date: 2025-03-04T00:00:00+09:00
+principalTag:
+    - techarticle
+associatedTags:
+    - staticseek
 ---
 ## WebGPU for Search, Who Knew This Was Possible
 

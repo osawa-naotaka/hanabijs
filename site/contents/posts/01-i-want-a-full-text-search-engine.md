@@ -1,5 +1,11 @@
 ---
 title: I Want a Full-Text Search Engine!
+author: producer
+date: 2025-03-01T00:00:00+09:00
+principalTag:
+    - techarticle
+associatedTags:
+    - staticseek
 ---
 
 In this article, I will explain the reasons and methods that led me to create a full-text search engine. I will also explain one of the components of the search engine. The project mentioned in the title is published as a website. Please take a look. Unfortunately, the site does not yet support Japanese...
