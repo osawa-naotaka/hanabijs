@@ -6,7 +6,13 @@ import type { HRootPageFn, Repository } from "@/main";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
 import { navitem, posts_dir, site } from "@site/config/site.config";
+import type { PageList } from "@site/site.config";
 import matter from "gray-matter";
+
+export const generateStatic: PageList = async (repo: Repository) => {
+    const root_fn = Root(repo);
+    return { css_js_path: "/assets/top", pages: [{ node: await root_fn(), path: "/index" }] };
+};
 
 export default function Root(repo: Repository): HRootPageFn<void> {
     const Page = page(repo);

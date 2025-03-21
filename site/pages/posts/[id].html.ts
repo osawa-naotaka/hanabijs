@@ -3,9 +3,10 @@ import path from "node:path";
 import { cwd } from "node:process";
 import { markdownToHtml } from "@/lib/markdown";
 import { H2, RawHTML, globExt, semantic } from "@/main";
-import type { HPath, HRootPageFn, Repository } from "@/main";
+import type { HNode, HPath, HRootPageFn, Repository } from "@/main";
 import { page } from "@site/components/pages/page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
+import type { PageList } from "@site/site.config";
 import matter from "gray-matter";
 
 export type RootParameter = {
@@ -16,6 +17,17 @@ export async function getStaticPaths(): Promise<HPath<RootParameter>> {
     const items = globExt(path.join(cwd(), posts_dir), ".md");
     return (await Array.fromAsync(items)).map((x) => ({ params: { id: path.basename(x, ".md") } }));
 }
+
+export const generateStatic: PageList = async (repo: Repository) => {
+    const root_fn = Root(repo);
+    return {
+        css_js_path: "/assets/post",
+        pages: (await getStaticPaths()).map(async ({ params }) => ({
+            node: await root_fn(params),
+            path: `/posts/${params.id}`,
+        })),
+    };
+};
 
 export default function Root(repo: Repository): HRootPageFn<RootParameter> {
     const Page = page(repo);

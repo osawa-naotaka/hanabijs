@@ -5,6 +5,7 @@ import { A, Li, Ul, globExt, semantic } from "@/main";
 import type { HPath, HRootPageFn, Repository } from "@/main";
 import { page } from "@site/components/pages/page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
+import type { PageList } from "@site/site.config";
 import matter from "gray-matter";
 import * as v from "valibot";
 
@@ -15,6 +16,17 @@ export type RootParameter = {
 export async function getStaticPaths(): Promise<HPath<RootParameter>> {
     return [{ params: { tag: "techarticle" } }, { params: { tag: "typescript" } }];
 }
+
+export const generateStatic: PageList = async (repo: Repository) => {
+    const root_fn = Root(repo);
+    return {
+        css_js_path: "/assets/tag",
+        pages: (await getStaticPaths()).map(async ({ params }) => ({
+            node: await root_fn(params),
+            path: `/tags/${params.tag}`,
+        })),
+    };
+};
 
 export default function Root(repo: Repository): HRootPageFn<RootParameter> {
     const Page = page(repo);
