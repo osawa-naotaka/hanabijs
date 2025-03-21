@@ -8,7 +8,7 @@ import { page } from "@site/components/pages/page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
 import matter from "gray-matter";
 
-type RootParameter = {
+export type RootParameter = {
     id: string;
 };
 
