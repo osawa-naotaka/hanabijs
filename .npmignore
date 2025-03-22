@@ -6,6 +6,6 @@
 /test
 biome.json
 bun.lock
-rollup.config.json
 shell.nix
 tsconfig.json
+tsup.config.ts

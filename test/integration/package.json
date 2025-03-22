@@ -1,15 +1,15 @@
 {
-  "name": "integration-test",
-  "scripts": {
-    "build": "hanabi-build",
-    "dev": "hanabi-serve"
-  },
-  "devDependencies": {
-    "@types/node": "^22.13.10",
-    "typescript": "^5.8.2"
-  },
-  "packageManager": "yarn@4.7.0",
-  "dependencies": {
-    "hanabijs": "../.."
-  }
+    "name": "integration-test",
+    "devDependencies": {
+        "@types/node": "^22.13.10",
+        "typescript": "^5.8.2"
+    },
+    "packageManager": "yarn@4.7.0",
+    "scripts": {
+        "build": "tsc && hanabi build",
+        "dev": "hanabi dev"
+    },
+    "dependencies": {
+        "hanabijs": "../.."
+    }
 }

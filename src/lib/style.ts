@@ -1,7 +1,7 @@
-import type { HNode } from "./element";
+import type { HComponent } from "./element";
 
 // Style
-export type Rule = {
+export type StyleRule = {
     selectorlist: SelectorList;
     properties: Properties;
 };
@@ -24,11 +24,43 @@ export type Combinator = " " | ">" | "+" | "~" | "||";
 
 export type Properties = Record<string, string[] | string>;
 
-export function style(rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]): Rule[] {
+export function createStyles(
+    ...rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]
+): StyleRule[] {
     return rules.map(([selectors, properties]) => ({
-        selectorlist: selectors.map((s) => createSelector(s.length > 0 && s[0] === "&" ? s : ["*", " ", ...s])),
+        selectorlist: selectors.map(createSelector),
         properties,
     }));
+}
+
+function isSelf(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&"): selector is "&" {
+    return typeof selector === "string" && selector === "&";
+}
+
+export function selfStyle(propaties: Properties): StyleRule[] {
+    return [
+        {
+            selectorlist: [["&"]],
+            properties: propaties,
+        },
+    ];
+}
+
+export function style(selector: SimpleSelector | "&", propaties: Properties): StyleRule {
+    return {
+        selectorlist: selector === "&" ? [["&"]] : [createSelector([selector])],
+        properties: propaties,
+    };
+}
+
+export function compoundStyle(
+    selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&",
+    propaties: Properties,
+): StyleRule {
+    return {
+        selectorlist: isSelf(selector) ? [["&"]] : [createSelector(selector)],
+        properties: propaties,
+    };
 }
 
 export function createSelector(selector: (SimpleSelector | CompoundSelector | Combinator)[]): Selector {
@@ -67,18 +99,14 @@ export function isCompoundSelector(s: Selector): s is CompoundSelector {
 }
 
 // Stringify
-export function stringifyToCss(node: HNode): string {
-    if (typeof node === "string") {
-        return "";
-    }
-
-    return [rulesToString(node.style), node.child.map(stringifyToCss).join("")].join("");
+export function stringifyToCss(components: HComponent[]): string {
+    return components.map(rulesToString).join("");
 }
 
-export function rulesToString(rules: Rule[]): string {
+export function rulesToString(semantic: HComponent): string {
     const res: string[] = [];
-    for (const rule of rules) {
-        const selectors_string = rule.selectorlist.map(selectorToString).join(", ");
+    for (const rule of semantic.style) {
+        const selectors_string = rule.selectorlist.map(selectorToString(semantic)).join(", ");
         const propaties_string = propatiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }
@@ -86,17 +114,29 @@ export function rulesToString(rules: Rule[]): string {
     return res.join("");
 }
 
-function selectorToString(selector: Selector): string {
-    if (isCompoundSelector(selector)) {
-        return selector.join("");
+function stringifySelector(current: HComponent, selector: CompoundSelector): string {
+    if (selector.length === 1 && selector[0] === "&") {
+        return `.${current.component_name}`;
     }
-    return selector.combinator === " "
-        ? `${selector.compound.join("")} ${selectorToString(selector.descendant)}`
-        : `${selector.compound.join("")} ${selector.combinator} ${selectorToString(selector.descendant)}`;
+    return selector.join("");
+}
+
+function selectorToString(current: HComponent): (selector: Selector) => string {
+    return (selector: Selector) => {
+        if (isCompoundSelector(selector)) {
+            return stringifySelector(current, selector);
+        }
+        return selector.combinator === " "
+            ? `${stringifySelector(current, selector.compound)} ${selectorToString(current)(selector.descendant)}`
+            : `${stringifySelector(current, selector.compound)} ${selector.combinator} ${selectorToString(current)(selector.descendant)}`;
+    };
 }
 
 function propatiesToString(properties: Properties): string {
     return Object.entries(properties)
-        .map(([key, value]) => `${key.replace("_", "-")}: ${typeof value === "string" ? value : value.join(" ")};`)
+        .map(
+            ([key, value]) =>
+                `${key.replaceAll("_", "-")}: ${typeof value === "string" ? value : key === "font-family" || key === "font_family" ? value.join(", ") : value.join(" ")};`,
+        )
         .join(" ");
 }

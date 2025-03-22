@@ -1,54 +1,173 @@
+import { existsSync } from "node:fs";
 import path from "node:path";
 import type { Attribute } from "../lib/element";
-import { globTs } from "../lib/util";
+import { globExt } from "../lib/util";
 
 export type RouteTable = {
-    url_regexp_woext: RegExp;
-    url_exact_woext: string;
-    file_path: string;
+    path_regexp: RegExp;
+    target_file: string;
+    target_ext: string;
+    auto_generate: boolean;
 };
 
 export type Route = {
-    file_path: string;
+    target_file: string;
     req_ext: string;
+    auto_generate: boolean;
     params: Attribute;
 };
 
 export type Router = (req: Request) => Route | Error;
 
-export async function createRouter(base: string): Promise<Router> {
-    const route_table: RouteTable[] = (await Array.fromAsync(globTs(base))).map((file_path) => {
-        const p = path.parse(file_path);
-        const url_exact_woext = p.dir !== "" ? `/${p.dir}/${p.name}` : `/${p.name}`;
-        const param_names = Array.from(url_exact_woext.matchAll(/\[(?<key>[^\]]+)\]/g)).map((m) => m.groups?.key || "");
-        const regexp_str = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, `(?<${c}>.+)`), url_exact_woext);
-        const url_regexp_woext = new RegExp(`^${regexp_str}$`);
-        return { url_regexp_woext, url_exact_woext, file_path: `/${file_path}` };
-    });
+export async function createPageRouter(rootdir: string): Promise<Router> {
+    if (existsSync(rootdir)) {
+        const page_route_table = await createPageRouteTable(rootdir);
 
-    return (req) => {
-        const req_url = path.parse(new URL(req.url).pathname);
-        const req_ext = req_url.ext;
-        const name =
-            (req_url.dir === "/" ? "" : `${req_url.dir}`) + (req_url.name === "" ? "/index" : `/${req_url.name}/index`);
+        return (req) => pageRouter(page_route_table, new URL(req.url).pathname);
+    }
 
-        if (req_ext === "" || req_ext === ".html") {
-            for (const { url_regexp_woext, file_path } of route_table) {
-                const match = name.match(url_regexp_woext);
-                if (match) {
-                    return { file_path, req_ext, params: match.groups || {} };
-                }
-            }
-        } else if (req_ext === ".css" || req_ext === ".js") {
-            const target = req_url.dir === "/" ? `/${req_url.name}` : `${req_url.dir}/${req_url.name}`;
-            for (const { url_exact_woext, file_path } of route_table) {
-                if (target === url_exact_woext) {
-                    return { file_path, req_ext, params: {} };
-                }
-            }
+    return () => new Error("Path Not Found.");
+}
+
+export async function createStaticRouter(rootdir: string): Promise<Router> {
+    if (existsSync(rootdir)) {
+        const static_route_table = await createStaticRouteTable(rootdir);
+
+        return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
+    }
+
+    return () => new Error("Path Not Found.");
+}
+
+function withoutExt(file: string): string {
+    const p = path.parse(file);
+    return path.join(p.dir, p.name);
+}
+
+function escapeForRegExp(exp: string): string {
+    return exp.replace(/[-^$\\\.*+?()[\]{}|/]/g, "\\$&");
+}
+
+export async function createPageRouteTable(rootdir: string): Promise<RouteTable[]> {
+    const exact_route_table: RouteTable[] = [];
+    const regexp_route_table: RouteTable[] = [];
+
+    function addRoute(
+        [regexp, is_exact]: [RegExp, boolean],
+        target_file: string,
+        target_ext: string,
+        auto_generate: boolean,
+    ) {
+        const item = { path_regexp: regexp, target_file, target_ext, auto_generate };
+        if (is_exact) {
+            exact_route_table.push(item);
         } else {
-            return new Error(`Unsupported extension ${req_ext}`);
+            regexp_route_table.push(item);
         }
-        return new Error("Path Not Found.");
-    };
+    }
+
+    for (const file of await Array.fromAsync(globExt(rootdir, ".ts"))) {
+        const target_file = path.join("/", file);
+        const path_without_ts = withoutExt(target_file);
+        const path_without_ts_p = path.parse(path_without_ts);
+
+        //
+        if (path_without_ts_p.ext !== ".html") {
+            const path_regexp = new RegExp(`^${escapeForRegExp(path_without_ts)}$`);
+            exact_route_table.push({
+                path_regexp,
+                target_file,
+                target_ext: path_without_ts_p.ext,
+                auto_generate: false,
+            });
+            continue;
+        }
+
+        // .html is expanded to generated .css and .js
+        const path_base = withoutExt(path_without_ts);
+        for (const ext of [".css", ".js"]) {
+            exact_route_table.push({
+                path_regexp: new RegExp(`^${escapeForRegExp(path_base)}${escapeForRegExp(ext)}$`),
+                target_file,
+                target_ext: ext,
+                auto_generate: true,
+            });
+        }
+
+        // .html
+        if (path_without_ts.endsWith("/index.html")) {
+            addRoute(createHtmlRegExp(path_without_ts.replace("index.html", "")), target_file, ".html", false);
+            addRoute(createHtmlRegExp(path_without_ts.replace("/index.html", "")), target_file, ".html", false);
+        } else {
+            addRoute(createHtmlRegExp(path_without_ts.replace(".html", "/")), target_file, ".html", false);
+            addRoute(createHtmlRegExp(path_without_ts.replace(".html", "")), target_file, ".html", false);
+        }
+
+        addRoute(createHtmlRegExp(path_without_ts), target_file, ".html", false);
+    }
+
+    return exact_route_table.concat(regexp_route_table);
+}
+
+function createHtmlRegExp(path: string): [RegExp, boolean] {
+    const regexp_result = path.matchAll(/\[(?<key>[^\]]+)\]/g);
+
+    let regexp_str = "";
+    let start_pos = 0;
+    const param_names = new Set<string>();
+    for (const r of regexp_result) {
+        if (r.groups?.key) {
+            param_names.add(r.groups.key);
+            regexp_str += escapeForRegExp(path.slice(start_pos, r.index));
+            regexp_str += `(?<${r.groups.key}>.+)`;
+            start_pos = r.index + r[0].length;
+        } else {
+            throw new Error("hanabi: createPageRouteTable internal error.");
+        }
+    }
+    regexp_str += escapeForRegExp(path.slice(start_pos));
+
+    return [new RegExp(`^${regexp_str}$`), param_names.size === 0];
+}
+
+async function createStaticRouteTable(rootdir: string): Promise<RouteTable[]> {
+    return (await Array.fromAsync(globExt(rootdir, ""))).map((name) => {
+        const target_file = path.join("/", name);
+        const path_exact = target_file;
+        const path_regexp = new RegExp(`^${escapeForRegExp(path_exact)}$`);
+        return { path_regexp, path_exact, target_file, target_ext: path.extname(name), auto_generate: false };
+    });
+}
+
+function pageRouter(route_table: RouteTable[], req_url_path: string): Route | Error {
+    for (const { path_regexp, target_file, target_ext, auto_generate } of route_table) {
+        const match = req_url_path.match(path_regexp);
+
+        if (match) {
+            return { target_file, req_ext: target_ext, auto_generate, params: match.groups || {} };
+        }
+    }
+
+    return new Error("Path Not Found.");
+}
+
+function staticRouter(route_table: RouteTable[], req_url_path: string): Route | Error {
+    const req_url_path_persed = path.parse(req_url_path);
+    const req_ext = req_url_path_persed.ext;
+    for (const { target_file } of route_table) {
+        if (target_file === req_url_path) {
+            return { target_file, req_ext, auto_generate: false, params: {} };
+        }
+    }
+
+    // check if / (=index.html) matches
+    if (req_ext === "") {
+        const index_name = path.join(req_url_path_persed.dir, req_url_path_persed.name, "index.html");
+        for (const { target_file } of route_table) {
+            if (target_file === index_name) {
+                return { target_file, req_ext: ".html", auto_generate: false, params: {} };
+            }
+        }
+    }
+    return new Error("Path Not Found.");
 }

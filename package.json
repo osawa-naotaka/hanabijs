@@ -5,16 +5,15 @@
   "type": "module",
   "main": "build/hanabi-lib.js",
   "bin": {
-    "hanabi-build": "build/hanabi-build.js",
-    "hanabi-serve": "build/hanabi-serve.js"
+    "hanabi": "build/hanabi.js"
   },
   "types": "build/hanabi-lib.d.ts",
   "scripts": {
-    "build": "rollup --config rollup.config.ts",
-    "dev": "bun run --hot src/cli/serve.ts",
-    "site-build": "bun run src/cli/build.ts",
-    "check": "biome check ./src ./site",
-    "check-write": "biome check --write ./src ./site"
+    "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
+    "dev": "bun run --hot src/bin.ts dev",
+    "site": "tsc && bun run --hot src/bin.ts build",
+    "check": "biome check ./src ./site ./test",
+    "check-write": "biome check --write ./src ./site ./test"
   },
   "author": "osawa naotaka",
   "license": "MIT",
@@ -28,17 +27,29 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.2",
     "@types/bun": "^1.2.4",
     "@types/node": "^22.13.10",
-    "rollup": "^4.35.0",
-    "rollup-plugin-dts": "^6.1.1",
+    "staticseek": "^2.7.1",
     "tslib": "^2.8.1",
+    "tsup": "^8.4.0",
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "chokidar": "^4.0.3"
+    "chokidar": "^4.0.3",
+    "esbuild": "^0.25.1",
+    "gray-matter": "^4.0.3",
+    "prismjs": "^1.30.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.1",
+    "remark-toc": "^9.0.0",
+    "unified": "^11.0.5",
+    "valibot": "^1.0.0"
+  },
+  "resolutions": {
+    "@types/bun": "1.2.4"
   },
   "packageManager": "yarn@4.7.0"
 }

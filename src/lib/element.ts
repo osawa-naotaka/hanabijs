@@ -1,130 +1,214 @@
-import type { ComplexSelector, CompoundSelector, Rule, Selector } from "./style";
+import type { HanabiTag, Tag } from "./define";
+import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./style";
 import { isCompoundSelector } from "./style";
+import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
-export type Elem = {
-    tag: Tag;
-    attribute: Attribute;
-    style: Rule[];
-    child: HNode[];
+// HTML DOM Node = string or HTML Element
+export type HNode<T extends Attribute = Attribute> = string | HElement<Partial<T>>;
+
+// HTML Element, with custon element name
+export type HElement<T> = {
+    element_name: string;
+    tag: Tag | HanabiTag;
+    attribute: T;
+    child: HNode<Attribute>[];
 };
 
-export type HOElem<A> = (arg: A) => Elem;
+// Attribute of HTML Element
+export type Attribute = Record<string, AttributeValue>;
+export type AttributeValue = string | string[] | undefined;
 
-export type Attribute = Record<string, unknown>;
+// hanabi semantic data structure for register semantic to repository, internal use only.
+export type HComponent = {
+    component_name: string;
+    path?: string;
+    style: StyleRule[];
+};
 
-export type Tag =
-    | "a"
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "h5"
-    | "h6"
-    | "meta"
-    | "link"
-    | "head"
-    | "body"
-    | "html"
-    | "div"
-    | "span"
-    | "main"
-    | "aside"
-    | "section"
-    | "article"
-    | "ul"
-    | "ol"
-    | "li"
-    | "p"
-    | "img"
-    | "title"
-    | "script"
-    | "header"
-    | "footer";
+// hanabi Component (is function)
+export type HComponentFn<T extends HArgument> = (
+    argument: T & { class?: string | string[]; id?: string },
+) => (...child: HNode[]) => HNode;
+export type HAsyncComponentFn<T extends HArgument> = (
+    argument: T & { class?: string | string[]; id?: string },
+) => (...child: HNode[]) => Promise<HNode>;
+export type HArgument = Record<string, unknown>;
 
-export type HNode = string | Elem;
+// hanabi HTML Top export function
+export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
+
+// hanabi Client FUnction
+export type HClientFn = () => Promise<void>;
 
 // Element
 export function DOCTYPE(): string {
     return "<!DOCTYPE html>";
 }
 
-export function createElem(tag: Tag, attribute: Attribute, args: (Rule[] | HNode)[]): Elem {
-    const { style, child } = classifyElemArgs(args);
-    return { tag, attribute, style, child };
+// add class string to record.
+export function addClassInRecord<T extends { class?: string | string[] }>(record: T, className: string): T {
+    const new_record = JSON.parse(JSON.stringify(record));
+    new_record.class = addClassToHead(record, className);
+    return new_record;
 }
 
-export function classifyElemArgs(args: (Rule[] | HNode)[]): {
-    style: Rule[];
-    child: HNode[];
-} {
-    let style: Rule[] = [];
-    const child: HNode[] = [];
-
-    for (const arg of args) {
-        if (isNode(arg)) {
-            child.push(arg);
-        } else if (isStyle(arg)) {
-            style = arg;
+function addClassToHead<T extends { class?: string | string[] }>(
+    attribute: T,
+    className: string | string[],
+): string | string[] {
+    if (attribute.class !== undefined) {
+        if (typeof className === "string") {
+            return Array.isArray(attribute.class) ? [className, ...attribute.class] : [className, attribute.class];
         }
+        return Array.isArray(attribute.class) ? [...className, ...attribute.class] : [...className, attribute.class];
     }
-
-    return { style, child };
+    return className;
 }
 
-function isNode(arg: Rule[] | HNode): arg is HNode {
-    if (typeof arg === "string") {
-        return true;
+function mergeRecord<
+    T1 extends Record<string | number | symbol, unknown>,
+    T2 extends Record<string | number | symbol, unknown>,
+>(attribute1: T1, attribute2: T2): T1 & T2 {
+    const new_attribute = JSON.parse(JSON.stringify(attribute1));
+    for (const [key, value] of Object.entries(attribute2)) {
+        new_attribute[key] = value;
     }
-
-    if (Array.isArray(arg)) {
-        return false;
-    }
-
-    return (
-        Object.hasOwn(arg, "tag") &&
-        Object.hasOwn(arg, "attribute") &&
-        Object.hasOwn(arg, "style") &&
-        Object.hasOwn(arg, "child")
-    );
-}
-
-function isStyle(arg: Rule[] | HNode): arg is Rule[] {
-    if (Array.isArray(arg)) {
-        for (const a of arg) {
-            if (!Object.hasOwn(a, "selectorlist") || !Object.hasOwn(a, "properties")) {
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
+    return new_attribute;
 }
 
 // Strigify
-export function stringifyToHtml(node: HNode): string {
-    if (typeof node === "string") {
-        return node;
-    }
-    if (node.child.length === 0) {
-        return `<${node.tag}${attributeToString(node.attribute)} />`;
-    }
-    return `<${node.tag}${attributeToString(node.attribute)}>${node.child.map(stringifyToHtml).join("")}</${node.tag}>`;
+export function stringifyToHtml(depth: number): (node: HNode) => string {
+    return (node: HNode) => {
+        if (depth > 64) {
+            throw new Error("stringifyToHtml: html element nesting depth must be under 64.");
+        }
+
+        if (typeof node === "string") {
+            return sanitizeBasic(node);
+        }
+
+        // ad-hock tag "raw". this tag must be removed for security.
+        if (node.tag === "raw") {
+            return node.child.join("");
+        }
+
+        if (!validateElementName(node.tag)) {
+            throw new Error(`stringifyToHtml: invalid element name ${node.tag}.`);
+        }
+
+        if (node.tag === "unwrap") {
+            return node.child.map(stringifyToHtml(depth + 1)).join("");
+        }
+
+        if (node.child.length === 0) {
+            return `<${node.tag}${attributeToString(node.attribute)} />`;
+        }
+        return `<${node.tag}${attributeToString(node.attribute)}>${node.child.map(stringifyToHtml(depth + 1)).join("")}</${node.tag}>`;
+    };
 }
 
-function attributeToString(attribute: Attribute): string {
+function attributeToString(attribute: Partial<Attribute>): string {
     return Object.entries(attribute)
         .map(([raw_key, value]) => {
-            if (typeof value === "string") {
-                const key = (raw_key === "className" ? "class" : raw_key).replace("_", "-");
-                return value === "" || value === null ? ` ${key}"` : ` ${key}="${value}"`;
+            const key = raw_key.replaceAll("_", "-");
+
+            if (!validateAttributeKey(key)) {
+                throw new Error(`attributeToString: invalid attribute key ${key}.`);
             }
+
+            if (value === "" || value === null) {
+                return ` ${key}`;
+            }
+
+            if (typeof value !== "string" && !Array.isArray(value)) {
+                throw new Error(
+                    `attributeToString: invalid attribute value type ${value}. only string value or array of string value is allowd.`,
+                );
+            }
+
+            const sanitized = Array.isArray(value)
+                ? value.map(sanitizeAttributeValue(key))
+                : [sanitizeAttributeValue(key)(value)];
+
+            return ` ${key}="${sanitized.join(" ")}"`;
         })
         .join("");
 }
 
+// DOM Builder
+export function createDom(node: HNode, d: Document = document): Node[] {
+    return createDomInternal(0, d)(node);
+}
+
+function createDomInternal(depth: number, d: Document = document): (node: HNode) => Node[] {
+    return (node: HNode) => {
+        if (depth > 64) {
+            throw new Error("stringifyToHtml: html element nesting depth must be under 64.");
+        }
+
+        if (typeof node === "string") {
+            return [d.createTextNode(sanitizeBasic(node))];
+        }
+
+        // ad-hock tag "raw". this tag must be removed for security.
+        if (node.tag === "raw") {
+            const parser = new DOMParser();
+            return node.child.map((child) => {
+                if (typeof child === "string") {
+                    return parser.parseFromString(child, "text/html");
+                }
+                throw new Error("Raw node must be string.");
+            });
+        }
+
+        if (!validateElementName(node.tag)) {
+            throw new Error(`stringifyToHtml: invalid element name ${node.tag}.`);
+        }
+
+        if (node.tag === "unwrap") {
+            return node.child.flatMap(createDomInternal(depth + 1, d));
+        }
+
+        const element = d.createElement(node.tag);
+        setAttribute(element, node.attribute);
+
+        for (const child of node.child) {
+            for (const child_element of createDomInternal(depth + 1, d)(child)) {
+                element.appendChild(child_element);
+            }
+        }
+        return [element];
+    };
+}
+
+function setAttribute(element: HTMLElement, attribute: Partial<Attribute>): void {
+    for (const [raw_key, value] of Object.entries(attribute)) {
+        const key = raw_key.replaceAll("_", "-");
+
+        if (!validateAttributeKey(key)) {
+            throw new Error(`attributeToString: invalid attribute key ${key}.`);
+        }
+
+        if (value === "" || value === null) {
+            element.setAttribute(key, "");
+            return;
+        }
+
+        if (typeof value !== "string" && !Array.isArray(value)) {
+            throw new Error(
+                `attributeToString: invalid attribute value type ${value}. only string value or array of string value is allowd.`,
+            );
+        }
+
+        for (const v of Array.isArray(value) ? value : [value]) {
+            element.setAttribute(key, sanitizeAttributeValue(key)(v));
+        }
+    }
+}
+
 // Traverser
-export function selectElements(nodes: HNode[], selector: Selector, search_deep = false): Elem[] {
-    const result = new Set<Elem>();
+export function selectNode(nodes: HNode[], selector: Selector, search_deep = false): HNode[] {
+    const result = new Set<HNode>();
 
     for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
@@ -135,9 +219,9 @@ export function selectElements(nodes: HNode[], selector: Selector, search_deep =
                 }
             } else {
                 if (matchCompoundSelector(selector.compound, node)) {
-                    selectElementsCombinator(nodes, i, selector).map((e) => result.add(e));
+                    selectNodeCombinator(nodes, i, selector).map((e) => result.add(e));
                 } else if (search_deep) {
-                    selectElements(node.child, selector, true).map((e) => result.add(e));
+                    selectNode(node.child, selector, true).map((e) => result.add(e));
                 }
             }
         }
@@ -145,14 +229,14 @@ export function selectElements(nodes: HNode[], selector: Selector, search_deep =
     return Array.from(result);
 }
 
-function matchCompoundSelector(selector: CompoundSelector, element: Elem): boolean {
+function matchCompoundSelector(selector: CompoundSelector, element: HElement<{ id?: string }>): boolean {
     for (const s of selector) {
         if (s.startsWith(".")) {
             if (!hasClass(s.slice(1), element.attribute)) {
                 return false;
             }
         } else if (s.startsWith("#")) {
-            if (element.attribute.id !== s.slice(1)) {
+            if (element.attribute.id === undefined || element.attribute.id !== s.slice(1)) {
                 return false;
             }
         } else if (s !== "*") {
@@ -165,14 +249,14 @@ function matchCompoundSelector(selector: CompoundSelector, element: Elem): boole
 }
 
 function hasClass(className: string, attribute: Attribute): boolean {
-    if (attribute.className === undefined || typeof attribute.className !== "string") {
+    if (attribute.class === undefined || typeof attribute.class !== "string") {
         return false;
     }
-    return attribute.className.includes(className);
+    return attribute.class.includes(className);
 }
 
-function selectElementsCombinator(nodes: HNode[], index: number, selector: ComplexSelector): Elem[] {
-    const result = new Set<Elem>();
+function selectNodeCombinator(nodes: HNode[], index: number, selector: ComplexSelector): HNode[] {
+    const result = new Set<HNode>();
     const parent = nodes[index];
 
     if (typeof parent === "string") {
@@ -181,17 +265,17 @@ function selectElementsCombinator(nodes: HNode[], index: number, selector: Compl
 
     switch (selector.combinator) {
         case " ":
-            selectElements(parent.child, selector.descendant, true).map((e) => result.add(e));
-            selectElements(parent.child, selector, true).map((e) => result.add(e));
+            selectNode(parent.child, selector.descendant, true).map((e) => result.add(e));
+            selectNode(parent.child, selector, true).map((e) => result.add(e));
             break;
         case ">":
-            selectElements(parent.child, selector.descendant).map((e) => result.add(e));
+            selectNode(parent.child, selector.descendant).map((e) => result.add(e));
             break;
         case "+":
             if (nodes.length > index + 1) {
                 const next_node = nodes[index + 1];
                 if (typeof next_node !== "string") {
-                    selectElements([next_node], selector.descendant).map((e) => result.add(e));
+                    selectNode([next_node], selector.descendant).map((e) => result.add(e));
                 }
             }
             break;
@@ -199,19 +283,19 @@ function selectElementsCombinator(nodes: HNode[], index: number, selector: Compl
             for (let i = index + 1; i < nodes.length; i++) {
                 const next_node = nodes[i];
                 if (typeof next_node !== "string") {
-                    selectElements([next_node], selector.descendant).map((e) => result.add(e));
+                    selectNode([next_node], selector.descendant).map((e) => result.add(e));
                 }
             }
             break;
         default:
-            throw new Error("selectElementsCombinator: unsupported combinator.");
+            throw new Error("selectComponentsCombinator: unsupported combinator.");
     }
 
     return Array.from(result);
 }
 
 // Inserter
-export function insertElements(root: HNode, selector: Selector, insert: HNode[], search_deep = false): HNode {
+export function insertNodes(root: HNode, selector: Selector, insert: HNode[], search_deep = false): HNode {
     let result = root;
 
     if (typeof result !== "string") {
@@ -225,17 +309,17 @@ export function insertElements(root: HNode, selector: Selector, insert: HNode[],
         } else {
             if (matchCompoundSelector(selector.compound, result)) {
                 result = {
+                    element_name: result.element_name,
                     tag: result.tag,
                     attribute: result.attribute,
-                    style: result.style,
-                    child: result.child.map((e) => insertElementsCombinator(e, selector, insert)),
+                    child: result.child.map((e) => insertNodesCombinator(e, selector, insert)),
                 };
             } else if (search_deep) {
                 result = {
+                    element_name: result.element_name,
                     tag: result.tag,
                     attribute: result.attribute,
-                    style: result.style,
-                    child: result.child.map((e) => insertElements(e, selector, insert, true)),
+                    child: result.child.map((e) => insertNodes(e, selector, insert, true)),
                 };
             }
         }
@@ -244,7 +328,7 @@ export function insertElements(root: HNode, selector: Selector, insert: HNode[],
     return result;
 }
 
-function insertElementsCombinator(root: HNode, selector: ComplexSelector, insert: HNode[]): HNode {
+function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: HNode[]): HNode {
     let result = root;
 
     if (typeof result === "string") {
@@ -253,14 +337,50 @@ function insertElementsCombinator(root: HNode, selector: ComplexSelector, insert
 
     switch (selector.combinator) {
         case " ":
-            result = insertElements(result, selector.descendant, insert, true);
+            result = insertNodes(result, selector.descendant, insert, true);
             break;
         case ">":
-            result = insertElements(result, selector.descendant, insert);
+            result = insertNodes(result, selector.descendant, insert);
             break;
         default:
             throw new Error("insertElementsCombinator: unsupported combinator.");
     }
 
     return result;
+}
+
+// on semantic Component, argument is attribute.
+export function semantic<T extends Attribute>(
+    element_name: string,
+    { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
+): HComponentFn<T> {
+    return (argument) =>
+        (...child) => ({
+            element_name,
+            tag,
+            attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
+            child,
+        });
+}
+
+// on layout Component, argument is attribute.
+// layout component is constructed with div tag.
+export function layout<T extends Attribute>(
+    element_name: string,
+    { class_names = [] }: { class_names?: string[] } = {},
+): HComponentFn<T> {
+    return (argument) =>
+        (...child) => ({
+            element_name,
+            tag: "div",
+            attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
+            child,
+        });
+}
+
+export function mergeClassToRecord<T extends Record<string | number | symbol, unknown>>(
+    attribute: T,
+    className: string,
+) {
+    return mergeRecord(attribute, { class: addClassToHead(attribute, className) });
 }
