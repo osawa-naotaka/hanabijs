@@ -1,5 +1,16 @@
 # hanabi.js
 
+currently, hanabi.js is developed using bun.
+prepare develop environment with [nix](https://nixos.org/download/) on WSL2:
+
+```shell
+sh <(curl -L https://nixos.org/nix/install) --no-daemon
+mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+git clone https://github.com/osawa-naotaka/hanabijs.git
+cd hanabijs
+nix develop
+```
+
 for build bundle:
 
 ```shell
@@ -16,7 +27,7 @@ bun run dev
 deploy test site:
 ```shell
 bun install
-bun run site-build
+bun run site
 ```
 
 ## コンセプト

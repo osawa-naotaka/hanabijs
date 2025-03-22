@@ -66,13 +66,13 @@ export default function clientFunction(repo: Repository): HClientFn {
         const search_input_e = querySelector<HTMLInputElement>(".search-input");
 
         search_input_e.addEventListener("input", async () => {
-            const result = await search_fn(search_input_e.value);
-            if (result instanceof StaticSeekError) {
-                setChild(search_result_e, [Li({})(`search function internal errror: ${result}`)]);
+            const results = await search_fn(search_input_e.value);
+            if (results instanceof StaticSeekError) {
+                setChild(search_result_e, [Li({})(`search function internal errror: ${results}`)]);
             } else {
                 setChild(
                     search_result_e,
-                    result.map((r) => SearchResultItem({ result: r })()),
+                    results.map((result) => SearchResultItem({ result })()),
                 );
             }
         });
@@ -81,7 +81,7 @@ export default function clientFunction(repo: Repository): HClientFn {
 
 function querySelector<T extends Element>(selector: string, d: Document = document): T {
     const e = d.querySelector<T>(selector);
-    if(e === null) {
+    if (e === null) {
         throw new Error(`element not found: ${selector}`);
     }
     return e;
