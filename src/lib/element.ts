@@ -29,6 +29,9 @@ export type HComponent = {
 export type HComponentFn<T extends HArgument> = (
     argument: T & { class?: string | string[]; id?: string },
 ) => (...child: HNode[]) => HNode;
+export type HAsyncComponentFn<T extends HArgument> = (
+    argument: T & { class?: string | string[]; id?: string },
+) => (...child: HNode[]) => Promise<HNode>;
 export type HArgument = Record<string, unknown>;
 
 // hanabi HTML Top export function

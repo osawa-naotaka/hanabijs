@@ -14,7 +14,7 @@ export const appearence = {
     color: {
         main: "#303030",
         background: "#f0f0f0",
-        header_ackground: "#615c66",
+        header_background: "#615c66",
         header_ext: "#ffffff",
         accent: "#d7003a",
     },
@@ -26,3 +26,8 @@ export const appearence = {
 };
 
 export const posts_dir = "site/contents/posts/";
+
+export const tag_map: Record<string, string> = {
+    techarticle: "Technology",
+    staticseek: "staticseek",
+};

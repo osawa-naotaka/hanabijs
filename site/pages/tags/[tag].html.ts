@@ -30,7 +30,7 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
 
     return async (parameter) => {
         const files = globExt(path.join(cwd(), posts_dir), ".md");
-        const result: { id: string; title: string }[] = [];
+        const result: { slug: string; title: string }[] = [];
         for await (const file of files) {
             const markdown = await readFile(path.join(cwd(), posts_dir, file), "utf-8");
             const { data } = matter(markdown);
@@ -39,7 +39,7 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
                 frontmatter.principalTag.includes(parameter.tag) ||
                 frontmatter.associatedTags?.includes(parameter.tag)
             ) {
-                result.push({ id: path.basename(file, ".md"), title: data.title });
+                result.push({ slug: path.basename(file, ".md"), title: data.title });
             }
         }
 
@@ -49,6 +49,6 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
             lang: site.lang,
             name: site.name,
             navitem: navitem,
-        })(PageMainArea({})(Ul({})(...result.map((x) => Li({})(A({ href: `/posts/${x.id}` })(x.title))))));
+        })(PageMainArea({})(Ul({})(...result.map((x) => Li({})(A({ href: `/posts/${x.slug}` })(x.title))))));
     };
 }
