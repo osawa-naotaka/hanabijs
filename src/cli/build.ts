@@ -60,7 +60,7 @@ export async function build() {
 
 type HtmlPageFn = {
     default: (repo: Repository) => Promise<HRootPageFn<Attribute>>;
-    getStaticPaths?: () => Promise<Array<{ params: Record<string, string> }>>;
+    rootPageFnParameters?: () => Promise<Array<Record<string, string>>>;
 };
 
 async function processHtmlDotTs(repository: Repository, relative_path: string, dist_dir: string, page_fn: HtmlPageFn) {
@@ -68,13 +68,13 @@ async function processHtmlDotTs(repository: Repository, relative_path: string, d
     const root_page_fn = await page_fn.default(repository);
     const css_js = await bundleAndWriteCssJs(relative_path, dist_dir, repository);
 
-    if (page_fn.getStaticPaths !== undefined) {
-        const param_list = await page_fn.getStaticPaths();
+    if (page_fn.rootPageFnParameters !== undefined) {
+        const param_list = await page_fn.rootPageFnParameters();
         const param_names = Array.from(relative_path.matchAll(/\[(?<key>[^\]]+)\]/g)).map((m) => m.groups?.key || "");
 
         for (const param of param_list) {
-            const file_replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param.params[c]), relative_path);
-            await processAndWriteHtml(file_replaced, dist_dir, css_js, root_page_fn, param.params);
+            const file_replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param[c]), relative_path);
+            await processAndWriteHtml(file_replaced, dist_dir, css_js, root_page_fn, param);
         }
     } else {
         await processAndWriteHtml(relative_path, dist_dir, css_js, root_page_fn, {});

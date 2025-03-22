@@ -34,8 +34,6 @@ export type HArgument = Record<string, unknown>;
 // hanabi HTML Top export function
 export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
 
-export type HPath<T> = { params: T }[];
-
 // Element
 export function DOCTYPE(): string {
     return "<!DOCTYPE html>";

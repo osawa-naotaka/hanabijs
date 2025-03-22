@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import { A, Li, Ul, globExt, semantic } from "@/main";
-import type { HPath, HRootPageFn, Repository } from "@/main";
+import type { HRootPageFn, Repository } from "@/main";
 import { page } from "@site/components/pages/page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
 import matter from "gray-matter";
@@ -12,8 +12,8 @@ export type RootParameter = {
     tag: string;
 };
 
-export async function getStaticPaths(): Promise<HPath<RootParameter>> {
-    return [{ params: { tag: "techarticle" } }, { params: { tag: "typescript" } }];
+export async function rootPageFnParameters(): Promise<RootParameter[]> {
+    return [{ tag: "techarticle" }, { tag: "typescript" }];
 }
 
 export default function Root(repo: Repository): HRootPageFn<RootParameter> {
