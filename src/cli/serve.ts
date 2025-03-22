@@ -4,7 +4,7 @@ import { cwd } from "node:process";
 import { createPageRouter, createStaticRouter } from "@/cli/route";
 import { page_subdir, public_subdir, site_subdir } from "@/config";
 import { Link, Script } from "@/lib/define";
-import type { HComponent, HRootPageFn } from "@/lib/element";
+import type { HComponent } from "@/lib/element";
 import { DOCTYPE, insertNodes, stringifyToHtml } from "@/lib/element";
 import { clearRepository } from "@/lib/repository";
 import type { Repository } from "@/lib/repository";
@@ -61,18 +61,26 @@ export async function serve() {
                     if (match_page.auto_generate) {
                         switch (match_page.req_ext) {
                             case ".css": {
+                                const css_files = Array.from(repository.values())
+                                    .map((x) => x.path)
+                                    .filter((x) => x !== undefined);
+                                for (const client of css_files) {
+                                    const client_fn = await import(client);
+                                    if (typeof client_fn.default === "function") {
+                                        await client_fn.default(repository);
+                                    } else {
+                                        return await errorResponse(500, `${client} does not have default export.`);
+                                    }
+                                }
                                 const css = stringifyToCss(Array.from(repository.values()));
                                 return normalResponse(css, match_page.req_ext);
                             }
                             case ".js": {
-                                const js = await bundleScript(repository, page_fn.default);
+                                const js = await bundleScript(repository);
                                 return normalResponse(js, match_page.req_ext);
                             }
                             default:
-                                return errorResponse(
-                                    "500",
-                                    `hanabi: server internal error. auto generation ${match_page.req_ext} is not supported.`,
-                                );
+                                return errorResponse(500, `auto generation of ${match_page.req_ext} is not supported.`);
                         }
                     }
 
@@ -94,7 +102,7 @@ export async function serve() {
                             return normalResponse(await root_page_fn, match_page.req_ext);
                     }
                 }
-                return await errorResponse("500", `${match_page.target_file} does not have default export.`);
+                return await errorResponse(500, `${match_page.target_file} does not have default export.`);
             }
 
             // Public router
@@ -116,13 +124,13 @@ export async function serve() {
                 return normalResponse(hanabi_error_css, ".css");
             }
 
-            return await errorResponse("404", "Route Not Found");
+            return await errorResponse(404, "Route Not Found");
         },
         port: 4132,
         hostname: "localhost",
         async error(error) {
             console.error(error);
-            return await errorResponse(error.name, error.message);
+            return await errorResponse(500, error.message);
         },
     });
 }
@@ -133,22 +141,19 @@ function normalResponse(content: string | Buffer<ArrayBufferLike>, ext: string):
     });
 }
 
-async function errorResponse(name: string, cause: string): Promise<Response> {
-    return new Response(stringifyToHtml(0)(await ErrorPage({ name, cause })), {
+async function errorResponse(status: number, cause: string): Promise<Response> {
+    return new Response(stringifyToHtml(0)(await ErrorPage({ name: status.toString(), cause })), {
+        status,
+        statusText: cause,
         headers: { "Content-Type": "text/html" },
     });
 }
 
-async function bundleScript(
-    repository: Repository,
-    page_fn: (repo: Repository) => Promise<HRootPageFn<Record<string, unknown>>>,
-): Promise<string> {
-    clearRepository(repository);
-    await page_fn(repository);
+async function bundleScript(repository: Repository): Promise<string> {
     const script_files = Array.from(repository.values())
         .map((x) => x.path)
-        .filter(Boolean);
-    const entry = `import type { HComponent } from "@/main"; const repo = new Map<string, HComponent>(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; scr${idx}(repo);`).join("\n")}`;
+        .filter((x) => x !== undefined);
+    const entry = `import type { HComponent } from "@/main"; const repo = new Map<string, HComponent>(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(repo)();`).join("\n")}`;
     const bundle = await esbuild.build({
         stdin: {
             contents: entry,
@@ -160,7 +165,7 @@ async function bundleScript(
             "import.meta.path": "undefined",
         },
         bundle: true,
-        format: "iife",
+        format: "esm",
         sourcemap: "inline",
         platform: "browser",
         target: "es2024",

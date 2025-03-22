@@ -7,7 +7,7 @@ import { summaries } from "@site/components/sections/summaries";
 import { navitem, site } from "@site/config/site.config";
 import { postFmSchema, posts_dir } from "@site/config/site.config";
 
-export default async function Root(repo: Repository): Promise<HRootPageFn<void>> {
+export default function Root(repo: Repository): HRootPageFn<void> {
     const Page = page(repo);
     const Hero = hero(repo);
     const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });

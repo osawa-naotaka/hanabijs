@@ -37,6 +37,9 @@ export type HArgument = Record<string, unknown>;
 // hanabi HTML Top export function
 export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
 
+// hanabi Client FUnction
+export type HClientFn = () => Promise<void>;
+
 // Element
 export function DOCTYPE(): string {
     return "<!DOCTYPE html>";

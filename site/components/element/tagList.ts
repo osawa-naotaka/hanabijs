@@ -10,7 +10,7 @@ export function tagList(repo: Repository): HComponentFn<TagListArgument> {
     registerComponent(repo, "tag-list", [
         style("&", {
             display: "flex",
-            align_tems: "center",
+            align_items: "center",
             gap: "0.5rem",
             list_style_type: "none",
         }),

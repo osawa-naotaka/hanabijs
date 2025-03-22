@@ -134,6 +134,9 @@ function selectorToString(current: HComponent): (selector: Selector) => string {
 
 function propatiesToString(properties: Properties): string {
     return Object.entries(properties)
-        .map(([key, value]) => `${key.replaceAll("_", "-")}: ${typeof value === "string" ? value : value.join(" ")};`)
+        .map(
+            ([key, value]) =>
+                `${key.replaceAll("_", "-")}: ${typeof value === "string" ? value : key === "font-family" || key === "font_family" ? value.join(", ") : value.join(" ")};`,
+        )
         .join(" ");
 }

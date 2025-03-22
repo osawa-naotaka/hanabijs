@@ -125,6 +125,18 @@ async function bundleAndWriteCssJs(
     // process css
     const css_start = performance.now();
     let css_link = "";
+    const css_files = Array.from(repository.values())
+        .map((x) => x.path)
+        .filter((x) => x !== undefined);
+    for (const client of css_files) {
+        const client_fn = await import(client);
+        if (typeof client_fn.default === "function") {
+            await client_fn.default(repository);
+        } else {
+            console.log(`${client} has no default export. skip processing.`);
+        }
+    }
+
     const css_content = stringifyToCss(Array.from(repository.values()));
     if (css_content !== "") {
         css_link = writeToFile(css_content, relative_path, dist_dir, ".css", css_start);
@@ -153,8 +165,8 @@ function writeToFile(content: string, file_name: string, dist_dir: string, ext: 
 async function bundleScriptEsbuild(repository: Repository): Promise<string> {
     const script_files = Array.from(repository.values())
         .map((x) => x.path)
-        .filter(Boolean);
-    const entry = `import type { HComponent } from "@/main"; const repo = new Map<string, HComponent>(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; scr${idx}(repo);`).join("\n")}`;
+        .filter((x) => x !== undefined);
+    const entry = `import type { HComponent } from "@/main"; const repo = new Map<string, HComponent>(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(repo)();`).join("\n")}`;
     const bundle = await esbuild.build({
         stdin: {
             contents: entry,

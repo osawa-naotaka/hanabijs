@@ -1,5 +1,5 @@
 import { A, Div, compoundStyle, createDom, registerComponent, semantic, style } from "@/main";
-import type { HArgument, HComponentFn, Repository } from "@/main";
+import type { HArgument, HClientFn, HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
 
@@ -33,25 +33,6 @@ export function search(repo: Repository): HComponentFn<HArgument> {
             style(".search-result-item", {
                 margin_block: "2rem",
             }),
-            style(".search-result-item-meta", {
-                display: "flex",
-                flex_wrap: "wrap",
-                align_items: "center",
-                gap: ["2px", "0.5rem"],
-                border_block_end: ["2px", "solid"],
-                padding_block_end: "2px",
-            }),
-            style(".search-result-item-tag", {
-                font_size: "0.8rem",
-                background_color: appearence.color.main,
-                color: appearence.color.background,
-                font_weight: "bold",
-                padding_inline: "0.5rem",
-                border_radius: "4px",
-            }),
-            style(".search-result-item-description", {
-                font_size: "0.7rem",
-            }),
         ],
         import.meta.path,
     );
@@ -76,29 +57,32 @@ export function search(repo: Repository): HComponentFn<HArgument> {
 import { StaticSeekError, createSearchFn } from "staticseek";
 import type { SearchResult } from "staticseek";
 
-export default async function clientFunction(repo: Repository): Promise<void> {
-    const search_fn = createSearchFn("/search-index.json");
-    const search_result_e = document.querySelector<HTMLUListElement>(".search-result");
-    const search_input_e = document.querySelector<HTMLInputElement>(".search-input");
-    if (search_result_e === null || search_input_e === null) {
-        throw new Error("search element not found.");
-    }
+export default function clientFunction(repo: Repository): HClientFn {
     const SearchResultItem = searchResultItem(repo);
 
-    search_input_e.addEventListener("input", async () => {
-        const result = await search_fn(search_input_e.value);
-        if (result instanceof StaticSeekError) {
-            search_result_e.innerHTML = "<li>search function internal errror</li>";
-        } else {
-            search_result_e.innerText = "";
-            for (const r of result) {
-                const node = SearchResultItem({ result: r })();
-                for (const n of createDom(node)) {
-                    search_result_e.appendChild(n);
+    return async () => {
+        const search_fn = createSearchFn("/search-index.json");
+        const search_result_e = document.querySelector<HTMLUListElement>(".search-result");
+        const search_input_e = document.querySelector<HTMLInputElement>(".search-input");
+        if (search_result_e === null || search_input_e === null) {
+            throw new Error("search element not found.");
+        }
+
+        search_input_e.addEventListener("input", async () => {
+            const result = await search_fn(search_input_e.value);
+            if (result instanceof StaticSeekError) {
+                search_result_e.innerHTML = "<li>search function internal errror</li>";
+            } else {
+                search_result_e.innerText = "";
+                for (const r of result) {
+                    const node = SearchResultItem({ result: r })();
+                    for (const n of createDom(node)) {
+                        search_result_e.appendChild(n);
+                    }
                 }
             }
-        }
-    });
+        });
+    };
 }
 
 import { v } from "@/main";
@@ -116,6 +100,21 @@ type SearchResultItemAttribute = {
 };
 
 function searchResultItem(repo: Repository): HComponentFn<SearchResultItemAttribute> {
+    registerComponent(repo, "search-result-item", [
+        style(".search-result-item-meta", {
+            display: "flex",
+            flex_wrap: "wrap",
+            align_items: "center",
+            gap: ["2px", "0.5rem"],
+            border_block_end: ["2px", "solid"],
+            padding_block_end: "2px",
+            font_size: "0.8rem",
+        }),
+        style(".search-result-item-description", {
+            font_size: "0.7rem",
+        }),
+    ]);
+
     const SearchResultItem = semantic("search-result-item", { tag: "li" });
     const SearchResultItemMeta = semantic("search-result-item-meta");
     const SearchResultItemTitle = semantic("search-result-item-title");

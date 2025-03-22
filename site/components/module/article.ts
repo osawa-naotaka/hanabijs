@@ -30,6 +30,9 @@ export function article(repo: Repository): HComponentFn<ArticleArgument> {
             overflow_wrap: "anywhere",
             text_align: "justify",
         }),
+        compoundStyle([".article-text", " ", "h2"], {
+            font_size: "1.2rem",
+        }),
         compoundStyle([".article-text", " ", "h3"], {
             font_size: "1.2rem",
             background_color: appearence.color.header_background,

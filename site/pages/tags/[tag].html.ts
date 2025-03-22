@@ -3,13 +3,14 @@ import type { HRootPageFn, Repository } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
 import { navitem, postFmSchema, posts_dir, site } from "@site/config/site.config";
+import { tag_map } from "@site/config/site.config";
 
 type RootParameter = {
     tag: string;
 };
 
-export async function rootPageFnParameters(): Promise<RootParameter[]> {
-    return [{ tag: "techarticle" }, { tag: "typescript" }];
+export function rootPageFnParameters(): RootParameter[] {
+    return Object.keys(tag_map).map((x) => ({ tag: x }));
 }
 
 export default function Root(repo: Repository): HRootPageFn<RootParameter> {
