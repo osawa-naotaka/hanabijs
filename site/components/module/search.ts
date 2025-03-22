@@ -1,5 +1,5 @@
-import { A, Div, compoundStyle, createDom, registerComponent, semantic, style } from "@/main";
-import type { HArgument, HClientFn, HComponentFn, Repository } from "@/main";
+import { A, Div, Li, compoundStyle, createDom, registerComponent, semantic, style } from "@/main";
+import type { HArgument, HClientFn, HComponentFn, HNode, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
 
@@ -62,27 +62,38 @@ export default function clientFunction(repo: Repository): HClientFn {
 
     return async () => {
         const search_fn = createSearchFn("/search-index.json");
-        const search_result_e = document.querySelector<HTMLUListElement>(".search-result");
-        const search_input_e = document.querySelector<HTMLInputElement>(".search-input");
-        if (search_result_e === null || search_input_e === null) {
-            throw new Error("search element not found.");
-        }
+        const search_result_e = querySelector<HTMLUListElement>(".search-result");
+        const search_input_e = querySelector<HTMLInputElement>(".search-input");
 
         search_input_e.addEventListener("input", async () => {
             const result = await search_fn(search_input_e.value);
             if (result instanceof StaticSeekError) {
-                search_result_e.innerHTML = "<li>search function internal errror</li>";
+                setChild(search_result_e, [Li({})(`search function internal errror: ${result}`)]);
             } else {
-                search_result_e.innerText = "";
-                for (const r of result) {
-                    const node = SearchResultItem({ result: r })();
-                    for (const n of createDom(node)) {
-                        search_result_e.appendChild(n);
-                    }
-                }
+                setChild(
+                    search_result_e,
+                    result.map((r) => SearchResultItem({ result: r })()),
+                );
             }
         });
     };
+}
+
+function querySelector<T extends Element>(selector: string, d: Document = document): T {
+    const e = d.querySelector<T>(selector);
+    if(e === null) {
+        throw new Error(`element not found: ${selector}`);
+    }
+    return e;
+}
+
+function setChild(element: HTMLElement, nodes: HNode[]): void {
+    element.innerText = "";
+    for (const node of nodes) {
+        for (const n of createDom(node)) {
+            element.appendChild(n);
+        }
+    }
 }
 
 import { v } from "@/main";
