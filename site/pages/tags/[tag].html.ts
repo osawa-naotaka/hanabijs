@@ -8,7 +8,7 @@ import { navitem, posts_dir, site } from "@site/config/site.config";
 import matter from "gray-matter";
 import * as v from "valibot";
 
-export type RootParameter = {
+type RootParameter = {
     tag: string;
 };
 
