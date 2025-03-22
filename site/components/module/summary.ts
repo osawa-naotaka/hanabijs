@@ -5,14 +5,14 @@ import { tagList } from "../element/tagList";
 import { articleHeader } from "./articleHeader";
 
 export type SumamryArgument = {
-    slug: string,
+    slug: string;
     data: {
         title: string;
         author: string;
         date: string | Date;
         principalTag: string[];
         associatedTags?: string[];
-    }
+    };
 };
 
 export function summary(repo: Repository): HComponentFn<SumamryArgument> {
@@ -29,15 +29,14 @@ export function summary(repo: Repository): HComponentFn<SumamryArgument> {
     const TagList = tagList(repo);
     const DateTime = dateTime(repo);
 
-    return (argument) =>
-        () =>
-            Article({ class: argument.class })(
-                ArticleHeader({
-                    title: A({ href: `/posts/${argument.slug}` })(H2({})(argument.data.title)),
-                })(
-                    Author({})(argument.data.author),
-                    DateTime({ datetime: argument.data.date })(),
-                    TagList({ slugs: argument.data.principalTag.concat(argument.data.associatedTags || []) })(),
-                ),
-            );
+    return (argument) => () =>
+        Article({ class: argument.class })(
+            ArticleHeader({
+                title: A({ href: `/posts/${argument.slug}` })(H2({})(argument.data.title)),
+            })(
+                Author({})(argument.data.author),
+                DateTime({ datetime: argument.data.date })(),
+                TagList({ slugs: argument.data.principalTag.concat(argument.data.associatedTags || []) })(),
+            ),
+        );
 }

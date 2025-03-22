@@ -1,3 +1,5 @@
+import * as v from "valibot";
+
 export const site = {
     lang: "ja",
     name: "lulliecat",
@@ -31,3 +33,13 @@ export const tag_map: Record<string, string> = {
     techarticle: "Technology",
     staticseek: "staticseek",
 };
+
+export const postFmSchema = v.object({
+    title: v.string(),
+    author: v.string(),
+    date: v.date(),
+    principalTag: v.array(v.string()),
+    associatedTags: v.optional(v.array(v.string())),
+});
+
+export type PostFm = v.InferInput<typeof postFmSchema>;

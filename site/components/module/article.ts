@@ -2,9 +2,9 @@ import { H2, compoundStyle, registerComponent, semantic, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { appearence } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
+import { shareX } from "../element/shareX";
 import { tagList } from "../element/tagList";
 import { articleHeader } from "./articleHeader";
-import { shareX } from "../element/shareX";
 
 export type ArticleArgument = {
     slug: string;
@@ -13,8 +13,8 @@ export type ArticleArgument = {
         author: string;
         date: string | Date;
         principalTag: string[];
-        associatedTags?: string[];    
-    }
+        associatedTags?: string[];
+    };
 };
 
 export function article(repo: Repository): HComponentFn<ArticleArgument> {
