@@ -101,7 +101,7 @@ export default async function clientFunction(): Promise<void> {
     });
 }
 
-import * as v from "valibot";
+import { v } from "@/main";
 
 export const SearchKeySchema = v.object({
     id: v.string(),

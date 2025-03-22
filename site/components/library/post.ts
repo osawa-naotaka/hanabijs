@@ -4,7 +4,7 @@ import { cwd } from "node:process";
 import { globExt } from "@/main";
 import { posts_dir } from "@site/config/site.config";
 import matter from "gray-matter";
-import * as v from "valibot";
+import { v } from "@/main";
 
 export type Markdown<T> = {
     slug: string;

@@ -32,8 +32,7 @@
     "staticseek": "^2.7.1",
     "tslib": "^2.8.1",
     "tsup": "^8.4.0",
-    "typescript": "^5.8.2",
-    "valibot": "^1.0.0-rc.4"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "chokidar": "^4.0.3",
@@ -46,7 +45,8 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.1",
     "remark-toc": "^9.0.0",
-    "unified": "^11.0.5"
+    "unified": "^11.0.5",
+    "valibot": "^1.0.0"
   },
   "resolutions": {
     "@types/bun": "1.2.4"

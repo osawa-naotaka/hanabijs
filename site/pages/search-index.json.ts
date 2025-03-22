@@ -5,7 +5,7 @@ import { globExt } from "@/main";
 import { posts_dir } from "@site/config/site.config";
 import matter from "gray-matter";
 import { LinearIndex, StaticSeekError, createIndex, indexToObject } from "staticseek";
-import * as v from "valibot";
+import { v } from "@/main";
 
 export default async function createSearchIndex(): Promise<string> {
     const frontmatterSchema = v.object({
