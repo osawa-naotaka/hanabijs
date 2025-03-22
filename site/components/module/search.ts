@@ -40,7 +40,7 @@ export function search(repo: Repository): HComponentFn<HArgument> {
     const Search = semantic("search", { class_names: ["content"] });
     const SearchBar = semantic("search-bar");
     const SearchInput = semantic("search-input", { tag: "input" });
-    const SvgIcon = svgIcon(repo);
+    const SearchInputIcon = svgIcon(repo);
     const SearchResult = semantic("search-result", { tag: "ul" });
     const SearchResultItem = semantic("search-result-item", { tag: "li" });
 
@@ -48,7 +48,7 @@ export function search(repo: Repository): HComponentFn<HArgument> {
         Search({ class: argument.class })(
             SearchBar({})(
                 SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(),
-                SvgIcon({ name: "magnifier-glass" })(),
+                SearchInputIcon({ name: "magnifier-glass" })(),
             ),
             SearchResult({})(SearchResultItem({})("no result.")),
         );
@@ -98,8 +98,8 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
 
 import { v } from "@/main";
 import { postFmSchema } from "@site/config/site.config";
-import { dateTime } from "../element/dateTime";
-import { tagList } from "../element/tagList";
+import { dateTime } from "@site/components/element/dateTime";
+import { tagList } from "@site/components/element/tagList";
 
 export const SearchKeySchema = v.object({
     slug: v.string(),
