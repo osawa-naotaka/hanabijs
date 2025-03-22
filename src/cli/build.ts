@@ -154,7 +154,7 @@ async function bundleScriptEsbuild(repository: Repository): Promise<string> {
     const script_files = Array.from(repository.values())
         .map((x) => x.path)
         .filter(Boolean);
-    const entry = script_files.map((x, idx) => `import scr${idx} from "${x}"; scr${idx}();`).join("\n");
+    const entry = `import type { HComponent } from "@/main"; const repo = new Map<string, HComponent>(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; scr${idx}(repo);`).join("\n")}`;
     const bundle = await esbuild.build({
         stdin: {
             contents: entry,

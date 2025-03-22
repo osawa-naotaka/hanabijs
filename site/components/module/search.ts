@@ -1,4 +1,4 @@
-import { A, compoundStyle, createDom, registerComponent, semantic, style } from "@/main";
+import { A, Div, compoundStyle, createDom, registerComponent, semantic, style } from "@/main";
 import type { HArgument, HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { appearence } from "@site/config/site.config";
@@ -76,14 +76,14 @@ export function search(repo: Repository): HComponentFn<HArgument> {
 import { StaticSeekError, createSearchFn } from "staticseek";
 import type { SearchResult } from "staticseek";
 
-export default async function clientFunction(): Promise<void> {
+export default async function clientFunction(repo: Repository): Promise<void> {
     const search_fn = createSearchFn("/search-index.json");
     const search_result_e = document.querySelector<HTMLUListElement>(".search-result");
     const search_input_e = document.querySelector<HTMLInputElement>(".search-input");
     if (search_result_e === null || search_input_e === null) {
         throw new Error("search element not found.");
     }
-    const SearchResultItem = searchResultItem();
+    const SearchResultItem = searchResultItem(repo);
 
     search_input_e.addEventListener("input", async () => {
         const result = await search_fn(search_input_e.value);
@@ -102,42 +102,37 @@ export default async function clientFunction(): Promise<void> {
 }
 
 import { v } from "@/main";
+import { postFmSchema } from "@site/config/site.config";
+import { dateTime } from "../element/dateTime";
+import { tagList } from "../element/tagList";
 
 export const SearchKeySchema = v.object({
-    id: v.string(),
-    data: v.object({
-        title: v.string(),
-        author: v.string(),
-        date: v.string(),
-        principalTag: v.array(v.string()),
-        associatedTags: v.optional(v.array(v.string())),
-    }),
+    slug: v.string(),
+    data: postFmSchema,
 });
 
 type SearchResultItemAttribute = {
     result: SearchResult;
 };
 
-function searchResultItem(): HComponentFn<SearchResultItemAttribute> {
+function searchResultItem(repo: Repository): HComponentFn<SearchResultItemAttribute> {
     const SearchResultItem = semantic("search-result-item", { tag: "li" });
     const SearchResultItemMeta = semantic("search-result-item-meta");
-    const SearchResultItemTag = semantic("search-result-item-tag");
     const SearchResultItemTitle = semantic("search-result-item-title");
     const SearchResultItemDescription = semantic("search-result-item-description");
+    const DateTime = dateTime(repo);
+    const Tags = tagList(repo);
 
     return ({ result }) =>
         () => {
             const key = v.parse(SearchKeySchema, result.key);
             return SearchResultItem({})(
                 SearchResultItemMeta({})(
-                    key.data.author,
-                    key.data.date,
-                    ...key.data.principalTag.map((tag) => SearchResultItemTag({})(A({ href: `/tags/${tag}` })(tag))),
-                    ...(key.data.associatedTags || []).map((tag) =>
-                        SearchResultItemTag({})(A({ href: `/tags/${tag}` })(tag)),
-                    ),
+                    Div({})(key.data.author),
+                    DateTime({ datetime: key.data.date })(),
+                    Tags({ slugs: key.data.principalTag.concat(key.data.associatedTags || []) })(),
                 ),
-                SearchResultItemTitle({})(A({ href: `/posts/${key.id}` })(key.data.title)),
+                SearchResultItemTitle({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
                 SearchResultItemDescription({})(result.refs[0].wordaround || ""),
             );
         };
