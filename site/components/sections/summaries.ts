@@ -16,6 +16,8 @@ export function summaries(repo: Repository): HComponentFn<SummariesArgument> {
     const Summary = summary(repo);
 
     return (argument) => () => {
-        return Summaries({ class: argument.class })(SummariesList({})(...argument.posts.map((x) => Summary(x)())));
+        return Summaries({ class: argument.class })(
+            SummariesList({})(...argument.posts.map((post) => Summary(post)())),
+        );
     };
 }

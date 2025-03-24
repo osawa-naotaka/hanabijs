@@ -1,21 +1,13 @@
 import { H2, compoundStyle, registerComponent, semantic, style } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
-import { appearence } from "@site/config/site.config";
+import { type PostFm, appearence } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
 import { shareX } from "../element/shareX";
 import { tagList } from "../element/tagList";
+import type { Markdown } from "../library/post";
 import { articleHeader } from "./articleHeader";
 
-export type ArticleArgument = {
-    slug: string;
-    data: {
-        title: string;
-        author: string;
-        date: string | Date;
-        principalTag: string[];
-        associatedTags?: string[];
-    };
-};
+export type ArticleArgument = Markdown<PostFm>;
 
 export function article(repo: Repository): HComponentFn<ArticleArgument> {
     registerComponent(repo, "article", [
@@ -74,7 +66,7 @@ export function article(repo: Repository): HComponentFn<ArticleArgument> {
                 })(
                     Author({})(argument.data.author),
                     DateTime({ datetime: argument.data.date })(),
-                    TagList({ slugs: argument.data.principalTag.concat(argument.data.associatedTags || []) })(),
+                    TagList({ slugs: argument.data.tag || [] })(),
                     ShareX({ title: argument.data.title, url: `http://localhost/posts/${argument.slug}` })(),
                 ),
                 ArticleText({})(...child),

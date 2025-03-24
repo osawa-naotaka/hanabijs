@@ -97,9 +97,9 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
 }
 
 import { v } from "@/main";
-import { postFmSchema } from "@site/config/site.config";
 import { dateTime } from "@site/components/element/dateTime";
 import { tagList } from "@site/components/element/tagList";
+import { postFmSchema } from "@site/config/site.config";
 
 export const SearchKeySchema = v.object({
     slug: v.string(),
@@ -140,7 +140,7 @@ function searchResultItem(repo: Repository): HComponentFn<SearchResultItemAttrib
                 SearchResultItemMeta({})(
                     Div({})(key.data.author),
                     DateTime({ datetime: key.data.date })(),
-                    Tags({ slugs: key.data.principalTag.concat(key.data.associatedTags || []) })(),
+                    Tags({ slugs: key.data.tag || [] })(),
                 ),
                 SearchResultItemTitle({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
                 SearchResultItemDescription({})(result.refs[0].wordaround || ""),

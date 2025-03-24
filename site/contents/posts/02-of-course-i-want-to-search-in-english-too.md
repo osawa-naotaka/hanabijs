@@ -2,9 +2,8 @@
 title: Of Course I Want to Search in English Too!
 author: producer
 date: 2025-03-02T00:00:00+09:00
-principalTag:
+tag:
     - techarticle
-associatedTags:
     - staticseek
 ---
 ## Are character 2-grams ineffective in English?

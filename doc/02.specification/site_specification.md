@@ -38,13 +38,12 @@ default:
 ```mermaid
 block-beta
   block
-    columns 1
-    a("header")
-    b("global navigation")
-    c("main contents")
-    d("footer")
+    columns 2
+    a("header"):2
+    b("global navigation"):2
+    c("main contents"):2
+    d("footer"):2
   end
-  style c height:200px
 ```
 
 

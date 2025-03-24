@@ -2,9 +2,8 @@
 title: I Want a Full-Text Search Engine!
 author: producer
 date: 2025-03-01T00:00:00+09:00
-principalTag:
+tag:
     - techarticle
-associatedTags:
     - staticseek
 ---
 

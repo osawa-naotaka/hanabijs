@@ -18,9 +18,7 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
     const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
 
     return async (parameter) => {
-        const md = (await getAllMarkdowns(posts_dir, postFmSchema)).filter(
-            (x) => x.data.principalTag.includes(parameter.tag) || x.data.associatedTags?.includes(parameter.tag),
-        );
+        const md = (await getAllMarkdowns(posts_dir, postFmSchema)).filter((x) => x.data.tag?.includes(parameter.tag));
 
         return Page({
             title: `${parameter.tag || ""} | ${site.name}`,

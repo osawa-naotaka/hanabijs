@@ -38,8 +38,7 @@ export const postFmSchema = v.object({
     title: v.string(),
     author: v.string(),
     date: v.union([v.string(), v.date()]),
-    principalTag: v.array(v.string()),
-    associatedTags: v.optional(v.array(v.string())),
+    tag: v.optional(v.array(v.string())),
 });
 
 export type PostFm = v.InferInput<typeof postFmSchema>;

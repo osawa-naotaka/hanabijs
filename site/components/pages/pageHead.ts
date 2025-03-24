@@ -30,8 +30,7 @@ export function pageHead(_repo: Repository): HComponentFn<PageHeadArgument> {
                 Meta({ name: "description", content: description })(),
                 Meta({
                     http_equiv: "Content-Security-Policy",
-                    content:
-                        "default-src 'self' 'unsafe-inline'; img-src 'self' https://img.youtube.com; frame-src https://www.youtube.com;",
+                    content: "default-src 'self';",
                 })(),
             );
 }
