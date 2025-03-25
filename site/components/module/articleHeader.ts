@@ -6,12 +6,16 @@ export type ArticleHeaderArgument = {
 };
 
 export function articleHeader(repo: Repository): HComponentFn<ArticleHeaderArgument> {
-    registerComponent(repo, "article-header", [
-        style("&", { margin_block_end: "1.5rem" }),
-        style(".article-header-title", {
+    const ArticleHeader = semantic("article-header", { tag: "header" });
+    const ArticleHeaderTitle = semantic("article-header-title");
+    const ArticleHeaderMeta = semantic("article-header-meta");
+
+    const styles = [
+        style(ArticleHeader, { margin_block_end: "1.5rem" }),
+        style(ArticleHeaderTitle, {
             border_bottom: "3px solid",
         }),
-        style(".article-header-meta", {
+        style(ArticleHeaderMeta, {
             display: "flex",
             justify_content: "flex-end",
             align_items: "center",
@@ -20,16 +24,17 @@ export function articleHeader(repo: Repository): HComponentFn<ArticleHeaderArgum
             flex_wrap: "wrap",
             font_size: "0.8rem",
         }),
-    ]);
+    ];
 
-    const ArticleHeader = semantic("article-header", { tag: "header" });
-    const ArticleHeaderTitle = semantic("article-header-title");
-    const ArticleHeaderMeta = semantic("article-header-meta");
-
-    return (argument) =>
-        (...child) =>
-            ArticleHeader({ class: argument.class })(
-                ArticleHeaderTitle({})(argument.title),
-                ArticleHeaderMeta({})(...child),
-            );
+    return registerComponent(
+        repo,
+        ArticleHeader,
+        styles,
+        (argument): ((...child: HNode[]) => HNode) =>
+            (...child) =>
+                ArticleHeader({ class: argument.class })(
+                    ArticleHeaderTitle({})(argument.title),
+                    ArticleHeaderMeta({})(...child),
+                ),
+    );
 }

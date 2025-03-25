@@ -18,11 +18,11 @@ export async function rootPageFnParameters(): Promise<RootParameter[]> {
 }
 
 export default function Root(repo: Repository): HRootPageFn<RootParameter> {
-    registerComponent(repo, "root", [
-        style("page-main-area", {
-            margin_block_end: appearence.layout.space_block_large,
-        }),
-    ]);
+    // registerComponent(repo, "root", [
+    //     style("page-main-area", {
+    //         margin_block_end: appearence.layout.space_block_large,
+    //     }),
+    // ]);
 
     const Page = page(repo);
     const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });

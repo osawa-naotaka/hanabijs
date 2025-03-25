@@ -231,7 +231,9 @@ export function selectNode(nodes: HNode[], selector: Selector, search_deep = fal
 
 function matchCompoundSelector(selector: CompoundSelector, element: HElement<{ id?: string }>): boolean {
     for (const s of selector) {
-        if (s.startsWith(".")) {
+        if (typeof s !== "string") {
+            throw new Error("matchCompoundSelector: ComponentFn is not supported.");
+        } else if (s.startsWith(".")) {
             if (!hasClass(s.slice(1), element.attribute)) {
                 return false;
             }
@@ -354,13 +356,16 @@ export function semantic<T extends Attribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HComponentFn<T> {
-    return (argument) =>
-        (...child) => ({
-            element_name,
-            tag,
-            attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
-            child,
-        });
+    return {
+        [element_name]:
+            (argument: T) =>
+            (...child: HNode[]) => ({
+                element_name,
+                tag,
+                attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
+                child,
+            }),
+    }[element_name];
 }
 
 // on layout Component, argument is attribute.
@@ -369,13 +374,16 @@ export function layout<T extends Attribute>(
     element_name: string,
     { class_names = [] }: { class_names?: string[] } = {},
 ): HComponentFn<T> {
-    return (argument) =>
-        (...child) => ({
-            element_name,
-            tag: "div",
-            attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
-            child,
-        });
+    return {
+        [element_name]:
+            (argument: T) =>
+            (...child: HNode[]) => ({
+                element_name,
+                tag: "div" as Tag,
+                attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
+                child,
+            }),
+    }[element_name];
 }
 
 export function mergeClassToRecord<T extends Record<string | number | symbol, unknown>>(

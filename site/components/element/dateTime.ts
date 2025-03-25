@@ -6,23 +6,18 @@ export type DateTimeArgument = {
 };
 
 export function dateTime(repo: Repository): HComponentFn<DateTimeArgument> {
-    registerComponent(repo, "date-time", [
-        style("&", {
-            display: "block",
-        }),
-    ]);
-
     const DateTime = semantic("date-time", { tag: "time" });
 
-    return ({ datetime }) =>
-        () => {
-            const date = datetime instanceof Date ? datetime : new Date(datetime);
-            const date_string = date.toLocaleDateString("ja-jp", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-            });
+    const styles = [style(DateTime, { display: "block" })];
 
-            return DateTime({ datetime: date.toISOString() })(date_string);
-        };
+    return registerComponent(repo, DateTime, styles, ({ datetime }) => () => {
+        const date = datetime instanceof Date ? datetime : new Date(datetime);
+        const date_string = date.toLocaleDateString("ja-jp", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+
+        return DateTime({ datetime: date.toISOString() })(date_string);
+    });
 }

@@ -1,4 +1,4 @@
-import type { HComponent } from "./element";
+import type { HComponent, HComponentFn } from "./element";
 
 // Style
 export type StyleRule = {
@@ -12,7 +12,8 @@ export type Selector = CompoundSelector | ComplexSelector;
 
 export type CompoundSelector = SimpleSelector[];
 
-export type SimpleSelector = string;
+// using any. fix it.
+export type SimpleSelector = string | HComponentFn<any>;
 
 export type ComplexSelector = {
     compound: CompoundSelector;
@@ -24,41 +25,27 @@ export type Combinator = " " | ">" | "+" | "~" | "||";
 
 export type Properties = Record<string, string[] | string>;
 
-export function createStyles(
-    ...rules: [(SimpleSelector | CompoundSelector | Combinator)[][], Properties][]
-): StyleRule[] {
-    return rules.map(([selectors, properties]) => ({
-        selectorlist: selectors.map(createSelector),
-        properties,
-    }));
+function simpleSelectorIsString(selector: SimpleSelector): selector is string {
+    return typeof selector === "string";
 }
 
-function isSelf(selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&"): selector is "&" {
-    return typeof selector === "string" && selector === "&";
+function simpleSelectorIsComponentFn(selector: SimpleSelector): selector is HComponentFn<any> {
+    return typeof selector === "function";
 }
 
-export function selfStyle(propaties: Properties): StyleRule[] {
-    return [
-        {
-            selectorlist: [["&"]],
-            properties: propaties,
-        },
-    ];
-}
-
-export function style(selector: SimpleSelector | "&", propaties: Properties): StyleRule {
+export function style(selector: SimpleSelector, propaties: Properties): StyleRule {
     return {
-        selectorlist: selector === "&" ? [["&"]] : [createSelector([selector])],
+        selectorlist: [createSelector([selector])],
         properties: propaties,
     };
 }
 
 export function compoundStyle(
-    selector: (SimpleSelector | CompoundSelector | Combinator)[] | "&",
+    selector: (SimpleSelector | CompoundSelector | Combinator)[],
     propaties: Properties,
 ): StyleRule {
     return {
-        selectorlist: isSelf(selector) ? [["&"]] : [createSelector(selector)],
+        selectorlist: [createSelector(selector)],
         properties: propaties,
     };
 }
@@ -66,24 +53,44 @@ export function compoundStyle(
 export function createSelector(selector: (SimpleSelector | CompoundSelector | Combinator)[]): Selector {
     switch (selector.length) {
         case 0:
-            throw new Error("S internal error 1.");
+            throw new Error("createSelector: no selector specified.");
         case 1:
             if (tokenIsCombinator(selector[0])) {
-                throw new Error("S internal error 2.");
+                throw new Error(`createSelector: SimpleSelector or CompoundSelector must be specified. ${selector[0]}`);
             }
-            return typeof selector[0] === "string" ? [selector[0]] : selector[0];
+            if (tokenIsCompoundSelector(selector[0])) {
+                return selector[0];
+            }
+            if (simpleSelectorIsString(selector[0])) {
+                return [selector[0]];
+            }
+            if (simpleSelectorIsComponentFn(selector[0])) {
+                return [`.${selector[0].name}`];
+            }
+            throw new Error(`createSelector: internal error. type mismatch 1 at ${selector[0]}`);
         case 2:
-            throw new Error("S internal error 3.");
+            throw new Error(`createSelector: too few argument. ${selector[0]} ${selector[1]}`);
         default:
             if (!tokenIsCombinator(selector[0]) && tokenIsCombinator(selector[1])) {
+                let compound = [];
+                if (tokenIsCompoundSelector(selector[0])) {
+                    compound = selector[0];
+                } else if (simpleSelectorIsString(selector[0])) {
+                    compound = [selector[0]];
+                } else if (simpleSelectorIsComponentFn(selector[0])) {
+                    compound = [`.${selector[0].name}`];
+                } else {
+                    throw new Error(`createSelector: internal error. type mismatch 2 at ${selector[0]}.`);
+                }
+
                 return {
-                    compound: tokenIsCompoundSelector(selector[0]) ? selector[0] : [selector[0]],
+                    compound,
                     combinator: selector[1],
                     descendant: createSelector(selector.slice(2)),
                 };
             }
+            throw new Error(`createSelector: type mismatch. ${selector[0]}, ${selector[1]}`);
     }
-    throw new Error("S internal error 4.");
 }
 
 function tokenIsCombinator(c: SimpleSelector | CompoundSelector | Combinator): c is Combinator {
@@ -106,7 +113,7 @@ export function stringifyToCss(components: HComponent[]): string {
 export function rulesToString(semantic: HComponent): string {
     const res: string[] = [];
     for (const rule of semantic.style) {
-        const selectors_string = rule.selectorlist.map(selectorToString(semantic)).join(", ");
+        const selectors_string = rule.selectorlist.map(selectorToString).join(", ");
         const propaties_string = propatiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }
@@ -114,22 +121,17 @@ export function rulesToString(semantic: HComponent): string {
     return res.join("");
 }
 
-function stringifySelector(current: HComponent, selector: CompoundSelector): string {
-    if (selector.length === 1 && selector[0] === "&") {
-        return `.${current.component_name}`;
-    }
-    return selector.join("");
+function stringifySelector(selector: CompoundSelector): string {
+    return selector.map((s) => (typeof s === "function" ? `.${s.name}` : s)).join("");
 }
 
-function selectorToString(current: HComponent): (selector: Selector) => string {
-    return (selector: Selector) => {
-        if (isCompoundSelector(selector)) {
-            return stringifySelector(current, selector);
-        }
-        return selector.combinator === " "
-            ? `${stringifySelector(current, selector.compound)} ${selectorToString(current)(selector.descendant)}`
-            : `${stringifySelector(current, selector.compound)} ${selector.combinator} ${selectorToString(current)(selector.descendant)}`;
-    };
+function selectorToString(selector: Selector): string {
+    if (isCompoundSelector(selector)) {
+        return stringifySelector(selector);
+    }
+    return selector.combinator === " "
+        ? `${stringifySelector(selector.compound)} ${selectorToString(selector.descendant)}`
+        : `${stringifySelector(selector.compound)} ${selector.combinator} ${selectorToString(selector.descendant)}`;
 }
 
 function propatiesToString(properties: Properties): string {

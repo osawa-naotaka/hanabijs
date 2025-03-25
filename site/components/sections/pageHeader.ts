@@ -15,36 +15,41 @@ export type PageHeaderArgument = {
 };
 
 export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
-    registerComponent(repo, "page-header", [
-        style("&", {
+    const PageHeader = semantic("page-header", { class_names: ["container"], tag: "header" });
+    const Drawer = drawer(repo, "page-header-toggle-button");
+    const Popover = popover(repo, "search-popover");
+    const SvgIcon = svgIcon(repo);
+    const Navigation = navigation(repo);
+    const Search = search(repo);
+
+    const styles = [
+        style(PageHeader, {
             position: "sticky",
             top: "0",
             left: "0",
             width: "100%",
             margin_block_end: "2rem",
         }),
-    ]);
+    ];
 
-    const Drawer = drawer(repo, "page-header-toggle-button");
-    const Popover = popover(repo, "search-popover");
-    const SvgIcon = svgIcon(repo);
-    const Navigation = navigation(repo);
-    const PageHeader = semantic("page-header", { class_names: ["container"], tag: "header" });
-    const Search = search(repo);
-
-    return ({ title, navitem }) =>
-        () =>
-            PageHeader({})(
-                Drawer({
-                    class: "content",
-                    title: H1({})(A({ href: "/" })(title)),
-                    header_space: Popover({
-                        open_button: SvgIcon({ name: "magnifier-glass" })(),
-                        close_button: SvgIcon({ name: "close-button" })(),
-                        body: Search({})(),
+    return registerComponent(
+        repo,
+        PageHeader,
+        styles,
+        ({ title, navitem }) =>
+            () =>
+                PageHeader({})(
+                    Drawer({
+                        class: "content",
+                        title: H1({})(A({ href: "/" })(title)),
+                        header_space: Popover({
+                            open_button: SvgIcon({ name: "magnifier-glass" })(),
+                            close_button: SvgIcon({ name: "close-button" })(),
+                            body: Search({})(),
+                        })(),
+                        open_button: SvgIcon({ name: "menu-bar" })(),
+                        content: Navigation({ navitem })(),
                     })(),
-                    open_button: SvgIcon({ name: "menu-bar" })(),
-                    content: Navigation({ navitem })(),
-                })(),
-            );
+                ),
+    );
 }

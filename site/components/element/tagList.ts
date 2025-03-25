@@ -7,27 +7,32 @@ export type TagListArgument = {
 };
 
 export function tagList(repo: Repository): HComponentFn<TagListArgument> {
-    registerComponent(repo, "tag-list", [
-        style("&", {
+    const TagList = semantic("tag-list", { tag: "ul" });
+    const TagListItem = semantic("tag-list-item", { tag: "li" });
+
+    const styles = [
+        style(TagList, {
             display: "flex",
             align_items: "center",
             gap: "0.5rem",
             list_style_type: "none",
         }),
-        style(".tag-list-item", {
+        style(TagListItem, {
             background_color: appearence.color.header_background,
             color: appearence.color.header_ext,
             font_weight: "bold",
             padding_inline: "0.5rem",
             border_radius: "4px",
         }),
-    ]);
+    ];
 
-    const TagList = semantic("tag-list", { tag: "ul" });
-    const TagListItem = semantic("tag-list-item", { tag: "li" });
-
-    return (argument) => () =>
-        TagList({ class: argument.class })(
-            ...argument.slugs.map((x) => A({ href: `/tags/${x}` })(TagListItem({})(tag_map[x] || x))),
-        );
+    return registerComponent(
+        repo,
+        TagList,
+        styles,
+        (argument) => () =>
+            TagList({ class: argument.class })(
+                ...argument.slugs.map((x) => A({ href: `/tags/${x}` })(TagListItem({})(tag_map[x] || x))),
+            ),
+    );
 }

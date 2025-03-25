@@ -7,8 +7,12 @@ export type PageFooterArgument = {
 };
 
 export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
-    registerComponent(repo, "page-footer", [
-        style("&", {
+    const PageFooter = semantic("page-footer", { tag: "footer" });
+    const PageFooterContent = semantic("page-footer-content");
+    const PageFooterCopyright = semantic("page-footer-copyright");
+
+    const styles = [
+        style(PageFooter, {
             position: "fixed",
             bottom: "0",
             left: "0",
@@ -16,21 +20,22 @@ export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
             background_color: appearence.color.main,
             color: appearence.color.background,
         }),
-        style(".page-footer-content", {
+        style(PageFooterContent, {
             position: "relative",
             max_width: appearence.layout.content_width,
             margin_inline: "auto",
         }),
-        style(".page-footer-copyright", {
+        style(PageFooterCopyright, {
             text_align: "center",
         }),
-    ]);
+    ];
 
-    const PageFooter = semantic("page-footer", { tag: "footer" });
-    const PageFooterContent = semantic("page-footer-content");
-    const PageFooterCopyright = semantic("page-footer-copyright");
-
-    return ({ site_name }) =>
-        () =>
-            PageFooter({})(PageFooterContent({})(), PageFooterCopyright({})(`&copy; 2025 ${site_name}`));
+    return registerComponent(
+        repo,
+        PageFooter,
+        styles,
+        ({ site_name }) =>
+            () =>
+                PageFooter({})(PageFooterContent({})(), PageFooterCopyright({})(`&copy; 2025 ${site_name}`)),
+    );
 }

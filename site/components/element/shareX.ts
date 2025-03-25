@@ -1,4 +1,4 @@
-import { A, registerComponent } from "@/main";
+import { A } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "./svgIcon";
 
@@ -8,7 +8,6 @@ export type ShareXArgument = {
 };
 
 export function shareX(repo: Repository): HComponentFn<ShareXArgument> {
-    registerComponent(repo, "share-x", []);
     const SvgIcon = svgIcon(repo);
 
     return (argument) => () => {

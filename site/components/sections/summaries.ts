@@ -9,15 +9,13 @@ export type SummariesArgument = {
 };
 
 export function summaries(repo: Repository): HComponentFn<SummariesArgument> {
-    registerComponent(repo, "summaries", [style("&", {})]);
-
     const Summaries = semantic("summaries", { tag: "section", class_names: ["content"] });
     const SummariesList = semantic("summaries-list", { tag: "ul" });
     const Summary = summary(repo);
 
-    return (argument) => () => {
+    return registerComponent(repo, Summaries, [style(Summaries, {})], (argument) => () => {
         return Summaries({ class: argument.class })(
             SummariesList({})(...argument.posts.map((post) => Summary(post)())),
         );
-    };
+    });
 }

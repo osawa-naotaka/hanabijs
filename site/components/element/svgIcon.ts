@@ -1,12 +1,11 @@
-import { Img, registerComponent } from "@/main";
+import { Img } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 
 export type SvgIconArgument = {
     name: string;
 };
 
-export function svgIcon(repo: Repository): HComponentFn<SvgIconArgument> {
-    registerComponent(repo, "svg-icon", []);
+export function svgIcon(_repo: Repository): HComponentFn<SvgIconArgument> {
     return ({ name }) =>
         () =>
             Img({
