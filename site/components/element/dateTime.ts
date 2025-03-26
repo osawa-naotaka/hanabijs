@@ -12,7 +12,7 @@ export function dateTime(repo: Repository): HComponentFn<DateTimeArgument> {
 
     return registerComponent(repo, DateTime, styles, ({ datetime }) => () => {
         const date = datetime instanceof Date ? datetime : new Date(datetime);
-        const date_string = date.toLocaleDateString("ja-jp", {
+        const date_string = date.toLocaleDateString("en-us", {
             year: "numeric",
             month: "short",
             day: "numeric",

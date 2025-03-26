@@ -32,5 +32,8 @@ export function pageHead(_repo: Repository): HComponentFn<PageHeadArgument> {
                     http_equiv: "Content-Security-Policy",
                     content: "default-src 'self';",
                 })(),
+
+                // Global Style
+                Link({ rel: "stylesheet", href: "/assets/global.css" })(),
             );
 }

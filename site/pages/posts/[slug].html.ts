@@ -27,7 +27,7 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
         repo,
         "root",
         [
-            style("page-main-area", {
+            style(PageMainArea, {
                 margin_block_end: appearence.layout.space_block_large,
             }),
         ],

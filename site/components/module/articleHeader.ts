@@ -30,7 +30,7 @@ export function articleHeader(repo: Repository): HComponentFn<ArticleHeaderArgum
         repo,
         ArticleHeader,
         styles,
-        (argument): ((...child: HNode[]) => HNode) =>
+        (argument) =>
             (...child) =>
                 ArticleHeader({ class: argument.class })(
                     ArticleHeaderTitle({})(argument.title),

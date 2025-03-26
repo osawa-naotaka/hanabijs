@@ -1,4 +1,4 @@
-import type { HAnyComponentFn, HArgument, HComponent, HComponentFn, HRootPageFn } from "./element";
+import type { HAnyComponentFn, HArgument, HComponent, HComponentFn, HNode, HRootPageFn } from "./element";
 import type { StyleRule } from "./style";
 
 export type Repository = Map<string, HComponent>;
@@ -12,7 +12,12 @@ export function registerComponent<T extends HArgument>(
 ): HComponentFn<T> {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
     repo.set(component_name, { component_name, path, style });
-    return { [component_name]: component_fn }[component_name];
+    return {
+        [component_name]:
+            (argument: T) =>
+            (...child: HNode[]) =>
+                component_fn(argument)(...child),
+    }[component_name];
 }
 
 export function registerRootPage<T extends HArgument>(
@@ -23,7 +28,7 @@ export function registerRootPage<T extends HArgument>(
     path?: string,
 ): HRootPageFn<T> {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
-    repo.set(root_page_fn.name, { component_name, path, style });
+    repo.set(component_name, { component_name, path, style });
     return root_page_fn;
 }
 
