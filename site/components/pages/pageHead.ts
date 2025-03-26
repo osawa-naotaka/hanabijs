@@ -1,4 +1,4 @@
-import { Head, Link, Meta, Title } from "@/main";
+import { Head, Link, Meta, Script, Title } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 
 export type PageHeadArgument = {
@@ -30,10 +30,17 @@ export function pageHead(_repo: Repository): HComponentFn<PageHeadArgument> {
                 Meta({ name: "description", content: description })(),
                 Meta({
                     http_equiv: "Content-Security-Policy",
-                    content: "default-src 'self';",
+                    content: "default-src 'self' https://cdn.jsdelivr.net/;",
                 })(),
 
                 // Global Style
                 Link({ rel: "stylesheet", href: "/assets/global.css" })(),
+
+                // Markdown code syntax highlight
+                Link({ rel: "stylesheet", href: "/assets/prism-atom-dark.css" })(),
+                Script({ src: "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js" })(""),
+                Script({
+                    src: "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js",
+                })(""),
             );
 }

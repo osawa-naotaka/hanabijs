@@ -41,7 +41,6 @@
     "esbuild": "^0.25.1",
     "gray-matter": "^4.0.3",
     "jsdom": "^26.0.0",
-    "prismjs": "^1.30.0",
     "rehype-stringify": "^10.0.1",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
