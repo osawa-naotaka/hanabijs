@@ -2,15 +2,14 @@ import { A, Div, Input, Li, Ul, createDom } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode } from "@/main";
 import { SvgIcon } from "@site/components/element/svgIcon";
 
-export const Search: HComponentFn<HArgument> = () => () => {
-    return Div({})(
+export const Search: HComponentFn<HArgument> = () => () =>
+    Div({ class: "search" })(
         Div({ class: "search-bar" })(
             Input({ class: "search-input", type: "search", placeholder: "SEARCH KEYWORDS" })(),
             SvgIcon({ name: "magnifier-glass" })(),
         ),
         Ul({ class: "search-result" })(Li({ class: "search-result-item" })("no result.")),
     );
-};
 
 import { StaticSeekError, createSearchFn } from "staticseek";
 import type { SearchResult } from "staticseek";

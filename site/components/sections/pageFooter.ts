@@ -7,9 +7,8 @@ export type PageFooterArgument = {
 
 export const PageFooter: HComponentFn<PageFooterArgument> =
     ({ site_name }) =>
-    () => {
-        return Footer({ class: "page-footer" })(
+    () =>
+        Footer({ class: "page-footer" })(
             Div({ class: "page-footer-content" })(),
             Div({ class: "page-footer-copyright" })(`&copy; 2025 ${site_name}`),
         );
-    };

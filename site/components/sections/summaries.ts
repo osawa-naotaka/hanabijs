@@ -8,6 +8,5 @@ export type SummariesArgument = {
     posts: Markdown<PostFm>[];
 };
 
-export const Summaries: HComponentFn<SummariesArgument> = (argument) => () => {
-    return Section({})(Li({ class: "summaries-list" })(...argument.posts.map((post) => Summary(post)())));
-};
+export const Summaries: HComponentFn<SummariesArgument> = (argument) => () =>
+    Section({})(Li({ class: "summaries-list" })(...argument.posts.map((post) => Summary(post)())));

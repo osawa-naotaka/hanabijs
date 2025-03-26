@@ -9,8 +9,8 @@ export type NavigationArgument = {
     }[];
 };
 
-export const Navigation: HComponentFn<NavigationArgument> = (argument) => () => {
-    return Nav({})(
+export const Navigation: HComponentFn<NavigationArgument> = (argument) => () =>
+    Nav({})(
         Ul({})(
             Li({})(A({ href: "/posts" })("blog")),
             ...argument.navitem.map((item) =>
@@ -18,4 +18,3 @@ export const Navigation: HComponentFn<NavigationArgument> = (argument) => () => 
             ),
         ),
     );
-};

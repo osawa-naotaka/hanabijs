@@ -8,8 +8,8 @@ export type PageHeadArgument = {
 
 export const PageHead: HComponentFn<PageHeadArgument> =
     ({ title, description }) =>
-    () => {
-        return Head({ class: "page-head" })(
+    () =>
+        Head({ class: "page-head" })(
             // Global Metadata
             Meta({ charset: "utf-8" })(),
             Meta({
@@ -37,4 +37,3 @@ export const PageHead: HComponentFn<PageHeadArgument> =
             Link({ rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/beercss@3.9.7/dist/cdn/beer.min.css" })(""),
             Script({ type: "module", src: "https://cdn.jsdelivr.net/npm/beercss@3.9.7/dist/cdn/beer.min.js" })(""),
         );
-    };

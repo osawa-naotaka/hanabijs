@@ -8,8 +8,8 @@ import type { PostFm } from "@site/config/site.config";
 
 export type SummaryArgument = Markdown<PostFm>;
 
-export const Summary: HComponentFn<SummaryArgument> = (argument) => () => {
-    return Article({})(
+export const Summary: HComponentFn<SummaryArgument> = (argument) => () =>
+    Article({})(
         BlogArticleHeader({
             title: A({ href: `/posts/${argument.slug}` })(H2({})(argument.data.title)),
         })(
@@ -18,4 +18,3 @@ export const Summary: HComponentFn<SummaryArgument> = (argument) => () => {
             TagList({ slugs: argument.data.tag || [] })(),
         ),
     );
-};

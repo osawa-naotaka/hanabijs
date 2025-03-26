@@ -11,8 +11,8 @@ export type BlogArticleArgument = Markdown<PostFm>;
 
 export const BlogArticle: HComponentFn<BlogArticleArgument> =
     (argument) =>
-    (...child) => {
-        return Article({})(
+    (...child) =>
+        Article({})(
             BlogArticleHeader({
                 title: H2({})(argument.data.title),
             })(
@@ -23,4 +23,3 @@ export const BlogArticle: HComponentFn<BlogArticleArgument> =
             ),
             Div({ class: "article-text" })(...child),
         );
-    };

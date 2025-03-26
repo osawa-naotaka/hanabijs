@@ -17,8 +17,8 @@ export type PageArgument = {
 
 export const Page: HComponentFn<PageArgument> =
     ({ lang, name, title, description, navitem }) =>
-    (...child) => {
-        return Html({ lang })(
+    (...child) =>
+        Html({ lang })(
             PageHead({ title, description })(),
             Body({ id: "top-of-page", class: ["light"] })(
                 PageHeader({ title: name, navitem })(),
@@ -26,4 +26,3 @@ export const Page: HComponentFn<PageArgument> =
                 PageFooter({ site_name: name })(),
             ),
         );
-    };
