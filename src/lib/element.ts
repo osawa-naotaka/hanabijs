@@ -2,6 +2,8 @@ import type { HanabiTag, Tag } from "./define";
 import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./style";
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
+import DOMPurify from "dompurify";
+import { JSDOM } from "jsdom";
 
 // HTML DOM Node = string or HTML Element
 export type HNode<T extends Attribute = Attribute> = string | HElement<Partial<T>>;
@@ -91,7 +93,14 @@ export function stringifyToHtml(depth: number): (node: HNode) => string {
 
         // ad-hock tag "raw". this tag must be removed for security.
         if (node.tag === "raw") {
-            return node.child.join("");
+            const window = new JSDOM("").window;
+            const purify = DOMPurify(window);
+            return node.child.map((x) => {
+                if(typeof x !== "string") {
+                    throw new Error(`Raw node must be string at '${node}'.`);
+                }
+                return purify.sanitize(x);
+            }).join("");
         }
 
         if (!validateElementName(node.tag)) {
@@ -155,11 +164,13 @@ function createDomInternal(depth: number, d: Document = document): (node: HNode)
         // ad-hock tag "raw". this tag must be removed for security.
         if (node.tag === "raw") {
             const parser = new DOMParser();
+            const window = new JSDOM("").window;
+            const purify = DOMPurify(window);
             return node.child.map((child) => {
                 if (typeof child === "string") {
-                    return parser.parseFromString(child, "text/html");
+                    return parser.parseFromString(purify.sanitize(child), "text/html");
                 }
-                throw new Error("Raw node must be string.");
+                throw new Error(`Raw node must be string at ${node}.`);
             });
         }
 
