@@ -1,6 +1,6 @@
 import path from "node:path";
 import { markdownToHtml } from "@/lib/markdown";
-import { RawHTML, registerComponent, semantic, style } from "@/main";
+import { RawHTML, registerRootPage, semantic, style } from "@/main";
 import type { HRootPageFn, Repository } from "@/main";
 import { getMarkdown, listFiles } from "@site/components/library/post";
 import { article } from "@site/components/module/article";
@@ -18,27 +18,30 @@ export async function rootPageFnParameters(): Promise<RootParameter[]> {
 }
 
 export default function Root(repo: Repository): HRootPageFn<RootParameter> {
-    // registerComponent(repo, "root", [
-    //     style("page-main-area", {
-    //         margin_block_end: appearence.layout.space_block_large,
-    //     }),
-    // ]);
-
     const Page = page(repo);
     const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
     const PageSection = semantic("page-section", { class_names: ["section", "content"], tag: "section" });
     const Article = article(repo);
 
-    return async (argument) => {
-        const md = await getMarkdown(posts_dir, argument.slug, postFmSchema);
+    return registerRootPage(
+        repo,
+        "root",
+        [
+            style("page-main-area", {
+                margin_block_end: appearence.layout.space_block_large,
+            }),
+        ],
+        async (argument) => {
+            const md = await getMarkdown(posts_dir, argument.slug, postFmSchema);
 
-        const raw_html = await markdownToHtml(md.content);
-        return Page({
-            title: `${md.data.title || ""} | ${site.name}`,
-            description: site.description,
-            lang: site.lang,
-            name: site.name,
-            navitem: navitem,
-        })(PageMainArea({})(PageSection({})(Article(md)(RawHTML({})(raw_html)))));
-    };
+            const raw_html = await markdownToHtml(md.content);
+            return Page({
+                title: `${md.data.title || ""} | ${site.name}`,
+                description: site.description,
+                lang: site.lang,
+                name: site.name,
+                navitem: navitem,
+            })(PageMainArea({})(PageSection({})(Article(md)(RawHTML({})(raw_html)))));
+        },
+    );
 }
