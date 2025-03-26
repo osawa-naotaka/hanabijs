@@ -1,4 +1,4 @@
-import type { HArgument, HComponent, HComponentFn } from "./element";
+import type { HAnyComponentFn, HArgument, HComponent, HComponentFn } from "./element";
 import type { StyleRule } from "./style";
 
 export type Repository = Map<string, HComponent>;
@@ -6,7 +6,7 @@ export type Repository = Map<string, HComponent>;
 // using any. fix it.
 export function registerComponent<T extends HArgument>(
     repo: Repository,
-    name_fn: HComponentFn<Record<string, any>>,
+    name_fn: HAnyComponentFn,
     style: StyleRule[],
     component_fn: HComponentFn<T>,
     path?: string,

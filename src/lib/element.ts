@@ -33,6 +33,8 @@ export type HAsyncComponentFn<T extends HArgument> = (
     argument: T & { class?: string | string[]; id?: string },
 ) => (...child: HNode[]) => Promise<HNode>;
 export type HArgument = Record<string, unknown>;
+// biome-ignore lint: using any, this type is intended not to use argument.
+export type HAnyComponentFn = (argument: Record<string, any>) => (...child: HNode[]) => HNode;
 
 // hanabi HTML Top export function
 export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
@@ -122,7 +124,7 @@ function attributeToString(attribute: Partial<Attribute>): string {
 
             if (typeof value !== "string" && !Array.isArray(value)) {
                 throw new Error(
-                    `attributeToString: invalid attribute value type ${value}. only string value or array of string value is allowd.`,
+                    `attributeToString: invalid attribute value type '${key}:' '${value}'. only string value or array of string value is allowd.`,
                 );
             }
 
@@ -233,7 +235,8 @@ function matchCompoundSelector(selector: CompoundSelector, element: HElement<{ i
     for (const s of selector) {
         if (typeof s !== "string") {
             throw new Error("matchCompoundSelector: ComponentFn is not supported.");
-        } else if (s.startsWith(".")) {
+        }
+        if (s.startsWith(".")) {
             if (!hasClass(s.slice(1), element.attribute)) {
                 return false;
             }

@@ -41,7 +41,7 @@ export function drawer(repo: Repository, button_id: string): HComponentFn<Drawer
         Drawer,
         styles,
         (argument) => () =>
-            Drawer({ class: argument.class })(
+            Drawer({})(
                 DrawerOpenState({ type: "checkbox", id: button_id })(),
                 DrawerTitle({})(
                     argument.title,

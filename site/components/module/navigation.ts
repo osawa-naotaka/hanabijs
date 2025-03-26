@@ -1,6 +1,6 @@
-import { A, registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
-import { svgIcon } from "@site/components/element/svgIcon";
+import { A, Li, Nav, Ul } from "@/main";
+import type { HComponentFn } from "@/main";
+import { SvgIcon } from "@site/components/element/svgIcon";
 
 export type NavigationArgument = {
     navitem: {
@@ -9,40 +9,13 @@ export type NavigationArgument = {
     }[];
 };
 
-export function navigation(repo: Repository): HComponentFn<NavigationArgument> {
-    const Navigation = semantic("navigation", { tag: "nav" });
-    const NavigationList = semantic("navigation-list", { tag: "ul" });
-    const NavigationListItem = semantic("navigation-list-item", { tag: "li" });
-    const SvgIcon = svgIcon(repo);
-
-    const styles = [
-        style(Navigation, {
-            font_weight: "bold",
-            font_size: "1.4rem",
-        }),
-        style(NavigationList, {
-            display: "flex",
-            justify_content: "center",
-            align_items: "center",
-            list_style_type: "none",
-            gap: "2rem",
-        }),
-    ];
-
-    return registerComponent(
-        repo,
-        Navigation,
-        styles,
-        (argument) => () =>
-            Navigation({ class: argument.class })(
-                NavigationList({})(
-                    NavigationListItem({})(A({ href: "/posts" })("blog")),
-                    ...argument.navitem.map((item) =>
-                        NavigationListItem({})(
-                            A({ href: item.url, target: "__blank" })(SvgIcon({ name: item.icon })()),
-                        ),
-                    ),
-                ),
+export const Navigation: HComponentFn<NavigationArgument> = (argument) => () => {
+    return Nav({})(
+        Ul({})(
+            Li({})(A({ href: "/posts" })("blog")),
+            ...argument.navitem.map((item) =>
+                Li({})(A({ href: item.url, target: "__blank" })(SvgIcon({ name: item.icon })())),
             ),
+        ),
     );
-}
+};

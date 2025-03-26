@@ -1,16 +1,13 @@
-import { registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import { Time } from "@/main";
+import type { HComponentFn } from "@/main";
 
 export type DateTimeArgument = {
     datetime: string | Date;
 };
 
-export function dateTime(repo: Repository): HComponentFn<DateTimeArgument> {
-    const DateTime = semantic("date-time", { tag: "time" });
-
-    const styles = [style(DateTime, { display: "block" })];
-
-    return registerComponent(repo, DateTime, styles, ({ datetime }) => () => {
+export const DateTime: HComponentFn<DateTimeArgument> =
+    ({ datetime }) =>
+    () => {
         const date = datetime instanceof Date ? datetime : new Date(datetime);
         const date_string = date.toLocaleDateString("ja-jp", {
             year: "numeric",
@@ -18,6 +15,5 @@ export function dateTime(repo: Repository): HComponentFn<DateTimeArgument> {
             day: "numeric",
         });
 
-        return DateTime({ datetime: date.toISOString() })(date_string);
-    });
-}
+        return Time({ datetime: date.toISOString() })(date_string);
+    };

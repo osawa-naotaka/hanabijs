@@ -51,7 +51,7 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
         Popover,
         styles,
         (argument) => () =>
-            Popover({ class: argument.class })(
+            Popover({})(
                 PopoverButton({ type: "button", popovertarget: button_id })(argument.open_button),
                 PopoverContainer({ popover: "", id: button_id })(
                     PopoverContent({})(

@@ -1,16 +1,15 @@
 import { Img } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import type { HComponentFn } from "@/main";
 
 export type SvgIconArgument = {
     name: string;
 };
 
-export function svgIcon(_repo: Repository): HComponentFn<SvgIconArgument> {
-    return ({ name }) =>
-        () =>
-            Img({
-                src: `/images/icons/${name}-icon.svg`,
-                class: ["svg-icon", `svg-icon-${name}`],
-                alt: `${name} icon`,
-            })();
-}
+export const SvgIcon: HComponentFn<SvgIconArgument> =
+    ({ name }) =>
+    () =>
+        Img({
+            src: `/images/icons/${name}-icon.svg`,
+            class: ["svg-icon", `svg-icon-${name}`],
+            alt: `${name} icon`,
+        })();

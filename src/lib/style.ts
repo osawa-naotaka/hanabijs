@@ -1,4 +1,4 @@
-import type { HComponent, HComponentFn } from "./element";
+import type { HAnyComponentFn, HComponent } from "./element";
 
 // Style
 export type StyleRule = {
@@ -13,7 +13,7 @@ export type Selector = CompoundSelector | ComplexSelector;
 export type CompoundSelector = SimpleSelector[];
 
 // using any. fix it.
-export type SimpleSelector = string | HComponentFn<any>;
+export type SimpleSelector = string | HAnyComponentFn;
 
 export type ComplexSelector = {
     compound: CompoundSelector;
@@ -29,7 +29,7 @@ function simpleSelectorIsString(selector: SimpleSelector): selector is string {
     return typeof selector === "string";
 }
 
-function simpleSelectorIsComponentFn(selector: SimpleSelector): selector is HComponentFn<any> {
+function simpleSelectorIsComponentFn(selector: SimpleSelector): selector is HAnyComponentFn {
     return typeof selector === "function";
 }
 

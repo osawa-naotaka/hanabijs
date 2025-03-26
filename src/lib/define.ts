@@ -1444,3 +1444,4 @@ export const Em = gt<EmAttribute>("em");
 export const RawHTML = gt("raw");
 export const Button = gt<ButtonAttribute>("button");
 export const Unwrap = gt("unwrap");
+export const Time = gt<TimeAttribute>("time");
