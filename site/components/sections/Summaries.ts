@@ -1,4 +1,4 @@
-import { Li, Section } from "@/main";
+import { Li, Section, Ul } from "@/main";
 import type { HComponentFn } from "@/main";
 import type { Markdown } from "@site/components/library/post";
 import { Summary } from "@site/components/module/Summary";
@@ -9,4 +9,4 @@ export type SummariesArgument = {
 };
 
 export const Summaries: HComponentFn<SummariesArgument> = (argument) => () =>
-    Section({})(Li({ class: "summaries-list" })(...argument.posts.map((post) => Summary(post)())));
+    Section({})(Ul({})(...argument.posts.map((post) => Li({})(Summary(post)()))));

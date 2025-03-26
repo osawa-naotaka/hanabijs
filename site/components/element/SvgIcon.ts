@@ -10,6 +10,5 @@ export const SvgIcon: HComponentFn<SvgIconArgument> =
     () =>
         Img({
             src: `/images/icons/${name}-icon.svg`,
-            class: ["svg-icon", `svg-icon-${name}`],
             alt: `${name} icon`,
         })();

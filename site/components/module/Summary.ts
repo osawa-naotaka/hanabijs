@@ -13,7 +13,7 @@ export const Summary: HComponentFn<SummaryArgument> = (argument) => () =>
         BlogArticleHeader({
             title: A({ href: `/posts/${argument.slug}` })(H2({})(argument.data.title)),
         })(
-            Div({ class: "author" })(argument.data.author),
+            Div({})(argument.data.author),
             DateTime({ datetime: argument.data.date })(),
             TagList({ slugs: argument.data.tag || [] })(),
         ),

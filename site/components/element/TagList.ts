@@ -7,8 +7,4 @@ export type TagListArgument = {
 };
 
 export const TagList: HComponentFn<TagListArgument> = (argument) => () =>
-    Ul({ class: "tag-list" })(
-        ...argument.slugs.map((x) =>
-            A({ href: `/tags/${x}` })(Li({ class: ["tag-list-item", "chip"] })(tag_map[x] || x)),
-        ),
-    );
+    Ul({})(...argument.slugs.map((x) => A({ href: `/tags/${x}` })(Li({})(tag_map[x] || x))));

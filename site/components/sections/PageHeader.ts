@@ -13,4 +13,4 @@ export type PageHeaderArgument = {
 export const PageHeader: HComponentFn<PageHeaderArgument> =
     ({ title, navitem }) =>
     () =>
-        Header({ class: "top" })(H1({})(A({ href: "/" })(title)), Navigation({ navitem })());
+        Header({})(H1({})(A({ href: "/" })(title)), Navigation({ navitem })());

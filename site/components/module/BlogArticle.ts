@@ -16,10 +16,10 @@ export const BlogArticle: HComponentFn<BlogArticleArgument> =
             BlogArticleHeader({
                 title: H2({})(argument.data.title),
             })(
-                Div({ class: "author" })(argument.data.author),
+                Div({})(argument.data.author),
                 DateTime({ datetime: argument.data.date })(),
                 TagList({ slugs: argument.data.tag || [] })(),
                 ShareX({ title: argument.data.title, url: `http://localhost/posts/${argument.slug}` })(),
             ),
-            Div({ class: "article-text" })(...child),
+            Div({})(...child),
         );

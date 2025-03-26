@@ -20,9 +20,5 @@ export const Page: HComponentFn<PageArgument> =
     (...child) =>
         Html({ lang })(
             PageHead({ title, description })(),
-            Body({ id: "top-of-page", class: ["light"] })(
-                PageHeader({ title: name, navitem })(),
-                ...child,
-                PageFooter({ site_name: name })(),
-            ),
+            Body({})(PageHeader({ title: name, navitem })(), ...child, PageFooter({ site_name: name })()),
         );
