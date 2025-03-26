@@ -5,7 +5,7 @@ import type { HRootPageFn } from "@/main";
 import { getMarkdown, listFiles } from "@site/components/library/post";
 import { BlogArticle } from "@site/components/module/BlogArticle";
 import { Page } from "@site/components/pages/Page";
-import { navitem, posts_dir, site } from "@site/config/site.config";
+import { posts_dir, site } from "@site/config/site.config";
 import { postFmSchema } from "@site/config/site.config";
 
 type RootParameter = {
@@ -26,7 +26,6 @@ export default function Root(): HRootPageFn<RootParameter> {
             description: site.description,
             lang: site.lang,
             name: site.name,
-            navitem: navitem,
-        })(Main({})(Section({})(BlogArticle(md)(RawHTML({})(raw_html)))));
+        })(Main({ class: "responsive" })(Section({})(BlogArticle(md)(RawHTML({})(raw_html)))));
     };
 }

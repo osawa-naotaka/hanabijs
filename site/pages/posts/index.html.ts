@@ -2,7 +2,7 @@ import { A, Li, Main, Ul } from "@/main";
 import type { HRootPageFn } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { Page } from "@site/components/pages/Page";
-import { navitem, postFmSchema, posts_dir, site } from "@site/config/site.config";
+import { postFmSchema, posts_dir, site } from "@site/config/site.config";
 
 export default function Root(): HRootPageFn<void> {
     return async () => {
@@ -14,7 +14,6 @@ export default function Root(): HRootPageFn<void> {
             description: site.description,
             lang: site.lang,
             name: site.name,
-            navitem: navitem,
         })(
             Main({})(
                 Ul({ class: "article-list" })(

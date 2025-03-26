@@ -4,7 +4,7 @@ import { getAllMarkdowns } from "@site/components/library/post";
 import { Page } from "@site/components/pages/Page";
 import { Hero } from "@site/components/sections/Hero";
 import { Summaries } from "@site/components/sections/Summaries";
-import { navitem, site } from "@site/config/site.config";
+import { site } from "@site/config/site.config";
 import { postFmSchema, posts_dir } from "@site/config/site.config";
 
 export default function Root(): HRootPageFn<void> {
@@ -17,7 +17,6 @@ export default function Root(): HRootPageFn<void> {
             description: site.description,
             lang: site.lang,
             name: site.name,
-            navitem: navitem,
-        })(Hero({})(), Main({})(Summaries({ posts: posts_sorted })()));
+        })(Hero({})(), Main({ class: ["responsive"] })(Summaries({ posts: posts_sorted })()));
     };
 }

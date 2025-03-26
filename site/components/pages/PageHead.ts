@@ -36,4 +36,7 @@ export const PageHead: HComponentFn<PageHeadArgument> =
             // Beer CSS
             Link({ rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/beercss@3.9.7/dist/cdn/beer.min.css" })(""),
             Script({ type: "module", src: "https://cdn.jsdelivr.net/npm/beercss@3.9.7/dist/cdn/beer.min.js" })(""),
+
+            // Global CSS
+            Link({ rel: "stylesheet", href: "/assets/global.css" })(""),
         );

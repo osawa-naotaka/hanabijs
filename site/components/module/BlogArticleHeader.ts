@@ -8,4 +8,4 @@ export type ArticleHeaderArgument = {
 export const BlogArticleHeader: HComponentFn<ArticleHeaderArgument> =
     (argument): ((...child: HNode[]) => HNode) =>
     (...child) =>
-        Header({})(Div({})(argument.title), Div({})(...child));
+        Header({})(Div({})(argument.title), Div({ class: "row" })(...child));

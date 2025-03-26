@@ -9,16 +9,12 @@ export type PageArgument = {
     description: string;
     lang: string;
     name: string;
-    navitem: {
-        url: string;
-        icon: string;
-    }[];
 };
 
 export const Page: HComponentFn<PageArgument> =
-    ({ lang, name, title, description, navitem }) =>
+    ({ lang, name, title, description }) =>
     (...child) =>
         Html({ lang })(
             PageHead({ title, description })(),
-            Body({})(PageHeader({ title: name, navitem })(), ...child, PageFooter({ site_name: name })()),
+            Body({})(PageHeader({ title: name })(), ...child, PageFooter({ site_name: name })()),
         );

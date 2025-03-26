@@ -1,4 +1,4 @@
-import { A, Li, Ul } from "@/main";
+import { A, Unwrap } from "@/main";
 import type { HComponentFn } from "@/main";
 import { tag_map } from "@site/config/site.config";
 
@@ -7,4 +7,4 @@ export type TagListArgument = {
 };
 
 export const TagList: HComponentFn<TagListArgument> = (argument) => () =>
-    Ul({})(...argument.slugs.map((x) => A({ href: `/tags/${x}` })(Li({})(tag_map[x] || x))));
+    Unwrap({})(...argument.slugs.map((x) => A({ href: `/tags/${x}`, class: "chip" })(tag_map[x] || x)));
