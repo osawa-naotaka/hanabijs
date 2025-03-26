@@ -1,11 +1,11 @@
 import { Article, Div, H2 } from "@/main";
 import type { HComponentFn } from "@/main";
 import type { PostFm } from "@site/config/site.config";
-import { DateTime } from "../element/dateTime";
-import { ShareX } from "../element/shareX";
-import { TagList } from "../element/tagList";
+import { DateTime } from "../element/DateTime";
+import { ShareX } from "../element/ShareX";
+import { TagList } from "../element/TagList";
 import type { Markdown } from "../library/post";
-import { BlogArticleHeader } from "./articleHeader";
+import { BlogArticleHeader } from "./BlogArticleHeader";
 
 export type BlogArticleArgument = Markdown<PostFm>;
 

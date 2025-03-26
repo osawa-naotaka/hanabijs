@@ -1,8 +1,8 @@
 import { Body, Html } from "@/main";
 import type { HComponentFn } from "@/main";
-import { PageHead } from "@site/components/pages/pageHead";
-import { PageFooter } from "@site/components/sections/pageFooter";
-import { PageHeader } from "@site/components/sections/pageHeader";
+import { PageHead } from "@site/components/pages/PageHead";
+import { PageFooter } from "@site/components/sections/PageFooter";
+import { PageHeader } from "@site/components/sections/PageHeader";
 
 export type PageArgument = {
     title: string;

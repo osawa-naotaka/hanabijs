@@ -1,6 +1,6 @@
 import { A, Div, Input, Li, Ul, createDom } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode } from "@/main";
-import { SvgIcon } from "@site/components/element/svgIcon";
+import { SvgIcon } from "@site/components/element/SvgIcon";
 
 export const Search: HComponentFn<HArgument> = () => () =>
     Div({ class: "search" })(
@@ -52,8 +52,8 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
 }
 
 import { v } from "@/main";
-import { DateTime } from "@site/components/element/dateTime";
-import { TagList } from "@site/components/element/tagList";
+import { DateTime } from "@site/components/element/DateTime";
+import { TagList } from "@site/components/element/TagList";
 import { postFmSchema } from "@site/config/site.config";
 
 export const SearchKeySchema = v.object({

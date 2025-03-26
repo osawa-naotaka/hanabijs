@@ -1,6 +1,6 @@
 import { A, H1, Header } from "@/main";
 import type { HComponentFn } from "@/main";
-import { Navigation } from "@site/components/module/navigation";
+import { Navigation } from "@site/components/module/Navigation";
 
 export type PageHeaderArgument = {
     title: string;

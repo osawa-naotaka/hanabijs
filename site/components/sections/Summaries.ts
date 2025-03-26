@@ -1,7 +1,7 @@
 import { Li, Section } from "@/main";
 import type { HComponentFn } from "@/main";
 import type { Markdown } from "@site/components/library/post";
-import { Summary } from "@site/components/module/summary";
+import { Summary } from "@site/components/module/Summary";
 import type { PostFm } from "@site/config/site.config";
 
 export type SummariesArgument = {

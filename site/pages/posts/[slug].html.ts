@@ -3,8 +3,8 @@ import { markdownToHtml } from "@/lib/markdown";
 import { Main, RawHTML, Section } from "@/main";
 import type { HRootPageFn } from "@/main";
 import { getMarkdown, listFiles } from "@site/components/library/post";
-import { BlogArticle } from "@site/components/module/article";
-import { Page } from "@site/components/pages/page";
+import { BlogArticle } from "@site/components/module/BlogArticle";
+import { Page } from "@site/components/pages/Page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
 import { postFmSchema } from "@site/config/site.config";
 

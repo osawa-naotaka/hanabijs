@@ -1,6 +1,6 @@
 import { A, Li, Nav, Ul } from "@/main";
 import type { HComponentFn } from "@/main";
-import { SvgIcon } from "@site/components/element/svgIcon";
+import { SvgIcon } from "@site/components/element/SvgIcon";
 
 export type NavigationArgument = {
     navitem: {

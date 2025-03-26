@@ -1,6 +1,6 @@
 import { A } from "@/main";
 import type { HComponentFn } from "@/main";
-import { SvgIcon } from "./svgIcon";
+import { SvgIcon } from "./SvgIcon";
 
 export type ShareXArgument = {
     title: string;

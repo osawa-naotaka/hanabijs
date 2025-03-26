@@ -1,9 +1,9 @@
 import { Main } from "@/main";
 import type { HRootPageFn } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
-import { Page } from "@site/components/pages/page";
-import { Hero } from "@site/components/sections/hero";
-import { Summaries } from "@site/components/sections/summaries";
+import { Page } from "@site/components/pages/Page";
+import { Hero } from "@site/components/sections/Hero";
+import { Summaries } from "@site/components/sections/Summaries";
 import { navitem, site } from "@site/config/site.config";
 import { postFmSchema, posts_dir } from "@site/config/site.config";
 

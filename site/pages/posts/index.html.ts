@@ -1,7 +1,7 @@
 import { A, Li, Main, Ul } from "@/main";
 import type { HRootPageFn } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
-import { Page } from "@site/components/pages/page";
+import { Page } from "@site/components/pages/Page";
 import { navitem, postFmSchema, posts_dir, site } from "@site/config/site.config";
 
 export default function Root(): HRootPageFn<void> {
