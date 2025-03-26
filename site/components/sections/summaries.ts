@@ -9,7 +9,5 @@ export type SummariesArgument = {
 };
 
 export const Summaries: HComponentFn<SummariesArgument> = (argument) => () => {
-    return Section({})(
-        Li({ class: "summaries-list" })(...argument.posts.map((post) => Summary(post)())),
-    );
+    return Section({})(Li({ class: "summaries-list" })(...argument.posts.map((post) => Summary(post)())));
 };

@@ -2,7 +2,7 @@ import { A, Div, Input, Li, Ul, createDom } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode } from "@/main";
 import { SvgIcon } from "@site/components/element/svgIcon";
 
-export const Search: HComponentFn<HArgument> = (argument) => () => {
+export const Search: HComponentFn<HArgument> = () => () => {
     return Div({})(
         Div({ class: "search-bar" })(
             Input({ class: "search-input", type: "search", placeholder: "SEARCH KEYWORDS" })(),
