@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
-import type { Attribute, HNode } from "./element";
+import type { Attribute, HNode } from "./component";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
 // Strigify

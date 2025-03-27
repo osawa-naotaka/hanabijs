@@ -11,6 +11,20 @@ a {
     color: inherit;
 }
 
+h1, h2, h3, h4, h5, h6, input {
+    font-size: 1rem;
+}
+
+ul, ol, menu {
+    list-style-type: none;
+}
+
+input {
+    width: 100%;
+    border: 0 none;
+    outline: none;
+}
+
 img,
 svg {
     display: block;
@@ -26,6 +40,29 @@ svg {
     --layout-content-width: 740px;
     --layout-content_padding: 1rem;
     --layout-space_block_large: 4rem;
+
+    /* フォントサイズのバリエーション - rem単位 */
+
+    /* 極小サイズ - 補足情報、免責事項など */
+    --font-size-xs: 0.75rem;   /* 12px相当 (16px基準) */
+    --font-size-sm: 0.875rem;  /* 14px相当 */
+
+    /* 標準サイズ - 通常のテキスト */
+    --font-size-base: 1rem;    /* 16px相当 - ブラウザのデフォルト */
+    --font-size-md: 1.125rem;  /* 18px相当 */
+
+    /* 中見出しサイズ */
+    --font-size-lg: 1.25rem;   /* 20px相当 */
+    --font-size-xl: 1.5rem;    /* 24px相当 */
+
+    /* 大見出しサイズ */
+    --font-size-2xl: 1.875rem; /* 30px相当 */
+    --font-size-3xl: 2.25rem;  /* 36px相当 */
+
+    /* 特大見出しサイズ */
+    --font-size-4xl: 3rem;     /* 48px相当 */
+    --font-size-5xl: 3.75rem;  /* 60px相当 */
+    --font-size-6xl: 4.5rem;   /* 72px相当 */
 }
 
 :root {

@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
-import type { Attribute } from "../lib/element";
+import type { Attribute } from "../lib/component";
 import { globExt } from "../lib/util";
 
 export type RouteTable = {

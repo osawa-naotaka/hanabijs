@@ -1,4 +1,5 @@
-import { A, registerComponent, semantic, style } from "@/main";
+import { BOLD, FONT_SIZE, JUSTIFY_CENTER, ROW, SIZE_XL } from "@/lib/stylerules";
+import { A, registerComponent, semantic, styles } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
@@ -15,24 +16,15 @@ export function navigation(repo: Repository): HComponentFn<NavigationArgument> {
     const NavigationListItem = semantic("navigation-list-item", { tag: "li" });
     const SvgIcon = svgIcon(repo);
 
-    const styles = [
-        style(Navigation, {
-            font_weight: "bold",
-            font_size: "1.4rem",
-        }),
-        style(NavigationList, {
-            display: "flex",
-            justify_content: "center",
-            align_items: "center",
-            list_style_type: "none",
-            gap: "2rem",
-        }),
+    const component_styles = [
+        styles(Navigation, BOLD, FONT_SIZE(SIZE_XL)),
+        styles(NavigationList, ROW(SIZE_XL), JUSTIFY_CENTER),
     ];
 
     return registerComponent(
         repo,
         Navigation,
-        styles,
+        component_styles,
         (argument) => () =>
             Navigation({ class: argument.class })(
                 NavigationList({})(

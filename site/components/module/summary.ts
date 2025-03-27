@@ -1,10 +1,11 @@
-import { A, H2, compoundStyle, registerComponent, semantic, style } from "@/main";
+import { A, H2, compoundStyles, registerComponent, semantic, styles } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
 import { tagList } from "../element/tagList";
 import type { Markdown } from "../library/post";
 import { articleHeader } from "./articleHeader";
+import { FONT_SIZE, MARGIN_BLOCK, SIZE_LG, SIZE_XL } from "@/lib/stylerules";
 
 export type SummaryArgument = Markdown<PostFm>;
 
@@ -15,17 +16,15 @@ export function summary(repo: Repository): HComponentFn<SummaryArgument> {
     const TagList = tagList(repo);
     const DateTime = dateTime(repo);
 
-    const styles = [
-        style(Summary, { margin_block_end: "1.5rem" }),
-        compoundStyle([Summary, " ", ArticleHeader, " ", "h2"], {
-            font_size: "1.2rem",
-        }),
+    const component_styles = [
+        styles(Summary, MARGIN_BLOCK(SIZE_XL)),
+        compoundStyles([Summary, " ", ArticleHeader, " ", "h2"], FONT_SIZE(SIZE_LG)),
     ];
 
     return registerComponent(
         repo,
         Summary,
-        styles,
+        component_styles,
         (argument) => () =>
             Summary({ class: argument.class })(
                 ArticleHeader({

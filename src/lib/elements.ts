@@ -1,4 +1,4 @@
-import type { Attribute, AttributeValue, HComponentFn } from "./element";
+import type { Attribute, AttributeValue, HComponentFn, HNode } from "./component";
 
 export type Tag =
     | "a"
@@ -1403,8 +1403,9 @@ export type WbrAttribute = Record<CommonAttributeName, AttributeValue>;
 export const wbr_attribute_names: WbrAttributeName[] = common_attribute_names;
 
 function gt<T extends Attribute>(tag: Tag | HanabiTag): HComponentFn<Partial<T>> {
-    return (argument) =>
-        (...child) => ({ element_name: tag, tag, attribute: argument, child });
+    return { [tag]: (argument: Partial<T>) =>
+        (...child: HNode[]) => ({ element_name: tag, tag, attribute: argument, child }) }
+        [tag];
 }
 
 // add here

@@ -1,7 +1,6 @@
-import { A, Div, Li, compoundStyle, createDom, registerComponent, semantic, style } from "@/main";
+import { A, Div, Li, compoundStyles, createDom, registerComponent, semantic, styles } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
-import { appearence } from "@site/config/site.config";
 
 export function search(repo: Repository): HComponentFn<HArgument> {
     const Search = semantic("search", { class_names: ["content"] });
@@ -11,38 +10,18 @@ export function search(repo: Repository): HComponentFn<HArgument> {
     const SearchResult = semantic("search-result", { tag: "ul" });
     const SearchResultItem = semantic("search-result-item", { tag: "li" });
 
-    const sytles = [
-        style(SearchBar, {
-            display: "flex",
-            align_items: "center",
-            gap: "0.5rem",
-            padding_block_end: "0.25rem",
-            border_block_end: ["2px", "solid"],
-        }),
-        style(SearchInput, {
-            width: "100%",
-            height: "1.5rem",
-            border: ["0", "none"],
-            outline: "none",
-            font_size: "1rem",
-            background_color: appearence.color.background,
-        }),
-        compoundStyle([[SearchInput, "::placeholder"]], {
-            opacity: "0.5",
-        }),
-        style(SearchResult, {
-            margin_block: "2rem",
-            list_style_type: "none",
-        }),
-        style(SearchResultItem, {
-            margin_block: "2rem",
-        }),
+    const component_sytles = [
+        styles(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),
+        styles(SearchInput, COLOR_DEFAULT, HEIGHT(SIZE_2XL)),
+        compoundStyles([[SearchInput, "::placeholder"]], OPACITY("0.5")),
+        styles(SearchResult, MARGIN_BLOCK(SIZE_4XL)),
+        styles(SearchResultItem, MARGIN_BLOCK(SIZE_4XL)),
     ];
 
     return registerComponent(
         repo,
         Search,
-        sytles,
+        component_sytles,
         (argument) => () =>
             Search({ class: argument.class })(
                 SearchBar({})(
@@ -101,6 +80,7 @@ import { v } from "@/main";
 import { dateTime } from "@site/components/element/dateTime";
 import { tagList } from "@site/components/element/tagList";
 import { postFmSchema } from "@site/config/site.config";
+import { BORDER_UNDERLINE, COLOR_DEFAULT, FONT_SIZE, HEIGHT, MARGIN_BLOCK, OPACITY, ROW, ROW_WRAP, SIZE_2XL, SIZE_4XL, SIZE_XS } from "@/lib/stylerules";
 
 export const SearchKeySchema = v.object({
     slug: v.string(),
@@ -119,22 +99,12 @@ function searchResultItem(repo: Repository): HComponentFn<SearchResultItemAttrib
     const DateTime = dateTime(repo);
     const Tags = tagList(repo);
 
-    const styles = [
-        style(SearchResultItemMeta, {
-            display: "flex",
-            flex_wrap: "wrap",
-            align_items: "center",
-            gap: ["2px", "0.5rem"],
-            border_block_end: ["2px", "solid"],
-            padding_block_end: "2px",
-            font_size: "0.8rem",
-        }),
-        style(SearchResultItemDescription, {
-            font_size: "0.7rem",
-        }),
+    const component_styles = [
+        styles(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(SIZE_XS), BORDER_UNDERLINE),
+        styles(SearchResultItemDescription, FONT_SIZE(SIZE_XS)),
     ];
 
-    return registerComponent(repo, SearchResultItem, styles, ({ result }) => () => {
+    return registerComponent(repo, SearchResultItem, component_styles, ({ result }) => () => {
         const key = v.parse(SearchKeySchema, result.key);
         return SearchResultItem({})(
             SearchResultItemMeta({})(

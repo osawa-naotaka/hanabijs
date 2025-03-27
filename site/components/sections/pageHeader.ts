@@ -1,11 +1,11 @@
-import { A, H1, registerComponent, semantic, style } from "@/main";
+import { COLOR_DEFAULT, FIX_TOP_STICKY, FONT_SIZE, OPACITY, SIZE_2XL } from "@/lib/stylerules";
+import { A, H1, registerComponent, semantic, styles } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
 import { popover } from "@site/components/module/popover";
 import { search } from "@site/components/module/search";
-import { appearence } from "@site/config/site.config";
 
 export type PageHeaderArgument = {
     title: string;
@@ -23,22 +23,15 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
     const Navigation = navigation(repo);
     const Search = search(repo);
 
-    const styles = [
-        style(PageHeader, {
-            position: "sticky",
-            top: "0",
-            left: "0",
-            width: "100%",
-            margin_block_end: "2rem",
-            background_color: appearence.color.background,
-            opacity: "0.8",
-        }),
+    const component_styles = [
+        styles(PageHeader, FIX_TOP_STICKY, COLOR_DEFAULT, OPACITY("0.8")),
+        styles(H1, FONT_SIZE(SIZE_2XL)),
     ];
 
     return registerComponent(
         repo,
         PageHeader,
-        styles,
+        component_styles,
         ({ title, navitem }) =>
             () =>
                 PageHeader({})(

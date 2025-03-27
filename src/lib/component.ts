@@ -1,8 +1,9 @@
 import DOMPurify from "dompurify";
-import type { HanabiTag, Tag } from "./define";
+import type { HanabiTag, Tag } from "./elements";
 import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./style";
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
+import { mergeRecord } from "./util";
 
 // HTML DOM Node = string or HTML Element
 export type HNode<T extends Attribute = Attribute> = string | HElement<Partial<T>>;
@@ -65,17 +66,6 @@ function addClassToHead<T extends { class?: string | string[] }>(
         return Array.isArray(attribute.class) ? [...className, ...attribute.class] : [...className, attribute.class];
     }
     return className;
-}
-
-function mergeRecord<
-    T1 extends Record<string | number | symbol, unknown>,
-    T2 extends Record<string | number | symbol, unknown>,
->(attribute1: T1, attribute2: T2): T1 & T2 {
-    const new_attribute = JSON.parse(JSON.stringify(attribute1));
-    for (const [key, value] of Object.entries(attribute2)) {
-        new_attribute[key] = value;
-    }
-    return new_attribute;
 }
 
 // DOM Builder
@@ -301,16 +291,17 @@ export function semantic<T extends Attribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HComponentFn<T> {
+    const dot_name = `.${element_name}`;
     return {
-        [element_name]:
+        [dot_name]:
             (argument: T) =>
             (...child: HNode[]) => ({
-                element_name,
+                element_name: dot_name,
                 tag,
                 attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
                 child,
             }),
-    }[element_name];
+    }[dot_name];
 }
 
 // on layout Component, argument is attribute.
@@ -319,16 +310,17 @@ export function layout<T extends Attribute>(
     element_name: string,
     { class_names = [] }: { class_names?: string[] } = {},
 ): HComponentFn<T> {
+    const dot_name = `.${element_name}`;
     return {
-        [element_name]:
+        [dot_name]:
             (argument: T) =>
             (...child: HNode[]) => ({
-                element_name,
+                element_name: dot_name,
                 tag: "div" as Tag,
                 attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
                 child,
             }),
-    }[element_name];
+    }[dot_name];
 }
 
 export function mergeClassToRecord<T extends Record<string | number | symbol, unknown>>(

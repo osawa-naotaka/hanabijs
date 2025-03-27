@@ -1,4 +1,4 @@
-import type { HAnyComponentFn, HArgument, HComponent, HComponentFn, HNode, HRootPageFn } from "./element";
+import type { HAnyComponentFn, HArgument, HComponent, HComponentFn, HNode, HRootPageFn } from "./component";
 import type { StyleRule } from "./style";
 
 export type Repository = Map<string, HComponent>;

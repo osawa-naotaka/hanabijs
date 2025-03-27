@@ -1,4 +1,4 @@
-import { attribute_names, hanabi_tags, tags } from "./define";
+import { attribute_names, hanabi_tags, tags } from "./elements";
 
 export function replaceExt(filename: string, ext: string) {
     return filename.replace(/\.[^/.]+$/, ext);
@@ -8,6 +8,19 @@ export function globExt(base: string, ext: string): AsyncIterableIterator<string
     const glob = new Bun.Glob(`**/*${ext}`);
     return glob.scan(base);
 }
+
+export function mergeRecord<
+    T1 extends Record<string | number | symbol, unknown>,
+    T2 extends Record<string | number | symbol, unknown>,
+>(attribute1: T1, attribute2: T2): T1 & T2 {
+    const new_attribute = JSON.parse(JSON.stringify(attribute1));
+    for (const [key, value] of Object.entries(attribute2)) {
+        new_attribute[key] = value;
+    }
+    return new_attribute;
+}
+
+
 
 const contentTypes: [string, string][] = [
     [".html", "text/html"],

@@ -1,4 +1,5 @@
-import { registerComponent, semantic, style } from "@/main";
+import { BORDER_UNDERLINE, MARGIN_BLOCK, SIZE_2XL } from "@/lib/stylerules";
+import { registerComponent, semantic, style, styles } from "@/main";
 import type { HComponentFn, HNode, Repository } from "@/main";
 
 export type ArticleHeaderArgument = {
@@ -10,11 +11,9 @@ export function articleHeader(repo: Repository): HComponentFn<ArticleHeaderArgum
     const ArticleHeaderTitle = semantic("article-header-title");
     const ArticleHeaderMeta = semantic("article-header-meta");
 
-    const styles = [
-        style(ArticleHeader, { margin_block_end: "1.5rem" }),
-        style(ArticleHeaderTitle, {
-            border_bottom: "3px solid",
-        }),
+    const component_styles = [
+        styles(ArticleHeader, MARGIN_BLOCK(SIZE_2XL)),
+        styles(ArticleHeaderTitle, BORDER_UNDERLINE),
         style(ArticleHeaderMeta, {
             display: "flex",
             justify_content: "flex-end",
@@ -29,7 +28,7 @@ export function articleHeader(repo: Repository): HComponentFn<ArticleHeaderArgum
     return registerComponent(
         repo,
         ArticleHeader,
-        styles,
+        component_styles,
         (argument) =>
             (...child) =>
                 ArticleHeader({ class: argument.class })(

@@ -1,7 +1,7 @@
-export * from "./lib/element";
+export * from "./lib/component";
 export * from "./lib/markdown";
 export * from "./lib/style";
 export * from "./lib/repository";
 export * from "./lib/util";
-export * from "./lib/define";
+export * from "./lib/elements";
 export * as v from "valibot";

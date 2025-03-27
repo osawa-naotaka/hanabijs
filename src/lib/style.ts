@@ -1,4 +1,5 @@
-import type { HAnyComponentFn, HComponent } from "./element";
+import type { HAnyComponentFn, HComponent } from "./component";
+import { mergeRecord } from "./util";
 
 // Style
 export type StyleRule = {
@@ -33,22 +34,40 @@ function simpleSelectorIsComponentFn(selector: SimpleSelector): selector is HAny
     return typeof selector === "function";
 }
 
-export function style(selector: SimpleSelector, propaties: Properties): StyleRule {
+export function style(selector: SimpleSelector, properties: Properties): StyleRule {
     return {
         selectorlist: [createSelector([selector])],
-        properties: propaties,
+        properties,
+    };
+}
+
+export function styles(selector: SimpleSelector, ...propaties: Properties[][]): StyleRule {
+    return {
+        selectorlist: [createSelector([selector])],
+        properties: propaties.reduce((p, c) => mergeRecord(p, c.reduce(mergeRecord)), {}),
     };
 }
 
 export function compoundStyle(
     selector: (SimpleSelector | CompoundSelector | Combinator)[],
-    propaties: Properties,
+    properties: Properties,
 ): StyleRule {
     return {
         selectorlist: [createSelector(selector)],
-        properties: propaties,
+        properties,
     };
 }
+
+export function compoundStyles(
+    selector: (SimpleSelector | CompoundSelector | Combinator)[],
+    ...propaties: Properties[][]
+): StyleRule {
+    return {
+        selectorlist: [createSelector(selector)],
+        properties: propaties.reduce((p, c) => mergeRecord(p, c.reduce(mergeRecord)), {}),
+    };
+}
+
 
 export function createSelector(selector: (SimpleSelector | CompoundSelector | Combinator)[]): Selector {
     switch (selector.length) {
@@ -65,7 +84,7 @@ export function createSelector(selector: (SimpleSelector | CompoundSelector | Co
                 return [selector[0]];
             }
             if (simpleSelectorIsComponentFn(selector[0])) {
-                return [`.${selector[0].name}`];
+                return [selector[0].name];
             }
             throw new Error(`createSelector: internal error. type mismatch 1 at ${selector[0]}`);
         case 2:
@@ -78,7 +97,7 @@ export function createSelector(selector: (SimpleSelector | CompoundSelector | Co
                 } else if (simpleSelectorIsString(selector[0])) {
                     compound = [selector[0]];
                 } else if (simpleSelectorIsComponentFn(selector[0])) {
-                    compound = [`.${selector[0].name}`];
+                    compound = [selector[0].name];
                 } else {
                     throw new Error(`createSelector: internal error. type mismatch 2 at ${selector[0]}.`);
                 }
@@ -122,7 +141,7 @@ export function rulesToString(semantic: HComponent): string {
 }
 
 function stringifySelector(selector: CompoundSelector): string {
-    return selector.map((s) => (typeof s === "function" ? `.${s.name}` : s)).join("");
+    return selector.map((s) => (typeof s === "function" ? s.name : s)).join("");
 }
 
 function selectorToString(selector: Selector): string {
