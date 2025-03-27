@@ -1,4 +1,4 @@
-export const RESPONSIVE = {
+export const CONTENT = {
     max_width: "var(--layout-content-width)",
     width: "100%",
     padding_inline: "var(--layout-content-padding)",
@@ -131,8 +131,16 @@ export const MARGIN_BLOCK = (n: string) => ({
     margin_block: n,
 });
 
-export const MARGIN = (n: string) => ({
+export const MARGIN = (...n: string[]) => ({
     margin: n,
+});
+
+export const MARGIN_LEFT = (n: string) => ({
+    margin_left: n,
+});
+
+export const MARGIN_RIGHT = (n: string) => ({
+    margin_right: n,
 });
 
 export const PADDING_INLINE = (n: string) => ({
@@ -143,7 +151,7 @@ export const PADDING_BLOCK = (n: string) => ({
     padding_block: n,
 });
 
-export const PADDING = (n: string) => ({
+export const PADDING = (...n: string[]) => ({
     padding: n,
 });
 
@@ -154,6 +162,13 @@ export const WIDTH = (n: string) => ({
 export const HEIGHT = (n: string) => ({
     height: n,
 });
+
+export const BACKGROUND_COLOR = (color: string) => ({
+    background_color: color,
+});
+
+export const COLOR_MIX = (color_a: string, color_b: string) => (persent: string) =>
+    `color-mix(in srgb, ${color_a} ${persent}, ${color_b})`;
 
 export const SIZE_XS = "var(--font-size-xs)";
 export const SIZE_SM = "var(--font-size-sm)";

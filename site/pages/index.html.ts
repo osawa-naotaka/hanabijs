@@ -1,28 +1,74 @@
-import { semantic } from "@/main";
-import type { HRootPageFn, Repository } from "@/main";
-import { getAllMarkdowns } from "@site/components/library/post";
-import { page } from "@site/components/pages/page";
-import { hero } from "@site/components/sections/hero";
-import { summaries } from "@site/components/sections/summaries";
-import { navitem, site } from "@site/config/site.config";
-import { postFmSchema, posts_dir } from "@site/config/site.config";
+import { COLUMN, CONTENT } from "@/lib/stylerules";
+import {
+    HBUTTON,
+    HBUTTON_BG_ACTIVE,
+    HBUTTON_BG_HOVER,
+    HBUTTON_FILLED,
+    HBUTTON_FILLED_ACTIVE,
+    HBUTTON_FILLED_HOVER,
+    HBUTTON_OUTLINED,
+    HBUTTON_TEXT,
+} from "@/lib/ui";
+import {
+    Body,
+    H2,
+    Head,
+    Html,
+    Link,
+    Main,
+    Meta,
+    Title,
+    compoundStyles,
+    registerRootPage,
+    semantic,
+    styles,
+} from "@/main";
+import type { HArgument, HRootPageFn, Repository } from "@/main";
 
-export default function Root(repo: Repository): HRootPageFn<void> {
-    const Page = page(repo);
-    const Hero = hero(repo);
-    const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
-    const Summaries = summaries(repo);
+export default function Root(repo: Repository): HRootPageFn<HArgument> {
+    const HFilledButton = semantic("h-filled-button", { tag: "button" });
+    const HOutlinedButton = semantic("h-outlined-button", { tag: "button" });
+    const HTextButton = semantic("h-text-button", { tag: "button" });
 
-    return async () => {
-        const posts = await getAllMarkdowns(posts_dir, postFmSchema);
-        const posts_sorted = posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+    const page_styles = [
+        styles(Body, COLUMN()),
+        styles(Main, CONTENT),
+        styles(HFilledButton, HBUTTON, HBUTTON_FILLED),
+        compoundStyles([[HFilledButton, ":hover"]], HBUTTON_FILLED_HOVER),
+        compoundStyles([[HFilledButton, ":active"]], HBUTTON_FILLED_ACTIVE),
 
-        return Page({
-            title: site.name,
-            description: site.description,
-            lang: site.lang,
-            name: site.name,
-            navitem: navitem,
-        })(Hero({})(), PageMainArea({})(Summaries({ posts: posts_sorted })()));
-    };
+        styles(HOutlinedButton, HBUTTON, HBUTTON_OUTLINED),
+        compoundStyles([[HOutlinedButton, ":hover"]], HBUTTON_BG_HOVER),
+        compoundStyles([[HOutlinedButton, ":active"]], HBUTTON_BG_ACTIVE),
+
+        styles(HTextButton, HBUTTON, HBUTTON_TEXT),
+        compoundStyles([[HTextButton, ":hover"]], HBUTTON_BG_HOVER),
+        compoundStyles([[HTextButton, ":active"]], HBUTTON_BG_ACTIVE),
+    ];
+
+    return registerRootPage(repo, "root-page", page_styles, async () =>
+        Html({ lang: "en" })(
+            Head({ class: "page-head" })(
+                Meta({ charset: "utf-8" })(),
+                Meta({
+                    name: "viewport",
+                    content: "width=device-width,initial-scale=1.0",
+                })(),
+                Link({ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" })(),
+                Meta({ name: "generator", content: "template-engine" })(),
+
+                Title({})("ui test"),
+                Link({ rel: "stylesheet", href: "/assets/global.css" })(),
+                // Link({ rel: "stylesheet", href: "/assets/ui.css" })(),
+            ),
+            Body({})(
+                Main({})(
+                    H2({})("Button With Icon"),
+                    HFilledButton({})("BUTTON"),
+                    HOutlinedButton({})("BUTTON"),
+                    HTextButton({})("BUTTON"),
+                ),
+            ),
+        ),
+    );
 }
