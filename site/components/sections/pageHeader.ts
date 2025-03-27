@@ -5,6 +5,7 @@ import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
 import { popover } from "@site/components/module/popover";
 import { search } from "@site/components/module/search";
+import { appearence } from "@site/config/site.config";
 
 export type PageHeaderArgument = {
     title: string;
@@ -29,6 +30,8 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
             left: "0",
             width: "100%",
             margin_block_end: "2rem",
+            background_color: appearence.color.background,
+            opacity: "0.8",
         }),
     ];
 

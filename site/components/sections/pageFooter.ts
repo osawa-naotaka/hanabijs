@@ -36,6 +36,6 @@ export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
         styles,
         ({ site_name }) =>
             () =>
-                PageFooter({})(PageFooterContent({})(), PageFooterCopyright({})(`&copy; 2025 ${site_name}`)),
+                PageFooter({})(PageFooterContent({})(), PageFooterCopyright({})(`© 2025 ${site_name}`)),
     );
 }
