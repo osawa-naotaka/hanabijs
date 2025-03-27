@@ -1,6 +1,24 @@
-import { H2, compoundStyle, registerComponent, semantic, style } from "@/main";
+import {
+    ALIGN_NOMAL,
+    BORDER_UNDERLINE,
+    COLOR_HEADER,
+    COLUMN,
+    FONT_SIZE,
+    MARGIN_BLOCK,
+    MARGIN_INLINE,
+    PADDING,
+    PADDING_BLOCK,
+    PADDING_INLINE,
+    ROUND,
+    SIZE_2XL,
+    SIZE_BASE,
+    SIZE_XL,
+    TEXT_JUSTIFY,
+    TEXT_UNDERLINE,
+} from "@/lib/stylerules";
+import { A, H2, H3, H4, Li, Pre, compoundStyles, registerComponent, semantic, styles } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
-import { type PostFm, appearence } from "@site/config/site.config";
+import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
 import { shareX } from "../element/shareX";
 import { tagList } from "../element/tagList";
@@ -18,50 +36,30 @@ export function article(repo: Repository): HComponentFn<ArticleArgument> {
     const ArticleText = semantic("article-text");
     const ShareX = shareX(repo);
 
-    const styles = [
-        style(Article, { margin_block_end: "1.5rem" }),
-        compoundStyle([ArticleHeader, " ", "h2"], {
-            font_size: "1.2rem",
-        }),
-        style(ArticleText, {
-            display: "flex",
-            flex_direction: "column",
-            gap: "1.5rem",
-            overflow_wrap: "anywhere",
-            text_align: "justify",
-        }),
-        compoundStyle([ArticleText, " ", "h2"], {
-            font_size: "1.2rem",
-        }),
-        compoundStyle([ArticleText, " ", "h3"], {
-            font_size: "1.2rem",
-            background_color: appearence.color.header_background,
-            padding_inline: "1rem",
-            padding_block_start: "3px",
-            border_radius: "4px",
-            color: appearence.color.header_ext,
-            margin_block_start: "1.5rem",
-        }),
-        compoundStyle([ArticleText, " ", "h4"], {
-            border_bottom: ["2px", "solid", appearence.color.header_background],
-            margin_block_start: "1rem",
-        }),
-        compoundStyle([ArticleText, " ", "a"], {
-            text_decoration: ["underline", "2px"],
-            text_underline_offset: "5px",
-        }),
-        compoundStyle([ArticleText, " ", "li"], {
-            margin_inline: "2rem",
-        }),
-        compoundStyle([ArticleText, " ", "pre"], {
-            padding: "1rem",
-        }),
+    const component_styles = [
+        styles(Article, MARGIN_BLOCK(SIZE_2XL)),
+        compoundStyles([ArticleHeader, " ", H2], FONT_SIZE(SIZE_XL)),
+        styles(ArticleText, COLUMN(SIZE_2XL), TEXT_JUSTIFY, ALIGN_NOMAL),
+        compoundStyles([ArticleText, " ", H2], FONT_SIZE(SIZE_XL)),
+        compoundStyles(
+            [ArticleText, " ", H3],
+            FONT_SIZE(SIZE_XL),
+            ROUND("4px"),
+            PADDING_INLINE(SIZE_BASE),
+            PADDING_BLOCK("3px"),
+            COLOR_HEADER,
+            MARGIN_BLOCK(SIZE_2XL),
+        ),
+        compoundStyles([ArticleText, " ", H4], BORDER_UNDERLINE, MARGIN_BLOCK(SIZE_BASE)),
+        compoundStyles([ArticleText, " ", A], TEXT_UNDERLINE),
+        compoundStyles([ArticleText, " ", Li], MARGIN_INLINE(SIZE_2XL)),
+        compoundStyles([ArticleText, " ", Pre], PADDING(SIZE_BASE)),
     ];
 
     return registerComponent(
         repo,
         Article,
-        styles,
+        component_styles,
         (argument) =>
             (...child) =>
                 Article({ class: argument.class })(

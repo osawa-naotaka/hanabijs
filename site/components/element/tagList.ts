@@ -1,6 +1,7 @@
-import { A, registerComponent, semantic, style } from "@/main";
+import { BOLD, COLOR_INVERT, PADDING_INLINE, ROUND, ROW } from "@/lib/stylerules";
+import { A, registerComponent, semantic, styles } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
-import { appearence, tag_map } from "@site/config/site.config";
+import { tag_map } from "@site/config/site.config";
 
 export type TagListArgument = {
     slugs: string[];
@@ -10,26 +11,15 @@ export function tagList(repo: Repository): HComponentFn<TagListArgument> {
     const TagList = semantic("tag-list", { tag: "ul" });
     const TagListItem = semantic("tag-list-item", { tag: "li" });
 
-    const styles = [
-        style(TagList, {
-            display: "flex",
-            align_items: "center",
-            gap: "0.5rem",
-            list_style_type: "none",
-        }),
-        style(TagListItem, {
-            background_color: appearence.color.header_background,
-            color: appearence.color.header_ext,
-            font_weight: "bold",
-            padding_inline: "0.5rem",
-            border_radius: "4px",
-        }),
+    const component_styles = [
+        styles(TagList, ROW("0.5rem")),
+        styles(TagListItem, COLOR_INVERT, BOLD, PADDING_INLINE("0.5rem"), ROUND("4px")),
     ];
 
     return registerComponent(
         repo,
         TagList,
-        styles,
+        component_styles,
         (argument) => () =>
             TagList({ class: argument.class })(
                 ...argument.slugs.map((x) => A({ href: `/tags/${x}` })(TagListItem({})(tag_map[x] || x))),

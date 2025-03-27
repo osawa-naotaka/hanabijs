@@ -1403,9 +1403,11 @@ export type WbrAttribute = Record<CommonAttributeName, AttributeValue>;
 export const wbr_attribute_names: WbrAttributeName[] = common_attribute_names;
 
 function gt<T extends Attribute>(tag: Tag | HanabiTag): HComponentFn<Partial<T>> {
-    return { [tag]: (argument: Partial<T>) =>
-        (...child: HNode[]) => ({ element_name: tag, tag, attribute: argument, child }) }
-        [tag];
+    return {
+        [tag]:
+            (argument: Partial<T>) =>
+            (...child: HNode[]) => ({ element_name: tag, tag, attribute: argument, child }),
+    }[tag];
 }
 
 // add here
@@ -1442,6 +1444,9 @@ export const Input = gt<InputAttribute>("input");
 export const Label = gt<LabelAttribute>("label");
 export const Nav = gt<NavAttribute>("nav");
 export const Em = gt<EmAttribute>("em");
-export const RawHTML = gt("raw");
 export const Button = gt<ButtonAttribute>("button");
+export const Time = gt<TimeAttribute>("time");
+export const Pre = gt<PreAttribute>("pre");
+
 export const Unwrap = gt("unwrap");
+export const RawHTML = gt("raw");

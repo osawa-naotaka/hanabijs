@@ -1,3 +1,4 @@
+import { FONT_SIZE, MARGIN_BLOCK, SIZE_LG, SIZE_XL } from "@/lib/stylerules";
 import { A, H2, compoundStyles, registerComponent, semantic, styles } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 import type { PostFm } from "@site/config/site.config";
@@ -5,7 +6,6 @@ import { dateTime } from "../element/dateTime";
 import { tagList } from "../element/tagList";
 import type { Markdown } from "../library/post";
 import { articleHeader } from "./articleHeader";
-import { FONT_SIZE, MARGIN_BLOCK, SIZE_LG, SIZE_XL } from "@/lib/stylerules";
 
 export type SummaryArgument = Markdown<PostFm>;
 
@@ -18,7 +18,7 @@ export function summary(repo: Repository): HComponentFn<SummaryArgument> {
 
     const component_styles = [
         styles(Summary, MARGIN_BLOCK(SIZE_XL)),
-        compoundStyles([Summary, " ", ArticleHeader, " ", "h2"], FONT_SIZE(SIZE_LG)),
+        compoundStyles([Summary, " ", ArticleHeader, " ", H2], FONT_SIZE(SIZE_LG)),
     ];
 
     return registerComponent(

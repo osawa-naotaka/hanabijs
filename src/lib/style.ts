@@ -68,7 +68,6 @@ export function compoundStyles(
     };
 }
 
-
 export function createSelector(selector: (SimpleSelector | CompoundSelector | Combinator)[]): Selector {
     switch (selector.length) {
         case 0:

@@ -1,4 +1,4 @@
-import { registerComponent, semantic, style } from "@/main";
+import { registerComponent, semantic } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 
 export type DateTimeArgument = {
@@ -8,9 +8,7 @@ export type DateTimeArgument = {
 export function dateTime(repo: Repository): HComponentFn<DateTimeArgument> {
     const DateTime = semantic("date-time", { tag: "time" });
 
-    const styles = [style(DateTime, { display: "block" })];
-
-    return registerComponent(repo, DateTime, styles, ({ datetime }) => () => {
+    return registerComponent(repo, DateTime, [], ({ datetime }) => () => {
         const date = datetime instanceof Date ? datetime : new Date(datetime);
         const date_string = date.toLocaleDateString("en-us", {
             year: "numeric",

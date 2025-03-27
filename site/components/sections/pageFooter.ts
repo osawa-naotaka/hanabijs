@@ -1,4 +1,4 @@
-import { ABSOLUTE_ANCHOR, COLOR_INVERT, COLUMN, FIX_BOTTOM_STICKY, TEXT_ALIGN_CENTER } from "@/lib/stylerules";
+import { ABSOLUTE_ANCHOR, COLOR_INVERT, COLUMN, FIX_BOTTOM, TEXT_ALIGN_CENTER } from "@/lib/stylerules";
 import { registerComponent, semantic, styles } from "@/main";
 import type { HComponentFn, Repository } from "@/main";
 
@@ -12,7 +12,7 @@ export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
     const PageFooterCopyright = semantic("page-footer-copyright");
 
     const component_styles = [
-        styles(PageFooter, FIX_BOTTOM_STICKY, COLOR_INVERT),
+        styles(PageFooter, FIX_BOTTOM, COLOR_INVERT),
         styles(PageFooterContent, COLUMN(), ABSOLUTE_ANCHOR),
         styles(PageFooterCopyright, TEXT_ALIGN_CENTER),
     ];

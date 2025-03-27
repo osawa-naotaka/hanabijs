@@ -76,11 +76,23 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
     }
 }
 
+import {
+    BORDER_UNDERLINE,
+    COLOR_DEFAULT,
+    FONT_SIZE,
+    HEIGHT,
+    MARGIN_BLOCK,
+    OPACITY,
+    ROW,
+    ROW_WRAP,
+    SIZE_2XL,
+    SIZE_4XL,
+    SIZE_XS,
+} from "@/lib/stylerules";
 import { v } from "@/main";
 import { dateTime } from "@site/components/element/dateTime";
 import { tagList } from "@site/components/element/tagList";
 import { postFmSchema } from "@site/config/site.config";
-import { BORDER_UNDERLINE, COLOR_DEFAULT, FONT_SIZE, HEIGHT, MARGIN_BLOCK, OPACITY, ROW, ROW_WRAP, SIZE_2XL, SIZE_4XL, SIZE_XS } from "@/lib/stylerules";
 
 export const SearchKeySchema = v.object({
     slug: v.string(),

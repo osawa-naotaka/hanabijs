@@ -20,8 +20,6 @@ export function mergeRecord<
     return new_attribute;
 }
 
-
-
 const contentTypes: [string, string][] = [
     [".html", "text/html"],
     [".css", "text/css"],
