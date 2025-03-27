@@ -41,10 +41,10 @@ export function style(selector: SimpleSelector, properties: Properties): StyleRu
     };
 }
 
-export function styles(selector: SimpleSelector, ...propaties: Properties[][]): StyleRule {
+export function styles(selector: SimpleSelector, ...propaties: Properties[]): StyleRule {
     return {
         selectorlist: [createSelector([selector])],
-        properties: propaties.reduce((p, c) => mergeRecord(p, c.reduce(mergeRecord)), {}),
+        properties: propaties.reduce((p, c) => mergeRecord(p, c), {}),
     };
 }
 
@@ -60,11 +60,11 @@ export function compoundStyle(
 
 export function compoundStyles(
     selector: (SimpleSelector | CompoundSelector | Combinator)[],
-    ...propaties: Properties[][]
+    ...propaties: Properties[]
 ): StyleRule {
     return {
         selectorlist: [createSelector(selector)],
-        properties: propaties.reduce((p, c) => mergeRecord(p, c.reduce(mergeRecord)), {}),
+        properties: propaties.reduce((p, c) => mergeRecord(p, c), {}),
     };
 }
 
