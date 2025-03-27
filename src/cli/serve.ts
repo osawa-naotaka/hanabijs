@@ -34,7 +34,7 @@ export async function serve() {
                 watcher.removeAllListeners();
                 watcher.on("change", async () => {
                     page_router = await createPageRouter(page_dir);
-                    public_router = await createPageRouter(public_dir);
+                    public_router = await createStaticRouter(public_dir);
                     ws.send("reload");
                 });
             },
