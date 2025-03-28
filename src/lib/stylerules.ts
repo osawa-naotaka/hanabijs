@@ -1,3 +1,5 @@
+import type { Store } from "./repository";
+
 export const CONTENT = {
     max_width: "var(--layout-content-width)",
     width: "100%",
@@ -190,10 +192,53 @@ export const SIZE_5XL = "var(--font-size-5xl)";
 export const SIZE_6XL = "var(--font-size-6xl)";
 
 export type MainBgColor = {
-    main: string;
-    background: string;
+    color: string;
+    background_color: string;
 };
 
-export function SWAP_MAIN_BG(color: MainBgColor): MainBgColor {
-    return { main: color.background, background: color.main };
+export function SWAP_MAIN_BG(arg: MainBgColor): MainBgColor {
+    return { color: arg.background_color, background_color: arg.color };
+}
+
+export const MIX_WHITE = (color: string) => COLOR_MIX(color, "white");
+export const MIX_BLACK = (color: string) => COLOR_MIX(color, "black");
+
+export function C_PRIMARY(store: Store): string {
+    return toHex(store.designrule.color.main.primary.default);
+}
+
+export function C_SECONDARY(store: Store): string {
+    return toHex(store.designrule.color.main.secondary.default);
+}
+
+export function C_ACCENT(store: Store): string {
+    return toHex(store.designrule.color.main.accent.default);
+}
+
+export function C_TEXT(store: Store): string {
+    return toHex(store.designrule.color.main.text.default);
+}
+
+export function C_BG(store: Store): string {
+    return toHex(store.designrule.color.main.background.default);
+}
+
+export function C_ERROR(store: Store): string {
+    return toHex(store.designrule.color.sub.error);
+}
+
+export function C_INFO(store: Store): string {
+    return toHex(store.designrule.color.sub.info);
+}
+
+export function C_SUCCESS(store: Store): string {
+    return toHex(store.designrule.color.sub.success);
+}
+
+export function C_WARNING(store: Store): string {
+    return toHex(store.designrule.color.sub.warning);
+}
+
+export function toHex(n: number) {
+    return `#${n.toString(16)}`;
 }

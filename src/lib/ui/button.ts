@@ -6,24 +6,23 @@ import { registerComponent } from "../repository";
 import type { Store } from "../repository";
 import { compoundStyles, styles } from "../style";
 import type { StyleRule } from "../style";
-import { BACKGROUND_COLOR, COLOR_MIX } from "../stylerules";
-import type { MainBgColor } from "../stylerules";
+import { BACKGROUND_COLOR, MIX_BLACK, MIX_WHITE } from "../stylerules";
 import { hash_djb2 } from "../util";
+
+export type HButtonArgument = {
+    type: "filled" | "outlined" | "text";
+    color: string;
+    background_color: string;
+    padding: string | string[];
+    font_size: string;
+    font_weight: string;
+    letter_spacing: string;
+    line_height: string;
+    border_radius: string;
+};
 
 const HBUTTON = (arg: HButtonArgument) => ({
     display: "inline-flex",
-    border_radius: arg.border_radius,
-
-    padding: arg.padding,
-
-    font_size: arg.font_size,
-    font_weight: arg.font_weight,
-    letter_spacing: arg.letter_spacing,
-    line_height: arg.line_height,
-
-    color: arg.color.main,
-    background_color: arg.color.background,
-
     align_items: "center",
     justify_content: "center",
 
@@ -34,6 +33,7 @@ const HBUTTON = (arg: HButtonArgument) => ({
 
     transition:
         "color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out",
+    ...arg,
 });
 
 const HBUTTON_FILLED = {
@@ -41,9 +41,9 @@ const HBUTTON_FILLED = {
     box_shadow: ["0px", "1px", "3px", "rgba(0, 0, 0, 0.2)"],
 };
 
-const HBUTTON_FILLED_HOVER = (color: MainBgColor) => ({
+const HBUTTON_FILLED_HOVER = (arg: HButtonArgument) => ({
     box_shadow: ["0px", "2px", "4px", "rgba(0, 0, 0, 0.3)"],
-    background_color: `color-mix(in srgb, ${color.background} 85%, white)`,
+    ...BACKGROUND_COLOR(MIX_WHITE(arg.background_color)("85%")),
 });
 
 const HBUTTON_FILLED_ACTIVE = {
@@ -54,29 +54,17 @@ const HBUTTON_OUTLINED = {
     border: ["1px", "solid", "rgba(0, 0, 0, 0.2)"],
 };
 
-const MIX_FG_BG = (color: MainBgColor) => COLOR_MIX(color.main, color.background);
-
-const HBUTTON_BG_HOVER = (color: MainBgColor) => BACKGROUND_COLOR(MIX_FG_BG(color)("5%"));
-const HBUTTON_BG_ACTIVE = (color: MainBgColor) => BACKGROUND_COLOR(MIX_FG_BG(color)("20%"));
+const HBUTTON_BG_HOVER = (arg: HButtonArgument) => BACKGROUND_COLOR(MIX_BLACK(arg.background_color)("95%"));
+const HBUTTON_BG_ACTIVE = (arg: HButtonArgument) => BACKGROUND_COLOR(MIX_BLACK(arg.background_color)("80%"));
 
 const HBUTTON_TEXT = {
     border: "none",
 };
 
-export type HButtonArgument = {
-    type: "filled" | "outlined" | "text";
-    color: MainBgColor;
-    padding: string | string[];
-    font_size: string;
-    font_weight: string;
-    letter_spacing: string;
-    line_height: string;
-    border_radius: string;
-};
-
 const common_default = {
     type: "filled" as const,
-    color: { main: "var(--color-main)", background: "var(--color-background)" },
+    color: "#000000",
+    background_color: "#FFFFFF",
     padding: ["12px", "18px"],
     font_size: "1rem",
     font_weight: "normal",
@@ -121,7 +109,7 @@ function buttonStyles(component_name: string, arg: HButtonArgument): StyleRule[]
         case "filled": {
             component_styles.push(
                 styles(component_name, HBUTTON_FILLED),
-                compoundStyles([[component_name, ":hover"]], HBUTTON_FILLED_HOVER(arg.color)),
+                compoundStyles([[component_name, ":hover"]], HBUTTON_FILLED_HOVER(arg)),
                 compoundStyles([[component_name, ":active"]], HBUTTON_FILLED_ACTIVE),
             );
             break;
@@ -129,16 +117,16 @@ function buttonStyles(component_name: string, arg: HButtonArgument): StyleRule[]
         case "outlined": {
             component_styles.push(
                 styles(component_name, HBUTTON_OUTLINED),
-                compoundStyles([[component_name, ":hover"]], HBUTTON_BG_HOVER(arg.color)),
-                compoundStyles([[component_name, ":active"]], HBUTTON_BG_ACTIVE(arg.color)),
+                compoundStyles([[component_name, ":hover"]], HBUTTON_BG_HOVER(arg)),
+                compoundStyles([[component_name, ":active"]], HBUTTON_BG_ACTIVE(arg)),
             );
             break;
         }
         case "text": {
             component_styles.push(
                 styles(component_name, HBUTTON_TEXT),
-                compoundStyles([[component_name, ":hover"]], HBUTTON_BG_HOVER(arg.color)),
-                compoundStyles([[component_name, ":active"]], HBUTTON_BG_ACTIVE(arg.color)),
+                compoundStyles([[component_name, ":hover"]], HBUTTON_BG_HOVER(arg)),
+                compoundStyles([[component_name, ":active"]], HBUTTON_BG_ACTIVE(arg)),
             );
             break;
         }
