@@ -15,8 +15,8 @@ import {
     Section,
     Span,
     Title,
-} from "../src/lib/define";
-import { insertNodes, selectNode } from "../src/lib/element";
+} from "../src/lib/elements";
+import { insertNodes, selectNode } from "../src/lib/component";
 import { createSelector, rulesToString } from "../src/lib/style";
 
 describe("createSelector test", () => {

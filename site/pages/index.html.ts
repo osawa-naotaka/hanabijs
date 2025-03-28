@@ -1,14 +1,18 @@
 import { COLUMN, CONTENT, SWAP_MAIN_BG } from "@/lib/stylerules";
-import { HButton } from "@/lib/ui/button";
+import { hButton, hLinkedButton } from "@/lib/ui/button";
 import { Body, H2, Head, Html, Link, Main, Meta, Title, registerRootPage, styles } from "@/main";
 import type { HArgument, HRootPageFn, Repository } from "@/main";
 
 export default function Root(repo: Repository): HRootPageFn<HArgument> {
     const color = { main: "var(--color-main)", background: "var(--color-background)" };
 
-    const HFilledButton = HButton(repo, { type: "filled", color: SWAP_MAIN_BG(color) });
-    const HOutlinedButton = HButton(repo, { type: "outlined", color });
-    const HTextButton = HButton(repo, { type: "text", color });
+    const HFilledButton = hButton(repo, { color: SWAP_MAIN_BG(color) });
+    const HOutlinedButton = hButton(repo, { type: "outlined" });
+    const HTextButton = hButton(repo, { type: "text" });
+
+    const HLFilledButton = hLinkedButton(repo, { color: SWAP_MAIN_BG(color), padding: ["0.3rem", "0.5rem"] });
+    const HLOutlinedButton = hLinkedButton(repo, { type: "outlined" });
+    const HLTextButton = hLinkedButton(repo, { type: "text" });
 
     const page_styles = [styles(Body, COLUMN()), styles(Main, CONTENT)];
 
@@ -33,6 +37,10 @@ export default function Root(repo: Repository): HRootPageFn<HArgument> {
                     HFilledButton({})("BUTTON"),
                     HOutlinedButton({})("BUTTON"),
                     HTextButton({})("BUTTON"),
+                    H2({})("Linked Buttons"),
+                    HLFilledButton({ href: "#" })("LINK"),
+                    HLOutlinedButton({ href: "#" })("LINK"),
+                    HLTextButton({ href: "#" })("LINK"),
                 ),
             ),
         ),

@@ -123,15 +123,19 @@ export const FONT_SIZE = (n: string) => ({
     font_size: n,
 });
 
-export const MARGIN_INLINE = (n: string) => ({
+export const MARGIN_INLINE = (...n: string[]) => ({
     margin_inline: n,
 });
 
-export const MARGIN_BLOCK = (n: string) => ({
+export const MARGIN_BLOCK = (...n: string[]) => ({
     margin_block: n,
 });
 
 export const MARGIN = (...n: string[]) => ({
+    margin: n,
+});
+
+export const MARGINA = (n: string | string[]) => ({
     margin: n,
 });
 
@@ -143,15 +147,18 @@ export const MARGIN_RIGHT = (n: string) => ({
     margin_right: n,
 });
 
-export const PADDING_INLINE = (n: string) => ({
+export const PADDING_INLINE = (...n: string[]) => ({
     padding_inline: n,
 });
 
-export const PADDING_BLOCK = (n: string) => ({
+export const PADDING_BLOCK = (...n: string[]) => ({
     padding_block: n,
 });
 
 export const PADDING = (...n: string[]) => ({
+    padding: n,
+});
+export const PADDINGA = (n: string | string[]) => ({
     padding: n,
 });
 
