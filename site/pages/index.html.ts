@@ -9,13 +9,13 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
         background_color: C_BG(store),
     };
 
-    const HFilledButton = hButton(store, SWAP_MAIN_BG(color));
-    const HOutlinedButton = hButton(store, { type: "outlined", ...color });
-    const HTextButton = hButton(store, { type: "text", ...color });
+    const HFilledButton = hButton(store, "filled", SWAP_MAIN_BG(color));
+    const HOutlinedButton = hButton(store, "outlined", color);
+    const HTextButton = hButton(store, "text", color);
 
-    const HLFilledButton = hLinkedButton(store, { padding: ["0.3rem", "0.5rem"], ...SWAP_MAIN_BG(color) });
-    const HLOutlinedButton = hLinkedButton(store, { type: "outlined", ...color });
-    const HLTextButton = hLinkedButton(store, { type: "text", ...color });
+    const HLFilledButton = hLinkedButton(store, "filled", { padding: ["0.3rem", "0.5rem"], ...SWAP_MAIN_BG(color) });
+    const HLOutlinedButton = hLinkedButton(store, "outlined", color);
+    const HLTextButton = hLinkedButton(store, "text", color);
 
     const page_styles = [styles(Body, COLUMN()), styles(Main, CONTENT)];
 

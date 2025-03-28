@@ -9,8 +9,8 @@ import type { StyleRule } from "../style";
 import { BACKGROUND_COLOR, MIX_BLACK, MIX_WHITE } from "../stylerules";
 import { hash_djb2 } from "../util";
 
-export type HButtonArgument = {
-    type: "filled" | "outlined" | "text";
+export type HButtonType = "filled" | "outlined" | "text";
+export type HButtonProperty = {
     color: string;
     background_color: string;
     padding: string | string[];
@@ -21,7 +21,7 @@ export type HButtonArgument = {
     border_radius: string;
 };
 
-const HBUTTON = (arg: HButtonArgument) => ({
+const HBUTTON = (arg: HButtonProperty) => ({
     display: "inline-flex",
     align_items: "center",
     justify_content: "center",
@@ -41,7 +41,7 @@ const HBUTTON_FILLED = {
     box_shadow: ["0px", "1px", "3px", "rgba(0, 0, 0, 0.2)"],
 };
 
-const HBUTTON_FILLED_HOVER = (arg: HButtonArgument) => ({
+const HBUTTON_FILLED_HOVER = (arg: HButtonProperty) => ({
     box_shadow: ["0px", "2px", "4px", "rgba(0, 0, 0, 0.3)"],
     ...BACKGROUND_COLOR(MIX_WHITE(arg.background_color)("85%")),
 });
@@ -54,15 +54,14 @@ const HBUTTON_OUTLINED = {
     border: ["1px", "solid", "rgba(0, 0, 0, 0.2)"],
 };
 
-const HBUTTON_BG_HOVER = (arg: HButtonArgument) => BACKGROUND_COLOR(MIX_BLACK(arg.background_color)("95%"));
-const HBUTTON_BG_ACTIVE = (arg: HButtonArgument) => BACKGROUND_COLOR(MIX_BLACK(arg.background_color)("80%"));
+const HBUTTON_BG_HOVER = (arg: HButtonProperty) => BACKGROUND_COLOR(MIX_BLACK(arg.background_color)("95%"));
+const HBUTTON_BG_ACTIVE = (arg: HButtonProperty) => BACKGROUND_COLOR(MIX_BLACK(arg.background_color)("80%"));
 
 const HBUTTON_TEXT = {
     border: "none",
 };
 
 const common_default = {
-    type: "filled" as const,
     color: "#000000",
     background_color: "#FFFFFF",
     padding: ["12px", "18px"],
@@ -73,10 +72,14 @@ const common_default = {
     border_radius: "4px",
 };
 
-export function hButton(store: Store, arg: Partial<HButtonArgument> = {}): HComponentFn<Partial<ButtonAttribute>> {
-    const arg_w: HButtonArgument = { ...common_default, ...arg };
+export function hButton(
+    store: Store,
+    type: HButtonType,
+    arg: Partial<HButtonProperty> = {},
+): HComponentFn<Partial<ButtonAttribute>> {
+    const arg_w: HButtonProperty = { ...common_default, ...arg };
     const component_name = `.h-button-${hash_djb2(arg_w)}`;
-    const component_styles = buttonStyles(component_name, arg_w);
+    const component_styles = buttonStyles(component_name, type, arg_w);
 
     return registerComponent(
         store,
@@ -88,10 +91,14 @@ export function hButton(store: Store, arg: Partial<HButtonArgument> = {}): HComp
     );
 }
 
-export function hLinkedButton(store: Store, arg: Partial<HButtonArgument> = {}): HComponentFn<Partial<AAttribute>> {
-    const arg_w: HButtonArgument = { ...common_default, ...arg };
+export function hLinkedButton(
+    store: Store,
+    type: HButtonType,
+    arg: Partial<HButtonProperty> = {},
+): HComponentFn<Partial<AAttribute>> {
+    const arg_w: HButtonProperty = { ...common_default, ...arg };
     const component_name = `.h-linked-button-${hash_djb2(arg_w)}`;
-    const component_styles = buttonStyles(component_name, arg_w);
+    const component_styles = buttonStyles(component_name, type, arg_w);
 
     return registerComponent(
         store,
@@ -103,9 +110,9 @@ export function hLinkedButton(store: Store, arg: Partial<HButtonArgument> = {}):
     );
 }
 
-function buttonStyles(component_name: string, arg: HButtonArgument): StyleRule[] {
+function buttonStyles(component_name: string, type: HButtonType, arg: HButtonProperty): StyleRule[] {
     const component_styles = [styles(component_name, HBUTTON(arg))];
-    switch (arg.type) {
+    switch (type) {
         case "filled": {
             component_styles.push(
                 styles(component_name, HBUTTON_FILLED),
@@ -131,7 +138,7 @@ function buttonStyles(component_name: string, arg: HButtonArgument): StyleRule[]
             break;
         }
         default: {
-            throw new Error(`HButton: illegal type ${arg.type}.`);
+            throw new Error(`HButton: illegal type ${type}.`);
         }
     }
 
