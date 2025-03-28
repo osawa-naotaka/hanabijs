@@ -283,15 +283,15 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
 export function semantic<T extends Attribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
-): HComponentFn<T> {
+): HComponentFn<Partial<T>> {
     const dot_name = `.${element_name}`;
     return {
         [dot_name]:
-            (argument: T) =>
+            (argument: Partial<T>) =>
             (...child: HNode[]) => ({
                 element_name: dot_name,
                 tag,
-                attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
+                attribute: { ...argument, ...{ class: addClassToHead(argument, [element_name, ...class_names]) } },
                 child,
             }),
     }[dot_name];
@@ -302,11 +302,11 @@ export function semantic<T extends Attribute>(
 export function layout<T extends Attribute>(
     element_name: string,
     { class_names = [] }: { class_names?: string[] } = {},
-): HComponentFn<T> {
+): HComponentFn<Partial<T>> {
     const dot_name = `.${element_name}`;
     return {
         [dot_name]:
-            (argument: T) =>
+            (argument: Partial<T>) =>
             (...child: HNode[]) => ({
                 element_name: dot_name,
                 tag: "div" as Tag,

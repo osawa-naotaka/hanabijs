@@ -1,4 +1,5 @@
-import type { HAnyComponentFn, HComponent } from "./component";
+import type { HAnyComponentFn } from "./component";
+import type { HComponent } from "./repository";
 import { mergeRecord } from "./util";
 
 // Style
