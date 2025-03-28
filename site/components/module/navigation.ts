@@ -1,6 +1,6 @@
 import { BOLD, FONT_SIZE, JUSTIFY_CENTER, ROW, SIZE_XL } from "@/lib/stylerules";
 import { A, registerComponent, semantic, styles } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import type { HComponentFn, LiAttribute, NavAttribute, Store, UlAttribute } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
 export type NavigationArgument = {
@@ -11,9 +11,9 @@ export type NavigationArgument = {
 };
 
 export function navigation(store: Store): HComponentFn<NavigationArgument> {
-    const Navigation = semantic("navigation", { tag: "nav" });
-    const NavigationList = semantic("navigation-list", { tag: "ul" });
-    const NavigationListItem = semantic("navigation-list-item", { tag: "li" });
+    const Navigation = semantic<NavAttribute>("navigation", { tag: "nav" });
+    const NavigationList = semantic<UlAttribute>("navigation-list", { tag: "ul" });
+    const NavigationListItem = semantic<LiAttribute>("navigation-list-item", { tag: "li" });
     const SvgIcon = svgIcon(store);
 
     const component_styles = [

@@ -1,13 +1,13 @@
 import { BORDER_UNDERLINE, MARGIN_BLOCK, SIZE_2XL } from "@/lib/stylerules";
 import { registerComponent, semantic, style, styles } from "@/main";
-import type { HComponentFn, HNode, Store } from "@/main";
+import type { HComponentFn, HNode, HeaderAttribute, Store } from "@/main";
 
 export type ArticleHeaderArgument = {
     title: HNode;
 };
 
 export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument> {
-    const ArticleHeader = semantic("article-header", { tag: "header" });
+    const ArticleHeader = semantic<HeaderAttribute>("article-header", { tag: "header" });
     const ArticleHeaderTitle = semantic("article-header-title");
     const ArticleHeaderMeta = semantic("article-header-meta");
 

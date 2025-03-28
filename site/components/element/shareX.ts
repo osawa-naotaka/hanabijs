@@ -1,5 +1,5 @@
 import { registerComponent, semantic } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import type { AAttribute, HComponentFn, Store } from "@/main";
 import { svgIcon } from "./svgIcon";
 
 export type ShareXArgument = {
@@ -8,7 +8,7 @@ export type ShareXArgument = {
 };
 
 export function shareX(store: Store): HComponentFn<ShareXArgument> {
-    const ShareX = semantic("share-x", { tag: "a" });
+    const ShareX = semantic<AAttribute>("share-x", { tag: "a" });
     const SvgIcon = svgIcon(store);
 
     return registerComponent(store, ShareX, [], (argument) => () => {

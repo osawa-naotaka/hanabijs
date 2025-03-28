@@ -5,12 +5,13 @@ import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
 import { tagList } from "../element/tagList";
 import type { Markdown } from "../library/post";
+import type { ArticleArgument } from "./article";
 import { articleHeader } from "./articleHeader";
 
 export type SummaryArgument = Markdown<PostFm>;
 
 export function summary(store: Store): HComponentFn<SummaryArgument> {
-    const Summary = semantic("summary", { tag: "article", class_names: ["neu"] });
+    const Summary = semantic<ArticleArgument>("summary", { tag: "article", class_names: ["neu"] });
     const ArticleHeader = articleHeader(store);
     const Author = semantic("author");
     const TagList = tagList(store);

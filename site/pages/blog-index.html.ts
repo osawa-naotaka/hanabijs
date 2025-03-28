@@ -1,5 +1,5 @@
 import { semantic } from "@/main";
-import type { HRootPageFn, Store } from "@/main";
+import type { HRootPageFn, MainAttribute, Store } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
@@ -10,7 +10,7 @@ import { postFmSchema, posts_dir } from "@site/config/site.config";
 export default function Root(store: Store): HRootPageFn<void> {
     const Page = page(store);
     const Hero = hero(store);
-    const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
+    const PageMainArea = semantic<MainAttribute>("page-main-area", { class_names: ["container"], tag: "main" });
     const Summaries = summaries(store);
 
     return async () => {

@@ -1,5 +1,5 @@
 import { compoundStyle, layout, registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, HNode, Store } from "@/main";
+import type { HComponentFn, HNode, InputAttribute, LabelAttribute, Store } from "@/main";
 
 export type DrawerArgument = {
     title: HNode;
@@ -13,8 +13,8 @@ export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgu
     const DrawerTitle = semantic("drawer-title");
     const DrawerHeaderSpace = layout("drawer-header-space");
     const DrawerContent = layout("drawer-content");
-    const DrawerOpenState = semantic("drawer-open-state", { tag: "input" });
-    const DrawerOpenButton = semantic("drawer-open-button", { tag: "label" });
+    const DrawerOpenState = semantic<InputAttribute>("drawer-open-state", { tag: "input" });
+    const DrawerOpenButton = semantic<LabelAttribute>("drawer-open-button", { tag: "label" });
 
     const styles = [
         style(Drawer, { overflow: "hidden" }),

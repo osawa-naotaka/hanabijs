@@ -1,5 +1,5 @@
 import DOMPurify from "dompurify";
-import type { HanabiTag, Tag } from "./elements";
+import type { DivAttribute, HanabiTag, Tag } from "./elements";
 import type { ComplexSelector, CompoundSelector, Selector } from "./style";
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
@@ -280,7 +280,7 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
 }
 
 // on semantic Component, argument is attribute.
-export function semantic<T extends Attribute>(
+export function semantic<T = DivAttribute>(
     element_name: string,
     { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
 ): HComponentFn<Partial<T>> {
@@ -299,7 +299,7 @@ export function semantic<T extends Attribute>(
 
 // on layout Component, argument is attribute.
 // layout component is constructed with div tag.
-export function layout<T extends Attribute>(
+export function layout<T = DivAttribute>(
     element_name: string,
     { class_names = [] }: { class_names?: string[] } = {},
 ): HComponentFn<Partial<T>> {
@@ -309,7 +309,7 @@ export function layout<T extends Attribute>(
             (argument: Partial<T>) =>
             (...child: HNode[]) => ({
                 element_name: dot_name,
-                tag: "div" as Tag,
+                tag: "div" as const,
                 attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
                 child,
             }),

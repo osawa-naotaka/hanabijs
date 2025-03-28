@@ -1,5 +1,5 @@
 import { A, Li, Ul, semantic } from "@/main";
-import type { HRootPageFn, Store } from "@/main";
+import type { HRootPageFn, MainAttribute, Store } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
 import { navitem, postFmSchema, posts_dir, site } from "@site/config/site.config";
@@ -15,7 +15,7 @@ export function rootPageFnParameters(): RootParameter[] {
 
 export default function Root(store: Store): HRootPageFn<RootParameter> {
     const Page = page(store);
-    const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
+    const PageMainArea = semantic<MainAttribute>("page-main-area", { class_names: ["container"], tag: "main" });
 
     return async (parameter) => {
         const md = (await getAllMarkdowns(posts_dir, postFmSchema)).filter((x) => x.data.tag?.includes(parameter.tag));
