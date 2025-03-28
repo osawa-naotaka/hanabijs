@@ -1,5 +1,5 @@
 import { compoundStyle, layout, registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, HNode, Repository } from "@/main";
+import type { HComponentFn, HNode, Store } from "@/main";
 
 export type DrawerArgument = {
     title: HNode;
@@ -8,7 +8,7 @@ export type DrawerArgument = {
     content: HNode;
 };
 
-export function drawer(repo: Repository, button_id: string): HComponentFn<DrawerArgument> {
+export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgument> {
     const Drawer = semantic("drawer");
     const DrawerTitle = semantic("drawer-title");
     const DrawerHeaderSpace = layout("drawer-header-space");
@@ -37,7 +37,7 @@ export function drawer(repo: Repository, button_id: string): HComponentFn<Drawer
     ];
 
     return registerComponent(
-        repo,
+        store,
         Drawer,
         styles,
         (argument) => () =>

@@ -17,7 +17,7 @@ import {
     TEXT_UNDERLINE,
 } from "@/lib/stylerules";
 import { A, H2, H3, H4, Li, Pre, compoundStyles, registerComponent, semantic, styles } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
 import { shareX } from "../element/shareX";
@@ -27,14 +27,14 @@ import { articleHeader } from "./articleHeader";
 
 export type ArticleArgument = Markdown<PostFm>;
 
-export function article(repo: Repository): HComponentFn<ArticleArgument> {
+export function article(store: Store): HComponentFn<ArticleArgument> {
     const Article = semantic("article", { tag: "article", class_names: ["neu"] });
-    const ArticleHeader = articleHeader(repo);
+    const ArticleHeader = articleHeader(store);
     const Author = semantic("author");
-    const TagList = tagList(repo);
-    const DateTime = dateTime(repo);
+    const TagList = tagList(store);
+    const DateTime = dateTime(store);
     const ArticleText = semantic("article-text");
-    const ShareX = shareX(repo);
+    const ShareX = shareX(store);
 
     const component_styles = [
         styles(Article, MARGIN_BLOCK(SIZE_2XL)),
@@ -57,7 +57,7 @@ export function article(repo: Repository): HComponentFn<ArticleArgument> {
     ];
 
     return registerComponent(
-        repo,
+        store,
         Article,
         component_styles,
         (argument) =>

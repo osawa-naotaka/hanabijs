@@ -3,11 +3,10 @@ import path from "node:path";
 import { cwd } from "node:process";
 import { createPageRouter, createStaticRouter } from "@/cli/route";
 import { page_subdir, public_subdir, site_subdir } from "@/config";
-import type { HComponent } from "@/lib/component";
 import { DOCTYPE, insertNodes } from "@/lib/component";
 import { Link, Script } from "@/lib/elements";
-import { clearRepository } from "@/lib/repository";
-import type { Repository } from "@/lib/repository";
+import { clearStore, generateStore } from "@/lib/repository";
+import type { Store } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
 import { createSelector, stringifyToCss } from "@/lib/style";
 import { contentType, replaceExt } from "@/lib/util";
@@ -21,7 +20,7 @@ export async function serve() {
     const page_dir = path.join(root, page_subdir);
     const public_dir = path.join(root, public_subdir);
     const site_dir = path.join(root, site_subdir);
-    const repository = new Map<string, HComponent>();
+    const store = generateStore();
 
     const watcher = chokidar.watch(site_dir, { persistent: true });
 
@@ -55,29 +54,29 @@ export async function serve() {
             if (!(match_page instanceof Error)) {
                 const page_fn = await import(path.join(page_dir, match_page.target_file));
                 if (typeof page_fn.default === "function") {
-                    clearRepository(repository);
-                    const root_page_fn = await page_fn.default(repository);
+                    clearStore(store);
+                    const root_page_fn = await page_fn.default(store);
 
                     // auto generation of .css and .js from .html.ts
                     if (match_page.auto_generate) {
                         switch (match_page.req_ext) {
                             case ".css": {
-                                const css_files = Array.from(repository.values())
+                                const css_files = Array.from(store.components.values())
                                     .map((x) => x.path)
                                     .filter((x) => x !== undefined);
                                 for (const client of css_files) {
                                     const client_fn = await import(client);
                                     if (typeof client_fn.default === "function") {
-                                        await client_fn.default(repository);
+                                        await client_fn.default(store);
                                     } else {
                                         return await errorResponse(500, `${client} does not have default export.`);
                                     }
                                 }
-                                const css = stringifyToCss(Array.from(repository.values()));
+                                const css = stringifyToCss(Array.from(store.components.values()));
                                 return normalResponse(css, match_page.req_ext);
                             }
                             case ".js": {
-                                const js = await bundleScript(repository);
+                                const js = await bundleScript(store);
                                 return normalResponse(js, match_page.req_ext);
                             }
                             default:
@@ -150,11 +149,11 @@ async function errorResponse(status: number, cause: string): Promise<Response> {
     });
 }
 
-async function bundleScript(repository: Repository): Promise<string> {
-    const script_files = Array.from(repository.values())
+async function bundleScript(store: Store): Promise<string> {
+    const script_files = Array.from(store.components.values())
         .map((x) => x.path)
         .filter((x) => x !== undefined);
-    const entry = `import type { HComponent } from "@/main"; const repo = new Map<string, HComponent>(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(repo)();`).join("\n")}`;
+    const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
     const bundle = await esbuild.build({
         stdin: {
             contents: entry,

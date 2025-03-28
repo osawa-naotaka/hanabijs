@@ -1,6 +1,6 @@
 import { COLOR_DEFAULT, FIX_TOP_STICKY, FONT_SIZE, OPACITY, SIZE_2XL } from "@/lib/stylerules";
 import { A, H1, registerComponent, semantic, styles } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
@@ -15,13 +15,13 @@ export type PageHeaderArgument = {
     }[];
 };
 
-export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
+export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const PageHeader = semantic("page-header", { class_names: ["container"], tag: "header" });
-    const Drawer = drawer(repo, "page-header-toggle-button");
-    const Popover = popover(repo, "search-popover");
-    const SvgIcon = svgIcon(repo);
-    const Navigation = navigation(repo);
-    const Search = search(repo);
+    const Drawer = drawer(store, "page-header-toggle-button");
+    const Popover = popover(store, "search-popover");
+    const SvgIcon = svgIcon(store);
+    const Navigation = navigation(store);
+    const Search = search(store);
 
     const component_styles = [
         styles(PageHeader, FIX_TOP_STICKY, COLOR_DEFAULT, OPACITY("0.8")),
@@ -29,7 +29,7 @@ export function pageHeader(repo: Repository): HComponentFn<PageHeaderArgument> {
     ];
 
     return registerComponent(
-        repo,
+        store,
         PageHeader,
         component_styles,
         ({ title, navitem }) =>

@@ -1,14 +1,14 @@
 import { registerComponent, semantic } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 
 export type SvgIconArgument = {
     name: string;
 };
 
-export function svgIcon(repo: Repository): HComponentFn<SvgIconArgument> {
+export function svgIcon(store: Store): HComponentFn<SvgIconArgument> {
     const SvgIcon = semantic("svg-icon", { tag: "img" });
     return registerComponent(
-        repo,
+        store,
         SvgIcon,
         [],
         ({ name }) =>

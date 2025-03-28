@@ -1,7 +1,7 @@
 import path from "node:path";
 import { markdownToHtml } from "@/lib/markdown";
 import { RawHTML, registerRootPage, semantic, style } from "@/main";
-import type { HRootPageFn, Repository } from "@/main";
+import type { HRootPageFn, Store } from "@/main";
 import { getMarkdown, listFiles } from "@site/components/library/post";
 import { article } from "@site/components/module/article";
 import { page } from "@site/components/pages/page";
@@ -17,14 +17,14 @@ export async function rootPageFnParameters(): Promise<RootParameter[]> {
     return (await listFiles(posts_dir, ".md")).map((y) => ({ slug: path.basename(y, ".md") }));
 }
 
-export default function Root(repo: Repository): HRootPageFn<RootParameter> {
-    const Page = page(repo);
+export default function Root(store: Store): HRootPageFn<RootParameter> {
+    const Page = page(store);
     const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
     const PageSection = semantic("page-section", { class_names: ["section", "content"], tag: "section" });
-    const Article = article(repo);
+    const Article = article(store);
 
     return registerRootPage(
-        repo,
+        store,
         "root",
         [
             style(PageMainArea, {

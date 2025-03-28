@@ -1,13 +1,13 @@
 import { A, Body, H1, Html, Link, Meta, Title, registerComponent, semantic, style } from "hanabijs";
-import type { HComponentFn, Repository } from "hanabijs";
+import type { HComponentFn, Store } from "hanabijs";
 
 export type PageAttribute = {
     title: string;
     description: string;
 };
 
-export default function page(repo: Repository): HComponentFn<PageAttribute> {
-    registerComponent(repo, "page", [style(".page-header", { width: "100%" })]);
+export default function page(store: Store): HComponentFn<PageAttribute> {
+    registerComponent(store, "page", [style(".page-header", { width: "100%" })]);
 
     const PageHead = semantic("page-head", { tag: "head" });
     const PageHeader = semantic("page-header", { tag: "header" });

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { insertNodes, selectNode } from "../src/lib/component";
 import {
     Article,
     Body,
@@ -16,7 +17,6 @@ import {
     Span,
     Title,
 } from "../src/lib/elements";
-import { insertNodes, selectNode } from "../src/lib/component";
 import { createSelector, rulesToString } from "../src/lib/style";
 
 describe("createSelector test", () => {

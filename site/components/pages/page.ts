@@ -1,5 +1,5 @@
 import { Body, Html } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 import { pageHead } from "@site/components/pages/pageHead";
 import { pageFooter } from "@site/components/sections/pageFooter";
 import { pageHeader } from "@site/components/sections/pageHeader";
@@ -15,10 +15,10 @@ export type PageArgument = {
     }[];
 };
 
-export function page(repo: Repository): HComponentFn<PageArgument> {
-    const PageHead = pageHead(repo);
-    const PageHeader = pageHeader(repo);
-    const PageFooter = pageFooter(repo);
+export function page(store: Store): HComponentFn<PageArgument> {
+    const PageHead = pageHead(store);
+    const PageHeader = pageHeader(store);
+    const PageFooter = pageFooter(store);
 
     return ({ lang, name, title, description, navitem }) =>
         (...child) =>

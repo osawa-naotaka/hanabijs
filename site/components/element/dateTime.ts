@@ -1,14 +1,14 @@
 import { registerComponent, semantic } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 
 export type DateTimeArgument = {
     datetime: string | Date;
 };
 
-export function dateTime(repo: Repository): HComponentFn<DateTimeArgument> {
+export function dateTime(store: Store): HComponentFn<DateTimeArgument> {
     const DateTime = semantic("date-time", { tag: "time" });
 
-    return registerComponent(repo, DateTime, [], ({ datetime }) => () => {
+    return registerComponent(store, DateTime, [], ({ datetime }) => () => {
         const date = datetime instanceof Date ? datetime : new Date(datetime);
         const date_string = date.toLocaleDateString("en-us", {
             year: "numeric",

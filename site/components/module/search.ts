@@ -1,12 +1,12 @@
 import { A, Div, Li, compoundStyles, createDom, registerComponent, semantic, styles } from "@/main";
-import type { HArgument, HClientFn, HComponentFn, HNode, Repository } from "@/main";
+import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
-export function search(repo: Repository): HComponentFn<HArgument> {
+export function search(store: Store): HComponentFn<HArgument> {
     const Search = semantic("search", { class_names: ["content"] });
     const SearchBar = semantic("search-bar");
     const SearchInput = semantic("search-input", { tag: "input" });
-    const SearchInputIcon = svgIcon(repo);
+    const SearchInputIcon = svgIcon(store);
     const SearchResult = semantic("search-result", { tag: "ul" });
     const SearchResultItem = semantic("search-result-item", { tag: "li" });
 
@@ -19,7 +19,7 @@ export function search(repo: Repository): HComponentFn<HArgument> {
     ];
 
     return registerComponent(
-        repo,
+        store,
         Search,
         component_sytles,
         (argument) => () =>
@@ -37,8 +37,8 @@ export function search(repo: Repository): HComponentFn<HArgument> {
 import { StaticSeekError, createSearchFn } from "staticseek";
 import type { SearchResult } from "staticseek";
 
-export default function clientFunction(repo: Repository): HClientFn {
-    const SearchResultItem = searchResultItem(repo);
+export default function clientFunction(store: Store): HClientFn {
+    const SearchResultItem = searchResultItem(store);
 
     return async () => {
         const search_fn = createSearchFn("/search-index.json");
@@ -103,20 +103,20 @@ type SearchResultItemAttribute = {
     result: SearchResult;
 };
 
-function searchResultItem(repo: Repository): HComponentFn<SearchResultItemAttribute> {
+function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute> {
     const SearchResultItem = semantic("search-result-item", { tag: "li" });
     const SearchResultItemMeta = semantic("search-result-item-meta");
     const SearchResultItemTitle = semantic("search-result-item-title");
     const SearchResultItemDescription = semantic("search-result-item-description");
-    const DateTime = dateTime(repo);
-    const Tags = tagList(repo);
+    const DateTime = dateTime(store);
+    const Tags = tagList(store);
 
     const component_styles = [
         styles(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(SIZE_XS), BORDER_UNDERLINE),
         styles(SearchResultItemDescription, FONT_SIZE(SIZE_XS)),
     ];
 
-    return registerComponent(repo, SearchResultItem, component_styles, ({ result }) => () => {
+    return registerComponent(store, SearchResultItem, component_styles, ({ result }) => () => {
         const key = v.parse(SearchKeySchema, result.key);
         return SearchResultItem({})(
             SearchResultItemMeta({})(

@@ -1,5 +1,5 @@
 import { compoundStyle, layout, registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, HNode, Repository } from "@/main";
+import type { HComponentFn, HNode, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
 export type PopoverArgument = {
@@ -8,7 +8,7 @@ export type PopoverArgument = {
     body: HNode;
 };
 
-export function popover(repo: Repository, button_id: string): HComponentFn<PopoverArgument> {
+export function popover(store: Store, button_id: string): HComponentFn<PopoverArgument> {
     const Popover = semantic("popover");
     const PopoverButton = semantic("popover-button", { tag: "button" });
     const PopoverCloseArea = layout("popover-close-area");
@@ -47,7 +47,7 @@ export function popover(repo: Repository, button_id: string): HComponentFn<Popov
     ];
 
     return registerComponent(
-        repo,
+        store,
         Popover,
         styles,
         (argument) => () =>

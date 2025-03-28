@@ -3,7 +3,7 @@ import type { HComponentFn } from "../component";
 import { A, Button } from "../elements";
 import type { AAttribute, ButtonAttribute } from "../elements";
 import { registerComponent } from "../repository";
-import type { Repository } from "../repository";
+import type { Store } from "../repository";
 import { compoundStyles, styles } from "../style";
 import type { StyleRule } from "../style";
 import { BACKGROUND_COLOR, COLOR_MIX } from "../stylerules";
@@ -85,13 +85,13 @@ const common_default = {
     border_radius: "4px",
 };
 
-export function hButton(repo: Repository, arg: Partial<HButtonArgument> = {}): HComponentFn<Partial<ButtonAttribute>> {
+export function hButton(store: Store, arg: Partial<HButtonArgument> = {}): HComponentFn<Partial<ButtonAttribute>> {
     const arg_w: HButtonArgument = { ...common_default, ...arg };
     const component_name = `.h-button-${hash_djb2(arg_w)}`;
     const component_styles = buttonStyles(component_name, arg_w);
 
     return registerComponent(
-        repo,
+        store,
         component_name,
         component_styles,
         (attribute) =>
@@ -100,13 +100,13 @@ export function hButton(repo: Repository, arg: Partial<HButtonArgument> = {}): H
     );
 }
 
-export function hLinkedButton(repo: Repository, arg: Partial<HButtonArgument> = {}): HComponentFn<Partial<AAttribute>> {
+export function hLinkedButton(store: Store, arg: Partial<HButtonArgument> = {}): HComponentFn<Partial<AAttribute>> {
     const arg_w: HButtonArgument = { ...common_default, ...arg };
     const component_name = `.h-linked-button-${hash_djb2(arg_w)}`;
     const component_styles = buttonStyles(component_name, arg_w);
 
     return registerComponent(
-        repo,
+        store,
         component_name,
         component_styles,
         (attribute) =>

@@ -1,9 +1,9 @@
 import { BOLD, COLOR_ACCENT } from "@/lib/stylerules";
 import { Em, compoundStyles, registerComponent, semantic, styles } from "@/main";
-import type { HArgument, HComponentFn, Repository } from "@/main";
+import type { HArgument, HComponentFn, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
-export function hero(repo: Repository): HComponentFn<HArgument> {
+export function hero(store: Store): HComponentFn<HArgument> {
     const Hero = semantic("hero", { class_names: ["container"] });
     const HeroText = semantic("hero-text", { class_names: ["content"] });
 
@@ -17,7 +17,7 @@ export function hero(repo: Repository): HComponentFn<HArgument> {
     ];
 
     return registerComponent(
-        repo,
+        store,
         Hero,
         component_styles,
         () => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE")),

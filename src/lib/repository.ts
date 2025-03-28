@@ -1,17 +1,35 @@
-import type { HAnyComponentFn, HArgument, HComponent, HComponentFn, HNode, HRootPageFn } from "./component";
+import type { HAnyComponentFn, HArgument, HComponentFn, HNode, HRootPageFn } from "./component";
+import { type DesignRule, type DesignRuleScaling, generateDesignRule } from "./design";
 import type { StyleRule } from "./style";
 
-export type Repository = Map<string, HComponent>;
+// hanabi semantic data structure for register semantic to repository, internal use only.
+export type HComponent = {
+    component_name: string;
+    path?: string;
+    style: StyleRule[];
+};
+
+export type Store = {
+    components: Map<string, HComponent>;
+    designrule: Required<DesignRule>;
+};
+
+export function generateStore(rule: Partial<DesignRule> = {}, scale: Partial<DesignRuleScaling> = {}): Store {
+    return {
+        components: new Map<string, HComponent>(),
+        designrule: generateDesignRule(rule, scale),
+    };
+}
 
 export function registerComponent<T extends HArgument>(
-    repo: Repository,
+    store: Store,
     name_fn: HAnyComponentFn | string,
     style: StyleRule[],
     component_fn: HComponentFn<T>,
     path?: string,
 ): HComponentFn<T> {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
-    repo.set(component_name, { component_name, path, style });
+    store.components.set(component_name, { component_name, path, style });
     return {
         [component_name]:
             (argument: T) =>
@@ -21,17 +39,17 @@ export function registerComponent<T extends HArgument>(
 }
 
 export function registerRootPage<T extends HArgument>(
-    repo: Repository,
+    store: Store,
     name_fn: HAnyComponentFn | string,
     style: StyleRule[],
     root_page_fn: HRootPageFn<T>,
     path?: string,
 ): HRootPageFn<T> {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
-    repo.set(component_name, { component_name, path, style });
+    store.components.set(component_name, { component_name, path, style });
     return root_page_fn;
 }
 
-export function clearRepository(repo: Repository): void {
-    repo.clear();
+export function clearStore(store: Store): void {
+    store.components.clear();
 }

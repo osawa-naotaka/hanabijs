@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import type { HanabiTag, Tag } from "./elements";
-import type { ComplexSelector, CompoundSelector, Selector, StyleRule } from "./style";
+import type { ComplexSelector, CompoundSelector, Selector } from "./style";
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 import { mergeRecord } from "./util";
@@ -19,13 +19,6 @@ export type HElement<T> = {
 // Attribute of HTML Element
 export type Attribute = Record<string, AttributeValue>;
 export type AttributeValue = string | string[] | undefined;
-
-// hanabi semantic data structure for register semantic to repository, internal use only.
-export type HComponent = {
-    component_name: string;
-    path?: string;
-    style: StyleRule[];
-};
 
 // hanabi Component (is function)
 export type HComponentFn<T extends HArgument> = (
