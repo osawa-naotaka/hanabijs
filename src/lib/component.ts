@@ -1,5 +1,5 @@
 import DOMPurify from "dompurify";
-import type { DivAttribute, HanabiTag, Tag } from "./elements";
+import type { AttributeMap, DivAttribute, HanabiTag, Tag } from "./elements";
 import type { ComplexSelector, CompoundSelector, Selector } from "./style";
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
@@ -21,7 +21,7 @@ export type Attribute = Record<string, AttributeValue>;
 export type AttributeValue = string | string[] | undefined;
 
 // hanabi Component (is function)
-export type HComponentFn<T extends HArgument> = (
+export type HComponentFn<T> = (
     argument: T & { class?: string | string[]; id?: string },
 ) => (...child: HNode[]) => HNode;
 
@@ -280,21 +280,21 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
 }
 
 // on semantic Component, argument is attribute.
-export function semantic<T = DivAttribute>(
+export function semantic<K extends Tag | HanabiTag = "div">(
     element_name: string,
-    { class_names = [], tag = "div" }: { class_names?: string[]; tag?: Tag } = {},
-): HComponentFn<Partial<T>> {
+    { class_names = [], tag = "div" as K }: { class_names?: string[]; tag?: K } = {},
+): HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>> {
     const dot_name = `.${element_name}`;
     return {
         [dot_name]:
-            (argument: Partial<T>) =>
+            (argument: Partial<AttributeMap[K & keyof AttributeMap]>) =>
             (...child: HNode[]) => ({
                 element_name: dot_name,
                 tag,
                 attribute: { ...argument, ...{ class: addClassToHead(argument, [element_name, ...class_names]) } },
                 child,
             }),
-    }[dot_name];
+    }[dot_name] as HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>>;
 }
 
 // on layout Component, argument is attribute.

@@ -37,7 +37,7 @@ export function hButton(
     prop: Partial<HButtonProperty> = {},
 ): HComponentFn<Partial<ButtonAttribute>> {
     const prop_w: HButtonProperty = { ...common_default, ...prop };
-    const HButton = semantic<ButtonAttribute>(`h-button-${type}-${hash_djb2(prop_w)}`, { tag: "button" });
+    const HButton = semantic(`h-button-${type}-${hash_djb2(prop_w)}`, { tag: "button" });
     const component_styles = buttonStyles(HButton, type, prop_w);
 
     return registerComponent(
@@ -56,7 +56,7 @@ export function hLinkedButton(
     prop: Partial<HButtonProperty> = {},
 ): HComponentFn<Partial<AAttribute>> {
     const prop_w: HButtonProperty = { ...common_default, ...prop };
-    const HLinkedButton = semantic<ButtonAttribute>(`h-linked-button-${type}-${hash_djb2(prop_w)}`, { tag: "a" });
+    const HLinkedButton = semantic(`h-linked-button-${type}-${hash_djb2(prop_w)}`, { tag: "a" });
     const component_styles = buttonStyles(HLinkedButton, type, prop_w);
 
     return registerComponent(

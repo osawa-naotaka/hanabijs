@@ -17,7 +17,7 @@ import {
     TEXT_UNDERLINE,
 } from "@/lib/stylerules";
 import { A, H2, H3, H4, Li, Pre, compoundStyles, registerComponent, semantic, styles } from "@/main";
-import type { ArticleAttribute, HComponentFn, Store } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
 import { shareX } from "../element/shareX";
@@ -28,7 +28,7 @@ import { articleHeader } from "./articleHeader";
 export type ArticleArgument = Markdown<PostFm>;
 
 export function article(store: Store): HComponentFn<ArticleArgument> {
-    const Article = semantic<ArticleAttribute>("article", { tag: "article", class_names: ["neu"] });
+    const Article = semantic("article", { tag: "article", class_names: ["neu"] });
     const ArticleHeader = articleHeader(store);
     const Author = semantic("author");
     const TagList = tagList(store);

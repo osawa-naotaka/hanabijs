@@ -1,4 +1,4 @@
-import type { HAnyComponentFn, HArgument, HComponentFn, HNode, HRootPageFn } from "./component";
+import type { HComponentFn, HNode, HRootPageFn } from "./component";
 import { type DesignRule, type DesignRuleScaling, generateDesignRule } from "./design";
 import type { StyleRule } from "./style";
 
@@ -21,9 +21,9 @@ export function generateStore(rule: Partial<DesignRule> = {}, scale: Partial<Des
     };
 }
 
-export function registerComponent<T extends HArgument>(
+export function registerComponent<T, K>(
     store: Store,
-    name_fn: HAnyComponentFn | string,
+    name_fn: HComponentFn<K> | string,
     style: StyleRule[],
     component_fn: HComponentFn<T>,
     path?: string,
@@ -32,15 +32,15 @@ export function registerComponent<T extends HArgument>(
     store.components.set(component_name, { component_name, path, style });
     return {
         [component_name]:
-            (argument: T) =>
+            (argument: T & { class?: string | string[]; id?: string }) =>
             (...child: HNode[]) =>
                 component_fn(argument)(...child),
     }[component_name];
 }
 
-export function registerRootPage<T extends HArgument>(
+export function registerRootPage<T, K>(
     store: Store,
-    name_fn: HAnyComponentFn | string,
+    name_fn: HComponentFn<K> | string,
     style: StyleRule[],
     root_page_fn: HRootPageFn<T>,
     path?: string,

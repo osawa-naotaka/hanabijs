@@ -1,23 +1,14 @@
 import { A, Div, Li, compoundStyles, createDom, registerComponent, semantic, styles } from "@/main";
-import type {
-    HArgument,
-    HClientFn,
-    HComponentFn,
-    HNode,
-    InputAttribute,
-    LiAttribute,
-    Store,
-    UlAttribute,
-} from "@/main";
+import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
 export function search(store: Store): HComponentFn<HArgument> {
     const Search = semantic("search", { class_names: ["content"] });
     const SearchBar = semantic("search-bar");
-    const SearchInput = semantic<InputAttribute>("search-input", { tag: "input" });
+    const SearchInput = semantic("search-input", { tag: "input" });
     const SearchInputIcon = svgIcon(store);
-    const SearchResult = semantic<UlAttribute>("search-result", { tag: "ul" });
-    const SearchResultItem = semantic<LiAttribute>("search-result-item", { tag: "li" });
+    const SearchResult = semantic("search-result", { tag: "ul" });
+    const SearchResultItem = semantic("search-result-item", { tag: "li" });
 
     const component_sytles = [
         styles(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),

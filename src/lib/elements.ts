@@ -1,4 +1,4 @@
-import type { Attribute, AttributeValue, HComponentFn, HNode } from "./component";
+import type { AttributeValue, HComponentFn, HNode } from "./component";
 
 export type Tag =
     | "a"
@@ -1402,51 +1402,87 @@ export type WbrAttributeName = CommonAttributeName;
 export type WbrAttribute = Record<CommonAttributeName, AttributeValue>;
 export const wbr_attribute_names: WbrAttributeName[] = common_attribute_names;
 
-function gt<T extends Attribute>(tag: Tag | HanabiTag): HComponentFn<Partial<T>> {
+export type AttributeMap = {
+    meta: MetaAttribute;
+    link: LinkAttribute;
+    head: HeadAttribute;
+    body: BodyAttribute;
+    html: HtmlAttribute;
+    div: DivAttribute;
+    span: SpanAttribute;
+    main: MainAttribute;
+    aside: AsideAttribute;
+    section: SectionAttribute;
+    article: ArticleAttribute;
+    ul: UlAttribute;
+    ol: OlAttribute;
+    li: LiAttribute;
+    img: ImgAttribute;
+    title: TitleAttribute;
+    script: ScriptAttribute;
+    h1: H1Attribute;
+    h2: H2Attribute;
+    h3: H3Attribute;
+    h4: H4Attribute;
+    h5: H5Attribute;
+    h6: H6Attribute;
+    header: HeaderAttribute;
+    footer: FooterAttribute;
+    a: AAttribute;
+    p: PAttribute;
+    input: InputAttribute;
+    label: LabelAttribute;
+    nav: NavAttribute;
+    em: EmAttribute;
+    button: ButtonAttribute;
+    time: TimeAttribute;
+    pre: PreAttribute;
+    unwrap: DivAttribute;
+    raw: DivAttribute;
+};
+
+function gt<K extends Tag | HanabiTag>(tag: K): HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>> {
     return {
         [tag]:
-            (argument: Partial<T>) =>
+            (argument: Partial<AttributeMap[K & keyof AttributeMap]>) =>
             (...child: HNode[]) => ({ element_name: tag, tag, attribute: argument, child }),
-    }[tag];
+    }[tag] as HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>>;
 }
 
-// add here
-
-// add here
-export const Meta = gt<MetaAttribute>("meta");
-export const Link = gt<LinkAttribute>("link");
-export const Head = gt<HeadAttribute>("head");
-export const Body = gt<BodyAttribute>("body");
-export const Html = gt<HtmlAttribute>("html");
-export const Div = gt<DivAttribute>("div");
-export const Span = gt<SpanAttribute>("span");
-export const Main = gt<MainAttribute>("main");
-export const Aside = gt<AsideAttribute>("aside");
-export const Section = gt<SectionAttribute>("section");
-export const Article = gt<ArticleAttribute>("article");
-export const Ul = gt<UlAttribute>("ul");
-export const Ol = gt<OlAttribute>("ol");
-export const Li = gt<LiAttribute>("li");
-export const Img = gt<ImgAttribute>("img");
-export const Title = gt<TitleAttribute>("title");
-export const Script = gt<ScriptAttribute>("script");
-export const H1 = gt<H1Attribute>("h1");
-export const H2 = gt<H2Attribute>("h2");
-export const H3 = gt<H3Attribute>("h3");
-export const H4 = gt<H4Attribute>("h4");
-export const H5 = gt<H5Attribute>("h5");
-export const H6 = gt<H6Attribute>("h6");
-export const Header = gt<HeaderAttribute>("header");
-export const Footer = gt<FooterAttribute>("footer");
-export const A = gt<AAttribute>("a");
-export const P = gt<PAttribute>("p");
-export const Input = gt<InputAttribute>("input");
-export const Label = gt<LabelAttribute>("label");
-export const Nav = gt<NavAttribute>("nav");
-export const Em = gt<EmAttribute>("em");
-export const Button = gt<ButtonAttribute>("button");
-export const Time = gt<TimeAttribute>("time");
-export const Pre = gt<PreAttribute>("pre");
+export const Meta = gt("meta");
+export const Link = gt("link");
+export const Head = gt("head");
+export const Body = gt("body");
+export const Html = gt("html");
+export const Div = gt("div");
+export const Span = gt("span");
+export const Main = gt("main");
+export const Aside = gt("aside");
+export const Section = gt("section");
+export const Article = gt("article");
+export const Ul = gt("ul");
+export const Ol = gt("ol");
+export const Li = gt("li");
+export const Img = gt("img");
+export const Title = gt("title");
+export const Script = gt("script");
+export const H1 = gt("h1");
+export const H2 = gt("h2");
+export const H3 = gt("h3");
+export const H4 = gt("h4");
+export const H5 = gt("h5");
+export const H6 = gt("h6");
+export const Header = gt("header");
+export const Footer = gt("footer");
+export const A = gt("a");
+export const P = gt("p");
+export const Input = gt("input");
+export const Label = gt("label");
+export const Nav = gt("nav");
+export const Em = gt("em");
+export const Button = gt("button");
+export const Time = gt("time");
+export const Pre = gt("pre");
 
 export const Unwrap = gt("unwrap");
 export const RawHTML = gt("raw");
