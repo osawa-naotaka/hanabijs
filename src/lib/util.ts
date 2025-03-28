@@ -20,6 +20,15 @@ export function mergeRecord<
     return new_attribute;
 }
 
+export function hash_djb2(json: Record<string, unknown>) {
+    let hash = 5381;
+    const chars = JSON.stringify(json);
+    for (const char of [...chars]) {
+        hash = ((hash << 5) + hash + char.charCodeAt(0)) & 0xffffffff;
+    }
+    return hash >>> 0;
+}
+
 const contentTypes: [string, string][] = [
     [".html", "text/html"],
     [".css", "text/css"],

@@ -181,3 +181,12 @@ export const SIZE_3XL = "var(--font-size-3xl)";
 export const SIZE_4XL = "var(--font-size-4xl)";
 export const SIZE_5XL = "var(--font-size-5xl)";
 export const SIZE_6XL = "var(--font-size-6xl)";
+
+export type MainBgColor = {
+    main: string;
+    background: string;
+};
+
+export function SWAP_MAIN_BG(color: MainBgColor): MainBgColor {
+    return { main: color.background, background: color.main };
+}
