@@ -1,41 +1,27 @@
-
-type ButtonAttributeName =
-    | "common"
-    | "button_attr1"
-    | "button_attr2";
+type ButtonAttributeName = "common" | "button_attr1";
 type ButtonAttribute = Record<ButtonAttributeName, string>;
 
-type LinkAttributeName =
-    | "common"
-    | "link_attr1"
-    | "link_attr2";
+type LinkAttributeName = "common" | "link_attr1";
 type LinkAttribute = Record<LinkAttributeName, string>;
 
 type AttributeMap = {
     button: ButtonAttribute;
     link: LinkAttribute;
-}
+};
 
 type Tag = "button" | "link";
 
-type ReturnValue<K> = (attr: AttributeMap[K & keyof AttributeMap]) => {
+type ReturnValFn<T> = (argument: T) => Value<T>;
+
+type Value<T> = {
     tag: Tag;
-    attr: AttributeMap[K & keyof AttributeMap];
+    attr: T;
+};
+
+function semantic<K extends Tag>(tag: K): ReturnValFn<Partial<AttributeMap[K]>> {
+    return (attr: Partial<AttributeMap[K]>) => ({ tag, attr });
 }
 
-function semantic<K extends Tag>(tag: K): ReturnValue<K> {
-    return (attr: AttributeMap[K & keyof AttributeMap]) => ({ tag, attr });
-}
-
-export function hLinkedButton(): ReturnValue<"link"> {
-    return () => semantic("button");
-}
-
-
-export function hButton(
-    prop: Partial<HButtonProperty> = {},
-): HComponentFn<Partial<ButtonAttribute>> {
-    const HButton = semantic("button");
-
-    return (attribute) => HButton(attribute);
+export function generate(): ReturnValFn<Partial<LinkAttribute>> {
+    return semantic("button");
 }
