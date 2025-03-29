@@ -2,7 +2,7 @@ import type { HComponentFn, HNode, HRootPageFn } from "./component";
 import { type DesignRule, type DesignRuleScaling, generateDesignRule } from "./design";
 import type { StyleRule } from "./style";
 
-// hanabi semantic data structure for register semantic to repository, internal use only.
+// hanabi element data structure for register element to repository, internal use only.
 export type HComponent = {
     component_name: string;
     path?: string;

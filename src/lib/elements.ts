@@ -1545,7 +1545,7 @@ export type AttributeMap = {
     var: VarAttribute;
     video: VideoAttribute;
     wbr: WbrAttribute;
-    
+
     unwrap: DivAttribute;
     raw: DivAttribute;
 };
@@ -1662,3 +1662,7 @@ export const Wbr = gt("wbr");
 
 export const Unwrap = gt("unwrap");
 export const RawHTML = gt("raw");
+
+export function DOCTYPE(): string {
+    return "<!DOCTYPE html>";
+}

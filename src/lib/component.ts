@@ -1,48 +1,47 @@
 import DOMPurify from "dompurify";
-import type { AttributeMap, DivAttribute, HanabiTag, Tag } from "./elements";
+import type { AttributeMap, HanabiTag, Tag } from "./elements";
 import type { ComplexSelector, CompoundSelector, Selector } from "./style";
 import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
-import { mergeRecord } from "./util";
-
-// HTML DOM Node = string or HTML Element
-export type HNode<T extends Attribute = Attribute> = string | HElement<Partial<T>>;
-
-// HTML Element, with custon element name
-export type HElement<T> = {
-    element_name: string;
-    tag: Tag | HanabiTag;
-    attribute: T;
-    child: HNode<Attribute>[];
-};
 
 // Attribute of HTML Element
-export type Attribute = Record<string, AttributeValue>;
 export type AttributeValue = string | string[] | undefined;
+export type Attribute = Record<string, AttributeValue>;
+export type AttributeOf<K> = Partial<AttributeMap[K & keyof AttributeMap]>;
 
-// hanabi Component (is function)
-export type HComponentFn<T> = (
-    argument: T & { class?: string | string[]; id?: string },
-) => (...child: HNode[]) => HNode;
+// HTML DOM Node = string or HTML Element
+export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 
-// biome-ignore lint/suspicious/noExplicitAny: HAnyComponent uses only for function.name
-export type HAnyComponentFn = (argument: any) => (...child: HNode[]) => HNode;
+// HTML Element, with custom element name
+export type HElement<K> = {
+    element_name: string;
+    tag: Tag | HanabiTag;
+    attribute: Partial<K>;
+    child: HNode[];
+};
 
-export type HArgument = Record<string, unknown>;
+// hanabi Element (is function), expressing HTML element
+export type HElementFn<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
 
-// hanabi HTML Top export function
-export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
-
-// hanabi Client FUnction
-export type HClientFn = () => Promise<void>;
-
-// Element
-export function DOCTYPE(): string {
-    return "<!DOCTYPE html>";
+export function element<K extends Tag | HanabiTag = "div">(
+    element_name: string,
+    { class_names = [], tag = "div" as K }: { class_names?: string[]; tag?: K } = {},
+): HElementFn<K> {
+    const dot_name = `.${element_name}`;
+    return {
+        [dot_name]:
+            (attribute: Partial<AttributeMap[K & keyof AttributeMap]>) =>
+            (...child: HNode[]) => ({
+                element_name: dot_name,
+                tag,
+                attribute: addClassInRecord(attribute, [element_name, ...class_names]),
+                child,
+            }),
+    }[dot_name];
 }
 
 // add class string to record.
-export function addClassInRecord<T extends { class?: string | string[] }>(record: T, className: string): T {
+function addClassInRecord<T extends { class?: string | string[] }>(record: T, className: string | string[]): T {
     const new_record = JSON.parse(JSON.stringify(record));
     new_record.class = addClassToHead(record, className);
     return new_record;
@@ -60,6 +59,22 @@ function addClassToHead<T extends { class?: string | string[] }>(
     }
     return className;
 }
+
+// hanabi Component (is function)
+export type HComponentFn<T> = (
+    argument: T & { class?: string | string[]; id?: string },
+) => (...child: HNode[]) => HNode;
+
+// biome-ignore lint/suspicious/noExplicitAny: HAnyComponent uses only for function.name
+export type HAnyComponentFn = (argument: any) => (...child: HNode[]) => HNode;
+
+export type HArgument = Record<string, unknown>;
+
+// hanabi HTML Top export function
+export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
+
+// hanabi Client FUnction
+export type HClientFn = () => Promise<void>;
 
 // DOM Builder
 export function createDom(node: HNode, d: Document = document): Node[] {
@@ -277,48 +292,4 @@ function insertNodesCombinator(root: HNode, selector: ComplexSelector, insert: H
     }
 
     return result;
-}
-
-// on semantic Component, argument is attribute.
-export function semantic<K extends Tag | HanabiTag = "div">(
-    element_name: string,
-    { class_names = [], tag = "div" as K }: { class_names?: string[]; tag?: K } = {},
-): HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>> {
-    const dot_name = `.${element_name}`;
-    return {
-        [dot_name]:
-            (argument: Partial<AttributeMap[K & keyof AttributeMap]>) =>
-            (...child: HNode[]) => ({
-                element_name: dot_name,
-                tag,
-                attribute: { ...argument, ...{ class: addClassToHead(argument, [element_name, ...class_names]) } },
-                child,
-            }),
-    }[dot_name] as HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>>;
-}
-
-// on layout Component, argument is attribute.
-// layout component is constructed with div tag.
-export function layout<T = DivAttribute>(
-    element_name: string,
-    { class_names = [] }: { class_names?: string[] } = {},
-): HComponentFn<Partial<T>> {
-    const dot_name = `.${element_name}`;
-    return {
-        [dot_name]:
-            (argument: Partial<T>) =>
-            (...child: HNode[]) => ({
-                element_name: dot_name,
-                tag: "div" as const,
-                attribute: mergeRecord(argument, { class: addClassToHead(argument, [element_name, ...class_names]) }),
-                child,
-            }),
-    }[dot_name];
-}
-
-export function mergeClassToRecord<T extends Record<string | number | symbol, unknown>>(
-    attribute: T,
-    className: string,
-) {
-    return mergeRecord(attribute, { class: addClassToHead(attribute, className) });
 }

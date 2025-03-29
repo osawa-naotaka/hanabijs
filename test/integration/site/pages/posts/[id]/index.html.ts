@@ -1,4 +1,4 @@
-import { H2, registerComponent, semantic, style } from "hanabijs";
+import { H2, element, registerComponent, style } from "hanabijs";
 import type { HPath, HRootPageFn, Store } from "hanabijs";
 import page from "../../../components/page";
 import { site } from "../../../config";
@@ -18,7 +18,7 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
         }),
     ]);
     const Page = page(store);
-    const PageMainArea = semantic("page-main-area", { tag: "main" });
+    const PageMainArea = element("page-main-area", { tag: "main" });
 
     return async (parameter) => {
         const title = `Post Page ${parameter.id}`;

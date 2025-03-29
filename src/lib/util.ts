@@ -9,15 +9,16 @@ export function globExt(base: string, ext: string): AsyncIterableIterator<string
     return glob.scan(base);
 }
 
-export function mergeRecord<
+export function cloneAndMergeRecord<
     T1 extends Record<string | number | symbol, unknown>,
     T2 extends Record<string | number | symbol, unknown>,
->(attribute1: T1, attribute2: T2): T1 & T2 {
-    const new_attribute = JSON.parse(JSON.stringify(attribute1));
-    for (const [key, value] of Object.entries(attribute2)) {
-        new_attribute[key] = value;
+>(record1: T1, record2: T2): T1 & T2 {
+    const new_record1 = JSON.parse(JSON.stringify(record1));
+    const new_record2 = JSON.parse(JSON.stringify(record2));
+    for (const [key, value] of Object.entries(new_record2)) {
+        new_record1[key] = value;
     }
-    return new_attribute;
+    return new_record1;
 }
 
 export function hash_djb2(json: Record<string, unknown>) {

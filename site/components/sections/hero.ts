@@ -1,11 +1,11 @@
 import { BOLD, COLOR_ACCENT } from "@/lib/stylerules";
-import { Em, compoundStyles, registerComponent, semantic, styles } from "@/main";
+import { Em, compoundStyles, element, registerComponent, styles } from "@/main";
 import type { HArgument, HComponentFn, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
 export function hero(store: Store): HComponentFn<HArgument> {
-    const Hero = semantic("hero", { class_names: ["container"] });
-    const HeroText = semantic("hero-text", { class_names: ["content"] });
+    const Hero = element("hero", { class_names: ["container"] });
+    const HeroText = element("hero-text", { class_names: ["content"] });
 
     const component_styles = [
         styles(Hero, BOLD, {

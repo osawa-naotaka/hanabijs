@@ -1,4 +1,4 @@
-import { registerComponent, semantic } from "@/main";
+import { element, registerComponent } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 
 export type DateTimeArgument = {
@@ -6,7 +6,7 @@ export type DateTimeArgument = {
 };
 
 export function dateTime(store: Store): HComponentFn<DateTimeArgument> {
-    const DateTime = semantic("date-time", { tag: "time" });
+    const DateTime = element("date-time", { tag: "time" });
 
     return registerComponent(store, DateTime, [], ({ datetime }) => () => {
         const date = datetime instanceof Date ? datetime : new Date(datetime);

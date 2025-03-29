@@ -1,6 +1,6 @@
 import path from "node:path";
 import { markdownToHtml } from "@/lib/markdown";
-import { RawHTML, registerRootPage, semantic, style } from "@/main";
+import { RawHTML, element, registerRootPage, style } from "@/main";
 import type { HRootPageFn, Store } from "@/main";
 import { getMarkdown, listFiles } from "@site/components/library/post";
 import { article } from "@site/components/module/article";
@@ -19,8 +19,8 @@ export async function rootPageFnParameters(): Promise<RootParameter[]> {
 
 export default function Root(store: Store): HRootPageFn<RootParameter> {
     const Page = page(store);
-    const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
-    const PageSection = semantic("page-section", {
+    const PageMainArea = element("page-main-area", { class_names: ["container"], tag: "main" });
+    const PageSection = element("page-section", {
         class_names: ["section", "content"],
         tag: "section",
     });

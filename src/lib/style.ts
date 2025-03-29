@@ -1,6 +1,5 @@
 import type { HAnyComponentFn } from "./component";
 import type { HComponent } from "./repository";
-import { mergeRecord } from "./util";
 
 // Style
 export type StyleRule = {
@@ -45,7 +44,7 @@ export function style(selector: SimpleSelector, properties: Properties): StyleRu
 export function styles(selector: SimpleSelector, ...propaties: Properties[]): StyleRule {
     return {
         selectorlist: [createSelector([selector])],
-        properties: propaties.reduce((p, c) => mergeRecord(p, c), {}),
+        properties: propaties.reduce((p, c) => ({ ...p, ...c }), {}),
     };
 }
 
@@ -65,7 +64,7 @@ export function compoundStyles(
 ): StyleRule {
     return {
         selectorlist: [createSelector(selector)],
-        properties: propaties.reduce((p, c) => mergeRecord(p, c), {}),
+        properties: propaties.reduce((p, c) => ({ ...p, ...c }), {}),
     };
 }
 
@@ -129,9 +128,9 @@ export function stringifyToCss(components: HComponent[]): string {
     return components.map(rulesToString).join("");
 }
 
-export function rulesToString(semantic: HComponent): string {
+export function rulesToString(element: HComponent): string {
     const res: string[] = [];
-    for (const rule of semantic.style) {
+    for (const rule of element.style) {
         const selectors_string = rule.selectorlist.map(selectorToString).join(", ");
         const propaties_string = propatiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);

@@ -1,14 +1,14 @@
-import { A, Div, Li, compoundStyles, createDom, registerComponent, semantic, styles } from "@/main";
+import { A, Div, Li, compoundStyles, createDom, element, registerComponent, styles } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
 export function search(store: Store): HComponentFn<HArgument> {
-    const Search = semantic("search", { class_names: ["content"] });
-    const SearchBar = semantic("search-bar");
-    const SearchInput = semantic("search-input", { tag: "input" });
+    const Search = element("search", { class_names: ["content"] });
+    const SearchBar = element("search-bar");
+    const SearchInput = element("search-input", { tag: "input" });
     const SearchInputIcon = svgIcon(store);
-    const SearchResult = semantic("search-result", { tag: "ul" });
-    const SearchResultItem = semantic("search-result-item", { tag: "li" });
+    const SearchResult = element("search-result", { tag: "ul" });
+    const SearchResultItem = element("search-result-item", { tag: "li" });
 
     const component_sytles = [
         styles(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),
@@ -104,10 +104,10 @@ type SearchResultItemAttribute = {
 };
 
 function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute> {
-    const SearchResultItem = semantic("search-result-item", { tag: "li" });
-    const SearchResultItemMeta = semantic("search-result-item-meta");
-    const SearchResultItemTitle = semantic("search-result-item-title");
-    const SearchResultItemDescription = semantic("search-result-item-description");
+    const SearchResultItem = element("search-result-item", { tag: "li" });
+    const SearchResultItemMeta = element("search-result-item-meta");
+    const SearchResultItemTitle = element("search-result-item-title");
+    const SearchResultItemDescription = element("search-result-item-description");
     const DateTime = dateTime(store);
     const Tags = tagList(store);
 

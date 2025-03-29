@@ -1,4 +1,4 @@
-import { A, semantic } from "@/main";
+import { A, element } from "@/main";
 import type { HRootPageFn, Store } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
@@ -6,9 +6,9 @@ import { navitem, postFmSchema, posts_dir, site } from "@site/config/site.config
 
 export default function Root(store: Store): HRootPageFn<void> {
     const Page = page(store);
-    const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
-    const ArticleList = semantic("article-list", { class_names: ["content"], tag: "ul" });
-    const ArticleListItem = semantic("article-list-item", { tag: "li" });
+    const PageMainArea = element("page-main-area", { class_names: ["container"], tag: "main" });
+    const ArticleList = element("article-list", { class_names: ["content"], tag: "ul" });
+    const ArticleListItem = element("article-list-item", { tag: "li" });
 
     return async () => {
         const posts = await getAllMarkdowns(posts_dir, postFmSchema);

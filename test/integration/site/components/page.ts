@@ -1,4 +1,4 @@
-import { A, Body, H1, Html, Link, Meta, Title, registerComponent, semantic, style } from "hanabijs";
+import { A, Body, H1, Html, Link, Meta, Title, element, registerComponent, style } from "hanabijs";
 import type { HComponentFn, Store } from "hanabijs";
 
 export type PageAttribute = {
@@ -9,9 +9,9 @@ export type PageAttribute = {
 export default function page(store: Store): HComponentFn<PageAttribute> {
     registerComponent(store, "page", [style(".page-header", { width: "100%" })]);
 
-    const PageHead = semantic("page-head", { tag: "head" });
-    const PageHeader = semantic("page-header", { tag: "header" });
-    const PageFooter = semantic("page-footer", { tag: "footer" });
+    const PageHead = element("page-head", { tag: "head" });
+    const PageHeader = element("page-header", { tag: "header" });
+    const PageFooter = element("page-footer", { tag: "footer" });
 
     return (attribute, ...child) =>
         Html(

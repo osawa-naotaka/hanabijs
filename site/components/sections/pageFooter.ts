@@ -1,5 +1,5 @@
 import { ABSOLUTE_ANCHOR, COLOR_INVERT, COLUMN, FIX_BOTTOM, TEXT_ALIGN_CENTER } from "@/lib/stylerules";
-import { registerComponent, semantic, styles } from "@/main";
+import { element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 
 export type PageFooterArgument = {
@@ -7,9 +7,9 @@ export type PageFooterArgument = {
 };
 
 export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
-    const PageFooter = semantic("page-footer", { tag: "footer" });
-    const PageFooterContent = semantic("page-footer-content");
-    const PageFooterCopyright = semantic("page-footer-copyright");
+    const PageFooter = element("page-footer", { tag: "footer" });
+    const PageFooterContent = element("page-footer-content");
+    const PageFooterCopyright = element("page-footer-copyright");
 
     const component_styles = [
         styles(PageFooter, FIX_BOTTOM, COLOR_INVERT),

@@ -1,4 +1,4 @@
-import { A, Body, H1, Head, Html, Link, Meta, Script, Title, semantic } from "@/main";
+import { A, Body, H1, Head, Html, Link, Meta, Script, Title, element } from "@/main";
 import type { HArgument, HComponentFn } from "@/main";
 
 const site = {
@@ -8,9 +8,9 @@ const site = {
 };
 
 export function page(): HComponentFn<HArgument> {
-    const PageHeader = semantic("page-header", { class_names: ["container"], tag: "header" });
-    const PageFooter = semantic("page-footer", { tag: "footer" });
-    const PageFooterCopyright = semantic("page-footer-copyright");
+    const PageHeader = element("page-header", { class_names: ["container"], tag: "header" });
+    const PageFooter = element("page-footer", { tag: "footer" });
+    const PageFooterCopyright = element("page-footer-copyright");
 
     return (_attribute) =>
         (...child) =>

@@ -1,5 +1,5 @@
 import { COLOR_DEFAULT, FIX_TOP_STICKY, FONT_SIZE, OPACITY, SIZE_2XL } from "@/lib/stylerules";
-import { A, H1, registerComponent, semantic, styles } from "@/main";
+import { A, H1, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 import { drawer } from "@site/components/module/drawer";
@@ -16,7 +16,7 @@ export type PageHeaderArgument = {
 };
 
 export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
-    const PageHeader = semantic("page-header", { class_names: ["container"], tag: "header" });
+    const PageHeader = element("page-header", { class_names: ["container"], tag: "header" });
     const Drawer = drawer(store, "page-header-toggle-button");
     const Popover = popover(store, "search-popover");
     const SvgIcon = svgIcon(store);
