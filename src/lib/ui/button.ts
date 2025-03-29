@@ -1,7 +1,6 @@
 import { element } from "../component";
-import type { HArgument, HComponentFn } from "../component";
-import type { AAttribute, ButtonAttribute } from "../elements";
-import { registerComponent } from "../repository";
+import type { HArgument, HComponentFn, HElementFn } from "../component";
+import { registerElement } from "../repository";
 import type { Store } from "../repository";
 import { compoundStyles, styles } from "../style";
 import type { StyleRule } from "../style";
@@ -31,42 +30,20 @@ const common_default: HButtonProperty = {
     border_radius: "4px",
 };
 
-export function hButton(
-    store: Store,
-    type: HButtonType,
-    prop: Partial<HButtonProperty> = {},
-): HComponentFn<Partial<ButtonAttribute>> {
+export function hButton(store: Store, type: HButtonType, prop: Partial<HButtonProperty> = {}): HElementFn<"button"> {
     const prop_w: HButtonProperty = { ...common_default, ...prop };
     const HButton = element(`h-button-${type}-${hash_djb2(prop_w)}`, { tag: "button" });
-    const component_styles = buttonStyles(HButton, type, prop_w);
+    const element_styles = buttonStyles(HButton, type, prop_w);
 
-    return registerComponent(
-        store,
-        HButton,
-        component_styles,
-        (attribute) =>
-            (...child) =>
-                HButton(attribute)(...child),
-    );
+    return registerElement(store, HButton, element_styles);
 }
 
-export function hLinkedButton(
-    store: Store,
-    type: HButtonType,
-    prop: Partial<HButtonProperty> = {},
-): HComponentFn<Partial<AAttribute>> {
+export function hLinkedButton(store: Store, type: HButtonType, prop: Partial<HButtonProperty> = {}): HElementFn<"a"> {
     const prop_w: HButtonProperty = { ...common_default, ...prop };
     const HLinkedButton = element(`h-linked-button-${type}-${hash_djb2(prop_w)}`, { tag: "a" });
-    const component_styles = buttonStyles(HLinkedButton, type, prop_w);
+    const element_styles = buttonStyles(HLinkedButton, type, prop_w);
 
-    return registerComponent(
-        store,
-        HLinkedButton,
-        component_styles,
-        (attribute) =>
-            (...child) =>
-                HLinkedButton(attribute)(...child),
-    );
+    return registerElement(store, HLinkedButton, element_styles);
 }
 
 function buttonStyles<T extends HArgument>(

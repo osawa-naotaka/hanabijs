@@ -30,7 +30,7 @@ export function element<K extends Tag | HanabiTag = "div">(
     const dot_name = `.${element_name}`;
     return {
         [dot_name]:
-            (attribute: Partial<AttributeMap[K & keyof AttributeMap]>) =>
+            (attribute: AttributeOf<K>) =>
             (...child: HNode[]) => ({
                 element_name: dot_name,
                 tag,

@@ -1,4 +1,4 @@
-import type { HComponentFn, HNode, HRootPageFn } from "./component";
+import type { HComponentFn, HElementFn, HRootPageFn } from "./component";
 import { type DesignRule, type DesignRuleScaling, generateDesignRule } from "./design";
 import type { StyleRule } from "./style";
 
@@ -30,12 +30,18 @@ export function registerComponent<T, K>(
 ): HComponentFn<T> {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
     store.components.set(component_name, { component_name, path, style });
-    return {
-        [component_name]:
-            (argument: T & { class?: string | string[]; id?: string }) =>
-            (...child: HNode[]) =>
-                component_fn(argument)(...child),
-    }[component_name];
+    return { [component_name]: component_fn }[component_name];
+}
+
+export function registerElement<K>(
+    store: Store,
+    element_fn: HElementFn<K>,
+    style: StyleRule[],
+    path?: string,
+): HElementFn<K> {
+    const component_name = element_fn.name;
+    store.components.set(component_name, { component_name, path, style });
+    return element_fn;
 }
 
 export function registerRootPage<T, K>(
