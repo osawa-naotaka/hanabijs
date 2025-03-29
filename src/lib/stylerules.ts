@@ -123,6 +123,14 @@ export const ITALIC = {
     font_weight: "normal",
 };
 
+export const LIST_DISC = {
+    list_style_type: "disc",
+}
+
+export const LIST_DECIMAL = {
+    list_style_type: "decimal",
+}
+
 export const FONT_SIZE = (n: string) => ({ font_size: n });
 
 export const MARGIN_INLINE = (...n: string[]) => ({ margin_inline: n });

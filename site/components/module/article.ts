@@ -6,6 +6,8 @@ import {
     C_BG,
     FONT_SIZE,
     F_XLARGE,
+    LIST_DECIMAL,
+    LIST_DISC,
     MARGIN_BLOCK,
     MARGIN_INLINE,
     PADDING,
@@ -18,7 +20,7 @@ import {
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
 } from "@/lib/stylerules";
-import { A, H2, H3, H4, Li, Pre, compoundStyles, element, registerComponent, styles } from "@/main";
+import { A, H2, H3, H4, Li, Ol, Pre, Ul, compoundStyles, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
@@ -54,6 +56,8 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
             MARGIN_BLOCK(S_MEDIUM(store)),
         ),
         compoundStyles([ArticleText, " ", H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
+        compoundStyles([ArticleText, " ", Ul], LIST_DISC),
+        compoundStyles([ArticleText, " ", Ol], LIST_DECIMAL),
         compoundStyles([ArticleText, " ", A], TEXT_UNDERLINE),
         compoundStyles([ArticleText, " ", Li], MARGIN_INLINE(S_2XLARGE(store))),
         compoundStyles([ArticleText, " ", Pre], PADDING(S_MEDIUM(store))),

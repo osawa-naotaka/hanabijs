@@ -21,7 +21,7 @@ export function generateStore(
 ): Store {
     return {
         components: new Map<string, HComponent>(),
-        designrule: generateDesignRule(rule, scale),
+        designrule: generateDesignRule(rule, Object.assign({}, default_design_rule_scaling, scale)),
     };
 }
 
