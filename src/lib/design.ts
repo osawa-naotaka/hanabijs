@@ -1,4 +1,6 @@
-export type ColorValue = number; // rgb
+import { MIX_BLACK, MIX_WHITE } from "./stylerules";
+
+export type ColorValue = string; // rgb
 export type SizeValue = number; // rem
 
 export type ColorSet = {
@@ -55,17 +57,17 @@ export type PartialDesignRule = DesignRule<Partial<SizeRem>, ColorSet>;
 export const default_design_rule: PartialDesignRule = {
     color: {
         main: {
-            primary: { default: 0x3f51b5 },
-            secondary: { default: 0x21ba45 },
-            accent: { default: 0xff4081 },
-            text: { default: 0x303030 },
-            background: { default: 0xf0f0f0 },
+            primary: { default: "#3f51b5" },
+            secondary: { default: "#21ba45" },
+            accent: { default: "#ff4081" },
+            text: { default: "#303030" },
+            background: { default: "#f0f0f0" },
         },
         sub: {
-            success: 0x21ba45,
-            error: 0xdb2828,
-            warning: 0xf2711c,
-            info: 0x31ccec,
+            success: "#21ba45",
+            error: "#db2828",
+            warning: "#f2711c",
+            info: "#31ccec",
         },
     },
     size: {
@@ -89,8 +91,8 @@ export type DesignRuleScaling<
 };
 
 type ColorScaling = {
-    light: number;
-    dark: number;
+    light: string;
+    dark: string;
 };
 
 type SizeScaling = {
@@ -108,8 +110,8 @@ export type RequiredDesignRuleScaling = DesignRuleScaling<ColorScaling, SizeScal
 
 export const default_design_rule_scaling: RequiredDesignRuleScaling = {
     color: {
-        light: 1.2,
-        dark: 0.8,
+        light: "90%",
+        dark: "90%",
     },
     size: {
         // under 1rem = 18px
@@ -143,31 +145,15 @@ export const default_design_rule_scaling: RequiredDesignRuleScaling = {
     },
 };
 
-export function generateDesignRule(rule: PartialDesignRule, scale: PartialDesignRuleScaling): RequiredDesignRule {
+export function generateDesignRule(rule: PartialDesignRule, scale: RequiredDesignRuleScaling): RequiredDesignRule {
     const initial_scale = Object.assign({}, default_design_rule_scaling, scale);
     const initial_rule = { ...default_design_rule, ...rule };
 
-    const primary = interpolate(
-        initial_rule.color.main.primary,
-        initial_rule.color.main.primary.default,
-        initial_scale.color,
-    );
-    const secondary = interpolate(
-        initial_rule.color.main.secondary,
-        initial_rule.color.main.secondary.default,
-        initial_scale.color,
-    );
-    const accent = interpolate(
-        initial_rule.color.main.accent,
-        initial_rule.color.main.accent.default,
-        initial_scale.color,
-    );
-    const text = interpolate(initial_rule.color.main.text, initial_rule.color.main.text.default, initial_scale.color);
-    const background = interpolate(
-        initial_rule.color.main.background,
-        initial_rule.color.main.background.default,
-        initial_scale.color,
-    );
+    const primary = mixColor(initial_rule.color.main.primary, scale.color);
+    const secondary = mixColor(initial_rule.color.main.secondary, scale.color);
+    const accent = mixColor(initial_rule.color.main.accent, scale.color);
+    const text = mixColor(initial_rule.color.main.text, scale.color);
+    const background = mixColor(initial_rule.color.main.background, scale.color);
 
     const font = interpolate(initial_rule.size.font, initial_rule.size.root, initial_scale.size.font);
     const spacing = interpolate(initial_rule.size.spacing, initial_rule.size.root, initial_scale.size.spacing);
@@ -194,4 +180,12 @@ export function interpolate<T extends Record<string, number>, S extends Record<s
         }
     }
     return inter;
+}
+
+export function mixColor(value: ColorSet, scale: ColorScaling): Required<ColorSet> {
+    return {
+        default: value.default,
+        light: value.light || MIX_WHITE(value.default)(scale.light),
+        dark: value.dark || MIX_BLACK(value.default)(scale.dark),
+    };
 }

@@ -17,7 +17,6 @@ import {
     TEXT_COLOR,
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
-    toHex,
 } from "@/lib/stylerules";
 import { A, H2, H3, H4, Li, Pre, compoundStyles, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
@@ -51,7 +50,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
             PADDING_INLINE(S_MEDIUM(store)),
             PADDING_BLOCK("3px"),
             TEXT_COLOR(C_BG(store)),
-            BG_COLOR(toHex(store.designrule.color.main.text.light)),
+            BG_COLOR(store.designrule.color.main.text.light),
             MARGIN_BLOCK(S_MEDIUM(store)),
         ),
         compoundStyles([ArticleText, " ", H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),

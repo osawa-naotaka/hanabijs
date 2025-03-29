@@ -154,8 +154,8 @@ export const BG_COLOR = (c: string) => ({ background_color: c });
 
 export function DEFAULT_TEXT_BG(store: Store) {
     return {
-        color: toHex(store.designrule.color.main.text.default),
-        background_color: toHex(store.designrule.color.main.background.default),
+        color: store.designrule.color.main.text.default,
+        background_color: store.designrule.color.main.background.default,
     };
 }
 
@@ -175,15 +175,15 @@ export function SWAP_MAIN_BG(arg: MainBgColor): MainBgColor {
 export const MIX_WHITE = (color: string) => COLOR_MIX(color, "white");
 export const MIX_BLACK = (color: string) => COLOR_MIX(color, "black");
 
-export const C_PRIMARY = (store: Store) => toHex(store.designrule.color.main.primary.default);
-export const C_SECONDARY = (store: Store) => toHex(store.designrule.color.main.secondary.default);
-export const C_ACCENT = (store: Store) => toHex(store.designrule.color.main.accent.default);
-export const C_TEXT = (store: Store) => toHex(store.designrule.color.main.text.default);
-export const C_BG = (store: Store) => toHex(store.designrule.color.main.background.default);
-export const C_ERROR = (store: Store) => toHex(store.designrule.color.sub.error);
-export const C_INFO = (store: Store) => toHex(store.designrule.color.sub.info);
-export const C_SUCCESS = (store: Store) => toHex(store.designrule.color.sub.success);
-export const C_WARNING = (store: Store) => toHex(store.designrule.color.sub.warning);
+export const C_PRIMARY = (store: Store) => store.designrule.color.main.primary.default;
+export const C_SECONDARY = (store: Store) => store.designrule.color.main.secondary.default;
+export const C_ACCENT = (store: Store) => store.designrule.color.main.accent.default;
+export const C_TEXT = (store: Store) => store.designrule.color.main.text.default;
+export const C_BG = (store: Store) => store.designrule.color.main.background.default;
+export const C_ERROR = (store: Store) => store.designrule.color.sub.error;
+export const C_INFO = (store: Store) => store.designrule.color.sub.info;
+export const C_SUCCESS = (store: Store) => store.designrule.color.sub.success;
+export const C_WARNING = (store: Store) => store.designrule.color.sub.warning;
 
 export const F_TINY = (store: Store) => px(store.designrule.size.font.tiny);
 export const F_SMALL = (store: Store) => px(store.designrule.size.font.small);
