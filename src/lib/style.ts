@@ -44,7 +44,7 @@ export function style(selector: SimpleSelector, properties: Properties): StyleRu
 export function styles(selector: SimpleSelector, ...propaties: Properties[]): StyleRule {
     return {
         selectorlist: [createSelector([selector])],
-        properties: propaties.reduce((p, c) => ({ ...p, ...c }), {}),
+        properties: propaties.reduce((p, c) => Object.assign(p, c), {}),
     };
 }
 
@@ -64,7 +64,7 @@ export function compoundStyles(
 ): StyleRule {
     return {
         selectorlist: [createSelector(selector)],
-        properties: propaties.reduce((p, c) => ({ ...p, ...c }), {}),
+        properties: propaties.reduce((p, c) => Object.assign(p, c), {}),
     };
 }
 
