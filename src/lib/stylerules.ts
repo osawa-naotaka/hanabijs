@@ -59,6 +59,12 @@ export const BORDER_UNDERLINE = {
     padding_block_end: "2px",
 };
 
+export const BORDER_LEFT_THIC = {
+    border_inline_start: ["8px", "solid"],
+    padding_block_end: "2px",
+    padding_inline_start: "1rem",
+};
+
 export const TEXT_UNDERLINE = {
     text_decoration: ["underline", "2px"],
     text_underline_offset: "5px",
