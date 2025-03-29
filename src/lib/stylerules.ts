@@ -125,11 +125,11 @@ export const ITALIC = {
 
 export const LIST_DISC = {
     list_style_type: "disc",
-}
+};
 
 export const LIST_DECIMAL = {
     list_style_type: "decimal",
-}
+};
 
 export const FONT_SIZE = (n: string) => ({ font_size: n });
 
