@@ -1,4 +1,4 @@
-import { FONT_SIZE, MARGIN_BLOCK, SIZE_LG, SIZE_XL } from "@/lib/stylerules";
+import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "@/lib/stylerules";
 import { A, H2, compoundStyles, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
@@ -17,8 +17,8 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
     const DateTime = dateTime(store);
 
     const component_styles = [
-        styles(Summary, MARGIN_BLOCK(SIZE_XL)),
-        compoundStyles([Summary, " ", ArticleHeader, " ", H2], FONT_SIZE(SIZE_LG)),
+        styles(Summary, MARGIN_BLOCK(S_XLARGE(store))),
+        compoundStyles([Summary, " ", ArticleHeader, " ", H2], FONT_SIZE(F_XLARGE(store))),
     ];
 
     return registerComponent(

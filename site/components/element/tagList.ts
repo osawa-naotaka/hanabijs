@@ -1,4 +1,4 @@
-import { BOLD, COLOR_INVERT, PADDING_INLINE, ROUND, ROW } from "@/lib/stylerules";
+import { BG_COLOR, BOLD, C_BG, C_TEXT, PADDING_INLINE, ROUND, ROW, TEXT_COLOR } from "@/lib/stylerules";
 import { A, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { tag_map } from "@site/config/site.config";
@@ -13,7 +13,14 @@ export function tagList(store: Store): HComponentFn<TagListArgument> {
 
     const component_styles = [
         styles(TagList, ROW("0.5rem")),
-        styles(TagListItem, COLOR_INVERT, BOLD, PADDING_INLINE("0.5rem"), ROUND("4px")),
+        styles(
+            TagListItem,
+            TEXT_COLOR(C_BG(store)),
+            BG_COLOR(C_TEXT(store)),
+            BOLD,
+            PADDING_INLINE("0.5rem"),
+            ROUND("4px"),
+        ),
     ];
 
     return registerComponent(

@@ -1,24 +1,46 @@
 import type { Store } from "./repository";
 
-export const CONTENT = {
-    max_width: "var(--layout-content-width)",
-    width: "100%",
-    padding_inline: "var(--layout-content-padding)",
-};
+export function RESPONSIVE_PAGE_WIDTH(max_width: string, padding_inline: string) {
+    return {
+        max_width,
+        width: "100%",
+        padding_inline,
+    };
+}
 
-export const COLUMN = (gap = "var(--layout-space-block-large)") => ({
-    display: "flex",
-    flex_direction: "column",
-    align_items: "center",
-    gap,
-});
+export function DEFAULT_RESPONSIVE_PAGE_WIDTH(store: Store) {
+    return {
+        max_width: px(store.designrule.size.width.medium),
+        width: "100%",
+        padding_inline: px(store.designrule.size.spacing.medium),
+    };
+}
 
-export const ROW = (gap = "var(--layout-space-block-large)") => ({
-    display: "flex",
-    flex_direction: "row",
-    align_items: "center",
-    gap,
-});
+export function COLUMN(gap: string) {
+    return {
+        display: "flex",
+        flex_direction: "column",
+        align_items: "center",
+        gap,
+    };
+}
+
+export function DEFAULT_COLUMN(store: Store) {
+    return COLUMN(px(store.designrule.size.spacing.medium));
+}
+
+export function ROW(gap: string) {
+    return {
+        display: "flex",
+        flex_direction: "row",
+        align_items: "center",
+        gap,
+    };
+}
+
+export function DEFAULT_ROW(store: Store) {
+    return ROW(px(store.designrule.size.spacing.medium));
+}
 
 export const ALIGN_NOMAL = {
     align_items: "normal",
@@ -70,26 +92,6 @@ export const FIX_TOP = {
     width: "100%",
 };
 
-export const COLOR_INVERT = {
-    color: "var(--color-background)",
-    background_color: "var(--color-main)",
-};
-
-export const COLOR_DEFAULT = {
-    color: "var(--color-main)",
-    background_color: "var(--color-background)",
-};
-
-export const COLOR_ACCENT = {
-    color: "var(--color-accent)",
-    background_color: "var(--color-background)",
-};
-
-export const COLOR_HEADER = {
-    color: "var(--color-header-ext)",
-    background_color: "var(--color-header-background)",
-};
-
 export const TEXT_JUSTIFY = {
     overflow_wrap: "anywhere",
     text_align: "justify",
@@ -121,75 +123,45 @@ export const ITALIC = {
     font_weight: "normal",
 };
 
-export const FONT_SIZE = (n: string) => ({
-    font_size: n,
-});
+export const FONT_SIZE = (n: string) => ({ font_size: n });
 
-export const MARGIN_INLINE = (...n: string[]) => ({
-    margin_inline: n,
-});
+export const MARGIN_INLINE = (...n: string[]) => ({ margin_inline: n });
 
-export const MARGIN_BLOCK = (...n: string[]) => ({
-    margin_block: n,
-});
+export const MARGIN_BLOCK = (...n: string[]) => ({ margin_block: n });
 
-export const MARGIN = (...n: string[]) => ({
-    margin: n,
-});
+export const MARGIN = (...n: string[]) => ({ margin: n });
 
-export const MARGINA = (n: string | string[]) => ({
-    margin: n,
-});
+export const MARGINA = (n: string | string[]) => ({ margin: n });
 
-export const MARGIN_LEFT = (n: string) => ({
-    margin_left: n,
-});
+export const MARGIN_LEFT = (n: string) => ({ margin_left: n });
 
-export const MARGIN_RIGHT = (n: string) => ({
-    margin_right: n,
-});
+export const MARGIN_RIGHT = (n: string) => ({ margin_right: n });
 
-export const PADDING_INLINE = (...n: string[]) => ({
-    padding_inline: n,
-});
+export const PADDING_INLINE = (...n: string[]) => ({ padding_inline: n });
 
-export const PADDING_BLOCK = (...n: string[]) => ({
-    padding_block: n,
-});
+export const PADDING_BLOCK = (...n: string[]) => ({ padding_block: n });
 
-export const PADDING = (...n: string[]) => ({
-    padding: n,
-});
-export const PADDINGA = (n: string | string[]) => ({
-    padding: n,
-});
+export const PADDING = (...n: string[]) => ({ padding: n });
+export const PADDINGA = (n: string | string[]) => ({ padding: n });
 
-export const WIDTH = (n: string) => ({
-    width: n,
-});
+export const WIDTH = (n: string) => ({ width: n });
 
-export const HEIGHT = (n: string) => ({
-    height: n,
-});
+export const HEIGHT = (n: string) => ({ height: n });
 
-export const BACKGROUND_COLOR = (color: string) => ({
-    background_color: color,
-});
+export const TEXT_COLOR = (c: string) => ({ color: c });
 
-export const COLOR_MIX = (color_a: string, color_b: string) => (persent: string) =>
-    `color-mix(in srgb, ${color_a} ${persent}, ${color_b})`;
+export const BG_COLOR = (c: string) => ({ background_color: c });
 
-export const SIZE_XS = "var(--font-size-xs)";
-export const SIZE_SM = "var(--font-size-sm)";
-export const SIZE_BASE = "var(--font-size-base)";
-export const SIZE_L = "var(--font-size-l)";
-export const SIZE_LG = "var(--font-size-lg)";
-export const SIZE_XL = "var(--font-size-xl)";
-export const SIZE_2XL = "var(--font-size-2xl)";
-export const SIZE_3XL = "var(--font-size-3xl)";
-export const SIZE_4XL = "var(--font-size-4xl)";
-export const SIZE_5XL = "var(--font-size-5xl)";
-export const SIZE_6XL = "var(--font-size-6xl)";
+export function DEFAULT_TEXT_BG(store: Store) {
+    return {
+        color: toHex(store.designrule.color.main.text.default),
+        background_color: toHex(store.designrule.color.main.background.default),
+    };
+}
+
+export function COLOR_MIX(color_a: string, color_b: string): (persent: string) => string {
+    return (persent) => `color-mix(in srgb, ${color_a} ${persent}, ${color_b})`;
+}
 
 export type MainBgColor = {
     color: string;
@@ -203,42 +175,36 @@ export function SWAP_MAIN_BG(arg: MainBgColor): MainBgColor {
 export const MIX_WHITE = (color: string) => COLOR_MIX(color, "white");
 export const MIX_BLACK = (color: string) => COLOR_MIX(color, "black");
 
-export function C_PRIMARY(store: Store): string {
-    return toHex(store.designrule.color.main.primary.default);
-}
+export const C_PRIMARY = (store: Store) => toHex(store.designrule.color.main.primary.default);
+export const C_SECONDARY = (store: Store) => toHex(store.designrule.color.main.secondary.default);
+export const C_ACCENT = (store: Store) => toHex(store.designrule.color.main.accent.default);
+export const C_TEXT = (store: Store) => toHex(store.designrule.color.main.text.default);
+export const C_BG = (store: Store) => toHex(store.designrule.color.main.background.default);
+export const C_ERROR = (store: Store) => toHex(store.designrule.color.sub.error);
+export const C_INFO = (store: Store) => toHex(store.designrule.color.sub.info);
+export const C_SUCCESS = (store: Store) => toHex(store.designrule.color.sub.success);
+export const C_WARNING = (store: Store) => toHex(store.designrule.color.sub.warning);
 
-export function C_SECONDARY(store: Store): string {
-    return toHex(store.designrule.color.main.secondary.default);
-}
+export const F_TINY = (store: Store) => px(store.designrule.size.font.tiny);
+export const F_SMALL = (store: Store) => px(store.designrule.size.font.small);
+export const F_MEDIUM = (store: Store) => px(store.designrule.size.font.medium);
+export const F_LARGE = (store: Store) => px(store.designrule.size.font.large);
+export const F_XLARGE = (store: Store) => px(store.designrule.size.font.xlarge);
+export const F_2XLARGE = (store: Store) => px(store.designrule.size.font.x2large);
+export const F_3XLARGE = (store: Store) => px(store.designrule.size.font.x3large);
 
-export function C_ACCENT(store: Store): string {
-    return toHex(store.designrule.color.main.accent.default);
-}
-
-export function C_TEXT(store: Store): string {
-    return toHex(store.designrule.color.main.text.default);
-}
-
-export function C_BG(store: Store): string {
-    return toHex(store.designrule.color.main.background.default);
-}
-
-export function C_ERROR(store: Store): string {
-    return toHex(store.designrule.color.sub.error);
-}
-
-export function C_INFO(store: Store): string {
-    return toHex(store.designrule.color.sub.info);
-}
-
-export function C_SUCCESS(store: Store): string {
-    return toHex(store.designrule.color.sub.success);
-}
-
-export function C_WARNING(store: Store): string {
-    return toHex(store.designrule.color.sub.warning);
-}
+export const S_TINY = (store: Store) => px(store.designrule.size.spacing.tiny);
+export const S_SMALL = (store: Store) => px(store.designrule.size.spacing.small);
+export const S_MEDIUM = (store: Store) => px(store.designrule.size.spacing.medium);
+export const S_LARGE = (store: Store) => px(store.designrule.size.spacing.large);
+export const S_XLARGE = (store: Store) => px(store.designrule.size.spacing.xlarge);
+export const S_2XLARGE = (store: Store) => px(store.designrule.size.spacing.x2large);
+export const S_3XLARGE = (store: Store) => px(store.designrule.size.spacing.x3large);
 
 export function toHex(n: number) {
     return `#${n.toString(16)}`;
+}
+
+export function px(n: number) {
+    return `${n}px`;
 }

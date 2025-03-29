@@ -12,10 +12,10 @@ export function search(store: Store): HComponentFn<HArgument> {
 
     const component_sytles = [
         styles(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),
-        styles(SearchInput, COLOR_DEFAULT, HEIGHT(SIZE_2XL)),
+        styles(SearchInput, DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
         compoundStyles([[SearchInput, "::placeholder"]], OPACITY("0.5")),
-        styles(SearchResult, MARGIN_BLOCK(SIZE_4XL)),
-        styles(SearchResultItem, MARGIN_BLOCK(SIZE_4XL)),
+        styles(SearchResult, MARGIN_BLOCK(S_3XLARGE(store))),
+        styles(SearchResultItem, MARGIN_BLOCK(S_3XLARGE(store))),
     ];
 
     return registerComponent(
@@ -78,16 +78,17 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
 
 import {
     BORDER_UNDERLINE,
-    COLOR_DEFAULT,
+    DEFAULT_TEXT_BG,
     FONT_SIZE,
+    F_SMALL,
+    F_TINY,
     HEIGHT,
     MARGIN_BLOCK,
     OPACITY,
     ROW,
     ROW_WRAP,
-    SIZE_2XL,
-    SIZE_4XL,
-    SIZE_XS,
+    S_2XLARGE,
+    S_3XLARGE,
 } from "@/lib/stylerules";
 import { v } from "@/main";
 import { dateTime } from "@site/components/element/dateTime";
@@ -112,8 +113,8 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const Tags = tagList(store);
 
     const component_styles = [
-        styles(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(SIZE_XS), BORDER_UNDERLINE),
-        styles(SearchResultItemDescription, FONT_SIZE(SIZE_XS)),
+        styles(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
+        styles(SearchResultItemDescription, FONT_SIZE(F_TINY(store))),
     ];
 
     return registerComponent(store, SearchResultItem, component_styles, ({ result }) => () => {

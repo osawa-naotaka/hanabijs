@@ -7,12 +7,12 @@ export type ColorSet = {
     dark?: ColorValue;
 };
 
-export type MainColorSet = {
-    primary: ColorSet;
-    secondary: ColorSet;
-    accent: ColorSet;
-    background: ColorSet;
-    text: ColorSet;
+export type MainColorSet<C extends Required<ColorSet> | ColorSet> = {
+    primary: C;
+    secondary: C;
+    accent: C;
+    background: C;
+    text: C;
 };
 
 export type SubColorSet = {
@@ -22,8 +22,8 @@ export type SubColorSet = {
     info: ColorValue;
 };
 
-export type ColorRule = {
-    main: MainColorSet;
+export type ColorRule<C extends Required<ColorSet> | ColorSet> = {
+    main: MainColorSet<C>;
     sub: SubColorSet;
 };
 
@@ -37,18 +37,22 @@ export type SizeRem = {
     x3large: SizeValue;
 };
 
-export type SizeRule = {
+export type SizeRule<S extends SizeRem | Partial<SizeRem>> = {
     root: number; // pixel
-    font: Partial<SizeRem>;
-    spacing: Partial<SizeRem>;
+    font: S;
+    spacing: S;
+    width: S;
 };
 
-export type DesignRule = {
-    color: ColorRule;
-    size: SizeRule;
+export type DesignRule<S extends SizeRem | Partial<SizeRem>, C extends Required<ColorSet> | ColorSet> = {
+    color: ColorRule<C>;
+    size: SizeRule<S>;
 };
 
-export const default_design_rule: DesignRule = {
+export type RequiredDesignRule = DesignRule<SizeRem, Required<ColorSet>>;
+export type PartialDesignRule = DesignRule<Partial<SizeRem>, ColorSet>;
+
+export const default_design_rule: PartialDesignRule = {
     color: {
         main: {
             primary: { default: 0x3f51b5 },
@@ -68,14 +72,19 @@ export const default_design_rule: DesignRule = {
         root: 18,
         font: {},
         spacing: {},
+        width: {},
     },
 };
 
-export type DesignRuleScaling = {
-    color: ColorScaling;
+export type DesignRuleScaling<
+    C extends ColorScaling | Partial<ColorScaling>,
+    S extends SizeScaling | Partial<SizeScaling>,
+> = {
+    color: C;
     size: {
-        font: SizeScaling;
-        spacing: SizeScaling;
+        font: S;
+        spacing: S;
+        width: S;
     };
 };
 
@@ -94,12 +103,16 @@ type SizeScaling = {
     x3large: number;
 };
 
-export const default_design_rule_scaling: DesignRuleScaling = {
+export type PartialDesignRuleScaling = DesignRuleScaling<Partial<ColorScaling>, Partial<SizeScaling>>;
+export type RequiredDesignRuleScaling = DesignRuleScaling<ColorScaling, SizeScaling>;
+
+export const default_design_rule_scaling: RequiredDesignRuleScaling = {
     color: {
         light: 1.2,
         dark: 0.8,
     },
     size: {
+        // under 1rem = 18px
         font: {
             tiny: 0.75,
             small: 0.875,
@@ -118,50 +131,55 @@ export const default_design_rule_scaling: DesignRuleScaling = {
             x2large: 2,
             x3large: 4,
         },
+        width: {
+            tiny: 24, // 480px
+            small: 40, // 720px
+            medium: 53, // 960px
+            large: 66, // 1200px
+            xlarge: 80, // 1440px
+            x2large: 88, // 1600px
+            x3large: 106, // 1920px
+        },
     },
 };
 
-export function generateDesignRule(
-    rule: Partial<DesignRule>,
-    scale: Partial<DesignRuleScaling> = {},
-): Required<DesignRule> {
-    const initial_scale: DesignRuleScaling = { ...default_design_rule_scaling, ...scale };
-    const initial_rule: DesignRule = JSON.parse(JSON.stringify({ ...default_design_rule, ...rule }));
+export function generateDesignRule(rule: PartialDesignRule, scale: PartialDesignRuleScaling): RequiredDesignRule {
+    const initial_scale = Object.assign({}, default_design_rule_scaling, scale);
+    const initial_rule = { ...default_design_rule, ...rule };
 
-    initial_rule.color.main.primary = interpolate(
+    const primary = interpolate(
         initial_rule.color.main.primary,
         initial_rule.color.main.primary.default,
         initial_scale.color,
     );
-    initial_rule.color.main.secondary = interpolate(
+    const secondary = interpolate(
         initial_rule.color.main.secondary,
         initial_rule.color.main.secondary.default,
         initial_scale.color,
     );
-    initial_rule.color.main.accent = interpolate(
+    const accent = interpolate(
         initial_rule.color.main.accent,
         initial_rule.color.main.accent.default,
         initial_scale.color,
     );
-    initial_rule.color.main.text = interpolate(
-        initial_rule.color.main.text,
-        initial_rule.color.main.text.default,
-        initial_scale.color,
-    );
-    initial_rule.color.main.background = interpolate(
+    const text = interpolate(initial_rule.color.main.text, initial_rule.color.main.text.default, initial_scale.color);
+    const background = interpolate(
         initial_rule.color.main.background,
         initial_rule.color.main.background.default,
         initial_scale.color,
     );
 
-    initial_rule.size.font = interpolate(initial_rule.size.font, initial_rule.size.root, initial_scale.size.font);
-    initial_rule.size.spacing = interpolate(
-        initial_rule.size.spacing,
-        initial_rule.size.root,
-        initial_scale.size.spacing,
-    );
+    const font = interpolate(initial_rule.size.font, initial_rule.size.root, initial_scale.size.font);
+    const spacing = interpolate(initial_rule.size.spacing, initial_rule.size.root, initial_scale.size.spacing);
+    const width = interpolate(initial_rule.size.width, initial_rule.size.root, initial_scale.size.width);
 
-    return initial_rule;
+    return {
+        color: {
+            main: { primary, secondary, accent, text, background },
+            sub: initial_rule.color.sub,
+        },
+        size: { font, spacing, width, root: initial_rule.size.root },
+    };
 }
 
 export function interpolate<T extends Record<string, number>, S extends Record<string, number>>(

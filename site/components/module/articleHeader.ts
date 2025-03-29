@@ -1,4 +1,4 @@
-import { BORDER_UNDERLINE, MARGIN_BLOCK, SIZE_2XL } from "@/lib/stylerules";
+import { BORDER_UNDERLINE, MARGIN_BLOCK, S_2XLARGE } from "@/lib/stylerules";
 import { element, registerComponent, style, styles } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 
@@ -12,7 +12,7 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
     const ArticleHeaderMeta = element("article-header-meta");
 
     const component_styles = [
-        styles(ArticleHeader, MARGIN_BLOCK(SIZE_2XL)),
+        styles(ArticleHeader, MARGIN_BLOCK(S_2XLARGE(store))),
         styles(ArticleHeaderTitle, BORDER_UNDERLINE),
         style(ArticleHeaderMeta, {
             display: "flex",

@@ -4,7 +4,7 @@ import { registerElement } from "../repository";
 import type { Store } from "../repository";
 import { compoundStyles, styles } from "../style";
 import type { StyleRule } from "../style";
-import { BACKGROUND_COLOR, MIX_BLACK, MIX_WHITE } from "../stylerules";
+import { BG_COLOR, MIX_BLACK, MIX_WHITE } from "../stylerules";
 import { hash_djb2 } from "../util";
 
 export type HButtonType = "filled" | "outlined" | "text";
@@ -107,7 +107,7 @@ const HBUTTON_FILLED = {
 
 const HBUTTON_FILLED_HOVER = (arg: HButtonProperty) => ({
     box_shadow: ["0px", "2px", "4px", "rgba(0, 0, 0, 0.3)"],
-    ...BACKGROUND_COLOR(MIX_WHITE(arg.background_color)("85%")),
+    ...BG_COLOR(MIX_WHITE(arg.background_color)("85%")),
 });
 
 const HBUTTON_FILLED_ACTIVE = {
@@ -122,5 +122,5 @@ const HBUTTON_TEXT = {
     border: "none",
 };
 
-const HBUTTON_BG_HOVER = (arg: HButtonProperty) => BACKGROUND_COLOR(MIX_BLACK(arg.background_color)("95%"));
-const HBUTTON_BG_ACTIVE = (arg: HButtonProperty) => BACKGROUND_COLOR(MIX_BLACK(arg.background_color)("80%"));
+const HBUTTON_BG_HOVER = (arg: HButtonProperty) => BG_COLOR(MIX_BLACK(arg.background_color)("95%"));
+const HBUTTON_BG_ACTIVE = (arg: HButtonProperty) => BG_COLOR(MIX_BLACK(arg.background_color)("80%"));

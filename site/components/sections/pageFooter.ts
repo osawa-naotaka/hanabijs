@@ -1,4 +1,13 @@
-import { ABSOLUTE_ANCHOR, COLOR_INVERT, COLUMN, FIX_BOTTOM, TEXT_ALIGN_CENTER } from "@/lib/stylerules";
+import {
+    ABSOLUTE_ANCHOR,
+    BG_COLOR,
+    C_BG,
+    C_TEXT,
+    DEFAULT_COLUMN,
+    FIX_BOTTOM,
+    TEXT_ALIGN_CENTER,
+    TEXT_COLOR,
+} from "@/lib/stylerules";
 import { element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 
@@ -12,8 +21,8 @@ export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
     const PageFooterCopyright = element("page-footer-copyright");
 
     const component_styles = [
-        styles(PageFooter, FIX_BOTTOM, COLOR_INVERT),
-        styles(PageFooterContent, COLUMN(), ABSOLUTE_ANCHOR),
+        styles(PageFooter, FIX_BOTTOM, TEXT_COLOR(C_BG(store)), BG_COLOR(C_TEXT(store))),
+        styles(PageFooterContent, DEFAULT_COLUMN(store), ABSOLUTE_ANCHOR),
         styles(PageFooterCopyright, TEXT_ALIGN_CENTER),
     ];
 

@@ -1,4 +1,4 @@
-import { BOLD, FONT_SIZE, JUSTIFY_CENTER, ROW, SIZE_XL } from "@/lib/stylerules";
+import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "@/lib/stylerules";
 import { A, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
@@ -17,8 +17,8 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
     const SvgIcon = svgIcon(store);
 
     const component_styles = [
-        styles(Navigation, BOLD, FONT_SIZE(SIZE_XL)),
-        styles(NavigationList, ROW(SIZE_XL), JUSTIFY_CENTER),
+        styles(Navigation, BOLD, FONT_SIZE(F_XLARGE(store))),
+        styles(NavigationList, ROW(S_XLARGE(store)), JUSTIFY_CENTER),
     ];
 
     return registerComponent(

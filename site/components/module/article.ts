@@ -1,20 +1,23 @@
 import {
     ALIGN_NOMAL,
+    BG_COLOR,
     BORDER_UNDERLINE,
-    COLOR_HEADER,
     COLUMN,
+    C_BG,
     FONT_SIZE,
+    F_XLARGE,
     MARGIN_BLOCK,
     MARGIN_INLINE,
     PADDING,
     PADDING_BLOCK,
     PADDING_INLINE,
     ROUND,
-    SIZE_2XL,
-    SIZE_BASE,
-    SIZE_XL,
+    S_2XLARGE,
+    S_MEDIUM,
+    TEXT_COLOR,
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
+    toHex,
 } from "@/lib/stylerules";
 import { A, H2, H3, H4, Li, Pre, compoundStyles, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
@@ -37,23 +40,24 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
     const ShareX = shareX(store);
 
     const component_styles = [
-        styles(Article, MARGIN_BLOCK(SIZE_2XL)),
-        compoundStyles([ArticleHeader, " ", H2], FONT_SIZE(SIZE_XL)),
-        styles(ArticleText, COLUMN(SIZE_2XL), TEXT_JUSTIFY, ALIGN_NOMAL),
-        compoundStyles([ArticleText, " ", H2], FONT_SIZE(SIZE_XL)),
+        styles(Article, MARGIN_BLOCK(S_2XLARGE(store))),
+        compoundStyles([ArticleHeader, " ", H2], FONT_SIZE(F_XLARGE(store))),
+        styles(ArticleText, COLUMN(S_2XLARGE(store)), TEXT_JUSTIFY, ALIGN_NOMAL),
+        compoundStyles([ArticleText, " ", H2], FONT_SIZE(F_XLARGE(store))),
         compoundStyles(
             [ArticleText, " ", H3],
-            FONT_SIZE(SIZE_XL),
+            FONT_SIZE(F_XLARGE(store)),
             ROUND("4px"),
-            PADDING_INLINE(SIZE_BASE),
+            PADDING_INLINE(S_MEDIUM(store)),
             PADDING_BLOCK("3px"),
-            COLOR_HEADER,
-            MARGIN_BLOCK(SIZE_2XL),
+            TEXT_COLOR(C_BG(store)),
+            BG_COLOR(toHex(store.designrule.color.main.text.light)),
+            MARGIN_BLOCK(S_MEDIUM(store)),
         ),
-        compoundStyles([ArticleText, " ", H4], BORDER_UNDERLINE, MARGIN_BLOCK(SIZE_BASE)),
+        compoundStyles([ArticleText, " ", H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
         compoundStyles([ArticleText, " ", A], TEXT_UNDERLINE),
-        compoundStyles([ArticleText, " ", Li], MARGIN_INLINE(SIZE_2XL)),
-        compoundStyles([ArticleText, " ", Pre], PADDING(SIZE_BASE)),
+        compoundStyles([ArticleText, " ", Li], MARGIN_INLINE(S_2XLARGE(store))),
+        compoundStyles([ArticleText, " ", Pre], PADDING(S_MEDIUM(store))),
     ];
 
     return registerComponent(

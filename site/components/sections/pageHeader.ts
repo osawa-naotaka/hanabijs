@@ -1,4 +1,4 @@
-import { COLOR_DEFAULT, FIX_TOP_STICKY, FONT_SIZE, OPACITY, SIZE_2XL } from "@/lib/stylerules";
+import { DEFAULT_TEXT_BG, FIX_TOP_STICKY, FONT_SIZE, F_2XLARGE, OPACITY } from "@/lib/stylerules";
 import { A, H1, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
@@ -24,8 +24,8 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const Search = search(store);
 
     const component_styles = [
-        styles(PageHeader, FIX_TOP_STICKY, COLOR_DEFAULT, OPACITY("0.8")),
-        styles(H1, FONT_SIZE(SIZE_2XL)),
+        styles(PageHeader, FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),
+        styles(H1, FONT_SIZE(F_2XLARGE(store))),
     ];
 
     return registerComponent(
