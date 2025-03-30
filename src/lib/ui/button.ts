@@ -77,47 +77,51 @@ function buttonStyles<T extends HArgument>(
     return component_styles;
 }
 
-const HBUTTON = (arg: Properties) => ({
-    display: "inline-flex",
-    align_items: "center",
-    justify_content: "center",
+function HBUTTON(arg: Properties): Properties {
+    return {
+        display: "inline-flex",
+        align_items: "center",
+        justify_content: "center",
 
-    padding: ["12px", "18px"],
-    font_size: "1rem",
-    font_weight: "normal",
-    letter_spacing: "0.05rem",
-    line_height: "1",
-    border_radius: "4px",
+        padding: ["12px", "18px"],
+        font_size: "1rem",
+        font_weight: "normal",
+        letter_spacing: "0.05rem",
+        line_height: "1",
+        border_radius: "4px",
 
-    outline: "none",
-    position: "relative",
-    overflow: "hidden",
-    cursor: "pointer",
+        outline: "none",
+        position: "relative",
+        overflow: "hidden",
+        cursor: "pointer",
 
-    transition:
-        "color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out",
-    ...arg,
-});
+        transition:
+            "color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out",
+        ...arg,
+    };
+}
 
-const HBUTTON_FILLED = {
+const HBUTTON_FILLED: Properties = {
     border: "none",
     box_shadow: ["0px", "1px", "3px", "rgba(0, 0, 0, 0.2)"],
 };
 
-const HBUTTON_FILLED_HOVER = (arg: HButtonProperties) => ({
-    box_shadow: ["0px", "2px", "4px", "rgba(0, 0, 0, 0.3)"],
-    ...BG_COLOR(MIX_WHITE(arg.background_color)("85%")),
-});
+function HBUTTON_FILLED_HOVER(arg: HButtonProperties): Properties {
+    return {
+        box_shadow: ["0px", "2px", "4px", "rgba(0, 0, 0, 0.3)"],
+        ...BG_COLOR(MIX_WHITE(arg.background_color)("85%")),
+    };
+}
 
-const HBUTTON_FILLED_ACTIVE = {
+const HBUTTON_FILLED_ACTIVE: Properties = {
     box_shadow: ["0px", "4px", "8px", "rgba(0, 0, 0, 0.4)"],
 };
 
-const HBUTTON_OUTLINED = {
+const HBUTTON_OUTLINED: Properties = {
     border: ["1px", "solid", "rgba(0, 0, 0, 0.2)"],
 };
 
-const HBUTTON_TEXT = {
+const HBUTTON_TEXT: Properties = {
     border: "none",
 };
 

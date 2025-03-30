@@ -1,6 +1,7 @@
-import { element, registerComponent } from "@/main";
+import { BOLD, FONT_SIZE, F_SMALL, PADDING, S_SMALL, S_TINY } from "@/lib/stylerules";
+import { hLinkedButton } from "@/lib/ui/button";
+import { I } from "@/main";
 import type { HComponentFn, Store } from "@/main";
-import { svgIcon } from "./svgIcon";
 
 export type ShareXArgument = {
     title: string;
@@ -8,12 +9,18 @@ export type ShareXArgument = {
 };
 
 export function shareX(store: Store): HComponentFn<ShareXArgument> {
-    const ShareX = element("share-x", { tag: "a" });
-    const SvgIcon = svgIcon(store);
+    const ShareX = hLinkedButton(
+        store,
+        { type: "filled" },
+        FONT_SIZE(F_SMALL(store)),
+        BOLD,
+        PADDING(S_TINY(store), S_SMALL(store)),
+    );
 
-    return registerComponent(store, ShareX, [], (argument) => () => {
-        const link = `https://x.com/intent/tweet?text=${encodeURIComponent(argument.title)}&url=${encodeURIComponent(argument.url)}`;
-
-        return ShareX({ href: link, target: "__blank" })(SvgIcon({ name: "x-share" })());
-    });
+    return {
+        [".share-x"]: (argument: ShareXArgument) => () => {
+            const link = `https://x.com/intent/tweet?text=${encodeURIComponent(argument.title)}&url=${encodeURIComponent(argument.url)}`;
+            return ShareX({ href: link })(I({ class: ["fa-brands", "fa-x-twitter"] })(""), "SHARE");
+        },
+    }[".share-x"];
 }

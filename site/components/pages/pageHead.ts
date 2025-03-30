@@ -34,10 +34,15 @@ export function pageHead(_repo: Store): HComponentFn<PageHeadArgument> {
                 })(),
 
                 // Global Style
-                Link({ rel: "stylesheet", href: "/assets/global.css" })(),
+                Link({ rel: "stylesheet", href: "/assets/css/global.css" })(),
+
+                // fontawesome
+                Link({ rel: "stylesheet", href: "/assets/webfonts/fontawesome.css" })(),
+                Link({ rel: "stylesheet", href: "/assets/webfonts/brands.css" })(),
+                Link({ rel: "stylesheet", href: "/assets/webfonts/solid.css" })(),
 
                 // Markdown code syntax highlight
-                Link({ rel: "stylesheet", href: "/assets/prism-atom-dark.css" })(),
+                Link({ rel: "stylesheet", href: "/assets/css/prism-atom-dark.css" })(),
                 Script({ src: "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js" })(""),
                 Script({
                     src: "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js",
