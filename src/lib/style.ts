@@ -1,5 +1,7 @@
 import type { HAnyComponentFn } from "./component";
+import type { PropertyName } from "./properties";
 import type { HComponent } from "./repository";
+import { validatePropertyName } from "./util";
 
 // Style
 export type StyleRule = {
@@ -24,7 +26,7 @@ export type ComplexSelector = {
 
 export type Combinator = " " | ">" | "+" | "~" | "||";
 
-export type Properties = Record<string, string[] | string>;
+export type Properties = Partial<Record<PropertyName, string[] | string>>;
 
 function simpleSelectorIsString(selector: SimpleSelector): selector is string {
     return typeof selector === "string";
@@ -132,7 +134,7 @@ export function rulesToString(element: HComponent): string {
     const res: string[] = [];
     for (const rule of element.style) {
         const selectors_string = rule.selectorlist.map(selectorToString).join(", ");
-        const propaties_string = propatiesToString(rule.properties);
+        const propaties_string = propertiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }
 
@@ -140,7 +142,15 @@ export function rulesToString(element: HComponent): string {
 }
 
 function stringifySelector(selector: CompoundSelector): string {
-    return selector.map((s) => (typeof s === "function" ? s.name : s)).join("");
+    return selector
+        .map((s) => {
+            const sel = typeof s === "function" ? s.name : s;
+            if (sel.length > 64) {
+                throw new Error(`stringifySelector: selector length must be under 64 characters. (${sel}).`);
+            }
+            return sel;
+        })
+        .join("");
 }
 
 function selectorToString(selector: Selector): string {
@@ -152,11 +162,23 @@ function selectorToString(selector: Selector): string {
         : `${stringifySelector(selector.compound)} ${selector.combinator} ${selectorToString(selector.descendant)}`;
 }
 
-function propatiesToString(properties: Properties): string {
+function propertiesToString(properties: Properties): string {
     return Object.entries(properties)
-        .map(
-            ([key, value]) =>
-                `${key.replaceAll("_", "-")}: ${typeof value === "string" ? value : key === "font-family" || key === "font_family" ? value.join(", ") : value.join(" ")};`,
-        )
+        .map(([raw_key, raw_value]) => {
+            if (!validatePropertyName(raw_key)) {
+                throw new Error(`propertyesToString: invalid key. (${raw_key})})`);
+            }
+            if (raw_value.length > 512) {
+                throw new Error(`propertyesToString: value length must be under 512 characters. (${raw_value})`);
+            }
+            const key = raw_key.replaceAll("_", "-");
+            const value =
+                typeof raw_value === "string"
+                    ? raw_value
+                    : key === "font-family"
+                      ? raw_value.join(", ")
+                      : raw_value.join(" ");
+            return `${key}: ${value};`;
+        })
         .join(" ");
 }

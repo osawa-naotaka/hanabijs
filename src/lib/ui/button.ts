@@ -5,7 +5,7 @@ import type { Store } from "../repository";
 import { compoundStyles, styles } from "../style";
 import type { StyleRule } from "../style";
 import { BG_COLOR, MIX_BLACK, MIX_WHITE } from "../stylerules";
-import { hash_djb2 } from "../util";
+import { hash_djb2, joinAll } from "../util";
 
 export type HButtonType = "filled" | "outlined" | "text";
 export type HButtonProperty = {
@@ -30,16 +30,16 @@ const common_default: HButtonProperty = {
     border_radius: "4px",
 };
 
-export function hButton(store: Store, type: HButtonType, prop: Partial<HButtonProperty> = {}): HElementFn<"button"> {
-    const prop_w: HButtonProperty = { ...common_default, ...prop };
+export function hButton(store: Store, type: HButtonType, ...prop: Partial<HButtonProperty>[]): HElementFn<"button"> {
+    const prop_w = joinAll(common_default, prop);
     const HButton = element(`h-button-${type}-${hash_djb2(prop_w)}`, { tag: "button" });
     const element_styles = buttonStyles(HButton, type, prop_w);
 
     return registerElement(store, HButton, element_styles);
 }
 
-export function hLinkedButton(store: Store, type: HButtonType, prop: Partial<HButtonProperty> = {}): HElementFn<"a"> {
-    const prop_w: HButtonProperty = { ...common_default, ...prop };
+export function hLinkedButton(store: Store, type: HButtonType, ...prop: Partial<HButtonProperty>[]): HElementFn<"a"> {
+    const prop_w = joinAll(common_default, prop);
     const HLinkedButton = element(`h-linked-button-${type}-${hash_djb2(prop_w)}`, { tag: "a" });
     const element_styles = buttonStyles(HLinkedButton, type, prop_w);
 

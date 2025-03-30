@@ -13,7 +13,7 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const HOutlinedButton = hButton(store, "outlined", color);
     const HTextButton = hButton(store, "text", color);
 
-    const HLFilledButton = hLinkedButton(store, "filled", { padding: ["0.3rem", "0.5rem"], ...SWAP_MAIN_BG(color) });
+    const HLFilledButton = hLinkedButton(store, "filled", { padding: ["0.3rem", "0.5rem"] }, SWAP_MAIN_BG(color));
     const HLOutlinedButton = hLinkedButton(store, "outlined", color);
     const HLTextButton = hLinkedButton(store, "text", color);
 

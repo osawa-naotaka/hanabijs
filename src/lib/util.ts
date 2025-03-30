@@ -1,4 +1,5 @@
 import { attribute_names, hanabi_tags, tags } from "./elements";
+import { property_names } from "./properties";
 
 export function replaceExt(filename: string, ext: string) {
     return filename.replace(/\.[^/.]+$/, ext);
@@ -19,6 +20,10 @@ export function cloneAndMergeRecord<
         new_record1[key] = value;
     }
     return new_record1;
+}
+
+export function joinAll<T extends {}, S extends {}>(base: T, items: S[]): T & S {
+    return Object.assign({}, base, ...items);
 }
 
 export function hash_djb2(json: Record<string, unknown>) {
@@ -57,6 +62,12 @@ const allowed_attribute_names = new Set<string>(attribute_names);
 
 export function validateAttributeKey(key: string): boolean {
     return allowed_attribute_names.has(key.toLowerCase()) || key.toLowerCase().startsWith("data-");
+}
+
+const allowed_property_names = new Set<string>(property_names);
+
+export function validatePropertyName(name: string): boolean {
+    return allowed_property_names.has(name);
 }
 
 export function sanitizeAttributeValue(key: string): (value: string) => string {
