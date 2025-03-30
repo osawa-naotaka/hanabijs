@@ -90,7 +90,6 @@ function createDomInternal(depth: number, d: Document = document): (node: HNode)
             return [d.createTextNode(sanitizeBasic(node))];
         }
 
-        // ad-hock tag "raw". this tag must be removed for security.
         if (node.tag === "raw") {
             const parser = new DOMParser();
             const purify = DOMPurify(window);

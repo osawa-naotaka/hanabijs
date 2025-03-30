@@ -14,7 +14,6 @@ export function stringifyToHtml(depth: number): (node: HNode) => string {
             return sanitizeBasic(node);
         }
 
-        // ad-hock tag "raw". this tag must be removed for security.
         if (node.tag === "raw") {
             const window = new JSDOM("").window;
             const purify = DOMPurify(window);
@@ -36,9 +35,6 @@ export function stringifyToHtml(depth: number): (node: HNode) => string {
             return node.child.map(stringifyToHtml(depth + 1)).join("");
         }
 
-        if (node.child.length === 0) {
-            return `<${node.tag}${attributeToString(node.attribute)} />`;
-        }
         return `<${node.tag}${attributeToString(node.attribute)}>${node.child.map(stringifyToHtml(depth + 1)).join("")}</${node.tag}>`;
     };
 }
