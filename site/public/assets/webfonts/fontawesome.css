@@ -39,11 +39,13 @@
 .fa-solid,
 .far,
 .fa-regular {
+    /* biome-ignore lint/a11y/useGenericFontNames: this is font icons and is not intended to use ordinal characters. */
     font-family: "Font Awesome 6 Free";
 }
 
 .fa-brands,
 .fab {
+    /* biome-ignore lint/a11y/useGenericFontNames: this is font icons and is not intended to use ordinal characters. */
     font-family: "Font Awesome 6 Brands";
 }
 
