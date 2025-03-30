@@ -1,4 +1,4 @@
-import type { HComponentFn, HElementFn, HRootPageFn } from "./component";
+import type { HComponentFn, HComponentFnArg, HElementFn, HRootPageFn } from "./component";
 import { default_design_rule, default_design_rule_scaling, generateDesignRule } from "./design";
 import type { PartialDesignRule, PartialDesignRuleScaling, RequiredDesignRule } from "./design";
 import type { StyleRule } from "./style";
@@ -34,7 +34,7 @@ export function registerComponent<T, K>(
 ): HComponentFn<T> {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
     store.components.set(component_name, { component_name, path, style });
-    return { [component_name]: component_fn }[component_name];
+    return { [component_name]: (arg: HComponentFnArg<T>) => component_fn(arg) }[component_name];
 }
 
 export function registerElement<K>(
