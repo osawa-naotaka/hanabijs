@@ -26,9 +26,9 @@ export function joinAll<T extends {}, S extends {}>(base: T, items: S[]): T & S 
     return Object.assign({}, base, ...items);
 }
 
-export function hash_djb2(json: Record<string, unknown>) {
+export function hash_djb2(...jsons: Record<string, unknown>[]) {
     let hash = 5381;
-    const chars = JSON.stringify(json);
+    const chars = jsons.map((x) => JSON.stringify(x)).join("");
     for (const char of [...chars]) {
         hash = ((hash << 5) + hash + char.charCodeAt(0)) & 0xffffffff;
     }

@@ -1,21 +1,16 @@
-import { C_BG, C_PRIMARY, DEFAULT_COLUMN, DEFAULT_RESPONSIVE_PAGE_WIDTH, SWAP_MAIN_BG } from "@/lib/stylerules";
+import { DEFAULT_COLUMN, DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
 import { hButton, hLinkedButton } from "@/lib/ui/button";
 import { Body, H2, Head, Html, Link, Main, Meta, Title, registerRootPage, styles } from "@/main";
 import type { HArgument, HRootPageFn, Store } from "@/main";
 
 export default function Root(store: Store): HRootPageFn<HArgument> {
-    const color = {
-        color: C_PRIMARY(store),
-        background_color: C_BG(store),
-    };
+    const HFilledButton = hButton(store, { type: "filled" });
+    const HOutlinedButton = hButton(store, { type: "outlined" });
+    const HTextButton = hButton(store, { type: "text" });
 
-    const HFilledButton = hButton(store, "filled", SWAP_MAIN_BG(color));
-    const HOutlinedButton = hButton(store, "outlined", color);
-    const HTextButton = hButton(store, "text", color);
-
-    const HLFilledButton = hLinkedButton(store, "filled", { padding: ["0.3rem", "0.5rem"] }, SWAP_MAIN_BG(color));
-    const HLOutlinedButton = hLinkedButton(store, "outlined", color);
-    const HLTextButton = hLinkedButton(store, "text", color);
+    const HLFilledButton = hLinkedButton(store, { type: "filled" }, { padding: ["0.3rem", "0.5rem"] });
+    const HLOutlinedButton = hLinkedButton(store, { type: "outlined" });
+    const HLTextButton = hLinkedButton(store, { type: "text" });
 
     const page_styles = [styles(Body, DEFAULT_COLUMN(store)), styles(Main, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
