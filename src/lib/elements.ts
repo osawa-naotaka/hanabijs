@@ -1,4 +1,4 @@
-import type { AttributeValue, HComponentFn, HNode } from "./component";
+import type { HComponentFn, HNode } from "./component";
 
 export type Tag =
     | "a"
@@ -230,48 +230,104 @@ export type HanabiTag = "raw" | "unwrap";
 
 export const hanabi_tags: HanabiTag[] = ["raw", "unwrap"] as const;
 
-export type AttributeName =
-    | "accept"
-    | "accept-charset"
+// HTML要素の共通属性
+export type GlobalAttributes = {
+    accesskey: string;
+    autocapitalize: "off" | "none" | "on" | "sentences" | "words" | "characters";
+    autofocus: null;
+    class: string | string[];
+    contenteditable: "true" | "false" | "";
+    dir: "ltr" | "rtl" | "auto";
+    draggable: "true" | "false";
+    enterkeyhint: "enter" | "done" | "go" | "next" | "previous" | "search" | "send";
+    hidden: null | "hidden" | "until-found";
+    id: string;
+    inert: null;
+    inputmode: "none" | "text" | "decimal" | "numeric" | "tel" | "search" | "email" | "url";
+    is: string;
+    itemid: string;
+    itemprop: string | string[];
+    itemref: string | string[];
+    itemscope: null;
+    itemtype: string | string[];
+    lang: string;
+    nonce: string;
+    part: string | string[];
+    popover: null;
+    slot: string;
+    spellcheck: "true" | "false";
+    tabindex: string;
+    title: string;
+    translate: "yes" | "no";
+};
+
+// グローバル属性の名前のユニオン型
+export type GlobalAttributeNames =
     | "accesskey"
-    | "action"
-    | "align"
-    | "alt"
-    | "async"
     | "autocapitalize"
-    | "autocomplete"
     | "autofocus"
+    | "class"
+    | "contenteditable"
+    | "dir"
+    | "draggable"
+    | "enterkeyhint"
+    | "hidden"
+    | "id"
+    | "inert"
+    | "inputmode"
+    | "is"
+    | "itemid"
+    | "itemprop"
+    | "itemref"
+    | "itemscope"
+    | "itemtype"
+    | "lang"
+    | "nonce"
+    | "part"
+    | "popover"
+    | "slot"
+    | "spellcheck"
+    | "tabindex"
+    | "title"
+    | "translate";
+
+// 全ての属性名のユニオン型
+export type AttributeNames =
+    | GlobalAttributeNames
+    | "abbr"
+    | "accept"
+    | "acceptcharset"
+    | "action"
+    | "allow"
+    | "allowfullscreen"
+    | "alt"
+    | "as"
+    | "async"
+    | "attributionsrc"
+    | "autocomplete"
     | "autoplay"
-    | "bgcolor"
-    | "border"
-    | "buffered"
-    | "challenge"
+    | "capture"
     | "charset"
     | "checked"
     | "cite"
-    | "class"
-    | "code"
-    | "codebase"
-    | "color"
     | "cols"
     | "colspan"
     | "content"
-    | "contenteditable"
-    | "contextmenu"
     | "controls"
     | "coords"
     | "crossorigin"
+    | "data"
     | "datetime"
     | "decoding"
     | "default"
     | "defer"
-    | "dir"
     | "dirname"
     | "disabled"
+    | "disablepictureinpicture"
+    | "disableremoteplayback"
     | "download"
-    | "draggable"
     | "enctype"
-    | "enterkeyhint"
+    | "fetchpriority"
     | "for"
     | "form"
     | "formaction"
@@ -281,52 +337,42 @@ export type AttributeName =
     | "formtarget"
     | "headers"
     | "height"
-    | "hidden"
     | "high"
     | "href"
     | "hreflang"
-    | "http_equiv"
     | "http-equiv"
-    | "icon"
-    | "id"
-    | "importance"
+    | "http_equiv"
+    | "imagesizes"
+    | "imagesrcset"
     | "integrity"
-    | "intrinsicsize"
-    | "inputmode"
-    | "is"
-    | "itemid"
-    | "itemprop"
-    | "itemref"
-    | "itemscope"
-    | "itemtype"
+    | "ismap"
     | "kind"
     | "label"
-    | "lang"
     | "list"
     | "loading"
     | "loop"
     | "low"
-    | "manifest"
     | "max"
     | "maxlength"
-    | "minlength"
     | "media"
     | "method"
     | "min"
+    | "minlength"
     | "multiple"
     | "muted"
     | "name"
+    | "nomodule"
     | "novalidate"
     | "open"
     | "optimum"
     | "pattern"
     | "ping"
     | "placeholder"
-    | "popover"
+    | "playsinline"
     | "popovertarget"
+    | "popovertargetaction"
     | "poster"
     | "preload"
-    | "radiogroup"
     | "readonly"
     | "referrerpolicy"
     | "rel"
@@ -336,73 +382,88 @@ export type AttributeName =
     | "rowspan"
     | "sandbox"
     | "scope"
-    | "scoped"
     | "selected"
+    | "shadowrootmode"
     | "shape"
     | "size"
     | "sizes"
-    | "slot"
     | "span"
-    | "spellcheck"
     | "src"
     | "srcdoc"
     | "srclang"
     | "srcset"
     | "start"
     | "step"
-    | "summary"
-    | "tabindex"
     | "target"
-    | "title"
-    | "translate"
     | "type"
     | "usemap"
     | "value"
     | "width"
-    | "wrap";
+    | "wrap"
+    | "xmlns";
 
-export const attribute_names: AttributeName[] = [
-    "accept",
-    "accept-charset",
+export const attribute_names: AttributeNames[] = [
     "accesskey",
-    "action",
-    "align",
-    "alt",
-    "async",
     "autocapitalize",
-    "autocomplete",
     "autofocus",
+    "class",
+    "contenteditable",
+    "dir",
+    "draggable",
+    "enterkeyhint",
+    "hidden",
+    "id",
+    "inert",
+    "inputmode",
+    "is",
+    "itemid",
+    "itemprop",
+    "itemref",
+    "itemscope",
+    "itemtype",
+    "lang",
+    "nonce",
+    "part",
+    "popover",
+    "slot",
+    "spellcheck",
+    "tabindex",
+    "title",
+    "translate",
+    "abbr",
+    "accept",
+    "acceptcharset",
+    "action",
+    "allow",
+    "allowfullscreen",
+    "alt",
+    "as",
+    "async",
+    "attributionsrc",
+    "autocomplete",
     "autoplay",
-    "bgcolor",
-    "border",
-    "buffered",
-    "challenge",
+    "capture",
     "charset",
     "checked",
     "cite",
-    "class",
-    "code",
-    "codebase",
-    "color",
     "cols",
     "colspan",
     "content",
-    "contenteditable",
-    "contextmenu",
     "controls",
     "coords",
     "crossorigin",
+    "data",
     "datetime",
     "decoding",
     "default",
     "defer",
-    "dir",
     "dirname",
     "disabled",
+    "disablepictureinpicture",
+    "disableremoteplayback",
     "download",
-    "draggable",
     "enctype",
-    "enterkeyhint",
+    "fetchpriority",
     "for",
     "form",
     "formaction",
@@ -412,52 +473,42 @@ export const attribute_names: AttributeName[] = [
     "formtarget",
     "headers",
     "height",
-    "hidden",
     "high",
     "href",
     "hreflang",
-    "http_equiv",
     "http-equiv",
-    "icon",
-    "id",
-    "importance",
+    "http_equiv",
+    "imagesizes",
+    "imagesrcset",
     "integrity",
-    "intrinsicsize",
-    "inputmode",
-    "is",
-    "itemid",
-    "itemprop",
-    "itemref",
-    "itemscope",
-    "itemtype",
+    "ismap",
     "kind",
     "label",
-    "lang",
     "list",
     "loading",
     "loop",
     "low",
-    "manifest",
     "max",
     "maxlength",
-    "minlength",
     "media",
     "method",
     "min",
+    "minlength",
     "multiple",
     "muted",
     "name",
+    "nomodule",
     "novalidate",
     "open",
     "optimum",
     "pattern",
     "ping",
     "placeholder",
-    "poster",
-    "popover",
+    "playsinline",
     "popovertarget",
+    "popovertargetaction",
+    "poster",
     "preload",
-    "radiogroup",
     "readonly",
     "referrerpolicy",
     "rel",
@@ -467,197 +518,216 @@ export const attribute_names: AttributeName[] = [
     "rowspan",
     "sandbox",
     "scope",
-    "scoped",
     "selected",
+    "shadowrootmode",
     "shape",
     "size",
     "sizes",
-    "slot",
     "span",
-    "spellcheck",
     "src",
     "srcdoc",
     "srclang",
     "srcset",
     "start",
     "step",
-    "summary",
-    "tabindex",
     "target",
-    "title",
-    "translate",
     "type",
     "usemap",
     "value",
     "width",
     "wrap",
+    "xmlns",
 ] as const;
 
-// Common attribute_names (global attribute_names that can be used on any element)
-export type CommonAttributeName =
-    | "accesskey"
-    | "autocapitalize"
-    | "class"
-    | "contenteditable"
-    | "dir"
-    | "draggable"
-    | "hidden"
-    | "id"
-    | "itemprop"
-    | "lang"
-    | "popover"
-    | "popovertarget"
-    | "role"
-    | "slot"
-    | "spellcheck"
-    | "tabindex"
-    | "title"
-    | "translate";
+// AttributeType型定義
+type AttributeType<T, K extends string> = T &
+    Record<Exclude<AttributeNames, K | GlobalAttributeNames>, undefined>;
 
-export const common_attribute_names: CommonAttributeName[] = [
-    "accesskey",
-    "autocapitalize",
-    "class",
-    "contenteditable",
-    "dir",
-    "draggable",
-    "hidden",
-    "id",
-    "itemprop",
-    "lang",
-    "popover",
-    "popovertarget",
-    "role",
-    "slot",
-    "spellcheck",
-    "tabindex",
-    "title",
-    "translate",
-];
+// HTML要素ごとの属性型定義
+export type AAttributeBase = {
+    attributionsrc: string | string[];
+    download: string | null;
+    href: string;
+    hreflang: string;
+    ping: string | string[];
+    referrerpolicy:
+        | "no-referrer"
+        | "no-referrer-when-downgrade"
+        | "origin"
+        | "origin-when-cross-origin"
+        | "same-origin"
+        | "strict-origin"
+        | "strict-origin-when-cross-origin"
+        | "unsafe-url";
+    rel: string | string[];
+    target: string;
+    type: string;
+} & GlobalAttributes;
 
-type AttributeType<T extends string> = Record<T, AttributeValue> & Record<Exclude<AttributeName, T>, undefined>;
-
-// Element-specific attribute_names
-export type AAttributeName =
+export type AAttributeNames =
+    | GlobalAttributeNames
+    | "attributionsrc"
     | "download"
     | "href"
     | "hreflang"
-    | "media"
     | "ping"
     | "referrerpolicy"
     | "rel"
-    | "shape"
     | "target"
-    | CommonAttributeName;
-export type AAttribute = AttributeType<AAttributeName>;
-export const a_attribute_names: AAttributeName[] = [
-    "download",
-    "href",
-    "hreflang",
-    "media",
-    "ping",
-    "referrerpolicy",
-    "rel",
-    "shape",
-    "target",
-    ...common_attribute_names,
-];
+    | "type";
 
-export type AbbrAttributeName = CommonAttributeName;
-export type AbbrAttribute = AttributeType<CommonAttributeName>;
-export const abbr_attribute_names: AbbrAttributeName[] = common_attribute_names;
+export type AAttribute = AttributeType<AAttributeBase, AAttributeNames>;
 
-export type AddressAttributeName = CommonAttributeName;
-export type AddressAttribute = AttributeType<CommonAttributeName>;
-export const address_attribute_names: AddressAttributeName[] = common_attribute_names;
+export type AbbrAttributeBase = GlobalAttributes;
 
-export type AreaAttributeName =
+export type AbbrAttributeNames = GlobalAttributeNames;
+
+export type AbbrAttribute = AttributeType<AbbrAttributeBase, AbbrAttributeNames>;
+
+export type AddressAttributeBase = GlobalAttributes;
+
+export type AddressAttributeNames = GlobalAttributeNames;
+
+export type AddressAttribute = AttributeType<AddressAttributeBase, AddressAttributeNames>;
+
+export type AreaAttributeBase = {
+    alt: string;
+    coords: string;
+    download: string | null;
+    href: string;
+    hreflang: string;
+    ping: string | string[];
+    referrerpolicy:
+        | "no-referrer"
+        | "no-referrer-when-downgrade"
+        | "origin"
+        | "origin-when-cross-origin"
+        | "same-origin"
+        | "strict-origin"
+        | "strict-origin-when-cross-origin"
+        | "unsafe-url";
+    rel: string | string[];
+    shape: "rect" | "circle" | "poly" | "default";
+    target: string;
+} & GlobalAttributes;
+
+export type AreaAttributeNames =
+    | GlobalAttributeNames
     | "alt"
     | "coords"
     | "download"
     | "href"
     | "hreflang"
-    | "media"
     | "ping"
     | "referrerpolicy"
     | "rel"
     | "shape"
-    | "target"
-    | CommonAttributeName;
-export type AreaAttribute = AttributeType<AreaAttributeName>;
-export const area_attribute_names: AreaAttributeName[] = [
-    "alt",
-    "coords",
-    "download",
-    "href",
-    "hreflang",
-    "media",
-    "ping",
-    "referrerpolicy",
-    "rel",
-    "shape",
-    "target",
-    ...common_attribute_names,
-];
+    | "target";
 
-export type ArticleAttributeName = CommonAttributeName;
-export type ArticleAttribute = AttributeType<CommonAttributeName>;
-export const article_attribute_names: ArticleAttributeName[] = common_attribute_names;
+export type AreaAttribute = AttributeType<AreaAttributeBase, AreaAttributeNames>;
 
-export type AsideAttributeName = CommonAttributeName;
-export type AsideAttribute = AttributeType<CommonAttributeName>;
-export const aside_attribute_names: AsideAttributeName[] = common_attribute_names;
+export type ArticleAttributeBase = GlobalAttributes;
 
-export type AudioAttributeName =
+export type ArticleAttributeNames = GlobalAttributeNames;
+
+export type ArticleAttribute = AttributeType<ArticleAttributeBase, ArticleAttributeNames>;
+
+export type AsideAttributeBase = GlobalAttributes;
+
+export type AsideAttributeNames = GlobalAttributeNames;
+
+export type AsideAttribute = AttributeType<AsideAttributeBase, AsideAttributeNames>;
+
+export type AudioAttributeBase = {
+    autoplay: null;
+    controls: null;
+    crossorigin: "anonymous" | "use-credentials";
+    disableremoteplayback: null;
+    loop: null;
+    muted: null;
+    preload: "none" | "metadata" | "auto" | "";
+    src: string;
+} & GlobalAttributes;
+
+export type AudioAttributeNames =
+    | GlobalAttributeNames
     | "autoplay"
     | "controls"
     | "crossorigin"
+    | "disableremoteplayback"
     | "loop"
     | "muted"
     | "preload"
-    | "src"
-    | CommonAttributeName;
-export type AudioAttribute = AttributeType<AudioAttributeName>;
-export const audio_attribute_names: AudioAttributeName[] = [
-    "autoplay",
-    "controls",
-    "crossorigin",
-    "loop",
-    "muted",
-    "preload",
-    "src",
-    ...common_attribute_names,
-];
+    | "src";
 
-export type BAttributeName = CommonAttributeName;
-export type BAttribute = AttributeType<CommonAttributeName>;
-export const b_attribute_names: BAttributeName[] = common_attribute_names;
+export type AudioAttribute = AttributeType<AudioAttributeBase, AudioAttributeNames>;
 
-export type BaseAttributeName = "href" | "target" | CommonAttributeName;
-export type BaseAttribute = AttributeType<BaseAttributeName>;
-export const base_attribute_names: BaseAttributeName[] = ["href", "target", ...common_attribute_names];
+export type BAttributeBase = GlobalAttributes;
 
-export type BdiAttributeName = CommonAttributeName;
-export type BdiAttribute = AttributeType<CommonAttributeName>;
-export const bdi_attribute_names: BdiAttributeName[] = common_attribute_names;
+export type BAttributeNames = GlobalAttributeNames;
 
-export type BdoAttributeName = CommonAttributeName;
-export type BdoAttribute = AttributeType<CommonAttributeName>;
-export const bdo_attribute_names: BdoAttributeName[] = common_attribute_names;
+export type BAttribute = AttributeType<BAttributeBase, BAttributeNames>;
 
-export type BlockquoteAttributeName = "cite" | CommonAttributeName;
-export type BlockquoteAttribute = AttributeType<BlockquoteAttributeName>;
-export const blockquote_attribute_names: BlockquoteAttributeName[] = ["cite", ...common_attribute_names];
+export type BaseAttributeBase = {
+    href: string;
+    target: string;
+} & GlobalAttributes;
 
-export type BodyAttributeName = "background" | "bgcolor" | CommonAttributeName;
-export type BodyAttribute = AttributeType<BodyAttributeName>;
-export const body_attribute_names: BodyAttributeName[] = ["background", "bgcolor", ...common_attribute_names];
+export type BaseAttributeNames = GlobalAttributeNames | "href" | "target";
 
-export type BrAttributeName = CommonAttributeName;
-export type BrAttribute = AttributeType<CommonAttributeName>;
-export const br_attribute_names: BrAttributeName[] = common_attribute_names;
+export type BaseAttribute = AttributeType<BaseAttributeBase, BaseAttributeNames>;
 
-export type ButtonAttributeName =
+export type BdiAttributeBase = GlobalAttributes;
+
+export type BdiAttributeNames = GlobalAttributeNames;
+
+export type BdiAttribute = AttributeType<BdiAttributeBase, BdiAttributeNames>;
+
+export type BdoAttributeBase = {
+    dir: "ltr" | "rtl";
+} & GlobalAttributes;
+
+export type BdoAttributeNames = GlobalAttributeNames | "dir";
+
+export type BdoAttribute = AttributeType<BdoAttributeBase, BdoAttributeNames>;
+
+export type BlockquoteAttributeBase = {
+    cite: string;
+} & GlobalAttributes;
+
+export type BlockquoteAttributeNames = GlobalAttributeNames | "cite";
+
+export type BlockquoteAttribute = AttributeType<BlockquoteAttributeBase, BlockquoteAttributeNames>;
+
+export type BodyAttributeBase = GlobalAttributes;
+
+export type BodyAttributeNames = GlobalAttributeNames;
+
+export type BodyAttribute = AttributeType<BodyAttributeBase, BodyAttributeNames>;
+
+export type BrAttributeBase = GlobalAttributes;
+
+export type BrAttributeNames = GlobalAttributeNames;
+
+export type BrAttribute = AttributeType<BrAttributeBase, BrAttributeNames>;
+
+export type ButtonAttributeBase = {
+    disabled: null;
+    form: string;
+    formaction: string;
+    formenctype: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
+    formmethod: "post" | "get" | "dialog";
+    formnovalidate: null;
+    formtarget: string;
+    name: string;
+    popovertarget: string;
+    popovertargetaction: "toggle" | "show" | "hide";
+    type: "submit" | "reset" | "button";
+    value: string;
+} & GlobalAttributes;
+
+export type ButtonAttributeNames =
+    | GlobalAttributeNames
     | "disabled"
     | "form"
     | "formaction"
@@ -666,201 +736,295 @@ export type ButtonAttributeName =
     | "formnovalidate"
     | "formtarget"
     | "name"
+    | "popovertarget"
+    | "popovertargetaction"
     | "type"
-    | "value"
-    | CommonAttributeName;
-export type ButtonAttribute = AttributeType<ButtonAttributeName>;
-export const button_attribute_names: ButtonAttributeName[] = [
-    "disabled",
-    "form",
-    "formaction",
-    "formenctype",
-    "formmethod",
-    "formnovalidate",
-    "formtarget",
-    "name",
-    "type",
-    "value",
-    ...common_attribute_names,
-];
+    | "value";
 
-export type CanvasAttributeName = "height" | "width" | CommonAttributeName;
-export type CanvasAttribute = AttributeType<CanvasAttributeName>;
-export const canvas_attribute_names: CanvasAttributeName[] = ["height", "width", ...common_attribute_names];
+export type ButtonAttribute = AttributeType<ButtonAttributeBase, ButtonAttributeNames>;
 
-export type CaptionAttributeName = CommonAttributeName;
-export type CaptionAttribute = AttributeType<CommonAttributeName>;
-export const caption_attribute_names: CaptionAttributeName[] = common_attribute_names;
+export type CanvasAttributeBase = {
+    height: string;
+    width: string;
+} & GlobalAttributes;
 
-export type CiteAttributeName = CommonAttributeName;
-export type CiteAttribute = AttributeType<CommonAttributeName>;
-export const cite_attribute_names: CiteAttributeName[] = common_attribute_names;
+export type CanvasAttributeNames = GlobalAttributeNames | "height" | "width";
 
-export type CodeAttributeName = CommonAttributeName;
-export type CodeAttribute = AttributeType<CommonAttributeName>;
-export const code_attribute_names: CodeAttributeName[] = common_attribute_names;
+export type CanvasAttribute = AttributeType<CanvasAttributeBase, CanvasAttributeNames>;
 
-export type ColAttributeName = "bgcolor" | "span" | CommonAttributeName;
-export type ColAttribute = AttributeType<ColAttributeName>;
-export const col_attribute_names: ColAttributeName[] = ["bgcolor", "span", ...common_attribute_names];
+export type CaptionAttributeBase = GlobalAttributes;
 
-export type ColgroupAttributeName = "bgcolor" | "span" | CommonAttributeName;
-export type ColgroupAttribute = AttributeType<ColgroupAttributeName>;
-export const colgroup_attribute_names: ColgroupAttributeName[] = ["bgcolor", "span", ...common_attribute_names];
+export type CaptionAttributeNames = GlobalAttributeNames;
 
-export type DataAttributeName = "value" | CommonAttributeName;
-export type DataAttribute = AttributeType<DataAttributeName>;
-export const data_attribute_names: DataAttributeName[] = ["value", ...common_attribute_names];
+export type CaptionAttribute = AttributeType<CaptionAttributeBase, CaptionAttributeNames>;
 
-export type DatalistAttributeName = CommonAttributeName;
-export type DatalistAttribute = AttributeType<CommonAttributeName>;
-export const datalist_attribute_names: DatalistAttributeName[] = common_attribute_names;
+export type CiteAttributeBase = GlobalAttributes;
 
-export type DdAttributeName = CommonAttributeName;
-export type DdAttribute = AttributeType<CommonAttributeName>;
-export const dd_attribute_names: DdAttributeName[] = common_attribute_names;
+export type CiteAttributeNames = GlobalAttributeNames;
 
-export type DelAttributeName = "cite" | "datetime" | CommonAttributeName;
-export type DelAttribute = AttributeType<DelAttributeName>;
-export const del_attribute_names: DelAttributeName[] = ["cite", "datetime", ...common_attribute_names];
+export type CiteAttribute = AttributeType<CiteAttributeBase, CiteAttributeNames>;
 
-export type DetailsAttributeName = "open" | CommonAttributeName;
-export type DetailsAttribute = AttributeType<DetailsAttributeName>;
-export const details_attribute_names: DetailsAttributeName[] = ["open", ...common_attribute_names];
+export type CodeAttributeBase = GlobalAttributes;
 
-export type DfnAttributeName = CommonAttributeName;
-export type DfnAttribute = AttributeType<CommonAttributeName>;
-export const dfn_attribute_names: DfnAttributeName[] = common_attribute_names;
+export type CodeAttributeNames = GlobalAttributeNames;
 
-export type DialogAttributeName = "open" | CommonAttributeName;
-export type DialogAttribute = AttributeType<DialogAttributeName>;
-export const dialog_attribute_names: DialogAttributeName[] = ["open", ...common_attribute_names];
+export type CodeAttribute = AttributeType<CodeAttributeBase, CodeAttributeNames>;
 
-export type DivAttributeName = CommonAttributeName;
-export type DivAttribute = AttributeType<CommonAttributeName>;
-export const div_attribute_names: DivAttributeName[] = common_attribute_names;
+export type ColAttributeBase = {
+    span: string;
+} & GlobalAttributes;
 
-export type DlAttributeName = CommonAttributeName;
-export type DlAttribute = AttributeType<CommonAttributeName>;
-export const dl_attribute_names: DlAttributeName[] = common_attribute_names;
+export type ColAttributeNames = GlobalAttributeNames | "span";
 
-export type DtAttributeName = CommonAttributeName;
-export type DtAttribute = AttributeType<CommonAttributeName>;
-export const dt_attribute_names: DtAttributeName[] = common_attribute_names;
+export type ColAttribute = AttributeType<ColAttributeBase, ColAttributeNames>;
 
-export type EmAttributeName = CommonAttributeName;
-export type EmAttribute = AttributeType<CommonAttributeName>;
-export const em_attribute_names: EmAttributeName[] = common_attribute_names;
+export type ColgroupAttributeBase = {
+    span: string;
+} & GlobalAttributes;
 
-export type EmbedAttributeName = "height" | "src" | "type" | "width" | CommonAttributeName;
-export type EmbedAttribute = AttributeType<EmbedAttributeName>;
-export const embed_attribute_names: EmbedAttributeName[] = [
-    "height",
-    "src",
-    "type",
-    "width",
-    ...common_attribute_names,
-];
+export type ColgroupAttributeNames = GlobalAttributeNames | "span";
 
-export type FieldsetAttributeName = "disabled" | "form" | "name" | CommonAttributeName;
-export type FieldsetAttribute = AttributeType<FieldsetAttributeName>;
-export const fieldset_attribute_names: FieldsetAttributeName[] = [
-    "disabled",
-    "form",
-    "name",
-    ...common_attribute_names,
-];
+export type ColgroupAttribute = AttributeType<ColgroupAttributeBase, ColgroupAttributeNames>;
 
-export type FigcaptionAttributeName = CommonAttributeName;
-export type FigcaptionAttribute = AttributeType<CommonAttributeName>;
-export const figcaption_attribute_names: FigcaptionAttributeName[] = common_attribute_names;
+export type DataAttributeBase = {
+    value: string;
+} & GlobalAttributes;
 
-export type FigureAttributeName = CommonAttributeName;
-export type FigureAttribute = AttributeType<CommonAttributeName>;
-export const figure_attribute_names: FigureAttributeName[] = common_attribute_names;
+export type DataAttributeNames = GlobalAttributeNames | "value";
 
-export type FontAttributeName = "color" | CommonAttributeName;
-export type FontAttribute = AttributeType<FontAttributeName>;
-export const font_attribute_names: FontAttributeName[] = ["color", ...common_attribute_names];
+export type DataAttribute = AttributeType<DataAttributeBase, DataAttributeNames>;
 
-export type FooterAttributeName = CommonAttributeName;
-export type FooterAttribute = AttributeType<CommonAttributeName>;
-export const footer_attribute_names: FooterAttributeName[] = common_attribute_names;
+export type DatalistAttributeBase = GlobalAttributes;
 
-export type FormAttributeName =
-    | "accept-charset"
+export type DatalistAttributeNames = GlobalAttributeNames;
+
+export type DatalistAttribute = AttributeType<DatalistAttributeBase, DatalistAttributeNames>;
+
+export type DdAttributeBase = GlobalAttributes;
+
+export type DdAttributeNames = GlobalAttributeNames;
+
+export type DdAttribute = AttributeType<DdAttributeBase, DdAttributeNames>;
+
+export type DelAttributeBase = {
+    cite: string;
+    datetime: string;
+} & GlobalAttributes;
+
+export type DelAttributeNames = GlobalAttributeNames | "cite" | "datetime";
+
+export type DelAttribute = AttributeType<DelAttributeBase, DelAttributeNames>;
+
+export type DetailsAttributeBase = {
+    open: null;
+} & GlobalAttributes;
+
+export type DetailsAttributeNames = GlobalAttributeNames | "open";
+
+export type DetailsAttribute = AttributeType<DetailsAttributeBase, DetailsAttributeNames>;
+
+export type DfnAttributeBase = GlobalAttributes;
+
+export type DfnAttributeNames = GlobalAttributeNames;
+
+export type DfnAttribute = AttributeType<DfnAttributeBase, DfnAttributeNames>;
+
+export type DialogAttributeBase = {
+    open: null;
+} & GlobalAttributes;
+
+export type DialogAttributeNames = GlobalAttributeNames | "open";
+
+export type DialogAttribute = AttributeType<DialogAttributeBase, DialogAttributeNames>;
+
+export type DivAttributeBase = GlobalAttributes;
+
+export type DivAttributeNames = GlobalAttributeNames;
+
+export type DivAttribute = AttributeType<DivAttributeBase, DivAttributeNames>;
+
+export type DlAttributeBase = GlobalAttributes;
+
+export type DlAttributeNames = GlobalAttributeNames;
+
+export type DlAttribute = AttributeType<DlAttributeBase, DlAttributeNames>;
+
+export type DtAttributeBase = GlobalAttributes;
+
+export type DtAttributeNames = GlobalAttributeNames;
+
+export type DtAttribute = AttributeType<DtAttributeBase, DtAttributeNames>;
+
+export type EmAttributeBase = GlobalAttributes;
+
+export type EmAttributeNames = GlobalAttributeNames;
+
+export type EmAttribute = AttributeType<EmAttributeBase, EmAttributeNames>;
+
+export type EmbedAttributeBase = {
+    height: string;
+    src: string;
+    type: string;
+    width: string;
+} & GlobalAttributes;
+
+export type EmbedAttributeNames = GlobalAttributeNames | "height" | "src" | "type" | "width";
+
+export type EmbedAttribute = AttributeType<EmbedAttributeBase, EmbedAttributeNames>;
+
+export type FieldsetAttributeBase = {
+    disabled: null;
+    form: string;
+    name: string;
+} & GlobalAttributes;
+
+export type FieldsetAttributeNames = GlobalAttributeNames | "disabled" | "form" | "name";
+
+export type FieldsetAttribute = AttributeType<FieldsetAttributeBase, FieldsetAttributeNames>;
+
+export type FigcaptionAttributeBase = GlobalAttributes;
+
+export type FigcaptionAttributeNames = GlobalAttributeNames;
+
+export type FigcaptionAttribute = AttributeType<FigcaptionAttributeBase, FigcaptionAttributeNames>;
+
+export type FigureAttributeBase = GlobalAttributes;
+
+export type FigureAttributeNames = GlobalAttributeNames;
+
+export type FigureAttribute = AttributeType<FigureAttributeBase, FigureAttributeNames>;
+
+export type FooterAttributeBase = GlobalAttributes;
+
+export type FooterAttributeNames = GlobalAttributeNames;
+
+export type FooterAttribute = AttributeType<FooterAttributeBase, FooterAttributeNames>;
+
+export type FormAttributeBase = {
+    acceptcharset: string;
+    action: string;
+    autocomplete: "on" | "off";
+    enctype: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
+    method: "post" | "get" | "dialog";
+    name: string;
+    novalidate: null;
+    rel: string | string[];
+    target: string;
+} & GlobalAttributes;
+
+export type FormAttributeNames =
+    | GlobalAttributeNames
+    | "acceptcharset"
     | "action"
     | "autocomplete"
     | "enctype"
     | "method"
     | "name"
     | "novalidate"
-    | "target"
-    | CommonAttributeName;
-export type FormAttribute = AttributeType<FormAttributeName>;
-export const form_attribute_names: FormAttributeName[] = [
-    "accept-charset",
-    "action",
-    "autocomplete",
-    "enctype",
-    "method",
-    "name",
-    "novalidate",
-    "target",
-    ...common_attribute_names,
-];
+    | "rel"
+    | "target";
 
-export type H1AttributeName = CommonAttributeName;
-export type H1Attribute = AttributeType<CommonAttributeName>;
-export const h1_attribute_names: H1AttributeName[] = common_attribute_names;
+export type FormAttribute = AttributeType<FormAttributeBase, FormAttributeNames>;
 
-export type H2AttributeName = CommonAttributeName;
-export type H2Attribute = AttributeType<CommonAttributeName>;
-export const h2_attribute_names: H2AttributeName[] = common_attribute_names;
+export type H1AttributeBase = GlobalAttributes;
 
-export type H3AttributeName = CommonAttributeName;
-export type H3Attribute = AttributeType<CommonAttributeName>;
-export const h3_attribute_names: H3AttributeName[] = common_attribute_names;
+export type H1AttributeNames = GlobalAttributeNames;
 
-export type H4AttributeName = CommonAttributeName;
-export type H4Attribute = AttributeType<CommonAttributeName>;
-export const h4_attribute_names: H4AttributeName[] = common_attribute_names;
+export type H1Attribute = AttributeType<H1AttributeBase, H1AttributeNames>;
 
-export type H5AttributeName = CommonAttributeName;
-export type H5Attribute = AttributeType<CommonAttributeName>;
-export const h5_attribute_names: H5AttributeName[] = common_attribute_names;
+export type H2AttributeBase = GlobalAttributes;
 
-export type H6AttributeName = CommonAttributeName;
-export type H6Attribute = AttributeType<CommonAttributeName>;
-export const h6_attribute_names: H6AttributeName[] = common_attribute_names;
+export type H2AttributeNames = GlobalAttributeNames;
 
-export type HeadAttributeName = CommonAttributeName;
-export type HeadAttribute = AttributeType<CommonAttributeName>;
-export const head_attribute_names: HeadAttributeName[] = common_attribute_names;
+export type H2Attribute = AttributeType<H2AttributeBase, H2AttributeNames>;
 
-export type HeaderAttributeName = CommonAttributeName;
-export type HeaderAttribute = AttributeType<CommonAttributeName>;
-export const header_attribute_names: HeaderAttributeName[] = common_attribute_names;
+export type H3AttributeBase = GlobalAttributes;
 
-export type HgroupAttributeName = CommonAttributeName;
-export type HgroupAttribute = AttributeType<CommonAttributeName>;
-export const hgroup_attribute_names: HgroupAttributeName[] = common_attribute_names;
+export type H3AttributeNames = GlobalAttributeNames;
 
-export type HrAttributeName = "color" | CommonAttributeName;
-export type HrAttribute = AttributeType<HrAttributeName>;
-export const hr_attribute_names: HrAttributeName[] = ["color", ...common_attribute_names];
+export type H3Attribute = AttributeType<H3AttributeBase, H3AttributeNames>;
 
-export type HtmlAttributeName = CommonAttributeName;
-export type HtmlAttribute = AttributeType<CommonAttributeName>;
-export const html_attribute_names: HtmlAttributeName[] = common_attribute_names;
+export type H4AttributeBase = GlobalAttributes;
 
-export type IAttributeName = CommonAttributeName;
-export type IAttribute = AttributeType<CommonAttributeName>;
-export const i_attribute_names: IAttributeName[] = common_attribute_names;
+export type H4AttributeNames = GlobalAttributeNames;
 
-export type IframeAttributeName =
+export type H4Attribute = AttributeType<H4AttributeBase, H4AttributeNames>;
+
+export type H5AttributeBase = GlobalAttributes;
+
+export type H5AttributeNames = GlobalAttributeNames;
+
+export type H5Attribute = AttributeType<H5AttributeBase, H5AttributeNames>;
+
+export type H6AttributeBase = GlobalAttributes;
+
+export type H6AttributeNames = GlobalAttributeNames;
+
+export type H6Attribute = AttributeType<H6AttributeBase, H6AttributeNames>;
+
+export type HeadAttributeBase = GlobalAttributes;
+
+export type HeadAttributeNames = GlobalAttributeNames;
+
+export type HeadAttribute = AttributeType<HeadAttributeBase, HeadAttributeNames>;
+
+export type HeaderAttributeBase = GlobalAttributes;
+
+export type HeaderAttributeNames = GlobalAttributeNames;
+
+export type HeaderAttribute = AttributeType<HeaderAttributeBase, HeaderAttributeNames>;
+
+export type HgroupAttributeBase = GlobalAttributes;
+
+export type HgroupAttributeNames = GlobalAttributeNames;
+
+export type HgroupAttribute = AttributeType<HgroupAttributeBase, HgroupAttributeNames>;
+
+export type HrAttributeBase = GlobalAttributes;
+
+export type HrAttributeNames = GlobalAttributeNames;
+
+export type HrAttribute = AttributeType<HrAttributeBase, HrAttributeNames>;
+
+export type HtmlAttributeBase = {
+    xmlns: string;
+} & GlobalAttributes;
+
+export type HtmlAttributeNames = GlobalAttributeNames | "xmlns";
+
+export type HtmlAttribute = AttributeType<HtmlAttributeBase, HtmlAttributeNames>;
+
+export type IAttributeBase = GlobalAttributes;
+
+export type IAttributeNames = GlobalAttributeNames;
+
+export type IAttribute = AttributeType<IAttributeBase, IAttributeNames>;
+
+export type IframeAttributeBase = {
+    allow: string | string[];
+    allowfullscreen: null;
+    height: string;
+    loading: "lazy" | "eager";
+    name: string;
+    referrerpolicy:
+        | "no-referrer"
+        | "no-referrer-when-downgrade"
+        | "origin"
+        | "origin-when-cross-origin"
+        | "same-origin"
+        | "strict-origin"
+        | "strict-origin-when-cross-origin"
+        | "unsafe-url";
+    sandbox: string | string[];
+    src: string;
+    srcdoc: string;
+    width: string;
+} & GlobalAttributes;
+
+export type IframeAttributeNames =
+    | GlobalAttributeNames
     | "allow"
-    | "csp"
+    | "allowfullscreen"
     | "height"
     | "loading"
     | "name"
@@ -868,28 +1032,40 @@ export type IframeAttributeName =
     | "sandbox"
     | "src"
     | "srcdoc"
-    | "width"
-    | CommonAttributeName;
-export type IframeAttribute = AttributeType<IframeAttributeName>;
-export const iframe_attribute_names: IframeAttributeName[] = [
-    "allow",
-    "csp",
-    "height",
-    "loading",
-    "name",
-    "referrerpolicy",
-    "sandbox",
-    "src",
-    "srcdoc",
-    "width",
-    ...common_attribute_names,
-];
+    | "width";
 
-export type ImgAttributeName =
+export type IframeAttribute = AttributeType<IframeAttributeBase, IframeAttributeNames>;
+
+export type ImgAttributeBase = {
+    alt: string;
+    crossorigin: "anonymous" | "use-credentials";
+    decoding: "sync" | "async" | "auto";
+    fetchpriority: "auto" | "high" | "low";
+    height: string;
+    ismap: null;
+    loading: "lazy" | "eager";
+    referrerpolicy:
+        | "no-referrer"
+        | "no-referrer-when-downgrade"
+        | "origin"
+        | "origin-when-cross-origin"
+        | "same-origin"
+        | "strict-origin"
+        | "strict-origin-when-cross-origin"
+        | "unsafe-url";
+    sizes: string | string[];
+    src: string;
+    srcset: string | string[];
+    usemap: string;
+    width: string;
+} & GlobalAttributes;
+
+export type ImgAttributeNames =
+    | GlobalAttributeNames
     | "alt"
-    | "border"
     | "crossorigin"
     | "decoding"
+    | "fetchpriority"
     | "height"
     | "ismap"
     | "loading"
@@ -898,32 +1074,76 @@ export type ImgAttributeName =
     | "src"
     | "srcset"
     | "usemap"
-    | "width"
-    | CommonAttributeName;
-export type ImgAttribute = AttributeType<ImgAttributeName>;
-export const img_attribute_names: ImgAttributeName[] = [
-    "alt",
-    "border",
-    "crossorigin",
-    "decoding",
-    "height",
-    "ismap",
-    "loading",
-    "referrerpolicy",
-    "sizes",
-    "src",
-    "srcset",
-    "usemap",
-    "width",
-    ...common_attribute_names,
-];
+    | "width";
 
-export type InputAttributeName =
+export type ImgAttribute = AttributeType<ImgAttributeBase, ImgAttributeNames>;
+
+export type InputAttributeBase = {
+    accept: string | string[];
+    alt: string;
+    autocomplete: string;
+    capture: "user" | "environment" | "";
+    checked: null;
+    dirname: string;
+    disabled: null;
+    form: string;
+    formaction: string;
+    formenctype: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
+    formmethod: "post" | "get" | "dialog";
+    formnovalidate: null;
+    formtarget: string;
+    height: string;
+    list: string;
+    max: string;
+    maxlength: string;
+    min: string;
+    minlength: string;
+    multiple: null;
+    name: string;
+    pattern: string;
+    placeholder: string;
+    popovertarget: string;
+    popovertargetaction: "toggle" | "show" | "hide";
+    readonly: null;
+    required: null;
+    size: string;
+    src: string;
+    step: string;
+    type:
+        | "button"
+        | "checkbox"
+        | "color"
+        | "date"
+        | "datetime-local"
+        | "email"
+        | "file"
+        | "hidden"
+        | "image"
+        | "month"
+        | "number"
+        | "password"
+        | "radio"
+        | "range"
+        | "reset"
+        | "search"
+        | "submit"
+        | "tel"
+        | "text"
+        | "time"
+        | "url"
+        | "week";
+    value: string;
+    width: string;
+} & GlobalAttributes;
+
+export type InputAttributeNames =
+    | GlobalAttributeNames
     | "accept"
     | "alt"
     | "autocomplete"
     | "capture"
     | "checked"
+    | "dirname"
     | "disabled"
     | "form"
     | "formaction"
@@ -941,350 +1161,509 @@ export type InputAttributeName =
     | "name"
     | "pattern"
     | "placeholder"
+    | "popovertarget"
+    | "popovertargetaction"
     | "readonly"
     | "required"
     | "size"
     | "src"
     | "step"
     | "type"
-    | "usemap"
     | "value"
-    | "width"
-    | CommonAttributeName;
-export type InputAttribute = AttributeType<InputAttributeName>;
-export const input_attribute_names: InputAttributeName[] = [
-    "accept",
-    "alt",
-    "autocomplete",
-    "capture",
-    "checked",
-    "disabled",
-    "form",
-    "formaction",
-    "formenctype",
-    "formmethod",
-    "formnovalidate",
-    "formtarget",
-    "height",
-    "list",
-    "max",
-    "maxlength",
-    "min",
-    "minlength",
-    "multiple",
-    "name",
-    "pattern",
-    "placeholder",
-    "readonly",
-    "required",
-    "size",
-    "src",
-    "step",
-    "type",
-    "usemap",
-    "value",
-    "width",
-    ...common_attribute_names,
-];
+    | "width";
 
-export type InsAttributeName = "cite" | "datetime" | CommonAttributeName;
-export type InsAttribute = AttributeType<InsAttributeName>;
-export const ins_attribute_names: InsAttributeName[] = ["cite", "datetime", ...common_attribute_names];
+export type InputAttribute = AttributeType<InputAttributeBase, InputAttributeNames>;
 
-export type KbdAttributeName = CommonAttributeName;
-export type KbdAttribute = AttributeType<CommonAttributeName>;
-export const kbd_attribute_names: KbdAttributeName[] = common_attribute_names;
+export type InsAttributeBase = {
+    cite: string;
+    datetime: string;
+} & GlobalAttributes;
 
-export type LabelAttributeName = "for" | "form" | CommonAttributeName;
-export type LabelAttribute = AttributeType<LabelAttributeName>;
-export const label_attribute_names: LabelAttributeName[] = ["for", "form", ...common_attribute_names];
+export type InsAttributeNames = GlobalAttributeNames | "cite" | "datetime";
 
-export type LegendAttributeName = CommonAttributeName;
-export type LegendAttribute = AttributeType<CommonAttributeName>;
-export const legend_attribute_names: LegendAttributeName[] = common_attribute_names;
+export type InsAttribute = AttributeType<InsAttributeBase, InsAttributeNames>;
 
-export type LiAttributeName = "value" | CommonAttributeName;
-export type LiAttribute = AttributeType<LiAttributeName>;
-export const li_attribute_names: LiAttributeName[] = ["value", ...common_attribute_names];
+export type KbdAttributeBase = GlobalAttributes;
 
-export type LinkAttributeName =
+export type KbdAttributeNames = GlobalAttributeNames;
+
+export type KbdAttribute = AttributeType<KbdAttributeBase, KbdAttributeNames>;
+
+export type LabelAttributeBase = {
+    for: string;
+    form: string;
+} & GlobalAttributes;
+
+export type LabelAttributeNames = GlobalAttributeNames | "for" | "form";
+
+export type LabelAttribute = AttributeType<LabelAttributeBase, LabelAttributeNames>;
+
+export type LegendAttributeBase = GlobalAttributes;
+
+export type LegendAttributeNames = GlobalAttributeNames;
+
+export type LegendAttribute = AttributeType<LegendAttributeBase, LegendAttributeNames>;
+
+export type LiAttributeBase = {
+    value: string;
+} & GlobalAttributes;
+
+export type LiAttributeNames = GlobalAttributeNames | "value";
+
+export type LiAttribute = AttributeType<LiAttributeBase, LiAttributeNames>;
+
+export type LinkAttributeBase = {
+    as:
+        | "audio"
+        | "document"
+        | "embed"
+        | "fetch"
+        | "font"
+        | "image"
+        | "object"
+        | "script"
+        | "style"
+        | "track"
+        | "video"
+        | "worker";
+    crossorigin: "anonymous" | "use-credentials";
+    disabled: null;
+    fetchpriority: "auto" | "high" | "low";
+    href: string;
+    hreflang: string;
+    imagesizes: string | string[];
+    imagesrcset: string | string[];
+    integrity: string;
+    media: string;
+    referrerpolicy:
+        | "no-referrer"
+        | "no-referrer-when-downgrade"
+        | "origin"
+        | "origin-when-cross-origin"
+        | "same-origin"
+        | "strict-origin"
+        | "strict-origin-when-cross-origin"
+        | "unsafe-url";
+    rel: string | string[];
+    sizes: string | string[];
+    title: string;
+    type: string;
+} & GlobalAttributes;
+
+export type LinkAttributeNames =
+    | GlobalAttributeNames
     | "as"
     | "crossorigin"
+    | "disabled"
+    | "fetchpriority"
     | "href"
     | "hreflang"
+    | "imagesizes"
+    | "imagesrcset"
     | "integrity"
     | "media"
     | "referrerpolicy"
     | "rel"
     | "sizes"
-    | "type"
-    | CommonAttributeName;
-export type LinkAttribute = AttributeType<LinkAttributeName>;
-export const link_attribute_names: LinkAttributeName[] = [
-    "as",
-    "crossorigin",
-    "href",
-    "hreflang",
-    "integrity",
-    "media",
-    "referrerpolicy",
-    "rel",
-    "sizes",
-    "type",
-    ...common_attribute_names,
-];
+    | "title"
+    | "type";
 
-export type MainAttributeName = CommonAttributeName;
-export type MainAttribute = AttributeType<CommonAttributeName>;
-export const main_attribute_names: MainAttributeName[] = common_attribute_names;
+export type LinkAttribute = AttributeType<LinkAttributeBase, LinkAttributeNames>;
 
-export type MapAttributeName = "name" | CommonAttributeName;
-export type MapAttribute = AttributeType<MapAttributeName>;
-export const map_attribute_names: MapAttributeName[] = ["name", ...common_attribute_names];
+export type MainAttributeBase = GlobalAttributes;
 
-export type MarkAttributeName = CommonAttributeName;
-export type MarkAttribute = AttributeType<CommonAttributeName>;
-export const mark_attribute_names: MarkAttributeName[] = common_attribute_names;
+export type MainAttributeNames = GlobalAttributeNames;
 
-export type MarqueeAttributeName = "bgcolor" | "loop" | CommonAttributeName;
-export type MarqueeAttribute = AttributeType<MarqueeAttributeName>;
-export const marquee_attribute_names: MarqueeAttributeName[] = ["bgcolor", "loop", ...common_attribute_names];
+export type MainAttribute = AttributeType<MainAttributeBase, MainAttributeNames>;
 
-export type MenuAttributeName = "type" | CommonAttributeName;
-export type MenuAttribute = AttributeType<MenuAttributeName>;
-export const menu_attribute_names: MenuAttributeName[] = ["type", ...common_attribute_names];
+export type MapAttributeBase = {
+    name: string;
+} & GlobalAttributes;
 
-export type MetaAttributeName = "charset" | "content" | "http_equiv" | "http-equiv" | "name" | CommonAttributeName;
-export type MetaAttribute = AttributeType<MetaAttributeName>;
-export const meta_attribute_names: MetaAttributeName[] = [
-    "charset",
-    "content",
-    "http_equiv",
-    "http-equiv",
-    "name",
-    ...common_attribute_names,
-];
+export type MapAttributeNames = GlobalAttributeNames | "name";
 
-export type MeterAttributeName = "form" | "high" | "low" | "max" | "min" | "optimum" | "value" | CommonAttributeName;
-export type MeterAttribute = AttributeType<MeterAttributeName>;
-export const meter_attribute_names: MeterAttributeName[] = [
-    "form",
-    "high",
-    "low",
-    "max",
-    "min",
-    "optimum",
-    "value",
-    ...common_attribute_names,
-];
+export type MapAttribute = AttributeType<MapAttributeBase, MapAttributeNames>;
 
-export type NavAttributeName = CommonAttributeName;
-export type NavAttribute = AttributeType<CommonAttributeName>;
-export const nav_attribute_names: NavAttributeName[] = common_attribute_names;
+export type MarkAttributeBase = GlobalAttributes;
 
-export type NoscriptAttributeName = CommonAttributeName;
-export type NoscriptAttribute = AttributeType<CommonAttributeName>;
-export const noscript_attribute_names: NoscriptAttributeName[] = common_attribute_names;
+export type MarkAttributeNames = GlobalAttributeNames;
 
-export type ObjectAttributeName =
-    | "border"
+export type MarkAttribute = AttributeType<MarkAttributeBase, MarkAttributeNames>;
+
+export type MenuAttributeBase = GlobalAttributes;
+
+export type MenuAttributeNames = GlobalAttributeNames;
+
+export type MenuAttribute = AttributeType<MenuAttributeBase, MenuAttributeNames>;
+
+export type MetaAttributeBase = {
+    charset: string;
+    content: string;
+    "http-equiv": "content-security-policy" | "content-type" | "default-style" | "x-ua-compatible" | "refresh";
+    http_equiv: "content-security-policy" | "content-type" | "default-style" | "x-ua-compatible" | "refresh";
+    media: string;
+    name: string;
+} & GlobalAttributes;
+
+export type MetaAttributeNames = GlobalAttributeNames | "charset" | "content" | "http-equiv" | "http_equiv" | "media" | "name";
+
+export type MetaAttribute = AttributeType<MetaAttributeBase, MetaAttributeNames>;
+
+export type MeterAttributeBase = {
+    form: string;
+    high: string;
+    low: string;
+    max: string;
+    min: string;
+    optimum: string;
+    value: string;
+} & GlobalAttributes;
+
+export type MeterAttributeNames = GlobalAttributeNames | "form" | "high" | "low" | "max" | "min" | "optimum" | "value";
+
+export type MeterAttribute = AttributeType<MeterAttributeBase, MeterAttributeNames>;
+
+export type NavAttributeBase = GlobalAttributes;
+
+export type NavAttributeNames = GlobalAttributeNames;
+
+export type NavAttribute = AttributeType<NavAttributeBase, NavAttributeNames>;
+
+export type NoscriptAttributeBase = GlobalAttributes;
+
+export type NoscriptAttributeNames = GlobalAttributeNames;
+
+export type NoscriptAttribute = AttributeType<NoscriptAttributeBase, NoscriptAttributeNames>;
+
+export type ObjectAttributeBase = {
+    data: string;
+    form: string;
+    height: string;
+    name: string;
+    type: string;
+    usemap: string;
+    width: string;
+} & GlobalAttributes;
+
+export type ObjectAttributeNames =
+    | GlobalAttributeNames
     | "data"
     | "form"
     | "height"
     | "name"
     | "type"
     | "usemap"
-    | "width"
-    | CommonAttributeName;
-export type ObjectAttribute = AttributeType<ObjectAttributeName>;
-export const object_attribute_names: ObjectAttributeName[] = [
-    "border",
-    "data",
-    "form",
-    "height",
-    "name",
-    "type",
-    "usemap",
-    "width",
-    ...common_attribute_names,
-];
+    | "width";
 
-export type OlAttributeName = "reversed" | "start" | "type" | CommonAttributeName;
-export type OlAttribute = AttributeType<OlAttributeName>;
-export const ol_attribute_names: OlAttributeName[] = ["reversed", "start", "type", ...common_attribute_names];
+export type ObjectAttribute = AttributeType<ObjectAttributeBase, ObjectAttributeNames>;
 
-export type OptgroupAttributeName = "disabled" | "label" | CommonAttributeName;
-export type OptgroupAttribute = AttributeType<OptgroupAttributeName>;
-export const optgroup_attribute_names: OptgroupAttributeName[] = ["disabled", "label", ...common_attribute_names];
+export type OlAttributeBase = {
+    reversed: null;
+    start: string;
+    type: "1" | "a" | "A" | "i" | "I";
+} & GlobalAttributes;
 
-export type OptionAttributeName = "disabled" | "label" | "selected" | "value" | CommonAttributeName;
-export type OptionAttribute = AttributeType<OptionAttributeName>;
-export const option_attribute_names: OptionAttributeName[] = [
-    "disabled",
-    "label",
-    "selected",
-    "value",
-    ...common_attribute_names,
-];
+export type OlAttributeNames = GlobalAttributeNames | "reversed" | "start" | "type";
 
-export type OutputAttributeName = "for" | "form" | "name" | CommonAttributeName;
-export type OutputAttribute = AttributeType<OutputAttributeName>;
-export const output_attribute_names: OutputAttributeName[] = ["for", "form", "name", ...common_attribute_names];
+export type OlAttribute = AttributeType<OlAttributeBase, OlAttributeNames>;
 
-export type PAttributeName = CommonAttributeName;
-export type PAttribute = AttributeType<CommonAttributeName>;
-export const p_attribute_names: PAttributeName[] = common_attribute_names;
+export type OptgroupAttributeBase = {
+    disabled: null;
+    label: string;
+} & GlobalAttributes;
 
-export type ParamAttributeName = "name" | "value" | CommonAttributeName;
-export type ParamAttribute = AttributeType<ParamAttributeName>;
-export const param_attribute_names: ParamAttributeName[] = ["name", "value", ...common_attribute_names];
+export type OptgroupAttributeNames = GlobalAttributeNames | "disabled" | "label";
 
-export type PictureAttributeName = CommonAttributeName;
-export type PictureAttribute = AttributeType<CommonAttributeName>;
-export const picture_attribute_names: PictureAttributeName[] = common_attribute_names;
+export type OptgroupAttribute = AttributeType<OptgroupAttributeBase, OptgroupAttributeNames>;
 
-export type PreAttributeName = CommonAttributeName;
-export type PreAttribute = AttributeType<CommonAttributeName>;
-export const pre_attribute_names: PreAttributeName[] = common_attribute_names;
+export type OptionAttributeBase = {
+    disabled: null;
+    label: string;
+    selected: null;
+    value: string;
+} & GlobalAttributes;
 
-export type ProgressAttributeName = "form" | "max" | "value" | CommonAttributeName;
-export type ProgressAttribute = AttributeType<ProgressAttributeName>;
-export const progress_attribute_names: ProgressAttributeName[] = ["form", "max", "value", ...common_attribute_names];
+export type OptionAttributeNames = GlobalAttributeNames | "disabled" | "label" | "selected" | "value";
 
-export type QAttributeName = "cite" | CommonAttributeName;
-export type QAttribute = AttributeType<QAttributeName>;
-export const q_attribute_names: QAttributeName[] = ["cite", ...common_attribute_names];
+export type OptionAttribute = AttributeType<OptionAttributeBase, OptionAttributeNames>;
 
-export type RpAttributeName = CommonAttributeName;
-export type RpAttribute = AttributeType<CommonAttributeName>;
-export const rp_attribute_names: RpAttributeName[] = common_attribute_names;
+export type OutputAttributeBase = {
+    for: string | string[];
+    form: string;
+    name: string;
+} & GlobalAttributes;
 
-export type RtAttributeName = CommonAttributeName;
-export type RtAttribute = AttributeType<CommonAttributeName>;
-export const rt_attribute_names: RtAttributeName[] = common_attribute_names;
+export type OutputAttributeNames = GlobalAttributeNames | "for" | "form" | "name";
 
-export type RubyAttributeName = CommonAttributeName;
-export type RubyAttribute = AttributeType<CommonAttributeName>;
-export const ruby_attribute_names: RubyAttributeName[] = common_attribute_names;
+export type OutputAttribute = AttributeType<OutputAttributeBase, OutputAttributeNames>;
 
-export type SAttributeName = CommonAttributeName;
-export type SAttribute = AttributeType<CommonAttributeName>;
-export const s_attribute_names: SAttributeName[] = common_attribute_names;
+export type PAttributeBase = GlobalAttributes;
 
-export type SampAttributeName = CommonAttributeName;
-export type SampAttribute = AttributeType<CommonAttributeName>;
-export const samp_attribute_names: SampAttributeName[] = common_attribute_names;
+export type PAttributeNames = GlobalAttributeNames;
 
-export type ScriptAttributeName =
+export type PAttribute = AttributeType<PAttributeBase, PAttributeNames>;
+
+export type PictureAttributeBase = GlobalAttributes;
+
+export type PictureAttributeNames = GlobalAttributeNames;
+
+export type PictureAttribute = AttributeType<PictureAttributeBase, PictureAttributeNames>;
+
+export type PreAttributeBase = GlobalAttributes;
+
+export type PreAttributeNames = GlobalAttributeNames;
+
+export type PreAttribute = AttributeType<PreAttributeBase, PreAttributeNames>;
+
+export type ProgressAttributeBase = {
+    max: string;
+    value: string;
+} & GlobalAttributes;
+
+export type ProgressAttributeNames = GlobalAttributeNames | "max" | "value";
+
+export type ProgressAttribute = AttributeType<ProgressAttributeBase, ProgressAttributeNames>;
+
+export type QAttributeBase = {
+    cite: string;
+} & GlobalAttributes;
+
+export type QAttributeNames = GlobalAttributeNames | "cite";
+
+export type QAttribute = AttributeType<QAttributeBase, QAttributeNames>;
+
+export type RpAttributeBase = GlobalAttributes;
+
+export type RpAttributeNames = GlobalAttributeNames;
+
+export type RpAttribute = AttributeType<RpAttributeBase, RpAttributeNames>;
+
+export type RtAttributeBase = GlobalAttributes;
+
+export type RtAttributeNames = GlobalAttributeNames;
+
+export type RtAttribute = AttributeType<RtAttributeBase, RtAttributeNames>;
+
+export type RubyAttributeBase = GlobalAttributes;
+
+export type RubyAttributeNames = GlobalAttributeNames;
+
+export type RubyAttribute = AttributeType<RubyAttributeBase, RubyAttributeNames>;
+
+export type SAttributeBase = GlobalAttributes;
+
+export type SAttributeNames = GlobalAttributeNames;
+
+export type SAttribute = AttributeType<SAttributeBase, SAttributeNames>;
+
+export type SampAttributeBase = GlobalAttributes;
+
+export type SampAttributeNames = GlobalAttributeNames;
+
+export type SampAttribute = AttributeType<SampAttributeBase, SampAttributeNames>;
+
+export type ScriptAttributeBase = {
+    async: null;
+    crossorigin: "anonymous" | "use-credentials";
+    defer: null;
+    fetchpriority: "auto" | "high" | "low";
+    integrity: string;
+    nomodule: null;
+    referrerpolicy:
+        | "no-referrer"
+        | "no-referrer-when-downgrade"
+        | "origin"
+        | "origin-when-cross-origin"
+        | "same-origin"
+        | "strict-origin"
+        | "strict-origin-when-cross-origin"
+        | "unsafe-url";
+    src: string;
+    type: string;
+} & GlobalAttributes;
+
+export type ScriptAttributeNames =
+    | GlobalAttributeNames
     | "async"
     | "crossorigin"
     | "defer"
+    | "fetchpriority"
     | "integrity"
+    | "nomodule"
     | "referrerpolicy"
     | "src"
-    | "type"
-    | CommonAttributeName;
-export type ScriptAttribute = AttributeType<ScriptAttributeName>;
-export const script_attribute_names: ScriptAttributeName[] = [
-    "async",
-    "crossorigin",
-    "defer",
-    "integrity",
-    "referrerpolicy",
-    "src",
-    "type",
-    ...common_attribute_names,
-];
+    | "type";
 
-export type SectionAttributeName = CommonAttributeName;
-export type SectionAttribute = AttributeType<CommonAttributeName>;
-export const section_attribute_names: SectionAttributeName[] = common_attribute_names;
+export type ScriptAttribute = AttributeType<ScriptAttributeBase, ScriptAttributeNames>;
 
-export type SelectAttributeName =
+export type SearchAttributeBase = GlobalAttributes;
+
+export type SearchAttributeNames = GlobalAttributeNames;
+
+export type SearchAttribute = AttributeType<SearchAttributeBase, SearchAttributeNames>;
+
+export type SectionAttributeBase = GlobalAttributes;
+
+export type SectionAttributeNames = GlobalAttributeNames;
+
+export type SectionAttribute = AttributeType<SectionAttributeBase, SectionAttributeNames>;
+
+export type SelectAttributeBase = {
+    autocomplete: "on" | "off";
+    disabled: null;
+    form: string;
+    multiple: null;
+    name: string;
+    required: null;
+    size: string;
+} & GlobalAttributes;
+
+export type SelectAttributeNames =
+    | GlobalAttributeNames
     | "autocomplete"
     | "disabled"
     | "form"
     | "multiple"
     | "name"
     | "required"
-    | "size"
-    | CommonAttributeName;
-export type SelectAttribute = AttributeType<SelectAttributeName>;
-export const select_attribute_names: SelectAttributeName[] = [
-    "autocomplete",
-    "disabled",
-    "form",
-    "multiple",
-    "name",
-    "required",
-    "size",
-    ...common_attribute_names,
-];
+    | "size";
 
-export type SmallAttributeName = CommonAttributeName;
-export type SmallAttribute = AttributeType<CommonAttributeName>;
-export const small_attribute_names: SmallAttributeName[] = common_attribute_names;
+export type SelectAttribute = AttributeType<SelectAttributeBase, SelectAttributeNames>;
 
-export type SourceAttributeName = "media" | "sizes" | "src" | "srcset" | "type" | CommonAttributeName;
-export type SourceAttribute = AttributeType<SourceAttributeName>;
-export const source_attribute_names: SourceAttributeName[] = [
-    "media",
-    "sizes",
-    "src",
-    "srcset",
-    "type",
-    ...common_attribute_names,
-];
+export type SlotAttributeBase = {
+    name: string;
+} & GlobalAttributes;
 
-export type SpanAttributeName = CommonAttributeName;
-export type SpanAttribute = AttributeType<CommonAttributeName>;
-export const span_attribute_names: SpanAttributeName[] = common_attribute_names;
+export type SlotAttributeNames = GlobalAttributeNames | "name";
 
-export type StrongAttributeName = CommonAttributeName;
-export type StrongAttribute = AttributeType<CommonAttributeName>;
-export const strong_attribute_names: StrongAttributeName[] = common_attribute_names;
+export type SlotAttribute = AttributeType<SlotAttributeBase, SlotAttributeNames>;
 
-export type SubAttributeName = CommonAttributeName;
-export type SubAttribute = AttributeType<CommonAttributeName>;
-export const sub_attribute_names: SubAttributeName[] = common_attribute_names;
+export type SmallAttributeBase = GlobalAttributes;
 
-export type SummaryAttributeName = CommonAttributeName;
-export type SummaryAttribute = AttributeType<CommonAttributeName>;
-export const summary_attribute_names: SummaryAttributeName[] = common_attribute_names;
+export type SmallAttributeNames = GlobalAttributeNames;
 
-export type SupAttributeName = CommonAttributeName;
-export type SupAttribute = AttributeType<CommonAttributeName>;
-export const sup_attribute_names: SupAttributeName[] = common_attribute_names;
+export type SmallAttribute = AttributeType<SmallAttributeBase, SmallAttributeNames>;
 
-export type TableAttributeName = "background" | "bgcolor" | "border" | CommonAttributeName;
-export type TableAttribute = AttributeType<TableAttributeName>;
-export const table_attribute_names: TableAttributeName[] = [
-    "background",
-    "bgcolor",
-    "border",
-    ...common_attribute_names,
-];
+export type SourceAttributeBase = {
+    height: string;
+    media: string;
+    sizes: string | string[];
+    src: string;
+    srcset: string | string[];
+    type: string;
+    width: string;
+} & GlobalAttributes;
 
-export type TbodyAttributeName = "bgcolor" | CommonAttributeName;
-export type TbodyAttribute = AttributeType<TbodyAttributeName>;
-export const tbody_attribute_names: TbodyAttributeName[] = ["bgcolor", ...common_attribute_names];
+export type SourceAttributeNames =
+    | GlobalAttributeNames
+    | "height"
+    | "media"
+    | "sizes"
+    | "src"
+    | "srcset"
+    | "type"
+    | "width";
 
-export type TdAttributeName = "background" | "bgcolor" | "colspan" | "headers" | "rowspan" | CommonAttributeName;
-export type TdAttribute = AttributeType<TdAttributeName>;
-export const td_attribute_names: TdAttributeName[] = [
-    "background",
-    "bgcolor",
-    "colspan",
-    "headers",
-    "rowspan",
-    ...common_attribute_names,
-];
+export type SourceAttribute = AttributeType<SourceAttributeBase, SourceAttributeNames>;
 
-export type TemplateAttributeName = CommonAttributeName;
-export type TemplateAttribute = AttributeType<CommonAttributeName>;
-export const template_attribute_names: TemplateAttributeName[] = common_attribute_names;
+export type SpanAttributeBase = GlobalAttributes;
 
-export type TextareaAttributeName =
+export type SpanAttributeNames = GlobalAttributeNames;
+
+export type SpanAttribute = AttributeType<SpanAttributeBase, SpanAttributeNames>;
+
+export type StrongAttributeBase = GlobalAttributes;
+
+export type StrongAttributeNames = GlobalAttributeNames;
+
+export type StrongAttribute = AttributeType<StrongAttributeBase, StrongAttributeNames>;
+
+export type StyleAttributeBase = {
+    media: string;
+    nonce: string;
+    title: string;
+} & GlobalAttributes;
+
+export type StyleAttributeNames = GlobalAttributeNames | "media" | "nonce" | "title";
+
+export type StyleAttribute = AttributeType<StyleAttributeBase, StyleAttributeNames>;
+
+export type SubAttributeBase = GlobalAttributes;
+
+export type SubAttributeNames = GlobalAttributeNames;
+
+export type SubAttribute = AttributeType<SubAttributeBase, SubAttributeNames>;
+
+export type SummaryAttributeBase = GlobalAttributes;
+
+export type SummaryAttributeNames = GlobalAttributeNames;
+
+export type SummaryAttribute = AttributeType<SummaryAttributeBase, SummaryAttributeNames>;
+
+export type SupAttributeBase = GlobalAttributes;
+
+export type SupAttributeNames = GlobalAttributeNames;
+
+export type SupAttribute = AttributeType<SupAttributeBase, SupAttributeNames>;
+
+export type SVGAttributeBase = {
+    height: string;
+    width: string;
+    xmlns: string;
+} & GlobalAttributes;
+
+export type SVGAttributeNames = GlobalAttributeNames | "height" | "width" | "xmlns";
+
+export type SVGAttribute = AttributeType<SVGAttributeBase, SVGAttributeNames>;
+
+export type TableAttributeBase = GlobalAttributes;
+
+export type TableAttributeNames = GlobalAttributeNames;
+
+export type TableAttribute = AttributeType<TableAttributeBase, TableAttributeNames>;
+
+export type TbodyAttributeBase = GlobalAttributes;
+
+export type TbodyAttributeNames = GlobalAttributeNames;
+
+export type TbodyAttribute = AttributeType<TbodyAttributeBase, TbodyAttributeNames>;
+
+export type TdAttributeBase = {
+    colspan: string;
+    headers: string | string[];
+    rowspan: string;
+} & GlobalAttributes;
+
+export type TdAttributeNames = GlobalAttributeNames | "colspan" | "headers" | "rowspan";
+
+export type TdAttribute = AttributeType<TdAttributeBase, TdAttributeNames>;
+
+export type TemplateAttributeBase = {
+    shadowrootmode: "open" | "closed";
+} & GlobalAttributes;
+
+export type TemplateAttributeNames = GlobalAttributeNames | "shadowrootmode";
+
+export type TemplateAttribute = AttributeType<TemplateAttributeBase, TemplateAttributeNames>;
+
+export type TextareaAttributeBase = {
+    autocomplete: "on" | "off";
+    cols: string;
+    dirname: string;
+    disabled: null;
+    form: string;
+    maxlength: string;
+    minlength: string;
+    name: string;
+    placeholder: string;
+    readonly: null;
+    required: null;
+    rows: string;
+    wrap: "hard" | "soft";
+} & GlobalAttributes;
+
+export type TextareaAttributeNames =
+    | GlobalAttributeNames
     | "autocomplete"
     | "cols"
     | "dirname"
@@ -1297,92 +1676,107 @@ export type TextareaAttributeName =
     | "readonly"
     | "required"
     | "rows"
-    | "wrap"
-    | CommonAttributeName;
-export type TextareaAttribute = AttributeType<TextareaAttributeName>;
-export const textarea_attribute_names: TextareaAttributeName[] = [
-    "autocomplete",
-    "cols",
-    "dirname",
-    "disabled",
-    "form",
-    "maxlength",
-    "minlength",
-    "name",
-    "placeholder",
-    "readonly",
-    "required",
-    "rows",
-    "wrap",
-    ...common_attribute_names,
-];
+    | "wrap";
 
-export type TfootAttributeName = "bgcolor" | CommonAttributeName;
-export type TfootAttribute = AttributeType<TfootAttributeName>;
-export const tfoot_attribute_names: TfootAttributeName[] = ["bgcolor", ...common_attribute_names];
+export type TextareaAttribute = AttributeType<TextareaAttributeBase, TextareaAttributeNames>;
 
-export type ThAttributeName =
-    | "background"
-    | "bgcolor"
-    | "colspan"
-    | "headers"
-    | "rowspan"
-    | "scope"
-    | CommonAttributeName;
-export type ThAttribute = AttributeType<ThAttributeName>;
-export const th_attribute_names: ThAttributeName[] = [
-    "background",
-    "bgcolor",
-    "colspan",
-    "headers",
-    "rowspan",
-    "scope",
-    ...common_attribute_names,
-];
+export type TfootAttributeBase = GlobalAttributes;
 
-export type TheadAttributeName = CommonAttributeName;
-export type TheadAttribute = AttributeType<CommonAttributeName>;
-export const thead_attribute_names: TheadAttributeName[] = common_attribute_names;
+export type TfootAttributeNames = GlobalAttributeNames;
 
-export type TimeAttributeName = "datetime" | CommonAttributeName;
-export type TimeAttribute = AttributeType<TimeAttributeName>;
-export const time_attribute_names: TimeAttributeName[] = ["datetime", ...common_attribute_names];
+export type TfootAttribute = AttributeType<TfootAttributeBase, TfootAttributeNames>;
 
-export type TitleAttributeName = CommonAttributeName;
-export type TitleAttribute = AttributeType<CommonAttributeName>;
-export const title_attribute_names: TitleAttributeName[] = common_attribute_names;
+export type ThAttributeBase = {
+    abbr: string;
+    colspan: string;
+    headers: string | string[];
+    rowspan: string;
+    scope: "row" | "col" | "rowgroup" | "colgroup";
+} & GlobalAttributes;
 
-export type TrAttributeName = "bgcolor" | CommonAttributeName;
-export type TrAttribute = AttributeType<TrAttributeName>;
-export const tr_attribute_names: TrAttributeName[] = ["bgcolor", ...common_attribute_names];
+export type ThAttributeNames = GlobalAttributeNames | "abbr" | "colspan" | "headers" | "rowspan" | "scope";
 
-export type TrackAttributeName = "default" | "kind" | "label" | "src" | "srclang" | CommonAttributeName;
-export type TrackAttribute = AttributeType<TrackAttributeName>;
-export const track_attribute_names: TrackAttributeName[] = [
-    "default",
-    "kind",
-    "label",
-    "src",
-    "srclang",
-    ...common_attribute_names,
-];
+export type ThAttribute = AttributeType<ThAttributeBase, ThAttributeNames>;
 
-export type UAttributeName = CommonAttributeName;
-export type UAttribute = AttributeType<CommonAttributeName>;
-export const u_attribute_names: UAttributeName[] = common_attribute_names;
+export type TheadAttributeBase = GlobalAttributes;
 
-export type UlAttributeName = CommonAttributeName;
-export type UlAttribute = AttributeType<CommonAttributeName>;
-export const ul_attribute_names: UlAttributeName[] = common_attribute_names;
+export type TheadAttributeNames = GlobalAttributeNames;
 
-export type VarAttributeName = CommonAttributeName;
-export type VarAttribute = AttributeType<CommonAttributeName>;
-export const var_attribute_names: VarAttributeName[] = common_attribute_names;
+export type TheadAttribute = AttributeType<TheadAttributeBase, TheadAttributeNames>;
 
-export type VideoAttributeName =
+export type TimeAttributeBase = {
+    datetime: string;
+} & GlobalAttributes;
+
+export type TimeAttributeNames = GlobalAttributeNames | "datetime";
+
+export type TimeAttribute = AttributeType<TimeAttributeBase, TimeAttributeNames>;
+
+export type TitleAttributeBase = GlobalAttributes;
+
+export type TitleAttributeNames = GlobalAttributeNames;
+
+export type TitleAttribute = AttributeType<TitleAttributeBase, TitleAttributeNames>;
+
+export type TrAttributeBase = GlobalAttributes;
+
+export type TrAttributeNames = GlobalAttributeNames;
+
+export type TrAttribute = AttributeType<TrAttributeBase, TrAttributeNames>;
+
+export type TrackAttributeBase = {
+    default: null;
+    kind: "subtitles" | "captions" | "descriptions" | "chapters" | "metadata";
+    label: string;
+    src: string;
+    srclang: string;
+} & GlobalAttributes;
+
+export type TrackAttributeNames = GlobalAttributeNames | "default" | "kind" | "label" | "src" | "srclang";
+
+export type TrackAttribute = AttributeType<TrackAttributeBase, TrackAttributeNames>;
+
+export type UAttributeBase = GlobalAttributes;
+
+export type UAttributeNames = GlobalAttributeNames;
+
+export type UAttribute = AttributeType<UAttributeBase, UAttributeNames>;
+
+export type UlAttributeBase = GlobalAttributes;
+
+export type UlAttributeNames = GlobalAttributeNames;
+
+export type UlAttribute = AttributeType<UlAttributeBase, UlAttributeNames>;
+
+export type VarAttributeBase = GlobalAttributes;
+
+export type VarAttributeNames = GlobalAttributeNames;
+
+export type VarAttribute = AttributeType<VarAttributeBase, VarAttributeNames>;
+
+export type VideoAttributeBase = {
+    autoplay: null;
+    controls: null;
+    crossorigin: "anonymous" | "use-credentials";
+    disablepictureinpicture: null;
+    disableremoteplayback: null;
+    height: string;
+    loop: null;
+    muted: null;
+    playsinline: null;
+    poster: string;
+    preload: "none" | "metadata" | "auto" | "";
+    src: string;
+    width: string;
+} & GlobalAttributes;
+
+export type VideoAttributeNames =
+    | GlobalAttributeNames
     | "autoplay"
     | "controls"
     | "crossorigin"
+    | "disablepictureinpicture"
+    | "disableremoteplayback"
     | "height"
     | "loop"
     | "muted"
@@ -1390,51 +1784,17 @@ export type VideoAttributeName =
     | "poster"
     | "preload"
     | "src"
-    | "width"
-    | CommonAttributeName;
-export type VideoAttribute = AttributeType<VideoAttributeName>;
-export const video_attribute_names: VideoAttributeName[] = [
-    "autoplay",
-    "controls",
-    "crossorigin",
-    "height",
-    "loop",
-    "muted",
-    "playsinline",
-    "poster",
-    "preload",
-    "src",
-    "width",
-    ...common_attribute_names,
-];
+    | "width";
 
-export type WbrAttributeName = CommonAttributeName;
-export type WbrAttribute = AttributeType<CommonAttributeName>;
-export const wbr_attribute_names: WbrAttributeName[] = common_attribute_names;
+export type VideoAttribute = AttributeType<VideoAttributeBase, VideoAttributeNames>;
 
-export function printDefine() {
-    function capitalize(t: string) {
-        return `${t.slice(0, 1).toUpperCase()}${t.slice(1)}`;
-    }
-    console.log("export type AttributeMap = {");
-    for (const tag of tags) {
-        console.log(`\t${tag}: ${capitalize(tag)}Attribute;`);
-    }
-    console.log("};");
+export type WbrAttributeBase = GlobalAttributes;
 
-    for (const tag of tags) {
-        console.log(`export const ${capitalize(tag)} = gt("${tag}");`);
-    }
-}
+export type WbrAttributeNames = GlobalAttributeNames;
 
-function gt<K extends Tag | HanabiTag>(tag: K): HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>> {
-    return {
-        [tag]:
-            (argument: Partial<AttributeMap[K & keyof AttributeMap]>) =>
-            (...child: HNode[]) => ({ element_name: tag, tag, attribute: argument, child }),
-    }[tag] as HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>>;
-}
+export type WbrAttribute = AttributeType<WbrAttributeBase, WbrAttributeNames>;
 
+// 各HTML要素に対応する属性型を表すマップ型
 export type AttributeMap = {
     a: AAttribute;
     abbr: AbbrAttribute;
@@ -1498,6 +1858,7 @@ export type AttributeMap = {
     main: MainAttribute;
     map: MapAttribute;
     mark: MarkAttribute;
+    menu: MenuAttribute;
     meta: MetaAttribute;
     meter: MeterAttribute;
     nav: NavAttribute;
@@ -1508,7 +1869,6 @@ export type AttributeMap = {
     option: OptionAttribute;
     output: OutputAttribute;
     p: PAttribute;
-    param: ParamAttribute;
     picture: PictureAttribute;
     pre: PreAttribute;
     progress: ProgressAttribute;
@@ -1519,15 +1879,19 @@ export type AttributeMap = {
     s: SAttribute;
     samp: SampAttribute;
     script: ScriptAttribute;
+    search: SearchAttribute;
     section: SectionAttribute;
     select: SelectAttribute;
+    slot: SlotAttribute;
     small: SmallAttribute;
     source: SourceAttribute;
     span: SpanAttribute;
     strong: StrongAttribute;
+    style: StyleAttribute;
     sub: SubAttribute;
     summary: SummaryAttribute;
     sup: SupAttribute;
+    svg: SVGAttribute;
     table: TableAttribute;
     tbody: TbodyAttribute;
     td: TdAttribute;
@@ -1549,6 +1913,29 @@ export type AttributeMap = {
     unwrap: DivAttribute;
     raw: DivAttribute;
 };
+
+export function printDefine() {
+    function capitalize(t: string) {
+        return `${t.slice(0, 1).toUpperCase()}${t.slice(1)}`;
+    }
+    console.log("export type AttributeMap = {");
+    for (const tag of tags) {
+        console.log(`\t${tag}: ${capitalize(tag)}Attribute;`);
+    }
+    console.log("};");
+
+    for (const tag of tags) {
+        console.log(`export const ${capitalize(tag)} = gt("${tag}");`);
+    }
+}
+
+function gt<K extends Tag | HanabiTag>(tag: K): HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>> {
+    return {
+        [tag]:
+            (argument: Partial<AttributeMap[K & keyof AttributeMap]>) =>
+            (...child: HNode[]) => ({ element_name: tag, tag, attribute: argument, child }),
+    }[tag] as HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>>;
+}
 
 export const A = gt("a");
 export const Abbr = gt("abbr");

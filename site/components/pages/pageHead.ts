@@ -29,7 +29,7 @@ export function pageHead(_repo: Store): HComponentFn<PageHeadArgument> {
                 Title({})(title),
                 Meta({ name: "description", content: description })(),
                 Meta({
-                    http_equiv: "Content-Security-Policy",
+                    http_equiv: "content-security-policy",
                     content: "default-src 'self' https://cdn.jsdelivr.net/;",
                 })(),
 

@@ -5,7 +5,7 @@ import { isCompoundSelector } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
 // Attribute of HTML Element
-export type AttributeValue = string | string[] | undefined;
+export type AttributeValue = string | string[] | null | undefined;
 export type Attribute = Record<string, AttributeValue>;
 export type AttributeOf<K> = Partial<AttributeMap[K & keyof AttributeMap]>;
 
