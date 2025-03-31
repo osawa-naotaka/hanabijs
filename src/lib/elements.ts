@@ -400,7 +400,8 @@ export type AttributeNames =
     | "value"
     | "width"
     | "wrap"
-    | "xmlns";
+    | "xmlns"
+    | `data-${string}`;
 
 export const attribute_names: AttributeNames[] = [
     "accesskey",
@@ -540,8 +541,7 @@ export const attribute_names: AttributeNames[] = [
 ] as const;
 
 // AttributeType型定義
-type AttributeType<T, K extends string> = T &
-    Record<Exclude<AttributeNames, K | GlobalAttributeNames>, undefined>;
+type AttributeType<T, K extends string> = T & Record<Exclude<AttributeNames, K | GlobalAttributeNames>, undefined>;
 
 // HTML要素ごとの属性型定義
 export type AAttributeBase = {
@@ -1305,7 +1305,14 @@ export type MetaAttributeBase = {
     name: string;
 } & GlobalAttributes;
 
-export type MetaAttributeNames = GlobalAttributeNames | "charset" | "content" | "http-equiv" | "http_equiv" | "media" | "name";
+export type MetaAttributeNames =
+    | GlobalAttributeNames
+    | "charset"
+    | "content"
+    | "http-equiv"
+    | "http_equiv"
+    | "media"
+    | "name";
 
 export type MetaAttribute = AttributeType<MetaAttributeBase, MetaAttributeNames>;
 

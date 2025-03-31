@@ -1,9 +1,10 @@
 import { element } from "../component";
 import type { HArgument, HComponentFn, HElementFn } from "../component";
+import type { Properties } from "../properties";
 import { registerElement } from "../repository";
 import type { Store } from "../repository";
 import { compoundStyles, styles } from "../style";
-import type { Properties, StyleRule } from "../style";
+import type { StyleRule } from "../style";
 import { BG_COLOR, C_BG, C_PRIMARY, MIX_BLACK, MIX_WHITE } from "../stylerules";
 import { hash_djb2, joinAll } from "../util";
 

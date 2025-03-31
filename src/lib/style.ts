@@ -1,5 +1,5 @@
 import type { HAnyComponentFn } from "./component";
-import type { PropertyName } from "./properties";
+import type { Properties } from "./properties";
 import type { HComponent } from "./repository";
 import { validatePropertyName } from "./util";
 
@@ -25,8 +25,6 @@ export type ComplexSelector = {
 };
 
 export type Combinator = " " | ">" | "+" | "~" | "||";
-
-export type Properties = Partial<Record<PropertyName, string[] | string>>;
 
 function simpleSelectorIsString(selector: SimpleSelector): selector is string {
     return typeof selector === "string";
@@ -162,22 +160,44 @@ function selectorToString(selector: Selector): string {
         : `${stringifySelector(selector.compound)} ${selector.combinator} ${selectorToString(selector.descendant)}`;
 }
 
+function valueToString(value: string | string[] | string[][]): string {
+    if (typeof value === "string") {
+        return singleValueToString(value);
+    }
+    if (value.every((x) => typeof x === "string")) {
+        return spaceSeparatedValueToString(value);
+    }
+    return commaSeparatedValueToString(value);
+}
+
+function singleValueToString(value: string): string {
+    if (value.length > 512) {
+        throw new Error(`propertyesToString: value length must be under 512 characters. (${value})`);
+    }
+    return value;
+}
+
+function spaceSeparatedValueToString(value: string[]): string {
+    return value.map(singleValueToString).join(" ");
+}
+
+function commaSeparatedValueToString(value: string[][]): string {
+    return value
+        .map((x) => (typeof x === "string" ? singleValueToString(x) : spaceSeparatedValueToString(x)))
+        .join(", ");
+}
+
 function propertiesToString(properties: Properties): string {
     return Object.entries(properties)
         .map(([raw_key, raw_value]) => {
             if (!validatePropertyName(raw_key)) {
                 throw new Error(`propertyesToString: invalid key. (${raw_key})})`);
             }
-            if (raw_value.length > 512) {
-                throw new Error(`propertyesToString: value length must be under 512 characters. (${raw_value})`);
+            if (raw_value === undefined) {
+                throw new Error(`propertiesToString: undefined value is not allowed in property ${raw_key}`);
             }
             const key = raw_key.replaceAll("_", "-");
-            const value =
-                typeof raw_value === "string"
-                    ? raw_value
-                    : key === "font-family"
-                      ? raw_value.join(", ")
-                      : raw_value.join(" ");
+            const value = valueToString(raw_value);
             return `${key}: ${value};`;
         })
         .join(" ");

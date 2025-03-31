@@ -1,6 +1,7 @@
+import type { Properties } from "./properties";
 import type { Store } from "./repository";
 
-export function RESPONSIVE_PAGE_WIDTH(max_width: string, padding_inline: string) {
+export function RESPONSIVE_PAGE_WIDTH(max_width: string, padding_inline: string): Properties {
     return {
         max_width,
         width: "100%",
@@ -8,7 +9,7 @@ export function RESPONSIVE_PAGE_WIDTH(max_width: string, padding_inline: string)
     };
 }
 
-export function DEFAULT_RESPONSIVE_PAGE_WIDTH(store: Store) {
+export function DEFAULT_RESPONSIVE_PAGE_WIDTH(store: Store): Properties {
     return {
         max_width: px(store.designrule.size.width.medium),
         width: "100%",
@@ -16,7 +17,7 @@ export function DEFAULT_RESPONSIVE_PAGE_WIDTH(store: Store) {
     };
 }
 
-export function COLUMN(gap: string) {
+export function COLUMN(gap: string): Properties {
     return {
         display: "flex",
         flex_direction: "column",
@@ -25,11 +26,11 @@ export function COLUMN(gap: string) {
     };
 }
 
-export function DEFAULT_COLUMN(store: Store) {
+export function DEFAULT_COLUMN(store: Store): Properties {
     return COLUMN(px(store.designrule.size.spacing.medium));
 }
 
-export function ROW(gap: string) {
+export function ROW(gap: string): Properties {
     return {
         display: "flex",
         flex_direction: "row",
@@ -38,135 +39,135 @@ export function ROW(gap: string) {
     };
 }
 
-export function DEFAULT_ROW(store: Store) {
+export function DEFAULT_ROW(store: Store): Properties {
     return ROW(px(store.designrule.size.spacing.medium));
 }
 
-export const ALIGN_NOMAL = {
+export const ALIGN_NOMAL: Properties = {
     align_items: "normal",
 };
 
-export const JUSTIFY_CENTER = {
+export const JUSTIFY_CENTER: Properties = {
     justify_content: "center",
 };
 
-export const ROW_WRAP = {
+export const ROW_WRAP: Properties = {
     flex_wrap: "wrap",
 };
 
-export const BORDER_UNDERLINE = {
+export const BORDER_UNDERLINE: Properties = {
     border_block_end: ["2px", "solid"],
     padding_block_end: "2px",
 };
 
-export const BORDER_LEFT_THIC = {
+export const BORDER_LEFT_THIC: Properties = {
     border_inline_start: ["8px", "solid"],
     padding_block_end: "2px",
     padding_inline_start: "1rem",
 };
 
-export const TEXT_UNDERLINE = {
+export const TEXT_UNDERLINE: Properties = {
     text_decoration: ["underline", "2px"],
     text_underline_offset: "5px",
 };
 
-export const FIX_BOTTOM_STICKY = {
+export const FIX_BOTTOM_STICKY: Properties = {
     position: "sticky",
     bottom: "0",
     left: "0",
     width: "100%",
 };
 
-export const FIX_BOTTOM = {
+export const FIX_BOTTOM: Properties = {
     position: "fixed",
     bottom: "0",
     left: "0",
     width: "100%",
 };
 
-export const FIX_TOP_STICKY = {
+export const FIX_TOP_STICKY: Properties = {
     position: "sticky",
     top: "0",
     left: "0",
     width: "100%",
 };
 
-export const FIX_TOP = {
+export const FIX_TOP: Properties = {
     position: "fixed",
     top: "0",
     left: "0",
     width: "100%",
 };
 
-export const TEXT_JUSTIFY = {
+export const TEXT_JUSTIFY: Properties = {
     overflow_wrap: "anywhere",
     text_align: "justify",
 };
 
-export const OPACITY = (n: string) => ({
+export const OPACITY = (n: string): Properties => ({
     opacity: n,
 });
 
-export const ROUND = (n: string) => ({
+export const ROUND = (n: string): Properties => ({
     border_radius: n,
 });
 
-export const TEXT_ALIGN_CENTER = {
+export const TEXT_ALIGN_CENTER: Properties = {
     text_align: "center",
 };
 
-export const ABSOLUTE_ANCHOR = {
+export const ABSOLUTE_ANCHOR: Properties = {
     position: "relative",
 };
 
-export const BOLD = {
+export const BOLD: Properties = {
     font_weight: "bold",
     font_style: "normal",
 };
 
-export const ITALIC = {
+export const ITALIC: Properties = {
     font_style: "italic",
     font_weight: "normal",
 };
 
-export const LIST_DISC = {
+export const LIST_DISC: Properties = {
     list_style_type: "disc",
 };
 
-export const LIST_DECIMAL = {
+export const LIST_DECIMAL: Properties = {
     list_style_type: "decimal",
 };
 
-export const FONT_SIZE = (n: string) => ({ font_size: n });
+export const FONT_SIZE = (n: string): Properties => ({ font_size: n });
 
-export const MARGIN_INLINE = (...n: string[]) => ({ margin_inline: n });
+export const MARGIN_INLINE = (...n: string[]): Properties => ({ margin_inline: n });
 
-export const MARGIN_BLOCK = (...n: string[]) => ({ margin_block: n });
+export const MARGIN_BLOCK = (...n: string[]): Properties => ({ margin_block: n });
 
-export const MARGIN = (...n: string[]) => ({ margin: n });
+export const MARGIN = (...n: string[]): Properties => ({ margin: n });
 
-export const MARGINA = (n: string | string[]) => ({ margin: n });
+export const MARGINA = (n: string | string[]): Properties => ({ margin: n });
 
-export const MARGIN_LEFT = (n: string) => ({ margin_left: n });
+export const MARGIN_LEFT = (n: string): Properties => ({ margin_left: n });
 
-export const MARGIN_RIGHT = (n: string) => ({ margin_right: n });
+export const MARGIN_RIGHT = (n: string): Properties => ({ margin_right: n });
 
-export const PADDING_INLINE = (...n: string[]) => ({ padding_inline: n });
+export const PADDING_INLINE = (...n: string[]): Properties => ({ padding_inline: n });
 
-export const PADDING_BLOCK = (...n: string[]) => ({ padding_block: n });
+export const PADDING_BLOCK = (...n: string[]): Properties => ({ padding_block: n });
 
-export const PADDING = (...n: string[]) => ({ padding: n });
-export const PADDINGA = (n: string | string[]) => ({ padding: n });
+export const PADDING = (...n: string[]): Properties => ({ padding: n });
+export const PADDINGA = (n: string | string[]): Properties => ({ padding: n });
 
-export const WIDTH = (n: string) => ({ width: n });
+export const WIDTH = (n: string): Properties => ({ width: n });
 
-export const HEIGHT = (n: string) => ({ height: n });
+export const HEIGHT = (n: string): Properties => ({ height: n });
 
-export const TEXT_COLOR = (c: string) => ({ color: c });
+export const TEXT_COLOR = (c: string): Properties => ({ color: c });
 
-export const BG_COLOR = (c: string) => ({ background_color: c });
+export const BG_COLOR = (c: string): Properties => ({ background_color: c });
 
-export function DEFAULT_TEXT_BG(store: Store) {
+export function DEFAULT_TEXT_BG(store: Store): Properties {
     return {
         color: store.designrule.color.main.text.default,
         background_color: store.designrule.color.main.background.default,
