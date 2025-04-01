@@ -1,7 +1,7 @@
 import type { HAnyComponentFn } from "./component";
 import type { Properties } from "./properties";
 import type { HComponent } from "./repository";
-import { validatePropertyName } from "./util";
+import { unionArrayOfRecords, validatePropertyName } from "./util";
 
 export type PropertyOf<T extends keyof Properties> = Properties[T];
 
@@ -46,7 +46,7 @@ export function style(selector: SimpleSelector, properties: Properties): StyleRu
 export function styles(selector: SimpleSelector, ...propaties: Properties[]): StyleRule {
     return {
         selectorlist: [createSelector([selector])],
-        properties: propaties.reduce((p, c) => Object.assign(p, c), {}),
+        properties: unionArrayOfRecords(propaties),
     };
 }
 
@@ -66,7 +66,7 @@ export function compoundStyles(
 ): StyleRule {
     return {
         selectorlist: [createSelector(selector)],
-        properties: propaties.reduce((p, c) => Object.assign(p, c), {}),
+        properties: unionArrayOfRecords(propaties),
     };
 }
 
@@ -75,42 +75,52 @@ export function createSelector(selector: (SimpleSelector | CompoundSelector | Co
         case 0:
             throw new Error("createSelector: no selector specified.");
         case 1:
-            if (tokenIsCombinator(selector[0])) {
-                throw new Error(`createSelector: SimpleSelector or CompoundSelector must be specified. ${selector[0]}`);
-            }
-            if (tokenIsCompoundSelector(selector[0])) {
-                return selector[0];
-            }
-            if (simpleSelectorIsString(selector[0])) {
-                return [selector[0]];
-            }
-            if (simpleSelectorIsComponentFn(selector[0])) {
-                return [selector[0].name];
-            }
-            throw new Error(`createSelector: internal error. type mismatch 1 at ${selector[0]}`);
+            return normalizeSelector(selector[0]);
         case 2:
-            throw new Error(`createSelector: too few argument. ${selector[0]} ${selector[1]}`);
+            if (tokenIsCombinator(selector[0]) || tokenIsCombinator(selector[1])) {
+                throw new Error(
+                    `createSelector: a combinator must be surrounded by two selector "${selector[0]}" "${selector[1]}" `,
+                );
+            }
+            return {
+                compound: normalizeSelector(selector[0]),
+                combinator: " ",
+                descendant: normalizeSelector(selector[1]),
+            };
         default:
-            if (!tokenIsCombinator(selector[0]) && tokenIsCombinator(selector[1])) {
-                let compound = [];
-                if (tokenIsCompoundSelector(selector[0])) {
-                    compound = selector[0];
-                } else if (simpleSelectorIsString(selector[0])) {
-                    compound = [selector[0]];
-                } else if (simpleSelectorIsComponentFn(selector[0])) {
-                    compound = [selector[0].name];
-                } else {
-                    throw new Error(`createSelector: internal error. type mismatch 2 at ${selector[0]}.`);
-                }
-
+            if (tokenIsCombinator(selector[0])) {
+                throw new Error(`createSelector: two selector appear twice in a row. "${selector[0]}"`);
+            }
+            if (tokenIsCombinator(selector[1])) {
                 return {
-                    compound,
+                    compound: normalizeSelector(selector[0]),
                     combinator: selector[1],
                     descendant: createSelector(selector.slice(2)),
                 };
             }
-            throw new Error(`createSelector: type mismatch. ${selector[0]}, ${selector[1]}`);
+            return {
+                compound: normalizeSelector(selector[0]),
+                combinator: " ",
+                descendant: createSelector(selector.slice(1)),
+            };
     }
+}
+
+
+function normalizeSelector(selector: SimpleSelector | CompoundSelector | Combinator): CompoundSelector {
+    if (tokenIsCombinator(selector)) {
+        throw new Error(`createSelector: SimpleSelector or CompoundSelector must be specified. ${selector[0]}`);
+    }
+    if (tokenIsCompoundSelector(selector)) {
+        return selector;
+    }
+    if (simpleSelectorIsString(selector)) {
+        return [selector];
+    }
+    if (simpleSelectorIsComponentFn(selector)) {
+        return [selector.name];
+    }
+    throw new Error(`createSelector: internal error. type mismatch 1 at ${selector}`);
 }
 
 function tokenIsCombinator(c: SimpleSelector | CompoundSelector | Combinator): c is Combinator {

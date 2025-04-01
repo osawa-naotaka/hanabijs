@@ -26,6 +26,14 @@ export function joinAll<T extends {}, S extends {}>(base: T, items: S[]): T & S 
     return Object.assign({}, base, ...items);
 }
 
+export function unionRecords<T extends {}>(...items: T[]) {
+    return unionArrayOfRecords(items);
+}
+
+export function unionArrayOfRecords<T extends {}>(items: T[]) {
+    return Object.assign({}, ...items);
+}
+
 export function hash_djb2(...jsons: Record<string, unknown>[]) {
     let hash = 5381;
     const chars = jsons.map((x) => JSON.stringify(x)).join("");

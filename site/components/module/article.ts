@@ -60,11 +60,11 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
     const component_styles = [
         styles(Article, MARGIN_BLOCK(S_2XLARGE(store))),
-        compoundStyles([ArticleHeader, " ", H2], FONT_SIZE(F_XLARGE(store))),
+        compoundStyles([ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
         ...buttonStyles(Tag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
         ...buttonStyles(ShareX, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
         compoundStyles(
-            [ArticleText, " ", H3],
+            [ArticleText, H3],
             FONT_SIZE(F_XLARGE(store)),
             ROUND("4px"),
             PADDING_INLINE(S_MEDIUM(store)),
@@ -76,13 +76,13 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
         styles(ArticleText, COLUMN(S_2XLARGE(store)), TEXT_JUSTIFY, ALIGN_NOMAL),
 
-        compoundStyles([ArticleText, " ", H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
-        compoundStyles([ArticleText, " ", H5], BORDER_LEFT_THIC),
-        compoundStyles([ArticleText, " ", Ul], LIST_DISC),
-        compoundStyles([ArticleText, " ", Ol], LIST_DECIMAL),
-        compoundStyles([ArticleText, " ", A], TEXT_UNDERLINE),
-        compoundStyles([ArticleText, " ", Li], MARGIN_INLINE(S_2XLARGE(store))),
-        compoundStyles([ArticleText, " ", Pre], PADDING(S_MEDIUM(store))),
+        compoundStyles([ArticleText, H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
+        compoundStyles([ArticleText, H5], BORDER_LEFT_THIC),
+        compoundStyles([ArticleText, Ul], LIST_DISC),
+        compoundStyles([ArticleText, Ol], LIST_DECIMAL),
+        compoundStyles([ArticleText, A], TEXT_UNDERLINE),
+        compoundStyles([ArticleText, Li], MARGIN_INLINE(S_2XLARGE(store))),
+        compoundStyles([ArticleText, Pre], PADDING(S_MEDIUM(store))),
     ];
 
     return registerComponent(

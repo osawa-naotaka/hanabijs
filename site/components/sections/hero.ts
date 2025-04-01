@@ -13,7 +13,7 @@ export function hero(store: Store): HComponentFn<HArgument> {
             line_height: "1.2",
             margin_block_end: appearence.layout.space_block_large,
         }),
-        compoundStyles([HeroText, " ", "em"], BOLD, TEXT_COLOR(C_ACCENT(store))),
+        compoundStyles([HeroText, "em"], BOLD, TEXT_COLOR(C_ACCENT(store))),
     ];
 
     return registerComponent(

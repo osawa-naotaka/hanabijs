@@ -18,7 +18,7 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
 
     const component_styles = [
         styles(Summary, MARGIN_BLOCK(S_XLARGE(store))),
-        compoundStyles([Summary, " ", ArticleHeader, " ", H2], FONT_SIZE(F_XLARGE(store))),
+        compoundStyles([Summary, ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
         ...buttonStyles(Tag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
     ];
 
