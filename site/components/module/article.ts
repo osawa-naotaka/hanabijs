@@ -45,9 +45,12 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
     const component_styles = [
         style(Article, MARGIN_BLOCK(S_2XLARGE(store))),
+
         style([ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
         ...buttonStyles(Tag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
         ...buttonStyles(ShareX, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
+
+        style(ArticleText, COLUMN(S_2XLARGE(store)), TEXT_JUSTIFY, ALIGN_NOMAL),
         style(
             [ArticleText, H3],
             FONT_SIZE(F_XLARGE(store)),
@@ -58,9 +61,6 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
             BG_COLOR(store.designrule.color.main.text.light),
             MARGIN_BLOCK(S_MEDIUM(store)),
         ),
-
-        style(ArticleText, COLUMN(S_2XLARGE(store)), TEXT_JUSTIFY, ALIGN_NOMAL),
-
         style([ArticleText, H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
         style([ArticleText, H5], BORDER_LEFT_THIC),
         style([ArticleText, Ul], LIST_DISC),

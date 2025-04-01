@@ -30,8 +30,8 @@ export type Combinator = " " | ">" | "+" | "~" | "||";
 
 export type SelectorContext = SimpleSelector | CompoundSelector | Combinator;
 
-function styleArgIsSelectorContext(context: SimpleSelector | SelectorContext[]): context is SelectorContext[] {
-    return Array.isArray(context);
+export function isCompoundSelector(s: Selector): s is CompoundSelector {
+    return Array.isArray(s);
 }
 
 export function style(context: SimpleSelector | SelectorContext[], ...properties: Properties[]): StyleRule {
@@ -40,6 +40,10 @@ export function style(context: SimpleSelector | SelectorContext[], ...properties
         selectorlist,
         properties: unionArrayOfRecords(properties),
     };
+}
+
+function styleArgIsSelectorContext(context: SimpleSelector | SelectorContext[]): context is SelectorContext[] {
+    return Array.isArray(context);
 }
 
 export function createSelector(context: SelectorContext[]): Selector {
@@ -92,10 +96,6 @@ function normalizeSelector(context: SelectorContext): CompoundSelector {
         return [context.name];
     }
     throw new Error(`createSelector: internal error. type mismatch 1 at ${context}`);
-}
-
-export function isCompoundSelector(s: Selector): s is CompoundSelector {
-    return Array.isArray(s);
 }
 
 function tokenIsCombinator(c: SelectorContext): c is Combinator {
