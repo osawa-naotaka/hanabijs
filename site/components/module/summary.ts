@@ -1,5 +1,5 @@
 import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_SMALL, S_TINY, S_XLARGE } from "@/lib/stylerules";
-import { A, H2, buttonStyles, compoundStyles, element, registerComponent, styles } from "@/main";
+import { A, H2, buttonStyles, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
@@ -17,8 +17,8 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
     const DateTime = dateTime(store);
 
     const component_styles = [
-        styles(Summary, MARGIN_BLOCK(S_XLARGE(store))),
-        compoundStyles([Summary, ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
+        style(Summary, MARGIN_BLOCK(S_XLARGE(store))),
+        style([Summary, ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
         ...buttonStyles(Tag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
     ];
 

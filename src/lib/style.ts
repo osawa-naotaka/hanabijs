@@ -28,111 +28,90 @@ export type ComplexSelector = {
 
 export type Combinator = " " | ">" | "+" | "~" | "||";
 
+export type SelectorContext = SimpleSelector | CompoundSelector | Combinator;
+
+function styleArgIsSelectorContext(context: SimpleSelector | SelectorContext[]): context is SelectorContext[] {
+    return Array.isArray(context);
+}
+
+export function style(context: SimpleSelector | SelectorContext[], ...properties: Properties[]): StyleRule {
+    const selectorlist = [createSelector(styleArgIsSelectorContext(context) ? context : [context])];
+    return {
+        selectorlist,
+        properties: unionArrayOfRecords(properties),
+    };
+}
+
+export function createSelector(context: SelectorContext[]): Selector {
+    switch (context.length) {
+        case 0:
+            throw new Error("createSelector: no selector specified.");
+        case 1:
+            return normalizeSelector(context[0]);
+        case 2:
+            if (tokenIsCombinator(context[0]) || tokenIsCombinator(context[1])) {
+                throw new Error(
+                    `createSelector: a combinator must be surrounded by two selector "${context[0]}" "${context[1]}" `,
+                );
+            }
+            return {
+                compound: normalizeSelector(context[0]),
+                combinator: " ",
+                descendant: normalizeSelector(context[1]),
+            };
+        default:
+            if (tokenIsCombinator(context[0])) {
+                throw new Error(`createSelector: two selector appear twice in a row. "${context[0]}"`);
+            }
+            if (tokenIsCombinator(context[1])) {
+                return {
+                    compound: normalizeSelector(context[0]),
+                    combinator: context[1],
+                    descendant: createSelector(context.slice(2)),
+                };
+            }
+            return {
+                compound: normalizeSelector(context[0]),
+                combinator: " ",
+                descendant: createSelector(context.slice(1)),
+            };
+    }
+}
+
+function normalizeSelector(context: SelectorContext): CompoundSelector {
+    if (tokenIsCombinator(context)) {
+        throw new Error(`createSelector: SimpleSelector or CompoundSelector must be specified. ${context[0]}`);
+    }
+    if (tokenIsCompoundSelector(context)) {
+        return context;
+    }
+    if (simpleSelectorIsString(context)) {
+        return [context];
+    }
+    if (simpleSelectorIsComponentFn(context)) {
+        return [context.name];
+    }
+    throw new Error(`createSelector: internal error. type mismatch 1 at ${context}`);
+}
+
+export function isCompoundSelector(s: Selector): s is CompoundSelector {
+    return Array.isArray(s);
+}
+
+function tokenIsCombinator(c: SelectorContext): c is Combinator {
+    return typeof c === "string" && (c === " " || c === ">" || c === "+" || c === "~");
+}
+
+function tokenIsCompoundSelector(s: SelectorContext): s is CompoundSelector {
+    return Array.isArray(s);
+}
+
 function simpleSelectorIsString(selector: SimpleSelector): selector is string {
     return typeof selector === "string";
 }
 
 function simpleSelectorIsComponentFn(selector: SimpleSelector): selector is HAnyComponentFn {
     return typeof selector === "function";
-}
-
-export function style(selector: SimpleSelector, properties: Properties): StyleRule {
-    return {
-        selectorlist: [createSelector([selector])],
-        properties,
-    };
-}
-
-export function styles(selector: SimpleSelector, ...propaties: Properties[]): StyleRule {
-    return {
-        selectorlist: [createSelector([selector])],
-        properties: unionArrayOfRecords(propaties),
-    };
-}
-
-export function compoundStyle(
-    selector: (SimpleSelector | CompoundSelector | Combinator)[],
-    properties: Properties,
-): StyleRule {
-    return {
-        selectorlist: [createSelector(selector)],
-        properties,
-    };
-}
-
-export function compoundStyles(
-    selector: (SimpleSelector | CompoundSelector | Combinator)[],
-    ...propaties: Properties[]
-): StyleRule {
-    return {
-        selectorlist: [createSelector(selector)],
-        properties: unionArrayOfRecords(propaties),
-    };
-}
-
-export function createSelector(selector: (SimpleSelector | CompoundSelector | Combinator)[]): Selector {
-    switch (selector.length) {
-        case 0:
-            throw new Error("createSelector: no selector specified.");
-        case 1:
-            return normalizeSelector(selector[0]);
-        case 2:
-            if (tokenIsCombinator(selector[0]) || tokenIsCombinator(selector[1])) {
-                throw new Error(
-                    `createSelector: a combinator must be surrounded by two selector "${selector[0]}" "${selector[1]}" `,
-                );
-            }
-            return {
-                compound: normalizeSelector(selector[0]),
-                combinator: " ",
-                descendant: normalizeSelector(selector[1]),
-            };
-        default:
-            if (tokenIsCombinator(selector[0])) {
-                throw new Error(`createSelector: two selector appear twice in a row. "${selector[0]}"`);
-            }
-            if (tokenIsCombinator(selector[1])) {
-                return {
-                    compound: normalizeSelector(selector[0]),
-                    combinator: selector[1],
-                    descendant: createSelector(selector.slice(2)),
-                };
-            }
-            return {
-                compound: normalizeSelector(selector[0]),
-                combinator: " ",
-                descendant: createSelector(selector.slice(1)),
-            };
-    }
-}
-
-
-function normalizeSelector(selector: SimpleSelector | CompoundSelector | Combinator): CompoundSelector {
-    if (tokenIsCombinator(selector)) {
-        throw new Error(`createSelector: SimpleSelector or CompoundSelector must be specified. ${selector[0]}`);
-    }
-    if (tokenIsCompoundSelector(selector)) {
-        return selector;
-    }
-    if (simpleSelectorIsString(selector)) {
-        return [selector];
-    }
-    if (simpleSelectorIsComponentFn(selector)) {
-        return [selector.name];
-    }
-    throw new Error(`createSelector: internal error. type mismatch 1 at ${selector}`);
-}
-
-function tokenIsCombinator(c: SimpleSelector | CompoundSelector | Combinator): c is Combinator {
-    return typeof c === "string" && (c === " " || c === ">" || c === "+" || c === "~");
-}
-
-function tokenIsCompoundSelector(s: SimpleSelector | CompoundSelector | Combinator): s is CompoundSelector {
-    return Array.isArray(s);
-}
-
-export function isCompoundSelector(s: Selector): s is CompoundSelector {
-    return Array.isArray(s);
 }
 
 // Stringify

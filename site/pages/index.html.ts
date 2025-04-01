@@ -1,6 +1,6 @@
 import { DEFAULT_COLUMN, DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
 import { hButton, hLinkedButton } from "@/lib/ui/button";
-import { Body, H2, Head, Html, Link, Main, Meta, Title, registerRootPage, styles } from "@/main";
+import { Body, H2, Head, Html, Link, Main, Meta, Title, registerRootPage, style } from "@/main";
 import type { HArgument, HRootPageFn, Store } from "@/main";
 
 export default function Root(store: Store): HRootPageFn<HArgument> {
@@ -12,7 +12,7 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const HLOutlinedButton = hLinkedButton(store, { type: "outlined" });
     const HLTextButton = hLinkedButton(store, { type: "text" });
 
-    const page_styles = [styles(Body, DEFAULT_COLUMN(store)), styles(Main, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
+    const page_styles = [style(Body, DEFAULT_COLUMN(store)), style(Main, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
     return registerRootPage(store, "root-page", page_styles, async () =>
         Html({ lang: "en" })(

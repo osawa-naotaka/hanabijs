@@ -1,4 +1,4 @@
-import { compoundStyle, element, registerComponent, style } from "@/main";
+import { element, registerComponent, style } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -30,7 +30,7 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
             opacity: "0",
             transition: ["all", "0.25s", "allow-discrete"],
         }),
-        compoundStyle([[PopoverContainer, ":popover-open"]], {
+        style([[PopoverContainer, ":popover-open"]], {
             display: "flex",
             opacity: "1",
         }),

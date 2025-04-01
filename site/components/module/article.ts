@@ -23,22 +23,7 @@ import {
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
 } from "@/lib/stylerules";
-import {
-    A,
-    H2,
-    H3,
-    H4,
-    H5,
-    Li,
-    Ol,
-    Pre,
-    Ul,
-    buttonStyles,
-    compoundStyles,
-    element,
-    registerComponent,
-    styles,
-} from "@/main";
+import { A, H2, H3, H4, H5, Li, Ol, Pre, Ul, buttonStyles, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
@@ -59,11 +44,11 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
     const ShareX = shareX(store);
 
     const component_styles = [
-        styles(Article, MARGIN_BLOCK(S_2XLARGE(store))),
-        compoundStyles([ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
+        style(Article, MARGIN_BLOCK(S_2XLARGE(store))),
+        style([ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
         ...buttonStyles(Tag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
         ...buttonStyles(ShareX, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
-        compoundStyles(
+        style(
             [ArticleText, H3],
             FONT_SIZE(F_XLARGE(store)),
             ROUND("4px"),
@@ -74,15 +59,15 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
             MARGIN_BLOCK(S_MEDIUM(store)),
         ),
 
-        styles(ArticleText, COLUMN(S_2XLARGE(store)), TEXT_JUSTIFY, ALIGN_NOMAL),
+        style(ArticleText, COLUMN(S_2XLARGE(store)), TEXT_JUSTIFY, ALIGN_NOMAL),
 
-        compoundStyles([ArticleText, H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
-        compoundStyles([ArticleText, H5], BORDER_LEFT_THIC),
-        compoundStyles([ArticleText, Ul], LIST_DISC),
-        compoundStyles([ArticleText, Ol], LIST_DECIMAL),
-        compoundStyles([ArticleText, A], TEXT_UNDERLINE),
-        compoundStyles([ArticleText, Li], MARGIN_INLINE(S_2XLARGE(store))),
-        compoundStyles([ArticleText, Pre], PADDING(S_MEDIUM(store))),
+        style([ArticleText, H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
+        style([ArticleText, H5], BORDER_LEFT_THIC),
+        style([ArticleText, Ul], LIST_DISC),
+        style([ArticleText, Ol], LIST_DECIMAL),
+        style([ArticleText, A], TEXT_UNDERLINE),
+        style([ArticleText, Li], MARGIN_INLINE(S_2XLARGE(store))),
+        style([ArticleText, Pre], PADDING(S_MEDIUM(store))),
     ];
 
     return registerComponent(

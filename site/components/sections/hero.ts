@@ -1,5 +1,5 @@
 import { BOLD, C_ACCENT, TEXT_COLOR } from "@/lib/stylerules";
-import { Em, compoundStyles, element, registerComponent, styles } from "@/main";
+import { Em, element, registerComponent, style } from "@/main";
 import type { HArgument, HComponentFn, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -8,12 +8,12 @@ export function hero(store: Store): HComponentFn<HArgument> {
     const HeroText = element("hero-text", { class_names: ["content"] });
 
     const component_styles = [
-        styles(Hero, BOLD, {
+        style(Hero, BOLD, {
             font_size: "min(17vw, 7rem)",
             line_height: "1.2",
             margin_block_end: appearence.layout.space_block_large,
         }),
-        compoundStyles([HeroText, "em"], BOLD, TEXT_COLOR(C_ACCENT(store))),
+        style([HeroText, "em"], BOLD, TEXT_COLOR(C_ACCENT(store))),
     ];
 
     return registerComponent(

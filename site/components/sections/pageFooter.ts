@@ -8,7 +8,7 @@ import {
     TEXT_ALIGN_CENTER,
     TEXT_COLOR,
 } from "@/lib/stylerules";
-import { element, registerComponent, styles } from "@/main";
+import { element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 
 export type PageFooterArgument = {
@@ -21,9 +21,9 @@ export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
     const PageFooterCopyright = element("page-footer-copyright");
 
     const component_styles = [
-        styles(PageFooter, FIX_BOTTOM, TEXT_COLOR(C_BG(store)), BG_COLOR(C_TEXT(store))),
-        styles(PageFooterContent, DEFAULT_COLUMN(store), ABSOLUTE_ANCHOR),
-        styles(PageFooterCopyright, TEXT_ALIGN_CENTER),
+        style(PageFooter, FIX_BOTTOM, TEXT_COLOR(C_BG(store)), BG_COLOR(C_TEXT(store))),
+        style(PageFooterContent, DEFAULT_COLUMN(store), ABSOLUTE_ANCHOR),
+        style(PageFooterCopyright, TEXT_ALIGN_CENTER),
     ];
 
     return registerComponent(

@@ -1,4 +1,4 @@
-import { A, Div, Li, compoundStyles, createDom, element, registerComponent, styles } from "@/main";
+import { A, Div, Li, createDom, element, registerComponent, style } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 import { svgIcon } from "@site/components/element/svgIcon";
 
@@ -11,11 +11,11 @@ export function search(store: Store): HComponentFn<HArgument> {
     const SearchResultItem = element("search-result-item", { tag: "li" });
 
     const component_sytles = [
-        styles(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),
-        styles(SearchInput, DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
-        compoundStyles([[SearchInput, "::placeholder"]], OPACITY("0.5")),
-        styles(SearchResult, MARGIN_BLOCK(S_3XLARGE(store))),
-        styles(SearchResultItem, MARGIN_BLOCK(S_3XLARGE(store))),
+        style(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),
+        style(SearchInput, DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
+        style([[SearchInput, "::placeholder"]], OPACITY("0.5")),
+        style(SearchResult, MARGIN_BLOCK(S_3XLARGE(store))),
+        style(SearchResultItem, MARGIN_BLOCK(S_3XLARGE(store))),
     ];
 
     return registerComponent(
@@ -113,8 +113,8 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const Tag = tag(store);
 
     const component_styles = [
-        styles(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
-        styles(SearchResultItemDescription, FONT_SIZE(F_TINY(store))),
+        style(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
+        style(SearchResultItemDescription, FONT_SIZE(F_TINY(store))),
     ];
 
     return registerComponent(store, SearchResultItem, component_styles, ({ result }) => () => {

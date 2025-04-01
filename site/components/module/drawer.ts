@@ -1,4 +1,4 @@
-import { compoundStyle, element, registerComponent, style } from "@/main";
+import { element, registerComponent, style } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 
 export type DrawerArgument = {
@@ -31,7 +31,7 @@ export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgu
         style(DrawerOpenState, { display: "none" }),
         style(DrawerOpenButton, { cursor: "pointer" }),
         style(DrawerContent, { height: "0", transition: ["height", "0.25s"] }),
-        compoundStyle([[`#${button_id}`, ":checked"], "~", DrawerContent], {
+        style([[`#${button_id}`, ":checked"], "~", DrawerContent], {
             height: "calc-size(fit-content, size)",
         }),
     ];
