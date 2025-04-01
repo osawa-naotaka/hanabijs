@@ -1,5 +1,17 @@
-import { BORDER_UNDERLINE, MARGIN_BLOCK, S_2XLARGE } from "@/lib/stylerules";
-import { element, registerComponent, style, styles } from "@/main";
+import {
+    BORDER_UNDERLINE,
+    FLEX_END,
+    FLEX_WRAP,
+    FONT_SIZE,
+    F_SMALL,
+    LINE_HEIGHT,
+    MARGIN_BLOCK,
+    ROW,
+    S_2XLARGE,
+    S_SMALL,
+    S_TINY,
+} from "@/lib/stylerules";
+import { element, registerComponent, styles } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 
 export type ArticleHeaderArgument = {
@@ -14,15 +26,15 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
     const component_styles = [
         styles(ArticleHeader, MARGIN_BLOCK(S_2XLARGE(store))),
         styles(ArticleHeaderTitle, BORDER_UNDERLINE),
-        style(ArticleHeaderMeta, {
-            display: "flex",
-            justify_content: "flex-end",
-            align_items: "center",
-            margin_block_start: "4px",
-            gap: "0.5rem",
-            flex_wrap: "wrap",
-            font_size: "0.8rem",
-        }),
+        styles(
+            ArticleHeaderMeta,
+            ROW(S_SMALL(store)),
+            FLEX_END,
+            FLEX_WRAP,
+            FONT_SIZE(F_SMALL(store)),
+            LINE_HEIGHT("1"),
+            MARGIN_BLOCK(S_TINY(store), "0"),
+        ),
     ];
 
     return registerComponent(

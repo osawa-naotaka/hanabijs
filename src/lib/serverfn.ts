@@ -48,7 +48,7 @@ function attributeToString(attribute: Partial<Attribute>): string {
                 throw new Error(`attributeToString: invalid attribute key ${key}.`);
             }
 
-            if(key.length > 64) {
+            if (key.length > 64) {
                 throw new Error(`attributeToString: key length must be under 64 characters. (${key})`);
             }
 

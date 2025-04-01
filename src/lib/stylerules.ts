@@ -1,5 +1,6 @@
 import type { Properties } from "./properties";
 import type { Store } from "./repository";
+import type { PropertyOf } from "./style";
 
 export function RESPONSIVE_PAGE_WIDTH(max_width: string, padding_inline: string): Properties {
     return {
@@ -17,7 +18,7 @@ export function DEFAULT_RESPONSIVE_PAGE_WIDTH(store: Store): Properties {
     };
 }
 
-export function COLUMN(gap: string): Properties {
+export function COLUMN(gap: PropertyOf<"gap">): Properties {
     return {
         display: "flex",
         flex_direction: "column",
@@ -26,11 +27,19 @@ export function COLUMN(gap: string): Properties {
     };
 }
 
+export const FLEX_END: Properties = {
+    justify_content: "flex-end",
+};
+
+export const FLEX_WRAP: Properties = {
+    flex_wrap: "wrap",
+};
+
 export function DEFAULT_COLUMN(store: Store): Properties {
     return COLUMN(px(store.designrule.size.spacing.medium));
 }
 
-export function ROW(gap: string): Properties {
+export function ROW(gap: PropertyOf<"gap">): Properties {
     return {
         display: "flex",
         flex_direction: "row",
@@ -129,6 +138,12 @@ export const ITALIC: Properties = {
     font_style: "italic",
     font_weight: "normal",
 };
+
+export function LINE_HEIGHT(n: string): Properties {
+    return {
+        line_height: n,
+    };
+}
 
 export const LIST_DISC: Properties = {
     list_style_type: "disc",

@@ -3,6 +3,8 @@ import type { Properties } from "./properties";
 import type { HComponent } from "./repository";
 import { validatePropertyName } from "./util";
 
+export type PropertyOf<T extends keyof Properties> = Properties[T];
+
 // Style
 export type StyleRule = {
     selectorlist: SelectorList;

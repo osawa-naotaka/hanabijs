@@ -17,16 +17,33 @@ import {
     ROUND,
     S_2XLARGE,
     S_MEDIUM,
+    S_SMALL,
+    S_TINY,
     TEXT_COLOR,
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
 } from "@/lib/stylerules";
-import { A, H2, H3, H4, H5, Li, Ol, Pre, Ul, compoundStyles, element, registerComponent, styles } from "@/main";
+import {
+    A,
+    H2,
+    H3,
+    H4,
+    H5,
+    Li,
+    Ol,
+    Pre,
+    Ul,
+    buttonStyles,
+    compoundStyles,
+    element,
+    registerComponent,
+    styles,
+} from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
 import { shareX } from "../element/shareX";
-import { tagList } from "../element/tagList";
+import { tag } from "../element/tag";
 import type { Markdown } from "../library/post";
 import { articleHeader } from "./articleHeader";
 
@@ -36,7 +53,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
     const Article = element("article", { tag: "article", class_names: ["neu"] });
     const ArticleHeader = articleHeader(store);
     const Author = element("author");
-    const TagList = tagList(store);
+    const Tag = tag(store);
     const DateTime = dateTime(store);
     const ArticleText = element("article-text");
     const ShareX = shareX(store);
@@ -44,7 +61,8 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
     const component_styles = [
         styles(Article, MARGIN_BLOCK(S_2XLARGE(store))),
         compoundStyles([ArticleHeader, " ", H2], FONT_SIZE(F_XLARGE(store))),
-
+        ...buttonStyles(Tag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
+        ...buttonStyles(ShareX, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
         compoundStyles(
             [ArticleText, " ", H3],
             FONT_SIZE(F_XLARGE(store)),
@@ -79,7 +97,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
                     })(
                         Author({})(argument.data.author),
                         DateTime({ datetime: argument.data.date })(),
-                        TagList({ slugs: argument.data.tag || [] })(),
+                        ...(argument.data.tag || []).map((x) => Tag({ slug: x })()),
                         ShareX({ title: argument.data.title, url: `http://localhost/posts/${argument.slug}` })(),
                     ),
                     ArticleText({})(...child),

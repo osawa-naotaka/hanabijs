@@ -34,15 +34,15 @@ type HButtonProperties = {
     background_color: string;
 };
 
-function buttonStyles<T extends HArgument>(
+export function buttonStyles<T extends HArgument>(
     top: HComponentFn<T>,
     type: HButtonType,
     store: Store,
     prop: Properties,
 ): StyleRule[] {
     const color: HButtonProperties = {
-        color: type === "filled" ? C_BG(store) : C_PRIMARY(store),
-        background_color: type === "filled" ? C_PRIMARY(store) : C_BG(store),
+        color: type === "filled" ? store.designrule.color.main.background.light : C_PRIMARY(store),
+        background_color: type === "filled" ? store.designrule.color.main.text.light : C_BG(store),
     };
     const component_styles = [styles(top, color, HBUTTON(prop))];
     switch (type) {

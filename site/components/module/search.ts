@@ -92,7 +92,7 @@ import {
 } from "@/lib/stylerules";
 import { v } from "@/main";
 import { dateTime } from "@site/components/element/dateTime";
-import { tagList } from "@site/components/element/tagList";
+import { tag } from "@site/components/element/tag";
 import { postFmSchema } from "@site/config/site.config";
 
 export const SearchKeySchema = v.object({
@@ -110,7 +110,7 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const SearchResultItemTitle = element("search-result-item-title");
     const SearchResultItemDescription = element("search-result-item-description");
     const DateTime = dateTime(store);
-    const Tags = tagList(store);
+    const Tag = tag(store);
 
     const component_styles = [
         styles(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
@@ -123,7 +123,7 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
             SearchResultItemMeta({})(
                 Div({})(key.data.author),
                 DateTime({ datetime: key.data.date })(),
-                Tags({ slugs: key.data.tag || [] })(),
+                ...(key.data.tag || []).map((x) => Tag({ slug: x })()),
             ),
             SearchResultItemTitle({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
             SearchResultItemDescription({})(result.refs[0].wordaround || ""),

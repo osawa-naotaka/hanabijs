@@ -1,9 +1,9 @@
-import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "@/lib/stylerules";
-import { A, H2, compoundStyles, element, registerComponent, styles } from "@/main";
+import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_SMALL, S_TINY, S_XLARGE } from "@/lib/stylerules";
+import { A, H2, buttonStyles, compoundStyles, element, registerComponent, styles } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
-import { tagList } from "../element/tagList";
+import { tag } from "../element/tag";
 import type { Markdown } from "../library/post";
 import { articleHeader } from "./articleHeader";
 
@@ -13,12 +13,13 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
     const Summary = element("summary", { tag: "article", class_names: ["neu"] });
     const ArticleHeader = articleHeader(store);
     const Author = element("author");
-    const TagList = tagList(store);
+    const Tag = tag(store);
     const DateTime = dateTime(store);
 
     const component_styles = [
         styles(Summary, MARGIN_BLOCK(S_XLARGE(store))),
         compoundStyles([Summary, " ", ArticleHeader, " ", H2], FONT_SIZE(F_XLARGE(store))),
+        ...buttonStyles(Tag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
     ];
 
     return registerComponent(
@@ -32,7 +33,7 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
                 })(
                     Author({})(argument.data.author),
                     DateTime({ datetime: argument.data.date })(),
-                    TagList({ slugs: argument.data.tag || [] })(),
+                    ...(argument.data.tag || []).map((x) => Tag({ slug: x })()),
                 ),
             ),
     );
