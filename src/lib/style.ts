@@ -7,6 +7,7 @@ export type PropertyOf<T extends keyof Properties> = Properties[T];
 
 // Style
 export type StyleRule = {
+    atrule?: string[];
     selector: SelectorList;
     properties: Properties;
 };
@@ -25,6 +26,14 @@ export type SelectorContext = SimpleSelector | Selector[];
 
 export function style(context: SelectorContext, ...properties: Properties[]): StyleRule {
     return {
+        selector: [context],
+        properties: unionArrayOfRecords(properties),
+    };
+}
+
+export function atStyle(atrule: string[], context: SelectorContext, ...properties: Properties[]): StyleRule {
+    return {
+        atrule,
         selector: [context],
         properties: unionArrayOfRecords(properties),
     };
@@ -150,7 +159,11 @@ export function rulesToString(element: HComponent): string {
     for (const rule of element.style) {
         const selectors_string = rule.selector.map(selectorContextToString).join(", ");
         const propaties_string = propertiesToString(rule.properties);
-        res.push(`${selectors_string} { ${propaties_string} }\n`);
+        if (rule.atrule) {
+            res.push(`${rule.atrule.join(" ")} { ${selectors_string} { ${propaties_string} } }\n`);
+        } else {
+            res.push(`${selectors_string} { ${propaties_string} }\n`);
+        }
     }
 
     return res.join("");

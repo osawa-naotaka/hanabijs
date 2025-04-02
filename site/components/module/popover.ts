@@ -1,4 +1,4 @@
-import { element, registerComponent, style } from "@/main";
+import { atStyle, element, registerComponent, style } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -33,6 +33,9 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
         style([[PopoverContainer, ":popover-open"]], {
             display: "flex",
             opacity: "1",
+        }),
+        atStyle(["@starting-style"], [[PopoverContainer, ":popover-open"]], {
+            opacity: "0",
         }),
         style(PopoverButton, {
             border: ["0px", "none"],
