@@ -3,12 +3,11 @@ import path from "node:path";
 import { cwd } from "node:process";
 import { createPageRouter, createStaticRouter } from "@/cli/route";
 import { page_subdir, public_subdir, site_subdir } from "@/config";
-import { insertNodes } from "@/lib/component";
 import { DOCTYPE, Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
 import type { Store } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
-import { createSelector, stringifyToCss } from "@/lib/style";
+import { insertNodes, stringifyToCss } from "@/lib/style";
 import { contentType, replaceExt } from "@/lib/util";
 import { ErrorPage } from "@/page/error";
 import hanabi_error_css from "@/page/hanabi-error.css" assert { type: "text" };
@@ -90,11 +89,16 @@ export async function serve() {
                             const css_name = replaceExt(replaceExt(match_page.target_file, ""), ".css");
                             const js_name = replaceExt(replaceExt(match_page.target_file, ""), ".js");
 
-                            const html = insertNodes(top_component, createSelector(["*", " ", "head"]), [
-                                Script({ type: "module", src: "/reload.js" })(""),
-                                Script({ type: "module", src: js_name })(""),
-                                Link({ href: css_name, rel: "stylesheet" })(""),
-                            ]);
+                            const html = insertNodes(
+                                top_component,
+                                ["head"],
+                                [
+                                    Script({ type: "module", src: "/reload.js" })(),
+                                    Script({ type: "module", src: js_name })(),
+                                    Link({ href: css_name, rel: "stylesheet" })(),
+                                ],
+                                true,
+                            );
                             const html_text = DOCTYPE() + stringifyToHtml(0)(html);
                             return normalResponse(html_text, ".html");
                         }

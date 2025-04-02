@@ -4,11 +4,10 @@ import path from "node:path";
 import { cwd, exit } from "node:process";
 import { dist_subdir, page_subdir, public_subdir } from "@/config";
 import type { Attribute, HRootPageFn } from "@/lib/component";
-import { insertNodes } from "@/lib/component";
 import { DOCTYPE, Link, Script } from "@/lib/elements";
 import { type Store, clearStore, generateStore } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
-import { createSelector, stringifyToCss } from "@/lib/style";
+import { insertNodes, stringifyToCss } from "@/lib/style";
 import { globExt, replaceExt } from "@/lib/util";
 import esbuild from "esbuild";
 
@@ -109,10 +108,15 @@ async function processAndWriteHtml(
     const html_start = performance.now();
 
     const top_component = await root_page_fn(params);
-    const inserted = insertNodes(top_component, createSelector(["*", "head"]), [
-        css_link !== "" ? Link({ href: css_link, rel: "stylesheet" })("") : "",
-        js_src !== "" ? Script({ type: "module", src: js_src })("") : "",
-    ]);
+    const inserted = insertNodes(
+        top_component,
+        ["head"],
+        [
+            css_link !== "" ? Link({ href: css_link, rel: "stylesheet" })("") : "",
+            js_src !== "" ? Script({ type: "module", src: js_src })("") : "",
+        ],
+        true,
+    );
 
     const html = DOCTYPE() + stringifyToHtml(0)(inserted);
     writeToFile(html, relative_path, dist_dir, ".html", html_start);

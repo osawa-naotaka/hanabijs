@@ -1,4 +1,4 @@
-import type { HAnyComponentFn } from "./component";
+import type { Attribute, HAnyComponentFn, HElement, HNode } from "./component";
 import type { Properties } from "./properties";
 import type { HComponent } from "./repository";
 import { unionArrayOfRecords, validatePropertyName } from "./util";
@@ -32,8 +32,118 @@ export type SelectorContextItem = SimpleSelector | CompoundSelector | Combinator
 
 export type SelectorContext = SimpleSelector | SelectorContextItem[];
 
-export function isCompoundSelector(s: Selector): s is CompoundSelector {
+// Inserter (HNode).
+export function insertNodes(
+    root: HNode,
+    selector: SelectorContextItem[],
+    insert: HNode[],
+    search_deep: boolean,
+): HNode {
+    if (typeof root === "string") {
+        return root;
+    }
+
+    if (selector.length === 0) {
+        throw new Error("insertNodes: selector is empty.");
+    }
+    if (selector.length === 1) {
+        if (isCombinator(selector[0])) {
+            throw new Error(`selector must not end with combinator "${selector[0]}"`);
+        }
+        if (matchCompoundSelector(normalizeSelector(selector[0]), root)) {
+            return {
+                element_name: root.element_name,
+                tag: root.tag,
+                attribute: root.attribute,
+                child: root.child ? [...root.child, ...insert] : insert,
+            };
+        }
+        if (search_deep) {
+            return {
+                element_name: root.element_name,
+                tag: root.tag,
+                attribute: root.attribute,
+                child: root.child.map((c) => insertNodes(c, selector, insert, true)),
+            };
+        }
+    }
+
+    if (isCombinator(selector[0])) {
+        switch (selector[0]) {
+            case ">":
+                return insertNodes(root, selector.slice(1), insert, false);
+            default:
+                throw new Error("insertElementsCombinator: unsupported combinator.");
+        }
+    }
+
+    if (matchCompoundSelector(normalizeSelector(selector[0]), root)) {
+        return {
+            element_name: root.element_name,
+            tag: root.tag,
+            attribute: root.attribute,
+            child: root.child.map((c) => insertNodes(c, selector.slice(1), insert, true)),
+        };
+    }
+
+    if (search_deep) {
+        return {
+            element_name: root.element_name,
+            tag: root.tag,
+            attribute: root.attribute,
+            child: root.child.map((c) => insertNodes(c, selector, insert, true)),
+        };
+    }
+    return root;
+}
+
+function hasClass(className: string, attribute: Attribute): boolean {
+    if (attribute.class === undefined || typeof attribute.class !== "string") {
+        return false;
+    }
+    return attribute.class.includes(className);
+}
+
+function matchCompoundSelector(selector: CompoundSelector, element: HElement<{ id?: string }>): boolean {
+    for (const s of selector) {
+        if (typeof s !== "string") {
+            throw new Error("matchCompoundSelector: ComponentFn is not supported.");
+        }
+        if (s.startsWith(".")) {
+            if (!hasClass(s.slice(1), element.attribute)) {
+                return false;
+            }
+        } else if (s.startsWith("#")) {
+            if (element.attribute.id === undefined || element.attribute.id !== s.slice(1)) {
+                return false;
+            }
+        } else if (s !== "*") {
+            if (element.tag !== s) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function isCompoundSelector(s: SelectorContextItem): s is CompoundSelector {
     return Array.isArray(s);
+}
+
+function isCombinator(s: SelectorContextItem): s is Combinator {
+    return typeof s === "string" && (s === " " || s === ">" || s === "+" || s === "~");
+}
+
+function isSimpleSelector(s: SelectorContextItem): s is SimpleSelector {
+    return (typeof s === "string" && !isCombinator(s)) || typeof s === "function";
+}
+
+function isString(selector: SimpleSelector): selector is string {
+    return typeof selector === "string";
+}
+
+function isComponentFn(selector: SimpleSelector): selector is HAnyComponentFn {
+    return typeof selector === "function";
 }
 
 export function style(context: SelectorContext, ...properties: Properties[]): StyleRule {
@@ -43,72 +153,22 @@ export function style(context: SelectorContext, ...properties: Properties[]): St
     };
 }
 
-export function createSelector(context: SelectorContextItem[]): Selector {
-    switch (context.length) {
-        case 0:
-            throw new Error("createSelector: no selector specified.");
-        case 1:
-            return normalizeSelector(context[0]);
-        case 2:
-            if (tokenIsCombinator(context[0]) || tokenIsCombinator(context[1])) {
-                throw new Error(
-                    `createSelector: a combinator must be surrounded by two selector "${context[0]}" "${context[1]}" `,
-                );
-            }
-            return {
-                compound: normalizeSelector(context[0]),
-                combinator: " ",
-                descendant: normalizeSelector(context[1]),
-            };
-        default:
-            if (tokenIsCombinator(context[0])) {
-                throw new Error(`createSelector: two selector appear twice in a row. "${context[0]}"`);
-            }
-            if (tokenIsCombinator(context[1])) {
-                return {
-                    compound: normalizeSelector(context[0]),
-                    combinator: context[1],
-                    descendant: createSelector(context.slice(2)),
-                };
-            }
-            return {
-                compound: normalizeSelector(context[0]),
-                combinator: " ",
-                descendant: createSelector(context.slice(1)),
-            };
-    }
-}
-
 function normalizeSelector(context: SelectorContextItem): CompoundSelector {
-    if (tokenIsCombinator(context)) {
+    if (isCombinator(context)) {
         throw new Error(`createSelector: SimpleSelector or CompoundSelector must be specified. ${context[0]}`);
     }
-    if (tokenIsCompoundSelector(context)) {
+    if (isCompoundSelector(context)) {
         return context;
     }
-    if (simpleSelectorIsString(context)) {
-        return [context];
-    }
-    if (simpleSelectorIsComponentFn(context)) {
-        return [context.name];
+    if (isSimpleSelector(context)) {
+        if (isString(context)) {
+            return [context];
+        }
+        if (isComponentFn(context)) {
+            return [context.name];
+        }
     }
     throw new Error(`createSelector: internal error. type mismatch 1 at ${context}`);
-}
-
-function tokenIsCombinator(c: SelectorContextItem): c is Combinator {
-    return typeof c === "string" && (c === " " || c === ">" || c === "+" || c === "~");
-}
-
-function tokenIsCompoundSelector(s: SelectorContextItem): s is CompoundSelector {
-    return Array.isArray(s);
-}
-
-function simpleSelectorIsString(selector: SimpleSelector): selector is string {
-    return typeof selector === "string";
-}
-
-function simpleSelectorIsComponentFn(selector: SimpleSelector): selector is HAnyComponentFn {
-    return typeof selector === "function";
 }
 
 // Stringify
@@ -127,24 +187,12 @@ export function rulesToString(element: HComponent): string {
     return res.join("");
 }
 
-function stringifySelector(selector: CompoundSelector): string {
-    return selector
-        .map((s) => {
-            const sel = typeof s === "function" ? s.name : s;
-            if (sel.length > 64) {
-                throw new Error(`stringifySelector: selector length must be under 64 characters. (${sel}).`);
-            }
-            return sel;
-        })
-        .join("");
-}
-
 function selectorToString(selector: SelectorContext): string {
     if (selectorContextIsSelectorContextItem(selector)) {
         return selector.map(selectorToString).join(" ");
     }
-    const selector_str = simpleSelectorIsString(selector) ? selector : selector.name;
-    if(selector_str.length > 64) {
+    const selector_str = isString(selector) ? selector : selector.name;
+    if (selector_str.length > 64) {
         throw new Error(`stringifySelector: selector length must be under 64 characters. (${selector_str}).`);
     }
     return selector_str;
