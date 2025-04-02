@@ -9,13 +9,13 @@ import { type Store, clearStore, generateStore } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
 import { insertNodes, stringifyToCss } from "@/lib/style";
 import { globExt, replaceExt } from "@/lib/util";
-import esbuild from "esbuild";
-import { rollup } from "rollup";
+import commonjs from "@rollup/plugin-commonjs";
+import nodeResolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import virtual from "@rollup/plugin-virtual";
-import terser from "@rollup/plugin-terser";
-import nodeResolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
+import esbuild from "esbuild";
+import { rollup } from "rollup";
 
 export async function build() {
     const start = performance.now();
@@ -207,7 +207,7 @@ export async function bundleScriptRollup(store: Store): Promise<string | null> {
     if (script_files.length === 0) {
         return null;
     }
-    
+
     const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
     const bundle = await rollup({
         input: "entry.ts",
