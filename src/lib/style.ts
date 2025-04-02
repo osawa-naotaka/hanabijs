@@ -13,59 +13,25 @@ export type StyleRule = {
 
 export type SelectorList = SelectorContext[];
 
-export type Selector = CompoundSelector | ComplexSelector;
-
 export type CompoundSelector = SimpleSelector[];
 
 // using any. fix it.
 export type SimpleSelector = string | HAnyComponentFn;
 
-export type ComplexSelector = {
-    compound: CompoundSelector;
-    combinator: Combinator;
-    descendant: Selector;
-};
-
 export type Combinator = " " | ">" | "+" | "~" | "||";
 
-export type SelectorContextItem = SimpleSelector | CompoundSelector | Combinator;
+export type Selector = SimpleSelector | CompoundSelector | Combinator;
 
-export type SelectorContext = SimpleSelector | SelectorContextItem[];
+export type SelectorContext = SimpleSelector | Selector[];
 
 // Inserter (HNode).
-export function insertNodes(
-    root: HNode,
-    selector: SelectorContextItem[],
-    insert: HNode[],
-    search_deep: boolean,
-): HNode {
+export function insertNodes(root: HNode, selector: Selector[], insert: HNode[], search_deep: boolean): HNode {
     if (typeof root === "string") {
         return root;
     }
 
     if (selector.length === 0) {
-        throw new Error("insertNodes: selector is empty.");
-    }
-    if (selector.length === 1) {
-        if (isCombinator(selector[0])) {
-            throw new Error(`selector must not end with combinator "${selector[0]}"`);
-        }
-        if (matchCompoundSelector(normalizeSelector(selector[0]), root)) {
-            return {
-                element_name: root.element_name,
-                tag: root.tag,
-                attribute: root.attribute,
-                child: root.child ? [...root.child, ...insert] : insert,
-            };
-        }
-        if (search_deep) {
-            return {
-                element_name: root.element_name,
-                tag: root.tag,
-                attribute: root.attribute,
-                child: root.child.map((c) => insertNodes(c, selector, insert, true)),
-            };
-        }
+        return root;
     }
 
     if (isCombinator(selector[0])) {
@@ -78,11 +44,15 @@ export function insertNodes(
     }
 
     if (matchCompoundSelector(normalizeSelector(selector[0]), root)) {
+        const child =
+            selector.length === 1
+                ? [...root.child, ...insert]
+                : root.child.map((c) => insertNodes(c, selector.slice(1), insert, true));
         return {
             element_name: root.element_name,
             tag: root.tag,
             attribute: root.attribute,
-            child: root.child.map((c) => insertNodes(c, selector.slice(1), insert, true)),
+            child,
         };
     }
 
@@ -126,15 +96,15 @@ function matchCompoundSelector(selector: CompoundSelector, element: HElement<{ i
     return true;
 }
 
-function isCompoundSelector(s: SelectorContextItem): s is CompoundSelector {
+function isCompoundSelector(s: Selector): s is CompoundSelector {
     return Array.isArray(s);
 }
 
-function isCombinator(s: SelectorContextItem): s is Combinator {
+function isCombinator(s: Selector): s is Combinator {
     return typeof s === "string" && (s === " " || s === ">" || s === "+" || s === "~");
 }
 
-function isSimpleSelector(s: SelectorContextItem): s is SimpleSelector {
+function isSimpleSelector(s: Selector): s is SimpleSelector {
     return (typeof s === "string" && !isCombinator(s)) || typeof s === "function";
 }
 
@@ -153,9 +123,9 @@ export function style(context: SelectorContext, ...properties: Properties[]): St
     };
 }
 
-function normalizeSelector(context: SelectorContextItem): CompoundSelector {
+function normalizeSelector(context: Selector): CompoundSelector {
     if (isCombinator(context)) {
-        throw new Error(`createSelector: SimpleSelector or CompoundSelector must be specified. ${context[0]}`);
+        return [context];
     }
     if (isCompoundSelector(context)) {
         return context;
@@ -179,7 +149,7 @@ export function stringifyToCss(components: HComponent[]): string {
 export function rulesToString(element: HComponent): string {
     const res: string[] = [];
     for (const rule of element.style) {
-        const selectors_string = rule.selector.map(selectorToString).join(", ");
+        const selectors_string = rule.selector.map(selectorContextToString).join(", ");
         const propaties_string = propertiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }
@@ -187,18 +157,21 @@ export function rulesToString(element: HComponent): string {
     return res.join("");
 }
 
-function selectorToString(selector: SelectorContext): string {
-    if (selectorContextIsSelectorContextItem(selector)) {
+function selectorContextToString(selector: SelectorContext): string {
+    if (isSelector(selector)) {
         return selector.map(selectorToString).join(" ");
     }
-    const selector_str = isString(selector) ? selector : selector.name;
-    if (selector_str.length > 64) {
-        throw new Error(`stringifySelector: selector length must be under 64 characters. (${selector_str}).`);
-    }
-    return selector_str;
+    return selectorToString(selector);
 }
 
-export function selectorContextIsSelectorContextItem(context: SelectorContext): context is SelectorContextItem[] {
+function selectorToString(selector: Selector): string {
+    if (isCompoundSelector(selector)) {
+        return selector.map(normalizeSelector).join("");
+    }
+    return normalizeSelector(selector).join("");
+}
+
+function isSelector(context: SelectorContext): context is Selector[] {
     return Array.isArray(context);
 }
 
