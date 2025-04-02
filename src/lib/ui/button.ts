@@ -3,7 +3,7 @@ import type { HArgument, HComponentFn, HElementFn } from "../component";
 import type { Properties } from "../properties";
 import { registerElement } from "../repository";
 import type { Store } from "../repository";
-import { compoundStyles, styles } from "../style";
+import { style } from "../style";
 import type { StyleRule } from "../style";
 import { BG_COLOR, C_BG, C_PRIMARY, MIX_BLACK, MIX_WHITE } from "../stylerules";
 import { hash_djb2, joinAll } from "../util";
@@ -44,29 +44,29 @@ export function buttonStyles<T extends HArgument>(
         color: type === "filled" ? store.designrule.color.main.background.light : C_PRIMARY(store),
         background_color: type === "filled" ? store.designrule.color.main.text.light : C_BG(store),
     };
-    const component_styles = [styles(top, color, HBUTTON(prop))];
+    const component_styles = [style(top, color, HBUTTON(prop))];
     switch (type) {
         case "filled": {
             component_styles.push(
-                styles(top, HBUTTON_FILLED),
-                compoundStyles([[top, ":hover"]], HBUTTON_FILLED_HOVER(color)),
-                compoundStyles([[top, ":active"]], HBUTTON_FILLED_ACTIVE),
+                style(top, HBUTTON_FILLED),
+                style([[top, ":hover"]], HBUTTON_FILLED_HOVER(color)),
+                style([[top, ":active"]], HBUTTON_FILLED_ACTIVE),
             );
             break;
         }
         case "outlined": {
             component_styles.push(
-                styles(top, HBUTTON_OUTLINED),
-                compoundStyles([[top, ":hover"]], HBUTTON_BG_HOVER(color)),
-                compoundStyles([[top, ":active"]], HBUTTON_BG_ACTIVE(color)),
+                style(top, HBUTTON_OUTLINED),
+                style([[top, ":hover"]], HBUTTON_BG_HOVER(color)),
+                style([[top, ":active"]], HBUTTON_BG_ACTIVE(color)),
             );
             break;
         }
         case "text": {
             component_styles.push(
-                styles(top, HBUTTON_TEXT),
-                compoundStyles([[top, ":hover"]], HBUTTON_BG_HOVER(color)),
-                compoundStyles([[top, ":active"]], HBUTTON_BG_ACTIVE(color)),
+                style(top, HBUTTON_TEXT),
+                style([[top, ":hover"]], HBUTTON_BG_HOVER(color)),
+                style([[top, ":active"]], HBUTTON_BG_ACTIVE(color)),
             );
             break;
         }

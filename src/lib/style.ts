@@ -7,11 +7,11 @@ export type PropertyOf<T extends keyof Properties> = Properties[T];
 
 // Style
 export type StyleRule = {
-    selectorlist: SelectorList;
+    selector: SelectorList;
     properties: Properties;
 };
 
-export type SelectorList = Selector[];
+export type SelectorList = SelectorContext[];
 
 export type Selector = CompoundSelector | ComplexSelector;
 
@@ -28,25 +28,22 @@ export type ComplexSelector = {
 
 export type Combinator = " " | ">" | "+" | "~" | "||";
 
-export type SelectorContext = SimpleSelector | CompoundSelector | Combinator;
+export type SelectorContextItem = SimpleSelector | CompoundSelector | Combinator;
+
+export type SelectorContext = SimpleSelector | SelectorContextItem[];
 
 export function isCompoundSelector(s: Selector): s is CompoundSelector {
     return Array.isArray(s);
 }
 
-export function style(context: SimpleSelector | SelectorContext[], ...properties: Properties[]): StyleRule {
-    const selectorlist = [createSelector(styleArgIsSelectorContext(context) ? context : [context])];
+export function style(context: SelectorContext, ...properties: Properties[]): StyleRule {
     return {
-        selectorlist,
+        selector: [context],
         properties: unionArrayOfRecords(properties),
     };
 }
 
-function styleArgIsSelectorContext(context: SimpleSelector | SelectorContext[]): context is SelectorContext[] {
-    return Array.isArray(context);
-}
-
-export function createSelector(context: SelectorContext[]): Selector {
+export function createSelector(context: SelectorContextItem[]): Selector {
     switch (context.length) {
         case 0:
             throw new Error("createSelector: no selector specified.");
@@ -82,7 +79,7 @@ export function createSelector(context: SelectorContext[]): Selector {
     }
 }
 
-function normalizeSelector(context: SelectorContext): CompoundSelector {
+function normalizeSelector(context: SelectorContextItem): CompoundSelector {
     if (tokenIsCombinator(context)) {
         throw new Error(`createSelector: SimpleSelector or CompoundSelector must be specified. ${context[0]}`);
     }
@@ -98,11 +95,11 @@ function normalizeSelector(context: SelectorContext): CompoundSelector {
     throw new Error(`createSelector: internal error. type mismatch 1 at ${context}`);
 }
 
-function tokenIsCombinator(c: SelectorContext): c is Combinator {
+function tokenIsCombinator(c: SelectorContextItem): c is Combinator {
     return typeof c === "string" && (c === " " || c === ">" || c === "+" || c === "~");
 }
 
-function tokenIsCompoundSelector(s: SelectorContext): s is CompoundSelector {
+function tokenIsCompoundSelector(s: SelectorContextItem): s is CompoundSelector {
     return Array.isArray(s);
 }
 
@@ -122,7 +119,7 @@ export function stringifyToCss(components: HComponent[]): string {
 export function rulesToString(element: HComponent): string {
     const res: string[] = [];
     for (const rule of element.style) {
-        const selectors_string = rule.selectorlist.map(selectorToString).join(", ");
+        const selectors_string = rule.selector.map(selectorToString).join(", ");
         const propaties_string = propertiesToString(rule.properties);
         res.push(`${selectors_string} { ${propaties_string} }\n`);
     }
@@ -142,13 +139,19 @@ function stringifySelector(selector: CompoundSelector): string {
         .join("");
 }
 
-function selectorToString(selector: Selector): string {
-    if (isCompoundSelector(selector)) {
-        return stringifySelector(selector);
+function selectorToString(selector: SelectorContext): string {
+    if (selectorContextIsSelectorContextItem(selector)) {
+        return selector.map(selectorToString).join(" ");
     }
-    return selector.combinator === " "
-        ? `${stringifySelector(selector.compound)} ${selectorToString(selector.descendant)}`
-        : `${stringifySelector(selector.compound)} ${selector.combinator} ${selectorToString(selector.descendant)}`;
+    const selector_str = simpleSelectorIsString(selector) ? selector : selector.name;
+    if(selector_str.length > 64) {
+        throw new Error(`stringifySelector: selector length must be under 64 characters. (${selector_str}).`);
+    }
+    return selector_str;
+}
+
+export function selectorContextIsSelectorContextItem(context: SelectorContext): context is SelectorContextItem[] {
+    return Array.isArray(context);
 }
 
 function valueToString(value: string | string[] | string[][]): string {

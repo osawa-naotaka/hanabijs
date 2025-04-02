@@ -1,7 +1,7 @@
 import DOMPurify from "dompurify";
 import type { AttributeMap, HanabiTag, Tag } from "./elements";
-import type { ComplexSelector, CompoundSelector, Selector } from "./style";
-import { isCompoundSelector } from "./style";
+import type { ComplexSelector, CompoundSelector, Selector, SelectorContext, SelectorContextItem } from "./style";
+import { isCompoundSelector, selectorContextIsSelectorContextItem } from "./style";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
 // Attribute of HTML Element
@@ -238,11 +238,14 @@ function selectNodeCombinator(nodes: HNode[], index: number, selector: ComplexSe
 }
 
 // Inserter
-export function insertNodes(root: HNode, selector: Selector, insert: HNode[], search_deep = false): HNode {
+export function insertNodes(root: HNode, selector: SelectorContextItem[], insert: HNode[], search_deep = false): HNode {
     let result = root;
 
     if (typeof result !== "string") {
-        if (isCompoundSelector(selector)) {
+        if (selectorContextIsSelectorContextItem(selector)) {
+
+        }
+        if (isCompoundSelector(selector[0])) {
             if (matchCompoundSelector(selector, result)) {
                 result = JSON.parse(JSON.stringify(root));
                 if (typeof result !== "string") {
