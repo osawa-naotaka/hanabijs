@@ -15,7 +15,6 @@ export type SelectorList = SelectorContext[];
 
 export type CompoundSelector = SimpleSelector[];
 
-// using any. fix it.
 export type SimpleSelector = string | HAnyComponentFn;
 
 export type Combinator = " " | ">" | "+" | "~" | "||";
@@ -23,6 +22,13 @@ export type Combinator = " " | ">" | "+" | "~" | "||";
 export type Selector = SimpleSelector | CompoundSelector | Combinator;
 
 export type SelectorContext = SimpleSelector | Selector[];
+
+export function style(context: SelectorContext, ...properties: Properties[]): StyleRule {
+    return {
+        selector: [context],
+        properties: unionArrayOfRecords(properties),
+    };
+}
 
 // Inserter (HNode).
 export function insertNodes(root: HNode, selector: Selector[], insert: HNode[], search_deep: boolean): HNode {
@@ -114,13 +120,6 @@ function isString(selector: SimpleSelector): selector is string {
 
 function isComponentFn(selector: SimpleSelector): selector is HAnyComponentFn {
     return typeof selector === "function";
-}
-
-export function style(context: SelectorContext, ...properties: Properties[]): StyleRule {
-    return {
-        selector: [context],
-        properties: unionArrayOfRecords(properties),
-    };
 }
 
 function normalizeSelector(context: Selector): CompoundSelector {

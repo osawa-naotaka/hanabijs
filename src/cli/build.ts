@@ -163,10 +163,13 @@ function writeToFile(content: string, file_name: string, dist_dir: string, ext: 
     return file_ext;
 }
 
-async function bundleScriptEsbuild(store: Store): Promise<string> {
+async function bundleScriptEsbuild(store: Store): Promise<string | null> {
     const script_files = Array.from(store.components.values())
         .map((x) => x.path)
         .filter((x) => x !== undefined);
+    if (script_files.length === 0) {
+        return null;
+    }
     const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
     const bundle = await esbuild.build({
         stdin: {
