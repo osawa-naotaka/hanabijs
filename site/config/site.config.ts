@@ -1,4 +1,4 @@
-import { v } from "@/main";
+import * as v from "valibot";
 
 export const site = {
     lang: "ja",

@@ -90,10 +90,10 @@ import {
     S_2XLARGE,
     S_3XLARGE,
 } from "@/lib/stylerules";
-import { v } from "@/main";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
 import { postFmSchema } from "@site/config/site.config";
+import * as v from "valibot";
 
 export const SearchKeySchema = v.object({
     slug: v.string(),

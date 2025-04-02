@@ -1,4 +1,3 @@
-import DOMPurify from "dompurify";
 import type { AttributeMap, HanabiTag, Tag } from "./elements";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
@@ -89,14 +88,7 @@ function createDomInternal(depth: number, d: Document = document): (node: HNode)
         }
 
         if (node.tag === "raw") {
-            const parser = new DOMParser();
-            const purify = DOMPurify(window);
-            return node.child.map((child) => {
-                if (typeof child === "string") {
-                    return parser.parseFromString(purify.sanitize(child), "text/html");
-                }
-                throw new Error(`Raw node must be string at ${node}.`);
-            });
+            throw new Error("Raw node must not be used in client module.");
         }
 
         if (!validateElementName(node.tag)) {

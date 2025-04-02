@@ -60,19 +60,19 @@ export function contentType(ext: string): string {
     return contentTypes.find((c) => c[0] === ext)?.[1] || "text/plain";
 }
 
-const allowed_elements = new Set<string>([...tags, ...hanabi_tags]);
+const allowed_elements = /* @__PURE__*/ new Set<string>([...tags, ...hanabi_tags]);
 
 export function validateElementName(name: string): boolean {
     return allowed_elements.has(name.toLowerCase());
 }
 
-const allowed_attribute_names = new Set<string>(attribute_names);
+const allowed_attribute_names = /* @__PURE__*/ new Set<string>(attribute_names);
 
 export function validateAttributeKey(key: string): boolean {
     return allowed_attribute_names.has(key.toLowerCase()) || key.toLowerCase().startsWith("data-");
 }
 
-const allowed_property_names = new Set<string>(property_names);
+const allowed_property_names = /* @__PURE__*/ new Set<string>(property_names);
 
 export function validatePropertyName(name: string): boolean {
     return allowed_property_names.has(name);

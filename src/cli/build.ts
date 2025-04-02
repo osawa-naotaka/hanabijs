@@ -10,6 +10,12 @@ import { stringifyToHtml } from "@/lib/serverfn";
 import { insertNodes, stringifyToCss } from "@/lib/style";
 import { globExt, replaceExt } from "@/lib/util";
 import esbuild from "esbuild";
+import { rollup } from "rollup";
+import typescript from "@rollup/plugin-typescript";
+import virtual from "@rollup/plugin-virtual";
+import terser from "@rollup/plugin-terser";
+import nodeResolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 
 export async function build() {
     const start = performance.now();
@@ -163,7 +169,7 @@ function writeToFile(content: string, file_name: string, dist_dir: string, ext: 
     return file_ext;
 }
 
-async function bundleScriptEsbuild(store: Store): Promise<string | null> {
+export async function bundleScriptEsbuild(store: Store): Promise<string | null> {
     const script_files = Array.from(store.components.values())
         .map((x) => x.path)
         .filter((x) => x !== undefined);
@@ -192,4 +198,31 @@ async function bundleScriptEsbuild(store: Store): Promise<string | null> {
     });
 
     return bundle.outputFiles[0].text;
+}
+
+export async function bundleScriptRollup(store: Store): Promise<string | null> {
+    const script_files = Array.from(store.components.values())
+        .map((x) => x.path)
+        .filter(Boolean);
+    if (script_files.length === 0) {
+        return null;
+    }
+    
+    const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
+    const bundle = await rollup({
+        input: "entry.ts",
+        treeshake: "smallest",
+        plugins: [
+            virtual({
+                "entry.ts": entry,
+            }),
+            typescript(),
+            terser(),
+            nodeResolve(),
+            commonjs(),
+        ],
+    });
+
+    const { output } = await bundle.generate({ format: "esm" });
+    return output[0].code;
 }
