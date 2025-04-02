@@ -1,12 +1,11 @@
 import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "@/lib/stylerules";
-import { A, element, registerComponent, style } from "@/main";
-import type { HComponentFn, Store } from "@/main";
-import { svgIcon } from "@site/components/element/svgIcon";
+import { A, element, hIcon, registerComponent, style } from "@/main";
+import type { HBrandIconName, HComponentFn, Store } from "@/main";
 
 export type NavigationArgument = {
     navitem: {
         url: string;
-        icon: string;
+        icon: HBrandIconName;
     }[];
 };
 
@@ -14,7 +13,6 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
     const Navigation = element("navigation", { tag: "nav" });
     const NavigationList = element("navigation-list", { tag: "ul" });
     const NavigationListItem = element("navigation-list-item", { tag: "li" });
-    const SvgIcon = svgIcon(store);
 
     const component_styles = [
         style(Navigation, BOLD, FONT_SIZE(F_XLARGE(store))),
@@ -31,7 +29,7 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
                     NavigationListItem({})(A({ href: "/posts" })("blog")),
                     ...argument.navitem.map((item) =>
                         NavigationListItem({})(
-                            A({ href: item.url, target: "__blank" })(SvgIcon({ name: item.icon })()),
+                            A({ href: item.url, target: "__blank" })(hIcon({ type: "brands", name: item.icon })({})()),
                         ),
                     ),
                 ),

@@ -1,12 +1,11 @@
-import { A, Div, Li, createDom, element, registerComponent, style } from "@/main";
+import { A, Div, Li, createDom, element, hIcon, registerComponent, style } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
-import { svgIcon } from "@site/components/element/svgIcon";
 
 export function search(store: Store): HComponentFn<HArgument> {
     const Search = element("search", { class_names: ["content"] });
     const SearchBar = element("search-bar");
     const SearchInput = element("search-input", { tag: "input" });
-    const SearchInputIcon = svgIcon(store);
+    const SearchInputIcon = hIcon({ type: "solid", name: "magnifying-glass" });
     const SearchResult = element("search-result", { tag: "ul" });
     const SearchResultItem = element("search-result-item", { tag: "li" });
 
@@ -24,10 +23,7 @@ export function search(store: Store): HComponentFn<HArgument> {
         component_sytles,
         (argument) => () =>
             Search({ class: argument.class })(
-                SearchBar({})(
-                    SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(),
-                    SearchInputIcon({ name: "magnifier-glass" })(),
-                ),
+                SearchBar({})(SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(), SearchInputIcon({})()),
                 SearchResult({})(SearchResultItem({})("no result.")),
             ),
         import.meta.path,

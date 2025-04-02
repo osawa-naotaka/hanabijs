@@ -1,3 +1,4 @@
+import type { HBrandIconName } from "@/main";
 import * as v from "valibot";
 
 export const site = {
@@ -6,9 +7,9 @@ export const site = {
     description: "lulliecatは皆さまの新しい歩みを支えます",
 };
 
-export const navitem: { name: string; url: string; icon: string }[] = [
+export const navitem: { name: string; url: string; icon: HBrandIconName }[] = [
     { name: "github", url: "https://github.com/osawa-naotaka/", icon: "github" },
-    { name: "x", url: "https://x.com/lulliecat", icon: "x" },
+    { name: "x", url: "https://x.com/lulliecat", icon: "x-twitter" },
     { name: "youtube", url: "https://www.youtube.com/channel/UCUzbZRjQJSZtH715CR2OIXw", icon: "youtube" },
 ];
 
