@@ -1,4 +1,4 @@
-import type { AttributeMap, HanabiTag, Tag } from "./elements";
+import { type AttributeMap, Class, type HanabiTag, type Tag } from "./elements";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
 // Attribute of HTML Element
@@ -17,12 +17,7 @@ export type HElement<K> = {
 };
 
 // hanabi Element (is function), expressing HTML element
-export type HElementFn<K> = {
-    (attribute: AttributeOf<K>): (...child: HNode[]) => HNode;
-    dot_name: string;
-};
-
-export type HRawElementFn<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
+export type HElementFn<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
 
 export type ElementArg = {
     class?: string | string[];
@@ -32,17 +27,15 @@ export type ElementArg = {
 export function element<K extends Tag | HanabiTag>(element_name: string, arg: ElementArg = {}): HElementFn<K> {
     const dot_name = `.${element_name}`;
     const class_name = arg.class === undefined ? [] : typeof arg.class === "string" ? [arg.class] : arg.class;
-    const fn: HRawElementFn<K> =
-        (attribute: AttributeOf<K>) =>
-        (...child: HNode[]) => ({
-            tag: arg.tag || "div",
-            attribute: addClassInRecord(attribute, [element_name, ...class_name]),
-            child,
-        });
-    const ret_fn = fn as HElementFn<K>;
-    ret_fn.dot_name = dot_name;
-
-    return ret_fn;
+    return {
+        [dot_name]:
+            (attribute: AttributeOf<K>) =>
+            (...child: HNode[]) => ({
+                tag: arg.tag || "div",
+                attribute: addClassInRecord(attribute, [element_name, ...class_name]),
+                child,
+            }),
+    }[dot_name];
 }
 
 // add class string to record.
@@ -66,17 +59,19 @@ function addClassToHead<T extends { class?: string | string[] }>(
 }
 
 // hanabi Component (is function)
-export type HComponentFn<T> = {
-    (argument: HComponentFnArg<T>): (...child: HNode[]) => HNode;
-    dot_name: string;
-};
-export type HRawComponentFn<T> = (argument: HComponentFnArg<T>) => (...child: HNode[]) => HNode;
+export type HComponentFn<T> = (argument: HComponentFnArg<T>) => (...child: HNode[]) => HNode;
 export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string };
 
 // biome-ignore lint/suspicious/noExplicitAny: HAnyComponent uses only for function.name
 export type HAnyComponentFn = HComponentFn<any>;
 
 export type HArgument = Record<string, unknown>;
+
+export function AddClassToComponent<T>(class_name: string | string[], fn: HComponentFn<T>): HComponentFn<T> {
+    return (argument) =>
+        (...child) =>
+            Class({ class: class_name })(fn(argument)(...child));
+}
 
 // hanabi HTML Top export function
 export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;

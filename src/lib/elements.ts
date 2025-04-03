@@ -1,4 +1,4 @@
-import type { AttributeOf, HElementFn, HNode, HRawElementFn } from "./component";
+import type { AttributeOf, HElementFn, HNode } from "./component";
 
 export type Tag =
     | "a"
@@ -226,9 +226,9 @@ export const tags: Tag[] = [
     "wbr",
 ] as const;
 
-export type HanabiTag = "raw" | "unwrap";
+export type HanabiTag = "raw" | "unwrap" | "class";
 
-export const hanabi_tags: HanabiTag[] = ["raw", "unwrap"] as const;
+export const hanabi_tags: HanabiTag[] = ["raw", "unwrap", "class"] as const;
 
 // HTML要素の共通属性
 export type GlobalAttributes = {
@@ -1919,6 +1919,7 @@ export type AttributeMap = {
 
     unwrap: DivAttribute;
     raw: DivAttribute;
+    class: DivAttribute;
 };
 
 export function printDefine() {
@@ -1937,13 +1938,11 @@ export function printDefine() {
 }
 
 function gt<K extends Tag | HanabiTag>(tag: K): HElementFn<K> {
-    const fn: HRawElementFn<K> =
-        (attribute: AttributeOf<K>) =>
-        (...child: HNode[]) => ({ tag, attribute, child });
-
-    const ret_fn = fn as HElementFn<K>;
-    ret_fn.dot_name = tag;
-    return ret_fn;
+    return {
+        [tag]:
+            (attribute: AttributeOf<K>) =>
+            (...child: HNode[]) => ({ tag, attribute, child }),
+    }[tag];
 }
 
 export const A = /* @__PURE__*/ gt("a");
@@ -2058,6 +2057,7 @@ export const Wbr = /* @__PURE__*/ gt("wbr");
 
 export const Unwrap = /* @__PURE__*/ gt("unwrap");
 export const RawHTML = /* @__PURE__*/ gt("raw");
+export const Class = /* @__PURE__*/ gt("class");
 
 export function DOCTYPE(): string {
     return "<!DOCTYPE html>";

@@ -1,4 +1,4 @@
-import type { HComponentFn, HElementFn, HRawComponentFn, HRootPageFn } from "./component";
+import type { HComponentFn, HComponentFnArg, HElementFn, HRootPageFn } from "./component";
 import { default_design_rule, default_design_rule_scaling, generateDesignRule } from "./design";
 import type { PartialDesignRule, PartialDesignRuleScaling, RequiredDesignRule } from "./design";
 import type { StyleRule } from "./style";
@@ -29,16 +29,13 @@ export function registerComponent<T, K>(
     store: Store,
     name_fn: HComponentFn<K> | string,
     style: StyleRule[],
-    component_fn: HRawComponentFn<T>,
+    component_fn: HComponentFn<T>,
     path?: string,
 ): HComponentFn<T> {
-    const component_name = typeof name_fn === "string" ? name_fn : name_fn.dot_name;
+    const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
     store.components.set(component_name, { component_name, path, style });
 
-    const fn: HRawComponentFn<T> = component_fn;
-    const ret_fn = fn as HComponentFn<T>;
-    ret_fn.dot_name = component_name;
-    return ret_fn;
+    return { [component_name]: (argument: HComponentFnArg<T>) => component_fn(argument) }[component_name];
 }
 
 export function registerElement<K>(
@@ -47,7 +44,7 @@ export function registerElement<K>(
     style: StyleRule[],
     path?: string,
 ): HElementFn<K> {
-    const component_name = element_fn.dot_name;
+    const component_name = element_fn.name;
     store.components.set(component_name, { component_name, path, style });
     return element_fn;
 }
@@ -59,7 +56,7 @@ export function registerRootPage<T, K>(
     root_page_fn: HRootPageFn<T>,
     path?: string,
 ): HRootPageFn<T> {
-    const component_name = typeof name_fn === "string" ? name_fn : name_fn.dot_name;
+    const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
     store.components.set(component_name, { component_name, path, style });
     return root_page_fn;
 }
