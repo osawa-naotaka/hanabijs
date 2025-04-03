@@ -125,7 +125,7 @@ async function processAndWriteHtml(
         true,
     );
 
-    const html = DOCTYPE() + stringifyToHtml(0)(inserted);
+    const html = DOCTYPE() + stringifyToHtml(0, [])(inserted);
     writeToFile(html, relative_path, dist_dir, ".html", html_start);
 }
 

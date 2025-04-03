@@ -99,7 +99,7 @@ export async function serve() {
                                 ],
                                 true,
                             );
-                            const html_text = DOCTYPE() + stringifyToHtml(0)(html);
+                            const html_text = DOCTYPE() + stringifyToHtml(0, [])(html);
                             return normalResponse(html_text, ".html");
                         }
                         default:
@@ -146,7 +146,7 @@ function normalResponse(content: string | Buffer<ArrayBufferLike>, ext: string):
 }
 
 async function errorResponse(status: number, cause: string): Promise<Response> {
-    return new Response(stringifyToHtml(0)(await ErrorPage({ name: status.toString(), cause })), {
+    return new Response(stringifyToHtml(0, [])(await ErrorPage({ name: status.toString(), cause })), {
         status,
         statusText: cause,
         headers: { "Content-Type": "text/html" },

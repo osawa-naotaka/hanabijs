@@ -1,10 +1,10 @@
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
-import type { Attribute, HNode } from "./component";
+import { type Attribute, type HNode, addClassInRecord } from "./component";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
 // Strigify
-export function stringifyToHtml(depth: number): (node: HNode) => string {
+export function stringifyToHtml(depth: number, additional_class: string | string[]): (node: HNode) => string {
     return (node: HNode) => {
         if (depth > 64) {
             throw new Error("stringifyToHtml: html element nesting depth must be under 64.");
@@ -32,10 +32,16 @@ export function stringifyToHtml(depth: number): (node: HNode) => string {
         }
 
         if (node.tag === "unwrap") {
-            return node.child.map(stringifyToHtml(depth + 1)).join("");
+            return node.child.map(stringifyToHtml(depth + 1, additional_class)).join("");
         }
 
-        return `<${node.tag}${attributeToString(node.attribute)}>${node.child.map(stringifyToHtml(depth + 1)).join("")}</${node.tag}>`;
+        if (node.tag === "class") {
+            return node.child.map(stringifyToHtml(depth + 1, node.attribute.class || [])).join("");
+        }
+
+        const attribute =
+            additional_class.length === 0 ? node.attribute : addClassInRecord(node.attribute, additional_class);
+        return `<${node.tag}${attributeToString(attribute)}>${node.child.map(stringifyToHtml(depth + 1, [])).join("")}</${node.tag}>`;
     };
 }
 

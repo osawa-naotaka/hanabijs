@@ -39,7 +39,7 @@ export function element<K extends Tag | HanabiTag>(element_name: string, arg: El
 }
 
 // add class string to record.
-function addClassInRecord<T extends { class?: string | string[] }>(record: T, className: string | string[]): T {
+export function addClassInRecord<T extends { class?: string | string[] }>(record: T, className: string | string[]): T {
     const new_record = JSON.parse(JSON.stringify(record));
     new_record.class = addClassToHead(record, className);
     return new_record;
@@ -67,7 +67,7 @@ export type HAnyComponentFn = HComponentFn<any>;
 
 export type HArgument = Record<string, unknown>;
 
-export function AddClassToComponent<T>(class_name: string | string[], fn: HComponentFn<T>): HComponentFn<T> {
+export function addClassToComponent<T>(class_name: string | string[], fn: HComponentFn<T>): HComponentFn<T> {
     return (argument) =>
         (...child) =>
             Class({ class: class_name })(fn(argument)(...child));
@@ -81,10 +81,14 @@ export type HClientFn = () => Promise<void>;
 
 // DOM Builder
 export function createDom(node: HNode, d: Document = document): Node[] {
-    return createDomInternal(0, d)(node);
+    return createDomInternal(0, [], d)(node);
 }
 
-function createDomInternal(depth: number, d: Document = document): (node: HNode) => Node[] {
+function createDomInternal(
+    depth: number,
+    additional_class: string | string[],
+    d: Document = document,
+): (node: HNode) => Node[] {
     return (node: HNode) => {
         if (depth > 64) {
             throw new Error("stringifyToHtml: html element nesting depth must be under 64.");
@@ -103,14 +107,20 @@ function createDomInternal(depth: number, d: Document = document): (node: HNode)
         }
 
         if (node.tag === "unwrap") {
-            return node.child.flatMap(createDomInternal(depth + 1, d));
+            return node.child.flatMap(createDomInternal(depth + 1, additional_class, d));
+        }
+
+        if (node.tag === "class") {
+            return node.child.flatMap(createDomInternal(depth + 1, node.attribute.class || [], d));
         }
 
         const element = d.createElement(node.tag);
         setAttribute(element, node.attribute);
+        const classes = typeof additional_class === "string" ? [additional_class] : additional_class;
+        element.classList.add(...classes.map(sanitizeAttributeValue("class")));
 
         for (const child of node.child) {
-            for (const child_element of createDomInternal(depth + 1, d)(child)) {
+            for (const child_element of createDomInternal(depth + 1, [], d)(child)) {
                 element.appendChild(child_element);
             }
         }
