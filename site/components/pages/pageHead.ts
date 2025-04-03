@@ -33,9 +33,6 @@ export function pageHead(_repo: Store): HComponentFn<PageHeadArgument> {
                     content: "default-src 'self' https://cdn.jsdelivr.net/;",
                 })(),
 
-                // Global Style
-                Link({ rel: "stylesheet", href: "/assets/css/global.css" })(),
-
                 // fontawesome
                 Link({ rel: "stylesheet", href: "/assets/webfonts/fontawesome.css" })(),
                 Link({ rel: "stylesheet", href: "/assets/webfonts/brands.css" })(),

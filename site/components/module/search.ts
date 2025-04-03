@@ -2,7 +2,7 @@ import { A, Div, Li, createDom, element, hIcon, registerComponent, style } from 
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
-    const Search = element("search", { class_names: ["content"] });
+    const Search = element("search");
     const SearchBar = element("search-bar");
     const SearchInput = element("search-input", { tag: "input" });
     const SearchInputIcon = hIcon({ type: "solid", name: "magnifying-glass" });
@@ -10,6 +10,7 @@ export function search(store: Store): HComponentFn<HArgument> {
     const SearchResultItem = element("search-result-item", { tag: "li" });
 
     const component_sytles = [
+        style(Search, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
         style(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),
         style(SearchInput, DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
         style([[SearchInput, "::placeholder"]], OPACITY("0.5")),
@@ -74,6 +75,7 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
 
 import {
     BORDER_UNDERLINE,
+    DEFAULT_RESPONSIVE_PAGE_WIDTH,
     DEFAULT_TEXT_BG,
     FONT_SIZE,
     F_SMALL,

@@ -1,4 +1,5 @@
-import { A, Li, Ul, element } from "@/main";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
+import { A, Li, Ul, element, registerRootPage, style } from "@/main";
 import type { HRootPageFn, Store } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
@@ -15,9 +16,10 @@ export function rootPageFnParameters(): RootParameter[] {
 
 export default function Root(store: Store): HRootPageFn<RootParameter> {
     const Page = page(store);
-    const PageMainArea = element("page-main-area", { class_names: ["container"], tag: "main" });
+    const PageMainArea = element("page-main-area", { tag: "main" });
+    const styles = [style(PageMainArea, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
-    return async (parameter) => {
+    return registerRootPage(store, "root", styles, async (parameter) => {
         const md = (await getAllMarkdowns(posts_dir, postFmSchema)).filter((x) => x.data.tag?.includes(parameter.tag));
 
         return Page({
@@ -27,5 +29,5 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
             name: site.name,
             navitem: navitem,
         })(PageMainArea({})(Ul({})(...md.map((x) => Li({})(A({ href: `/posts/${x.slug}` })(x.data.title))))));
-    };
+    });
 }

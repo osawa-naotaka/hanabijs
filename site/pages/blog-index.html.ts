@@ -1,4 +1,4 @@
-import { element } from "@/main";
+import { element, registerRootPage } from "@/main";
 import type { HRootPageFn, Store } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
@@ -13,7 +13,7 @@ export default function Root(store: Store): HRootPageFn<void> {
     const PageMainArea = element("page-main-area", { class_names: ["container"], tag: "main" });
     const Summaries = summaries(store);
 
-    return async () => {
+    return registerRootPage(store, "root", [], async () => {
         const posts = await getAllMarkdowns(posts_dir, postFmSchema);
         const posts_sorted = posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
@@ -24,5 +24,5 @@ export default function Root(store: Store): HRootPageFn<void> {
             name: site.name,
             navitem: navitem,
         })(Hero({})(), PageMainArea({})(Summaries({ posts: posts_sorted })()));
-    };
+    });
 }

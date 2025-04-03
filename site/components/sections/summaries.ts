@@ -1,3 +1,4 @@
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
 import { element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
@@ -9,11 +10,12 @@ export type SummariesArgument = {
 };
 
 export function summaries(store: Store): HComponentFn<SummariesArgument> {
-    const Summaries = element("summaries", { tag: "section", class_names: ["content"] });
+    const Summaries = element("summaries", { tag: "section" });
     const SummariesList = element("summaries-list", { tag: "ul" });
     const Summary = summary(store);
+    const styles = [style(Summaries, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
-    return registerComponent(store, Summaries, [style(Summaries, {})], (argument) => () => {
+    return registerComponent(store, Summaries, styles, (argument) => () => {
         return Summaries({ class: argument.class })(
             SummariesList({})(...argument.posts.map((post) => Summary(post)())),
         );

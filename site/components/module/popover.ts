@@ -1,3 +1,4 @@
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
 import { atStyle, element, registerComponent, style } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
@@ -12,8 +13,8 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
     const Popover = element("popover");
     const PopoverButton = element("popover-button", { tag: "button" });
     const PopoverCloseArea = element("popover-close-area");
-    const PopoverContainer = element("popover-container", { class_names: ["container"] });
-    const PopoverContent = element("popover-content", { class_names: ["content"] });
+    const PopoverContainer = element("popover-container");
+    const PopoverContent = element("popover-content");
 
     const styles = [
         style(Popover, {
@@ -37,6 +38,7 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
         atStyle(["@starting-style"], [[PopoverContainer, ":popover-open"]], {
             opacity: "0",
         }),
+        style(PopoverContent, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
         style(PopoverButton, {
             border: ["0px", "none"],
             background: "none",

@@ -1,4 +1,11 @@
-import { DEFAULT_TEXT_BG, FIX_TOP_STICKY, FONT_SIZE, F_2XLARGE, OPACITY } from "@/lib/stylerules";
+import {
+    DEFAULT_RESPONSIVE_PAGE_WIDTH,
+    DEFAULT_TEXT_BG,
+    FIX_TOP_STICKY,
+    FONT_SIZE,
+    F_2XLARGE,
+    OPACITY,
+} from "@/lib/stylerules";
 import { A, H1, element, hIcon, registerComponent, style } from "@/main";
 import type { HBrandIconName, HComponentFn, Store } from "@/main";
 import { drawer } from "@site/components/module/drawer";
@@ -27,6 +34,7 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const component_styles = [
         style(PageHeader, FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),
         style(H1, FONT_SIZE(F_2XLARGE(store))),
+        style(Drawer, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
     ];
 
     return registerComponent(
@@ -37,7 +45,6 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
             () =>
                 PageHeader({})(
                     Drawer({
-                        class: "content",
                         title: H1({})(A({ href: "/" })(title)),
                         header_space: Popover({
                             open_button: OpenButton({})(),

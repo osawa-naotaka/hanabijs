@@ -1,12 +1,63 @@
 import type { Properties } from "./properties";
 import type { Store } from "./repository";
-import type { PropertyOf } from "./style";
+import { type PropertyOf, type StyleRule, style } from "./style";
+
+export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
+    style("*", {
+        margin: "0",
+        padding: "0",
+        box_sizing: "border-box",
+    }),
+    style("a", {
+        text_decoration: "none",
+        color: "inherit",
+    }),
+    {
+        selector: [["h1"], ["h2"], ["h3"], ["h4"], ["h5"], ["h6"], ["input"]],
+        properties: {
+            font_size: "1rem",
+        },
+    },
+    {
+        selector: [["ul"], ["ol"], ["menu"]],
+        properties: {
+            list_style_type: "none",
+        },
+    },
+    style("input", {
+        width: "100%",
+        border: ["0", "none"],
+        outline: "none",
+    }),
+    {
+        selector: [["img"], ["svg"]],
+        properties: {
+            max_width: "100%",
+            display: "block",
+        },
+    },
+];
+
+export function DEFAULT_STYLES(store: Store) {
+    return [
+        style(":root", {
+            font_size: px(store.designrule.size.root),
+            line_height: store.designrule.size.line_height.toString(),
+            font_family: store.designrule.font_family.join(", "),
+        }),
+        style("body", {
+            color: store.designrule.color.main.text.default,
+            background_color: store.designrule.color.main.background.default,
+        }),
+    ];
+}
 
 export function RESPONSIVE_PAGE_WIDTH(max_width: string, padding_inline: string): Properties {
     return {
         max_width,
         width: "100%",
         padding_inline,
+        margin_inline: "auto",
     };
 }
 
@@ -14,7 +65,8 @@ export function DEFAULT_RESPONSIVE_PAGE_WIDTH(store: Store): Properties {
     return {
         max_width: px(store.designrule.size.width.medium),
         width: "100%",
-        padding_inline: px(store.designrule.size.spacing.medium),
+        padding_inline: rem(store.designrule.size.spacing.medium),
+        margin_inline: "auto",
     };
 }
 
@@ -36,7 +88,7 @@ export const FLEX_WRAP: Properties = {
 };
 
 export function DEFAULT_COLUMN(store: Store): Properties {
-    return COLUMN(px(store.designrule.size.spacing.medium));
+    return COLUMN(rem(store.designrule.size.spacing.medium));
 }
 
 export function ROW(gap: PropertyOf<"gap">): Properties {
@@ -49,7 +101,7 @@ export function ROW(gap: PropertyOf<"gap">): Properties {
 }
 
 export function DEFAULT_ROW(store: Store): Properties {
-    return ROW(px(store.designrule.size.spacing.medium));
+    return ROW(rem(store.designrule.size.spacing.medium));
 }
 
 export const ALIGN_NOMAL: Properties = {
@@ -215,21 +267,21 @@ export const C_INFO = (store: Store) => store.designrule.color.sub.info;
 export const C_SUCCESS = (store: Store) => store.designrule.color.sub.success;
 export const C_WARNING = (store: Store) => store.designrule.color.sub.warning;
 
-export const F_TINY = (store: Store) => px(store.designrule.size.font.tiny);
-export const F_SMALL = (store: Store) => px(store.designrule.size.font.small);
-export const F_MEDIUM = (store: Store) => px(store.designrule.size.font.medium);
-export const F_LARGE = (store: Store) => px(store.designrule.size.font.large);
-export const F_XLARGE = (store: Store) => px(store.designrule.size.font.xlarge);
-export const F_2XLARGE = (store: Store) => px(store.designrule.size.font.x2large);
-export const F_3XLARGE = (store: Store) => px(store.designrule.size.font.x3large);
+export const F_TINY = (store: Store) => rem(store.designrule.size.font.tiny);
+export const F_SMALL = (store: Store) => rem(store.designrule.size.font.small);
+export const F_MEDIUM = (store: Store) => rem(store.designrule.size.font.medium);
+export const F_LARGE = (store: Store) => rem(store.designrule.size.font.large);
+export const F_XLARGE = (store: Store) => rem(store.designrule.size.font.xlarge);
+export const F_2XLARGE = (store: Store) => rem(store.designrule.size.font.x2large);
+export const F_3XLARGE = (store: Store) => rem(store.designrule.size.font.x3large);
 
-export const S_TINY = (store: Store) => px(store.designrule.size.spacing.tiny);
-export const S_SMALL = (store: Store) => px(store.designrule.size.spacing.small);
-export const S_MEDIUM = (store: Store) => px(store.designrule.size.spacing.medium);
-export const S_LARGE = (store: Store) => px(store.designrule.size.spacing.large);
-export const S_XLARGE = (store: Store) => px(store.designrule.size.spacing.xlarge);
-export const S_2XLARGE = (store: Store) => px(store.designrule.size.spacing.x2large);
-export const S_3XLARGE = (store: Store) => px(store.designrule.size.spacing.x3large);
+export const S_TINY = (store: Store) => rem(store.designrule.size.spacing.tiny);
+export const S_SMALL = (store: Store) => rem(store.designrule.size.spacing.small);
+export const S_MEDIUM = (store: Store) => rem(store.designrule.size.spacing.medium);
+export const S_LARGE = (store: Store) => rem(store.designrule.size.spacing.large);
+export const S_XLARGE = (store: Store) => rem(store.designrule.size.spacing.xlarge);
+export const S_2XLARGE = (store: Store) => rem(store.designrule.size.spacing.x2large);
+export const S_3XLARGE = (store: Store) => rem(store.designrule.size.spacing.x3large);
 
 export function toHex(n: number) {
     return `#${n.toString(16)}`;
@@ -237,4 +289,8 @@ export function toHex(n: number) {
 
 export function px(n: number) {
     return `${n}px`;
+}
+
+export function rem(n: number) {
+    return `${n}rem`;
 }

@@ -41,6 +41,7 @@ export type SizeRem = {
 
 export type SizeRule<S extends SizeRem | Partial<SizeRem>> = {
     root: number; // pixel
+    line_height: number;
     font: S;
     spacing: S;
     width: S;
@@ -49,6 +50,7 @@ export type SizeRule<S extends SizeRem | Partial<SizeRem>> = {
 export type DesignRule<S extends SizeRem | Partial<SizeRem>, C extends Required<ColorSet> | ColorSet> = {
     color: ColorRule<C>;
     size: SizeRule<S>;
+    font_family: string[];
 };
 
 export type RequiredDesignRule = DesignRule<SizeRem, Required<ColorSet>>;
@@ -72,10 +74,13 @@ export const default_design_rule: PartialDesignRule = {
     },
     size: {
         root: 18,
+        line_height: 1.8,
+
         font: {},
         spacing: {},
         width: {},
     },
+    font_family: ['"Helvetica Neue"', "Arial", "sans-serif"],
 };
 
 export type DesignRuleScaling<
@@ -134,13 +139,13 @@ export const default_design_rule_scaling: RequiredDesignRuleScaling = {
             x3large: 4,
         },
         width: {
-            tiny: 24, // 480px
-            small: 40, // 720px
-            medium: 53, // 960px
-            large: 66, // 1200px
-            xlarge: 80, // 1440px
-            x2large: 88, // 1600px
-            x3large: 106, // 1920px
+            tiny: 25, // 450px
+            small: 30, // 540px
+            medium: 40, // 720px
+            large: 53, // 960px
+            xlarge: 66, // 12000px
+            x2large: 80, // 1440px
+            x3large: 88, // 1600px
         },
     },
 };
@@ -155,8 +160,8 @@ export function generateDesignRule(rule: PartialDesignRule, scale: RequiredDesig
     const text = mixColor(initial_rule.color.main.text, scale.color);
     const background = mixColor(initial_rule.color.main.background, scale.color);
 
-    const font = interpolate(initial_rule.size.font, initial_rule.size.root, initial_scale.size.font);
-    const spacing = interpolate(initial_rule.size.spacing, initial_rule.size.root, initial_scale.size.spacing);
+    const font = setDefault(initial_rule.size.font, initial_scale.size.font);
+    const spacing = setDefault(initial_rule.size.spacing, initial_scale.size.spacing);
     const width = interpolate(initial_rule.size.width, initial_rule.size.root, initial_scale.size.width);
 
     return {
@@ -164,8 +169,22 @@ export function generateDesignRule(rule: PartialDesignRule, scale: RequiredDesig
             main: { primary, secondary, accent, text, background },
             sub: initial_rule.color.sub,
         },
-        size: { font, spacing, width, root: initial_rule.size.root },
+        size: { font, spacing, width, root: initial_rule.size.root, line_height: initial_rule.size.line_height },
+        font_family: initial_rule.font_family,
     };
+}
+
+function setDefault<T extends Record<string, number>, S extends Record<string, number>>(
+    values: Partial<T>,
+    default_val: S,
+): T {
+    const ret = JSON.parse(JSON.stringify(values));
+    for (const key of Object.keys(default_val)) {
+        if (ret[key] === undefined) {
+            ret[key] = default_val[key];
+        }
+    }
+    return ret;
 }
 
 export function interpolate<T extends Record<string, number>, S extends Record<string, number>>(
