@@ -1938,8 +1938,8 @@ export function printDefine() {
 
 function gt<K extends Tag | HanabiTag>(tag: K): HElementFn<K> {
     const fn: HRawElementFn<K> =
-        (argument: AttributeOf<K>) =>
-        (...child: HNode[]) => ({ tag, attribute: argument, child });
+        (attribute: AttributeOf<K>) =>
+        (...child: HNode[]) => ({ tag, attribute, child });
 
     const ret_fn = fn as HElementFn<K>;
     ret_fn.dot_name = tag;
