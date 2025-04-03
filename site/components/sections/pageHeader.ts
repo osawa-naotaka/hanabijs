@@ -3,7 +3,8 @@ import {
     DEFAULT_TEXT_BG,
     FIX_TOP_STICKY,
     FONT_SIZE,
-    F_2XLARGE,
+    F_3XLARGE,
+    F_LARGE,
     OPACITY,
 } from "@/lib/stylerules";
 import { A, H1, element, hIcon, registerComponent, style } from "@/main";
@@ -33,8 +34,10 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
 
     const component_styles = [
         style(PageHeader, FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),
-        style(H1, FONT_SIZE(F_2XLARGE(store))),
         style(Drawer, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(H1, FONT_SIZE(F_3XLARGE(store))),
+        style(OpenButton, FONT_SIZE(F_LARGE(store))),
+        style(MenuButton, FONT_SIZE(F_LARGE(store))),
     ];
 
     return registerComponent(

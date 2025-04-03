@@ -85,7 +85,6 @@ function HBUTTON(arg: Properties): Properties {
         justify_content: "center",
 
         padding: ["12px", "18px"],
-        font_size: "1rem",
         font_weight: "normal",
         letter_spacing: "0.05rem",
         line_height: "1",

@@ -7,18 +7,12 @@ export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
         margin: "0",
         padding: "0",
         box_sizing: "border-box",
+        font_size: "inherit",
     }),
     atStyle([["@layer", "base"]], "a", {
         text_decoration: "none",
         color: "inherit",
     }),
-    {
-        atrules: [["@layer", "base"]],
-        selector: [["h1"], ["h2"], ["h3"], ["h4"], ["h5"], ["h6"], ["input"]],
-        properties: {
-            font_size: "1rem",
-        },
-    },
     {
         atrules: [["@layer", "base"]],
         selector: [["ul"], ["ol"], ["menu"]],

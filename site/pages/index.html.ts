@@ -1,46 +1,28 @@
-import { DEFAULT_COLUMN, DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
-import { hButton, hLinkedButton } from "@/lib/ui/button";
-import { Body, H2, Head, Html, Link, Main, Meta, Title, registerRootPage, style } from "@/main";
-import type { HArgument, HRootPageFn, Store } from "@/main";
+import { element, registerRootPage } from "@/main";
+import type { HRootPageFn, Store } from "@/main";
+import { getAllMarkdowns } from "@site/components/library/post";
+import { page } from "@site/components/pages/page";
+import { hero } from "@site/components/sections/hero";
+import { summaries } from "@site/components/sections/summaries";
+import { navitem, site } from "@site/config/site.config";
+import { postFmSchema, posts_dir } from "@site/config/site.config";
 
-export default function Root(store: Store): HRootPageFn<HArgument> {
-    const HFilledButton = hButton(store, { type: "filled" });
-    const HOutlinedButton = hButton(store, { type: "outlined" });
-    const HTextButton = hButton(store, { type: "text" });
+export default function Root(store: Store): HRootPageFn<void> {
+    const Page = page(store);
+    const Hero = hero(store);
+    const PageMainArea = element("page-main-area", { class_names: ["container"], tag: "main" });
+    const Summaries = summaries(store);
 
-    const HLFilledButton = hLinkedButton(store, { type: "filled" }, { padding: ["0.3rem", "0.5rem"] });
-    const HLOutlinedButton = hLinkedButton(store, { type: "outlined" });
-    const HLTextButton = hLinkedButton(store, { type: "text" });
+    return registerRootPage(store, "root", [], async () => {
+        const posts = await getAllMarkdowns(posts_dir, postFmSchema);
+        const posts_sorted = posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
-    const page_styles = [style(Body, DEFAULT_COLUMN(store)), style(Main, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
-
-    return registerRootPage(store, "root-page", page_styles, async () =>
-        Html({ lang: "en" })(
-            Head({ class: "page-head" })(
-                Meta({ charset: "utf-8" })(),
-                Meta({
-                    name: "viewport",
-                    content: "width=device-width,initial-scale=1.0",
-                })(),
-                Link({ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" })(),
-                Meta({ name: "generator", content: "template-engine" })(),
-
-                Title({})("ui test"),
-                Link({ rel: "stylesheet", href: "/assets/global.css" })(),
-                // Link({ rel: "stylesheet", href: "/assets/ui.css" })(),
-            ),
-            Body({})(
-                Main({})(
-                    H2({})("Buttons"),
-                    HFilledButton({})("BUTTON"),
-                    HOutlinedButton({})("BUTTON"),
-                    HTextButton({})("BUTTON"),
-                    H2({})("Linked Buttons"),
-                    HLFilledButton({ href: "#" })("LINK"),
-                    HLOutlinedButton({ href: "#" })("LINK"),
-                    HLTextButton({ href: "#" })("LINK"),
-                ),
-            ),
-        ),
-    );
+        return Page({
+            title: site.name,
+            description: site.description,
+            lang: site.lang,
+            name: site.name,
+            navitem: navitem,
+        })(Hero({})(), PageMainArea({})(Summaries({ posts: posts_sorted })()));
+    });
 }
