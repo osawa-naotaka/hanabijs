@@ -1,35 +1,38 @@
 import type { Properties } from "./properties";
 import type { Store } from "./repository";
-import { type PropertyOf, type StyleRule, style } from "./style";
+import { type PropertyOf, type StyleRule, atStyle } from "./style";
 
 export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
-    style("*", {
+    atStyle([["@layer", "base"]], "*", {
         margin: "0",
         padding: "0",
         box_sizing: "border-box",
     }),
-    style("a", {
+    atStyle([["@layer", "base"]], "a", {
         text_decoration: "none",
         color: "inherit",
     }),
     {
+        atrules: [["@layer", "base"]],
         selector: [["h1"], ["h2"], ["h3"], ["h4"], ["h5"], ["h6"], ["input"]],
         properties: {
             font_size: "1rem",
         },
     },
     {
+        atrules: [["@layer", "base"]],
         selector: [["ul"], ["ol"], ["menu"]],
         properties: {
             list_style_type: "none",
         },
     },
-    style("input", {
+    atStyle([["@layer", "base"]], "input", {
         width: "100%",
         border: ["0", "none"],
         outline: "none",
     }),
     {
+        atrules: [["@layer", "base"]],
         selector: [["img"], ["svg"]],
         properties: {
             max_width: "100%",
@@ -40,12 +43,12 @@ export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
 
 export function DEFAULT_STYLES(store: Store) {
     return [
-        style(":root", {
+        atStyle([["@layer", "base"]], ":root", {
             font_size: px(store.designrule.size.root),
             line_height: store.designrule.size.line_height.toString(),
             font_family: store.designrule.font_family.join(", "),
         }),
-        style("body", {
+        atStyle([["@layer", "base"]], "body", {
             color: store.designrule.color.main.text.default,
             background_color: store.designrule.color.main.background.default,
         }),

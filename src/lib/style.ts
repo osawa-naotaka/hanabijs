@@ -7,10 +7,12 @@ export type PropertyOf<T extends keyof Properties> = Properties[T];
 
 // Style
 export type StyleRule = {
-    atrule?: string[];
+    atrules?: Atrule[];
     selector: SelectorList;
     properties: Properties;
 };
+
+export type Atrule = string[];
 
 export type SelectorList = SelectorContext[];
 
@@ -31,9 +33,9 @@ export function style(context: SelectorContext, ...properties: Properties[]): St
     };
 }
 
-export function atStyle(atrule: string[], context: SelectorContext, ...properties: Properties[]): StyleRule {
+export function atStyle(atrules: Atrule[], context: SelectorContext, ...properties: Properties[]): StyleRule {
     return {
-        atrule,
+        atrules,
         selector: [context],
         properties: unionArrayOfRecords(properties),
     };
@@ -151,7 +153,7 @@ function normalizeSelector(context: Selector): CompoundSelector {
 
 // Stringify
 export function stringifyToCss(components: HComponent[]): string {
-    return components.map(rulesToString).join("");
+    return `@charset "utf-8";\n@layer base, low, main, high;\n${components.map(rulesToString).join("")}`;
 }
 
 export function rulesToString(element: HComponent): string {
@@ -159,10 +161,14 @@ export function rulesToString(element: HComponent): string {
     for (const rule of element.style) {
         const selectors_string = rule.selector.map(selectorContextToString).join(", ");
         const propaties_string = propertiesToString(rule.properties);
-        if (rule.atrule) {
-            res.push(`${rule.atrule.join(" ")} { ${selectors_string} { ${propaties_string} } }\n`);
+        if (rule.atrules) {
+            const has_layer = rule.atrules.some((x) => x.length > 0 && x[0].localeCompare("@layer") === 0);
+            const atrules = has_layer ? rule.atrules : [["@layer", "main"], ...rule.atrules];
+            res.push(
+                `${atrules.map((x) => x.join(" ")).join(" { ")} { ${selectors_string} { ${propaties_string} } ${" } ".repeat(atrules.length)}\n`,
+            );
         } else {
-            res.push(`${selectors_string} { ${propaties_string} }\n`);
+            res.push(`@layer main { ${selectors_string} { ${propaties_string} } }\n`);
         }
     }
 

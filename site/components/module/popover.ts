@@ -35,7 +35,7 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
             display: "flex",
             opacity: "1",
         }),
-        atStyle(["@starting-style"], [[PopoverContainer, ":popover-open"]], {
+        atStyle([["@layer", "high"], ["@starting-style"]], [[PopoverContainer, ":popover-open"]], {
             opacity: "0",
         }),
         style(PopoverContent, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
