@@ -1,5 +1,5 @@
 import { A, Body, H1, Head, Html, Link, Meta, Script, Title, element } from "@/main";
-import type { HArgument, HComponentFn } from "@/main";
+import type { HArgument, HRawComponentFn } from "@/main";
 
 const site = {
     lang: "en",
@@ -7,7 +7,7 @@ const site = {
     description: "fast, light-weight static site generator",
 };
 
-export function page(): HComponentFn<HArgument> {
+export function page(): HRawComponentFn<HArgument> {
     const PageHeader = element("page-header", { tag: "header" });
     const PageFooter = element("page-footer", { tag: "footer" });
     const PageFooterCopyright = element("page-footer-copyright");

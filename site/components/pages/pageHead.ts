@@ -1,4 +1,4 @@
-import { Head, Link, Meta, Script, Title } from "@/main";
+import { Head, Link, Meta, registerComponent, Script, Title } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 
 export type PageHeadArgument = {
@@ -6,8 +6,8 @@ export type PageHeadArgument = {
     description: string;
 };
 
-export function pageHead(_repo: Store): HComponentFn<PageHeadArgument> {
-    return ({ title, description }) =>
+export function pageHead(store: Store): HComponentFn<PageHeadArgument> {
+    return registerComponent(store, Head, [], ({ title, description }) =>
         () =>
             Head({ class: "page-head" })(
                 // Global Metadata
@@ -44,5 +44,5 @@ export function pageHead(_repo: Store): HComponentFn<PageHeadArgument> {
                 Script({
                     src: "https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js",
                 })(""),
-            );
+            ));
 }

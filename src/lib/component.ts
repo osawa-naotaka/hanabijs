@@ -18,23 +18,30 @@ export type HElement<K> = {
 };
 
 // hanabi Element (is function), expressing HTML element
-export type HElementFn<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
+export type HElementFn<K> = {
+    (attribute: AttributeOf<K>): (...child: HNode[]) => HNode;
+    dot_name: string;
+};
+
+type HElementFnInternal<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
 
 export function element<K extends Tag | HanabiTag = "div">(
     element_name: string,
     { class_names = [], tag = "div" as K }: { class_names?: string[]; tag?: K } = {},
 ): HElementFn<K> {
     const dot_name = `.${element_name}`;
-    return {
-        [dot_name]:
-            (attribute: AttributeOf<K>) =>
-            (...child: HNode[]) => ({
-                element_name: dot_name,
-                tag,
-                attribute: addClassInRecord(attribute, [element_name, ...class_names]),
-                child,
-            }),
-    }[dot_name];
+    const fn: HElementFnInternal<K> =
+        (attribute: AttributeOf<K>) =>
+        (...child: HNode[]) => ({
+            element_name: dot_name,
+            tag,
+            attribute: addClassInRecord(attribute, [element_name, ...class_names]),
+            child,
+        });
+    const ret_fn = fn as HElementFn<K>;
+    ret_fn.dot_name = dot_name;
+
+    return ret_fn;
 }
 
 // add class string to record.
@@ -58,11 +65,15 @@ function addClassToHead<T extends { class?: string | string[] }>(
 }
 
 // hanabi Component (is function)
-export type HComponentFn<T> = (argument: HComponentFnArg<T>) => (...child: HNode[]) => HNode;
+export type HComponentFn<T> = {
+    (argument: HComponentFnArg<T>): (...child: HNode[]) => HNode;
+    dot_name: string;
+};
+export type HRawComponentFn<T> = (argument: HComponentFnArg<T>) => (...child: HNode[]) => HNode;
 export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string };
 
 // biome-ignore lint/suspicious/noExplicitAny: HAnyComponent uses only for function.name
-export type HAnyComponentFn = (argument: any) => (...child: HNode[]) => HNode;
+export type HAnyComponentFn = HComponentFn<any>;
 
 export type HArgument = Record<string, unknown>;
 
