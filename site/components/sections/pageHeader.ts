@@ -23,7 +23,7 @@ export type PageHeaderArgument = {
 };
 
 export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
-    const PageHeader = element("page-header", { class_names: ["container"], tag: "header" });
+    const PageHeader = element("page-header", { tag: "header" });
     const Drawer = drawer(store, "page-header-toggle-button");
     const Popover = popover(store, "search-popover");
     const OpenButton = hIcon({ type: "solid", name: "search" });

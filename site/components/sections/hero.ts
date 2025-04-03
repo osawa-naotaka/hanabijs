@@ -4,7 +4,7 @@ import type { HArgument, HComponentFn, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
 export function hero(store: Store): HComponentFn<HArgument> {
-    const Hero = element("hero", { class_names: ["container"] });
+    const Hero = element("hero");
     const HeroText = element("hero-text");
 
     const component_styles = [

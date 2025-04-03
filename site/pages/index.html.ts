@@ -10,7 +10,7 @@ import { postFmSchema, posts_dir } from "@site/config/site.config";
 export default function Root(store: Store): HRootPageFn<void> {
     const Page = page(store);
     const Hero = hero(store);
-    const PageMainArea = element("page-main-area", { class_names: ["container"], tag: "main" });
+    const PageMainArea = element("page-main-area", { tag: "main" });
     const Summaries = summaries(store);
 
     return registerRootPage(store, "root", [], async () => {

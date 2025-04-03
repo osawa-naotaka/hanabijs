@@ -10,7 +10,7 @@ import { articleHeader } from "./articleHeader";
 export type SummaryArgument = Markdown<PostFm>;
 
 export function summary(store: Store): HComponentFn<SummaryArgument> {
-    const Summary = element("summary", { tag: "article", class_names: ["neu"] });
+    const Summary = element("summary", { tag: "article" });
     const ArticleHeader = articleHeader(store);
     const Author = element("author");
     const Tag = tag(store);

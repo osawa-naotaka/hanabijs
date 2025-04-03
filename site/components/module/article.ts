@@ -35,7 +35,7 @@ import { articleHeader } from "./articleHeader";
 export type ArticleArgument = Markdown<PostFm>;
 
 export function article(store: Store): HComponentFn<ArticleArgument> {
-    const Article = element("article", { tag: "article", class_names: ["neu"] });
+    const Article = element("article", { tag: "article" });
     const ArticleHeader = articleHeader(store);
     const Author = element("author");
     const Tag = tag(store);

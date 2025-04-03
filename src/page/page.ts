@@ -8,7 +8,7 @@ const site = {
 };
 
 export function page(): HComponentFn<HArgument> {
-    const PageHeader = element("page-header", { class_names: ["container"], tag: "header" });
+    const PageHeader = element("page-header", { tag: "header" });
     const PageFooter = element("page-footer", { tag: "footer" });
     const PageFooterCopyright = element("page-footer-copyright");
 
