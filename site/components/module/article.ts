@@ -76,7 +76,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
         Article,
         (argument) =>
             (...child) =>
-                Article({ class: argument.class })(
+                Article({})(
                     ArticleHeader({
                         title: H2({})(argument.data.title),
                     })(

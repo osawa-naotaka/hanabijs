@@ -43,9 +43,6 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
         ArticleHeader,
         (argument) =>
             (...child) =>
-                ArticleHeader({ class: argument.class })(
-                    ArticleHeaderTitle({})(argument.title),
-                    ArticleHeaderMeta({})(...child),
-                ),
+                ArticleHeader({})(ArticleHeaderTitle({})(argument.title), ArticleHeaderMeta({})(...child)),
     );
 }

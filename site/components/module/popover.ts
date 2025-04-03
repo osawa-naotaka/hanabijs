@@ -56,7 +56,7 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
     return component(
         Popover,
         (argument) => () =>
-            Popover({ class: argument.class })(
+            Popover({})(
                 PopoverButton({ type: "button", popovertarget: button_id })(argument.open_button),
                 PopoverContainer({ popover: null, id: button_id })(
                     PopoverContent({})(

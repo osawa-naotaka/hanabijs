@@ -22,8 +22,8 @@ export function search(store: Store): HComponentFn<HArgument> {
 
     return component(
         Search,
-        (argument) => () =>
-            Search({ class: argument.class })(
+        () => () =>
+            Search({})(
                 SearchBar({})(SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(), SearchInputIcon({})()),
                 SearchResult({})(SearchResultItem({})("no result.")),
             ),

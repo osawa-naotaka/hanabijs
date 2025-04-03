@@ -27,7 +27,7 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
     return component(
         Summary,
         (argument) => () =>
-            Summary({ class: argument.class })(
+            Summary({})(
                 ArticleHeader({
                     title: A({ href: `/posts/${argument.slug}` })(H2({})(argument.data.title)),
                 })(

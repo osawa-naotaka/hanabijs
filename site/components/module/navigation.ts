@@ -24,7 +24,7 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
     return component(
         Navigation,
         (argument) => () =>
-            Navigation({ class: argument.class })(
+            Navigation({})(
                 NavigationList({})(
                     NavigationListItem({})(A({ href: "/posts" })("blog")),
                     ...argument.navitem.map((item) =>

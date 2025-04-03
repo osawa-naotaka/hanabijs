@@ -41,7 +41,7 @@ export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgu
     return component(
         Drawer,
         (argument) => () =>
-            Drawer({ class: argument.class })(
+            Drawer({})(
                 DrawerOpenState({ type: "checkbox", id: button_id })(),
                 DrawerTitle({})(
                     argument.title,
