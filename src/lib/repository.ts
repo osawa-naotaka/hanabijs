@@ -40,15 +40,9 @@ export function registerComponent<K>(
     store.components.set(component_name, { component_name, path, style });
 }
 
-export function registerElement<K>(
-    store: Store,
-    element_fn: HElementFn<K>,
-    style: StyleRule[],
-    path?: string,
-): HElementFn<K> {
+export function registerElement<K>(store: Store, element_fn: HElementFn<K>, style: StyleRule[], path?: string): void {
     const component_name = element_fn.name;
     store.components.set(component_name, { component_name, path, style });
-    return element_fn;
 }
 
 export function registerRootPage(store: Store, style: StyleRule[], path?: string): void {

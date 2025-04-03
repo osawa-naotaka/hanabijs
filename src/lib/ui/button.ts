@@ -17,16 +17,18 @@ export function hButton(store: Store, arg: HButtonArg, ...prop: Properties[]): H
     const prop_w = joinAll({}, prop);
     const HButton = element(`h-button-${hash_djb2(arg, prop_w).toString(16)}`, { tag: "button" });
     const element_styles = buttonStyles(HButton, arg.type, store, prop_w);
+    registerElement(store, HButton, element_styles);
 
-    return registerElement(store, HButton, element_styles);
+    return HButton;
 }
 
 export function hLinkedButton(store: Store, arg: HButtonArg, ...prop: Properties[]): HElementFn<"a"> {
     const prop_w = joinAll({}, prop);
     const HLinkedButton = element(`h-linked-button-${hash_djb2(arg, prop_w).toString(16)}`, { tag: "a" });
     const element_styles = buttonStyles(HLinkedButton, arg.type, store, prop_w);
+    registerElement(store, HLinkedButton, element_styles);
 
-    return registerElement(store, HLinkedButton, element_styles);
+    return HLinkedButton;
 }
 
 type HButtonProperties = {
