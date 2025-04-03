@@ -14,7 +14,9 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
 
     const page_styles = [style(Body, DEFAULT_COLUMN(store)), style(Main, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
-    return registerRootPage(store, "root-page", page_styles, async () =>
+    registerRootPage(store, page_styles);
+
+    return async () =>
         Html({ lang: "en" })(
             Head({ class: "page-head" })(
                 Meta({ charset: "utf-8" })(),
@@ -41,6 +43,5 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
                     HLTextButton({ href: "#" })("LINK"),
                 ),
             ),
-        ),
-    );
+        );
 }

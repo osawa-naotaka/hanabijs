@@ -8,9 +8,8 @@ export type DateTimeArgument = {
 
 export function dateTime(): HComponentFn<DateTimeArgument> {
     const DateTime = element("date-time", { tag: "time" });
-    return component(DateTime, (argument) => () => {
-        const date = argument.datetime instanceof Date ? argument.datetime : new Date(argument.datetime);
-        const lang = argument.lang || "en-us";
+    return component(DateTime, ({ datetime, lang = "en-us" }) => () => {
+        const date = datetime instanceof Date ? datetime : new Date(datetime);
         const date_string = date.toLocaleDateString(lang, {
             year: "numeric",
             month: "short",

@@ -13,7 +13,8 @@ export default function Root(store: Store): HRootPageFn<void> {
 
     const styles = [style(ArticleList, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
-    return registerRootPage(store, "root", styles, async () => {
+    registerRootPage(store, styles);
+    return async () => {
         const posts = await getAllMarkdowns(posts_dir, postFmSchema);
         const posts_sorted = posts.sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
 
@@ -30,5 +31,5 @@ export default function Root(store: Store): HRootPageFn<void> {
                 ),
             ),
         );
-    });
+    };
 }

@@ -74,16 +74,16 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
     return component(
         Article,
-        (argument) =>
+        ({ data, slug }) =>
             (...child) =>
                 Article({})(
                     ArticleHeader({
-                        title: H2({})(argument.data.title),
+                        title: H2({})(data.title),
                     })(
-                        Author({})(argument.data.author),
-                        DateTime({ datetime: argument.data.date })(),
-                        ...(argument.data.tag || []).map((x) => Tag({ slug: x })()),
-                        ShareX({ title: argument.data.title, url: `http://localhost/posts/${argument.slug}` })(),
+                        Author({})(data.author),
+                        DateTime({ datetime: data.date })(),
+                        ...(data.tag || []).map((x) => Tag({ slug: x })()),
+                        ShareX({ title: data.title, url: `http://localhost/posts/${slug}` })(),
                     ),
                     ArticleText({})(...child),
                 ),

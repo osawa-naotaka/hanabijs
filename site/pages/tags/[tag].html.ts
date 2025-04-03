@@ -19,15 +19,17 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
     const PageMainArea = element("page-main-area", { tag: "main" });
     const styles = [style(PageMainArea, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
-    return registerRootPage(store, "root", styles, async (parameter) => {
-        const md = (await getAllMarkdowns(posts_dir, postFmSchema)).filter((x) => x.data.tag?.includes(parameter.tag));
+    registerRootPage(store, styles);
+
+    return async ({ tag }) => {
+        const md = (await getAllMarkdowns(posts_dir, postFmSchema)).filter((x) => x.data.tag?.includes(tag));
 
         return Page({
-            title: `${parameter.tag || ""} | ${site.name}`,
+            title: `${tag || ""} | ${site.name}`,
             description: site.description,
             lang: site.lang,
             name: site.name,
             navitem: navitem,
         })(PageMainArea({})(Ul({})(...md.map((x) => Li({})(A({ href: `/posts/${x.slug}` })(x.data.title))))));
-    });
+    };
 }

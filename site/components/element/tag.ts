@@ -11,6 +11,8 @@ export function tag(): HComponentFn<TagArgument> {
 
     return component(
         Tag,
-        (argument) => () => Tag({ href: `/tags/${argument.slug}` })(tag_map[argument.slug] || argument.slug),
+        ({ slug }) =>
+            () =>
+                Tag({ href: `/tags/${slug}` })(tag_map[slug] || slug),
     );
 }

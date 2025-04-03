@@ -1,4 +1,4 @@
-import type { HComponentFn, HComponentFnArg, HElementFn, HRootPageFn } from "./component";
+import type { HComponentFn, HComponentFnArg, HElementFn } from "./component";
 import { default_design_rule, default_design_rule_scaling, generateDesignRule } from "./design";
 import type { PartialDesignRule, PartialDesignRuleScaling, RequiredDesignRule } from "./design";
 import type { StyleRule } from "./style";
@@ -51,16 +51,9 @@ export function registerElement<K>(
     return element_fn;
 }
 
-export function registerRootPage<T, K>(
-    store: Store,
-    name_fn: HComponentFn<K> | string,
-    style: StyleRule[],
-    root_page_fn: HRootPageFn<T>,
-    path?: string,
-): HRootPageFn<T> {
-    const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
+export function registerRootPage(store: Store, style: StyleRule[], path?: string): void {
+    const component_name = "hanabi-root-page";
     store.components.set(component_name, { component_name, path, style });
-    return root_page_fn;
 }
 
 export function clearStore(store: Store): void {

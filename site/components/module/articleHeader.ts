@@ -41,8 +41,8 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
 
     return component(
         ArticleHeader,
-        (argument) =>
+        ({ title }) =>
             (...child) =>
-                ArticleHeader({})(ArticleHeaderTitle({})(argument.title), ArticleHeaderMeta({})(...child)),
+                ArticleHeader({})(ArticleHeaderTitle({})(title), ArticleHeaderMeta({})(...child)),
     );
 }

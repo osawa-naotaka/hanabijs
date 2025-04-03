@@ -17,7 +17,7 @@ export function summaries(store: Store): HComponentFn<SummariesArgument> {
 
     registerComponent(store, Summaries, styles);
 
-    return component(Summaries, (argument) => () => {
-        return Summaries({})(SummariesList({})(...argument.posts.map((post) => Summary(post)())));
+    return component(Summaries, ({ posts }) => () => {
+        return Summaries({})(SummariesList({})(...posts.map((post) => Summary(post)())));
     });
 }

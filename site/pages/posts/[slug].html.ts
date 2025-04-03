@@ -31,8 +31,10 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
         style(PageSection, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
     ];
 
-    return registerRootPage(store, "root", styles, async (argument) => {
-        const md = await getMarkdown(posts_dir, argument.slug, postFmSchema);
+    registerRootPage(store, styles);
+
+    return async ({ slug }) => {
+        const md = await getMarkdown(posts_dir, slug, postFmSchema);
 
         const raw_html = await markdownToHtml(md.content);
         return Page({
@@ -42,5 +44,5 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
             name: site.name,
             navitem: navitem,
         })(PageMainArea({})(PageSection({})(Article(md)(RawHTML({})(raw_html)))));
-    });
+    };
 }

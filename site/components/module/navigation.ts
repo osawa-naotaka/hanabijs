@@ -23,16 +23,19 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
 
     return component(
         Navigation,
-        (argument) => () =>
-            Navigation({})(
-                NavigationList({})(
-                    NavigationListItem({})(A({ href: "/posts" })("blog")),
-                    ...argument.navitem.map((item) =>
-                        NavigationListItem({})(
-                            A({ href: item.url, target: "__blank" })(hIcon({ type: "brands", name: item.icon })({})()),
+        ({ navitem }) =>
+            () =>
+                Navigation({})(
+                    NavigationList({})(
+                        NavigationListItem({})(A({ href: "/posts" })("blog")),
+                        ...navitem.map((item) =>
+                            NavigationListItem({})(
+                                A({ href: item.url, target: "__blank" })(
+                                    hIcon({ type: "brands", name: item.icon })({})(),
+                                ),
+                            ),
                         ),
                     ),
                 ),
-            ),
     );
 }

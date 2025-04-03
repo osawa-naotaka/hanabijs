@@ -26,15 +26,16 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
 
     return component(
         Summary,
-        (argument) => () =>
-            Summary({})(
-                ArticleHeader({
-                    title: A({ href: `/posts/${argument.slug}` })(H2({})(argument.data.title)),
-                })(
-                    Author({})(argument.data.author),
-                    DateTime({ datetime: argument.data.date })(),
-                    ...(argument.data.tag || []).map((slug) => Tag({ slug })()),
+        ({ slug, data }) =>
+            () =>
+                Summary({})(
+                    ArticleHeader({
+                        title: A({ href: `/posts/${slug}` })(H2({})(data.title)),
+                    })(
+                        Author({})(data.author),
+                        DateTime({ datetime: data.date })(),
+                        ...(data.tag || []).map((s) => Tag({ slug: s })()),
+                    ),
                 ),
-            ),
     );
 }
