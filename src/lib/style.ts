@@ -66,7 +66,6 @@ export function insertNodes(root: HNode, selector: Selector[], insert: HNode[], 
                 ? [...root.child, ...insert]
                 : root.child.map((c) => insertNodes(c, selector.slice(1), insert, true));
         return {
-            element_name: root.element_name,
             tag: root.tag,
             attribute: root.attribute,
             child,
@@ -75,7 +74,6 @@ export function insertNodes(root: HNode, selector: Selector[], insert: HNode[], 
 
     if (search_deep) {
         return {
-            element_name: root.element_name,
             tag: root.tag,
             attribute: root.attribute,
             child: root.child.map((c) => insertNodes(c, selector, insert, true)),

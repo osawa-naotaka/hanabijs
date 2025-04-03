@@ -11,7 +11,6 @@ export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 
 // HTML Element, with custom element name
 export type HElement<K> = {
-    element_name: string;
     tag: Tag | HanabiTag;
     attribute: Partial<K>;
     child: HNode[];
@@ -33,7 +32,6 @@ export function element<K extends Tag | HanabiTag = "div">(
     const fn: HRawElementFn<K> =
         (attribute: AttributeOf<K>) =>
         (...child: HNode[]) => ({
-            element_name: dot_name,
             tag,
             attribute: addClassInRecord(attribute, [element_name, ...class_names]),
             child,
