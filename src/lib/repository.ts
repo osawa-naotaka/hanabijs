@@ -25,17 +25,19 @@ export function generateStore(
     };
 }
 
-export function registerComponent<T, K>(
+export function component<T, K>(name_fn: HComponentFn<K> | string, component_fn: HComponentFn<T>): HComponentFn<T> {
+    const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
+    return { [component_name]: (argument: HComponentFnArg<T>) => component_fn(argument) }[component_name];
+}
+
+export function registerComponent<K>(
     store: Store,
     name_fn: HComponentFn<K> | string,
     style: StyleRule[],
-    component_fn: HComponentFn<T>,
     path?: string,
-): HComponentFn<T> {
+): void {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
     store.components.set(component_name, { component_name, path, style });
-
-    return { [component_name]: (argument: HComponentFnArg<T>) => component_fn(argument) }[component_name];
 }
 
 export function registerElement<K>(

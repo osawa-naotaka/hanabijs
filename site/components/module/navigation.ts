@@ -1,5 +1,5 @@
 import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "@/lib/stylerules";
-import { A, element, hIcon, registerComponent, style } from "@/main";
+import { A, component, element, hIcon, registerComponent, style } from "@/main";
 import type { HBrandIconName, HComponentFn, Store } from "@/main";
 
 export type NavigationArgument = {
@@ -19,10 +19,10 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
         style(NavigationList, ROW(S_XLARGE(store)), JUSTIFY_CENTER),
     ];
 
-    return registerComponent(
-        store,
+    registerComponent(store, Navigation, component_styles);
+
+    return component(
         Navigation,
-        component_styles,
         (argument) => () =>
             Navigation({ class: argument.class })(
                 NavigationList({})(

@@ -1,16 +1,14 @@
-import { Head, Link, Meta, Script, Title, registerComponent } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { Head, Link, Meta, Script, Title, component } from "@/main";
+import type { HComponentFn } from "@/main";
 
 export type PageHeadArgument = {
     title: string;
     description: string;
 };
 
-export function pageHead(store: Store): HComponentFn<PageHeadArgument> {
-    return registerComponent(
-        store,
+export function pageHead(): HComponentFn<PageHeadArgument> {
+    return component(
         Head,
-        [],
         ({ title, description }) =>
             () =>
                 Head({ class: "page-head" })(

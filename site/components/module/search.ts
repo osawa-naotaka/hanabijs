@@ -1,4 +1,4 @@
-import { A, Div, Li, createDom, element, hIcon, registerComponent, style } from "@/main";
+import { A, Div, Li, component, createDom, element, hIcon, registerComponent, style } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
@@ -18,16 +18,15 @@ export function search(store: Store): HComponentFn<HArgument> {
         style(SearchResultItem, MARGIN_BLOCK(S_3XLARGE(store))),
     ];
 
-    return registerComponent(
-        store,
+    registerComponent(store, Search, component_sytles, import.meta.path);
+
+    return component(
         Search,
-        component_sytles,
         (argument) => () =>
             Search({ class: argument.class })(
                 SearchBar({})(SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(), SearchInputIcon({})()),
                 SearchResult({})(SearchResultItem({})("no result.")),
             ),
-        import.meta.path,
     );
 }
 
@@ -107,15 +106,17 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const SearchResultItemMeta = element("search-result-item-meta");
     const SearchResultItemTitle = element("search-result-item-title");
     const SearchResultItemDescription = element("search-result-item-description");
-    const DateTime = dateTime(store);
-    const Tag = tag(store);
+    const DateTime = dateTime();
+    const Tag = tag();
 
     const component_styles = [
         style(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
         style(SearchResultItemDescription, FONT_SIZE(F_TINY(store))),
     ];
 
-    return registerComponent(store, SearchResultItem, component_styles, ({ result }) => () => {
+    registerComponent(store, SearchResultItem, component_styles);
+
+    return component(SearchResultItem, ({ result }) => () => {
         const key = v.parse(SearchKeySchema, result.key);
         return SearchResultItem({})(
             SearchResultItemMeta({})(

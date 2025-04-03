@@ -1,5 +1,5 @@
 import { DEFAULT_STYLES, INIT_CSS } from "@/lib/stylerules";
-import { Body, Html, registerComponent } from "@/main";
+import { Body, Html, component, registerComponent } from "@/main";
 import type { HBrandIconName, HComponentFn, Store } from "@/main";
 import { pageHead } from "@site/components/pages/pageHead";
 import { pageFooter } from "@site/components/sections/pageFooter";
@@ -17,14 +17,14 @@ export type PageArgument = {
 };
 
 export function page(store: Store): HComponentFn<PageArgument> {
-    const PageHead = pageHead(store);
+    const PageHead = pageHead();
     const PageHeader = pageHeader(store);
     const PageFooter = pageFooter(store);
 
-    return registerComponent(
-        store,
+    registerComponent(store, Html, [...INIT_CSS, ...DEFAULT_STYLES(store)]);
+
+    return component(
         Html,
-        [...INIT_CSS, ...DEFAULT_STYLES(store)],
         ({ lang, name, title, description, navitem }) =>
             (...child) =>
                 Html({ lang })(

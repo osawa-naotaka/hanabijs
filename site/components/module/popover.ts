@@ -1,5 +1,5 @@
 import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
-import { atStyle, element, registerComponent, style } from "@/main";
+import { atStyle, component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -51,10 +51,10 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
         }),
     ];
 
-    return registerComponent(
-        store,
+    registerComponent(store, Popover, styles);
+
+    return component(
         Popover,
-        styles,
         (argument) => () =>
             Popover({ class: argument.class })(
                 PopoverButton({ type: "button", popovertarget: button_id })(argument.open_button),

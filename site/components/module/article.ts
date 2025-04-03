@@ -23,7 +23,7 @@ import {
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
 } from "@/lib/stylerules";
-import { A, H2, H3, H4, H5, Li, Ol, Pre, Ul, buttonStyles, element, registerComponent, style } from "@/main";
+import { A, H2, H3, H4, H5, Li, Ol, Pre, Ul, buttonStyles, component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { dateTime } from "../element/dateTime";
@@ -38,10 +38,10 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
     const Article = element("article", { tag: "article" });
     const ArticleHeader = articleHeader(store);
     const Author = element("author");
-    const Tag = tag(store);
-    const DateTime = dateTime(store);
+    const Tag = tag();
+    const DateTime = dateTime();
     const ArticleText = element("article-text");
-    const ShareX = shareX(store);
+    const ShareX = shareX();
 
     const component_styles = [
         style(Article, MARGIN_BLOCK(S_2XLARGE(store))),
@@ -70,10 +70,10 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
         style([ArticleText, Pre], PADDING(S_MEDIUM(store))),
     ];
 
-    return registerComponent(
-        store,
+    registerComponent(store, Article, component_styles);
+
+    return component(
         Article,
-        component_styles,
         (argument) =>
             (...child) =>
                 Article({ class: argument.class })(

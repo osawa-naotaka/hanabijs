@@ -11,7 +11,7 @@ import {
     S_SMALL,
     S_TINY,
 } from "@/lib/stylerules";
-import { element, registerComponent, style } from "@/main";
+import { component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 
 export type ArticleHeaderArgument = {
@@ -37,10 +37,10 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
         ),
     ];
 
-    return registerComponent(
-        store,
+    registerComponent(store, ArticleHeader, component_styles);
+
+    return component(
         ArticleHeader,
-        component_styles,
         (argument) =>
             (...child) =>
                 ArticleHeader({ class: argument.class })(

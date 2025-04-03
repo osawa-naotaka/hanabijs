@@ -1,5 +1,5 @@
 import { BOLD, C_ACCENT, DEFAULT_RESPONSIVE_PAGE_WIDTH, TEXT_COLOR } from "@/lib/stylerules";
-import { Em, element, registerComponent, style } from "@/main";
+import { Em, component, element, registerComponent, style } from "@/main";
 import type { HArgument, HComponentFn, Store } from "@/main";
 import { appearence } from "@site/config/site.config";
 
@@ -17,10 +17,7 @@ export function hero(store: Store): HComponentFn<HArgument> {
         style([HeroText, "em"], BOLD, TEXT_COLOR(C_ACCENT(store))),
     ];
 
-    return registerComponent(
-        store,
-        Hero,
-        component_styles,
-        () => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE")),
-    );
+    registerComponent(store, Hero, component_styles);
+
+    return component(Hero, () => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE")));
 }

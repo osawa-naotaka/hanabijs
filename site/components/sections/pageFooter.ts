@@ -8,7 +8,7 @@ import {
     TEXT_ALIGN_CENTER,
     TEXT_COLOR,
 } from "@/lib/stylerules";
-import { element, registerComponent, style } from "@/main";
+import { component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 
 export type PageFooterArgument = {
@@ -26,10 +26,10 @@ export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
         style(PageFooterCopyright, TEXT_ALIGN_CENTER),
     ];
 
-    return registerComponent(
-        store,
+    registerComponent(store, PageFooter, component_styles);
+
+    return component(
         PageFooter,
-        component_styles,
         ({ site_name }) =>
             () =>
                 PageFooter({})(PageFooterContent({})(), PageFooterCopyright({})(`© 2025 ${site_name}`)),

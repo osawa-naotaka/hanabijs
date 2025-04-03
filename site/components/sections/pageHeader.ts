@@ -7,7 +7,7 @@ import {
     F_LARGE,
     OPACITY,
 } from "@/lib/stylerules";
-import { A, H1, element, hIcon, registerComponent, style } from "@/main";
+import { A, H1, component, element, hIcon, registerComponent, style } from "@/main";
 import type { HBrandIconName, HComponentFn, Store } from "@/main";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
@@ -40,10 +40,10 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
         style(MenuButton, FONT_SIZE(F_LARGE(store))),
     ];
 
-    return registerComponent(
-        store,
+    registerComponent(store, PageHeader, component_styles);
+
+    return component(
         PageHeader,
-        component_styles,
         ({ title, navitem }) =>
             () =>
                 PageHeader({})(

@@ -1,17 +1,16 @@
-import { element, registerComponent } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { component, element } from "@/main";
+import type { HComponentFn } from "@/main";
 
 export type DateTimeArgument = {
     datetime: string | Date;
     lang?: string;
 };
 
-export function dateTime(store: Store): HComponentFn<DateTimeArgument> {
+export function dateTime(): HComponentFn<DateTimeArgument> {
     const DateTime = element("date-time", { tag: "time" });
-
-    return registerComponent(store, DateTime, [], (arg) => () => {
-        const date = arg.datetime instanceof Date ? arg.datetime : new Date(arg.datetime);
-        const lang = arg.lang || "en-us";
+    return component(DateTime, (argument) => () => {
+        const date = argument.datetime instanceof Date ? argument.datetime : new Date(argument.datetime);
+        const lang = argument.lang || "en-us";
         const date_string = date.toLocaleDateString(lang, {
             year: "numeric",
             month: "short",

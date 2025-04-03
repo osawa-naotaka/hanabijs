@@ -1,4 +1,4 @@
-import { element, registerComponent, style } from "@/main";
+import { component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 
 export type DrawerArgument = {
@@ -36,10 +36,10 @@ export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgu
         }),
     ];
 
-    return registerComponent(
-        store,
+    registerComponent(store, Drawer, styles);
+
+    return component(
         Drawer,
-        styles,
         (argument) => () =>
             Drawer({ class: argument.class })(
                 DrawerOpenState({ type: "checkbox", id: button_id })(),
