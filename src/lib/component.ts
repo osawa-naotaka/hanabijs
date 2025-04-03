@@ -23,14 +23,14 @@ export type HElementFn<K> = {
     dot_name: string;
 };
 
-type HElementFnInternal<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
+export type HRawElementFn<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
 
 export function element<K extends Tag | HanabiTag = "div">(
     element_name: string,
     { class_names = [], tag = "div" as K }: { class_names?: string[]; tag?: K } = {},
 ): HElementFn<K> {
     const dot_name = `.${element_name}`;
-    const fn: HElementFnInternal<K> =
+    const fn: HRawElementFn<K> =
         (attribute: AttributeOf<K>) =>
         (...child: HNode[]) => ({
             element_name: dot_name,

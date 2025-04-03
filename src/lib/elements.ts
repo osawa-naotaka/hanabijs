@@ -1,4 +1,4 @@
-import type { HComponentFn, HNode, HRawComponentFn } from "./component";
+import type { AttributeOf, HElementFn, HNode, HRawElementFn } from "./component";
 
 export type Tag =
     | "a"
@@ -1936,12 +1936,12 @@ export function printDefine() {
     }
 }
 
-function gt<K extends Tag | HanabiTag>(tag: K): HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>> {
-    const fn: HRawComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>> =
-        (argument: Partial<AttributeMap[K & keyof AttributeMap]>) =>
+function gt<K extends Tag | HanabiTag>(tag: K): HElementFn<K> {
+    const fn: HRawElementFn<K> =
+        (argument: AttributeOf<K>) =>
         (...child: HNode[]) => ({ element_name: tag, tag, attribute: argument, child });
 
-    const ret_fn = fn as HComponentFn<Partial<AttributeMap[K & keyof AttributeMap]>>;
+    const ret_fn = fn as HElementFn<K>;
     ret_fn.dot_name = tag;
     return ret_fn;
 }
