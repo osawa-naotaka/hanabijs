@@ -13,7 +13,7 @@ export type HSolidIconArg = {
 };
 
 export function hIcon(arg: HBrandIconArg | HSolidIconArg): HElementFn<"i"> {
-    return element(`h-icon-${arg.type}-${arg.name}`, { tag: "i", class_names: [`fa-${arg.type}`, `fa-${arg.name}`] });
+    return element(`h-icon-${arg.type}-${arg.name}`, { tag: "i", class: [`fa-${arg.type}`, `fa-${arg.name}`] });
 }
 
 export type HBrandIconName =

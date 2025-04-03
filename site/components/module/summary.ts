@@ -33,7 +33,7 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
                 })(
                     Author({})(argument.data.author),
                     DateTime({ datetime: argument.data.date })(),
-                    ...(argument.data.tag || []).map((x) => Tag({ slug: x })()),
+                    ...(argument.data.tag || []).map((slug) => Tag({ slug })()),
                 ),
             ),
     );

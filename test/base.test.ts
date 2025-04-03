@@ -10,7 +10,7 @@ describe("ruleToString test", () => {
                 component_name: "div",
                 style: [{ selector: ["div"], properties: { color: "red", border_radius: "10px" } }],
             }),
-        ).toEqual("div { color: red; border-radius: 10px; }\n");
+        ).toEqual("@layer main { div { color: red; border-radius: 10px; } }\n");
     });
 
     test("Single Selector, Combinator, Single Selector", () => {
@@ -24,7 +24,7 @@ describe("ruleToString test", () => {
                     },
                 ],
             }),
-        ).toEqual("div > .show { color: red; border-radius: 10px; }\n");
+        ).toEqual("@layer main { div > .show { color: red; border-radius: 10px; } }\n");
     });
 
     test("Single Selector, Combinator, Single Selector", () => {
@@ -38,7 +38,7 @@ describe("ruleToString test", () => {
                     },
                 ],
             }),
-        ).toEqual("div .show { color: red; border-radius: 10px; }\n");
+        ).toEqual("@layer main { div .show { color: red; border-radius: 10px; } }\n");
     });
 });
 

@@ -24,16 +24,19 @@ export type HElementFn<K> = {
 
 export type HRawElementFn<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
 
-export function element<K extends Tag | HanabiTag = "div">(
-    element_name: string,
-    { class_names = [], tag = "div" as K }: { class_names?: string[]; tag?: K } = {},
-): HElementFn<K> {
+export type ElementArg = {
+    class?: string | string[];
+    tag?: Tag | HanabiTag;
+};
+
+export function element<K extends Tag | HanabiTag>(element_name: string, arg: ElementArg = {}): HElementFn<K> {
     const dot_name = `.${element_name}`;
+    const class_name = arg.class === undefined ? [] : typeof arg.class === "string" ? [arg.class] : arg.class;
     const fn: HRawElementFn<K> =
         (attribute: AttributeOf<K>) =>
         (...child: HNode[]) => ({
-            tag,
-            attribute: addClassInRecord(attribute, [element_name, ...class_names]),
+            tag: arg.tag || "div",
+            attribute: addClassInRecord(attribute, [element_name, ...class_name]),
             child,
         });
     const ret_fn = fn as HElementFn<K>;
