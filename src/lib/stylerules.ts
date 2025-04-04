@@ -66,6 +66,15 @@ export function DEFAULT_RESPONSIVE_PAGE_WIDTH(store: Store): Properties {
     };
 }
 
+export const FULL_VIEW: Properties = {
+    width: "100%",
+    height: "100svh",
+};
+
+export const BORDER_NONE: Properties = {
+    border: ["0px", "none"],
+};
+
 export function COLUMN(gap: PropertyOf<"gap">): Properties {
     return {
         display: "flex",
@@ -75,12 +84,34 @@ export function COLUMN(gap: PropertyOf<"gap">): Properties {
     };
 }
 
+export function DISPLAY(n: PropertyOf<"display">): Properties {
+    return {
+        display: n,
+    };
+}
+
+export function CURSOR(n: PropertyOf<"cursor">): Properties {
+    return {
+        cursor: n,
+    };
+}
+
+export function TRANSITION(...n: string[]): Properties {
+    return {
+        transition: n,
+    };
+}
+
 export const FLEX_END: Properties = {
     justify_content: "flex-end",
 };
 
 export const FLEX_WRAP: Properties = {
     flex_wrap: "wrap",
+};
+
+export const SPACE_BETWEEN: Properties = {
+    justify_content: "space-between",
 };
 
 export function DEFAULT_COLUMN(store: Store): Properties {

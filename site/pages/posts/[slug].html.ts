@@ -1,13 +1,12 @@
 import path from "node:path";
 import { markdownToHtml } from "@/lib/markdown";
-import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH, MARGIN_BLOCK, S_2XLARGE } from "@/lib/stylerules";
 import { RawHTML, element, registerRootPage, style } from "@/main";
 import type { HRootPageFn, Store } from "@/main";
 import { getMarkdown, listFiles } from "@site/components/library/post";
 import { article } from "@site/components/module/article";
 import { page } from "@site/components/pages/page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
-import { appearence } from "@site/config/site.config";
 import { postFmSchema } from "@site/config/site.config";
 
 type RootParameter = {
@@ -25,9 +24,7 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
     const Article = article(store);
 
     const styles = [
-        style(PageMainArea, {
-            margin_block_end: appearence.layout.space_block_large,
-        }),
+        style(PageMainArea, MARGIN_BLOCK("0", S_2XLARGE(store))),
         style(PageSection, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
     ];
 

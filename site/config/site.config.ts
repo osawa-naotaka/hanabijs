@@ -13,21 +13,6 @@ export const navitem: { name: string; url: string; icon: HBrandIconName }[] = [
     { name: "youtube", url: "https://www.youtube.com/channel/UCUzbZRjQJSZtH715CR2OIXw", icon: "youtube" },
 ];
 
-export const appearence = {
-    color: {
-        main: "#303030",
-        background: "#f0f0f0",
-        header_background: "#615c66",
-        header_ext: "#ffffff",
-        accent: "#d7003a",
-    },
-    layout: {
-        content_width: "740px",
-        content_padding: "1rem",
-        space_block_large: "4rem",
-    },
-};
-
 export const posts_dir = "site/contents/posts/";
 
 export const tag_map: Record<string, string> = {

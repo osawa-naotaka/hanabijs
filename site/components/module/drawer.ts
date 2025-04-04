@@ -1,4 +1,15 @@
-import { component, element, registerComponent, style } from "@/main";
+import {
+    CURSOR,
+    DEFAULT_ROW,
+    DISPLAY,
+    HEIGHT,
+    SPACE_BETWEEN,
+    TRANSITION,
+    component,
+    element,
+    registerComponent,
+    style,
+} from "@/main";
 import type { HComponentFn, HNode, Store } from "@/main";
 
 export type DrawerArgument = {
@@ -18,22 +29,12 @@ export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgu
 
     const styles = [
         style(Drawer, { overflow: "hidden" }),
-        style(DrawerTitle, {
-            display: "flex",
-            justify_content: "space-between",
-            align_items: "center",
-        }),
-        style(DrawerHeaderSpace, {
-            display: "flex",
-            gap: "1rem",
-            align_items: "center",
-        }),
-        style(DrawerOpenState, { display: "none" }),
-        style(DrawerOpenButton, { cursor: "pointer" }),
-        style(DrawerContent, { height: "0", transition: ["height", "0.25s"] }),
-        style([[`#${button_id}`, ":checked"], "~", DrawerContent], {
-            height: "calc-size(fit-content, size)",
-        }),
+        style(DrawerTitle, DEFAULT_ROW(store), SPACE_BETWEEN),
+        style(DrawerHeaderSpace, DEFAULT_ROW(store)),
+        style(DrawerOpenState, DISPLAY("none")),
+        style(DrawerOpenButton, CURSOR("pointer")),
+        style(DrawerContent, HEIGHT("0"), TRANSITION("height", "0.25s")),
+        style([[`#${button_id}`, ":checked"], "~", DrawerContent], HEIGHT("calc-size(fit-content, size)")),
     ];
 
     registerComponent(store, Drawer, styles);
