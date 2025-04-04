@@ -46,20 +46,146 @@ export function DEFAULT_STYLES(store: Store) {
     ];
 }
 
-export const BOX_TEXT = (store: Store): Properties => ({
-    ...DEFAULT_TEXT_BG(store),
-    ...BORDER_NONE,
+export const BOX_TEXT = (store: Store, kind: ColorKind): Properties => ({
+    color: COLOROF(store, kind),
+    background_color: "transparent",
+    border: "none",
+    box_shadow: "none",
 });
 
-export const BOX_OUTLINED = (store: Store): Properties => ({
-    ...DEFAULT_TEXT_BG(store),
-    border: ["1px", "solid", MIX_BLACK(C_TEXT(store))(B_DARKER(store))],
+export const BOX_TEXT_EM_LIGHT = (store: Store, kind: ColorKind): Properties => BOX_EM_LIGHT(store, kind);
+
+export const BOX_TEXT_EM_STRONG = (store: Store, kind: ColorKind): Properties => BOX_EM_STRONG(store, kind);
+
+export const BOX_OUTLINED = (store: Store, kind: ColorKind): Properties => ({
+    color: COLOROF(store, kind),
+    background_color: "transparent",
+    border: ["1px", "solid", `rgba(${SCOLOROF(store, kind)} / 0.2)`],
+    box_shadow: "none",
 });
 
-export const BOX_TONAL = (store: Store): Properties => ({
-    ...DEFAULT_TEXT_BG(store),
-    border: ["1px", "solid", MIX_BLACK(C_TEXT(store))(B_DARKER(store))],
+export const BOX_OUTLINED_EM_LIGHT = (store: Store, kind: ColorKind): Properties => BOX_EM_LIGHT(store, kind);
+
+export const BOX_OUTLINED_EM_STRONG = (store: Store, kind: ColorKind): Properties => BOX_EM_STRONG(store, kind);
+
+export const BOX_TONAL = (store: Store, kind: ColorKind): Properties => ({
+    color: MIX_BLACK(COLOROF(store, kind))("90%"),
+    background_color: COLOR_MIX(COLOROF(store, kind), C_BG(store))("35%"),
+    border: "none",
+    box_shadow: "none",
 });
+
+export const BOX_TONAL_EM_LIGHT = (store: Store, kind: ColorKind): Properties => ({
+    background_color: COLOR_MIX(COLOROF(store, kind), C_BG(store))("45%"),
+});
+
+export const BOX_TONAL_EM_STRONG = (store: Store, kind: ColorKind): Properties => ({
+    background_color: COLOR_MIX(COLOROF(store, kind), C_BG(store))("55%"),
+});
+
+export const BOX_FILLED = (store: Store, kind: ColorKind): Properties => ({
+    color: C_BG(store),
+    background_color: COLOROF(store, kind),
+    border: "none",
+    box_shadow: "none",
+});
+
+export const BOX_FILLED_EM_LIGHT = (store: Store, kind: ColorKind): Properties => ({
+    background_color: LIGHTER(store, kind),
+});
+
+export const BOX_FILLED_EM_STRONG = (store: Store, kind: ColorKind): Properties => ({
+    background_color: LIGHTEST(store, kind),
+});
+
+export const BOX_ELEVATED = (store: Store, kind: ColorKind): Properties => ({
+    color: COLOROF(store, kind),
+    background_color: COLOR_MIX(C_BG(store), COLOROF(store, kind))(B_DARKER(store)),
+    border: "none",
+    box_shadow: ["0", "1px", "3px", `rgba(${SCOLOROF(store, kind)} / 0.2)`],
+});
+
+export const BOX_ELEVATED_EM_LIGHT = (store: Store, kind: ColorKind): Properties => ({
+    box_shadow: ["0", "2px", "4px", `rgba(${SCOLOROF(store, kind)} / 0.3)`],
+});
+
+export const BOX_ELEVATED_EM_STRONG = (store: Store, kind: ColorKind): Properties => ({
+    box_shadow: ["0", "4px", "8px", `rgba(${SCOLOROF(store, kind)} / 0.4)`],
+});
+
+export const BOX_EM_LIGHT = (store: Store, kind: ColorKind): Properties =>
+    BG_COLOR(MIX_WHITE(COLOROF(store, kind))("15%"));
+export const BOX_EM_STRONG = (store: Store, kind: ColorKind): Properties =>
+    BG_COLOR(MIX_WHITE(COLOROF(store, kind))("25%"));
+
+export const DARKER = (store: Store, kind: ColorKind) => MIX_BLACK(COLOROF(store, kind))(B_DARKER(store));
+export const DARKEST = (store: Store, kind: ColorKind) => MIX_BLACK(COLOROF(store, kind))(B_DARKEST(store));
+export const LIGHTER = (store: Store, kind: ColorKind) => MIX_WHITE(COLOROF(store, kind))(B_LIGHTER(store));
+export const LIGHTEST = (store: Store, kind: ColorKind) => MIX_WHITE(COLOROF(store, kind))(B_LIGHTEST(store));
+
+export const BG_DARKER = (store: Store) => MIX_BLACK(C_BG(store))(B_DARKER(store));
+export const BG_DARKEST = (store: Store) => MIX_BLACK(C_BG(store))(B_DARKEST(store));
+
+export type ColorKind =
+    | "primary"
+    | "secondary"
+    | "accent"
+    | "background"
+    | "text"
+    | "success"
+    | "error"
+    | "warning"
+    | "info";
+
+export function COLOROF(store: Store, kind: ColorKind): string {
+    switch (kind) {
+        case "primary":
+            return C_PRIMARY(store);
+        case "secondary":
+            return C_SECONDARY(store);
+        case "accent":
+            return C_ACCENT(store);
+        case "background":
+            return C_BG(store);
+        case "text":
+            return C_TEXT(store);
+        case "success":
+            return C_SUCCESS(store);
+        case "error":
+            return C_ERROR(store);
+        case "warning":
+            return C_WARNING(store);
+        case "info":
+            return C_INFO(store);
+        default:
+            throw Error("invalid color kind");
+    }
+}
+
+export function SCOLOROF(store: Store, kind: ColorKind): string {
+    switch (kind) {
+        case "primary":
+            return CS_PRIMARY(store);
+        case "secondary":
+            return CS_SECONDARY(store);
+        case "accent":
+            return CS_ACCENT(store);
+        case "background":
+            return CS_BG(store);
+        case "text":
+            return CS_TEXT(store);
+        case "success":
+            return CS_SUCCESS(store);
+        case "error":
+            return CS_ERROR(store);
+        case "warning":
+            return CS_WARNING(store);
+        case "info":
+            return CS_INFO(store);
+        default:
+            throw Error("invalid color kind");
+    }
+}
 
 export function RESPONSIVE_PAGE_WIDTH(
     max_width: PropertyOf<"max_width">,
@@ -84,6 +210,10 @@ export const FULL_WIDTH_HEIGHT: Properties = {
 
 export const BORDER_NONE: Properties = {
     border: ["0px", "none"],
+};
+
+export const INLINE_FLEX: Properties = {
+    display: "inline-flex",
 };
 
 export function COLUMN(gap: PropertyOf<"gap">): Properties {
@@ -180,6 +310,10 @@ export const TEXT_JUSTIFY: Properties = {
 export const OPACITY = (opacity: PropertyOf<"opacity">): Properties => ({ opacity });
 
 export const ROUND = (border_radius: PropertyOf<"border_radius">): Properties => ({ border_radius });
+
+export const OVERFLOW = (overflow: PropertyOf<"overflow">): Properties => ({ overflow });
+
+export const BORDER_RADIUS = (border_radius: PropertyOf<"border_radius">): Properties => ({ border_radius });
 
 export const TEXT_ALIGN_CENTER: Properties = {
     text_align: "center",
@@ -283,6 +417,16 @@ export const C_INFO = (store: Store) => rgb(store.designrule.color.category.info
 export const C_SUCCESS = (store: Store) => rgb(store.designrule.color.category.success);
 export const C_WARNING = (store: Store) => rgb(store.designrule.color.category.warning);
 
+export const CS_PRIMARY = (store: Store) => rgb_sep(store.designrule.color.category.primary);
+export const CS_SECONDARY = (store: Store) => rgb_sep(store.designrule.color.category.secondary);
+export const CS_ACCENT = (store: Store) => rgb_sep(store.designrule.color.category.accent);
+export const CS_TEXT = (store: Store) => rgb_sep(store.designrule.color.category.text);
+export const CS_BG = (store: Store) => rgb_sep(store.designrule.color.category.background);
+export const CS_ERROR = (store: Store) => rgb_sep(store.designrule.color.category.error);
+export const CS_INFO = (store: Store) => rgb_sep(store.designrule.color.category.info);
+export const CS_SUCCESS = (store: Store) => rgb_sep(store.designrule.color.category.success);
+export const CS_WARNING = (store: Store) => rgb_sep(store.designrule.color.category.warning);
+
 export const F_TINY = (store: Store) => store.designrule.size.font.tiny;
 export const F_SMALL = (store: Store) => store.designrule.size.font.small;
 export const F_MEDIUM = (store: Store) => store.designrule.size.font.medium;
@@ -324,5 +468,9 @@ export function COLOR_MIX(color_a: string, color_b: string): (persent: string) =
 }
 
 export function rgb(color: [number, number, number]): string {
-    return `rgb(${color[0]} ${color[1]} ${color[2]})`;
+    return `rgb(${rgb_sep(color)})`;
+}
+
+export function rgb_sep(color: [number, number, number]): string {
+    return `${color[0]} ${color[1]} ${color[2]}`;
 }
