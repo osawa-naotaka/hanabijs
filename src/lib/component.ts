@@ -67,10 +67,14 @@ export type HAnyComponentFn = HComponentFn<any>;
 
 export type HArgument = Record<string, unknown>;
 
-export function addClassToComponent<T>(class_name: string | string[], fn: HComponentFn<T>): HComponentFn<T> {
-    return (argument) =>
-        (...child) =>
-            Class({ class: class_name })(fn(argument)(...child));
+export function as<T>(class_name: string, fn: HComponentFn<T>): HComponentFn<T> {
+    const dot_name = `.${class_name}`;
+    return {
+        [dot_name]:
+            (argument: HComponentFnArg<T>) =>
+            (...child: HNode[]) =>
+                Class({ class: class_name })(fn(argument)(...child)),
+    }[dot_name];
 }
 
 // hanabi HTML Top export function

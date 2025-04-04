@@ -7,7 +7,6 @@ export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
         margin: "0",
         padding: "0",
         box_sizing: "border-box",
-        font_size: "inherit",
     }),
     atStyle([["@layer", "base"]], "a", {
         text_decoration: "none",

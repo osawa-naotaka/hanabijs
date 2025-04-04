@@ -1,4 +1,4 @@
-import { A, Div, Li, component, createDom, element, hIcon, registerComponent, style } from "@/main";
+import { A, Div, Li, as, buttonStyles, component, createDom, element, hIcon, registerComponent, style } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
@@ -86,6 +86,8 @@ import {
     ROW_WRAP,
     S_2XLARGE,
     S_3XLARGE,
+    S_SMALL,
+    S_TINY,
 } from "@/lib/stylerules";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
@@ -107,11 +109,12 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const SearchResultItemTitle = element("search-result-item-title");
     const SearchResultItemDescription = element("search-result-item-description");
     const DateTime = dateTime();
-    const Tag = tag();
+    const SearchResultItemTag = as("serch-result-item-tag", tag());
 
     const component_styles = [
         style(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
         style(SearchResultItemDescription, FONT_SIZE(F_TINY(store))),
+        ...buttonStyles(SearchResultItemTag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
     ];
 
     registerComponent(store, SearchResultItem, component_styles);
@@ -122,7 +125,7 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
             SearchResultItemMeta({})(
                 Div({})(key.data.author),
                 DateTime({ datetime: key.data.date })(),
-                ...(key.data.tag || []).map((x) => Tag({ slug: x })()),
+                ...(key.data.tag || []).map((x) => SearchResultItemTag({ slug: x })()),
             ),
             SearchResultItemTitle({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
             SearchResultItemDescription({})(result.refs[0].wordaround || ""),

@@ -40,7 +40,7 @@ export function buttonStyles<T extends HArgument>(
     top: HComponentFn<T>,
     type: HButtonType,
     store: Store,
-    prop: Properties,
+    prop?: Properties,
 ): StyleRule[] {
     const color: HButtonProperties = {
         color: type === "filled" ? store.designrule.color.main.background.light : C_PRIMARY(store),
@@ -80,7 +80,7 @@ export function buttonStyles<T extends HArgument>(
     return component_styles;
 }
 
-function HBUTTON(arg: Properties): Properties {
+function HBUTTON(arg?: Properties): Properties {
     return {
         display: "inline-flex",
         align_items: "center",

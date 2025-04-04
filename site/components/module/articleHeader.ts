@@ -7,7 +7,6 @@ import {
     LINE_HEIGHT,
     MARGIN_BLOCK,
     ROW,
-    S_2XLARGE,
     S_SMALL,
     S_TINY,
 } from "@/lib/stylerules";
@@ -24,7 +23,6 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
     const ArticleHeaderMeta = element("article-header-meta");
 
     const component_styles = [
-        style(ArticleHeader, MARGIN_BLOCK(S_2XLARGE(store))),
         style(ArticleHeaderTitle, BORDER_UNDERLINE),
         style(
             ArticleHeaderMeta,
