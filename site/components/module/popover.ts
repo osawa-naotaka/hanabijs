@@ -8,7 +8,7 @@ import {
     DEFAULT_ROW,
     DISPLAY,
     FLEX_END,
-    FULL_VIEW,
+    FULL_WIDTH_HEIGHT,
     MARGIN_BLOCK,
     OPACITY,
     PADDING_BLOCK,
@@ -35,7 +35,7 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
         style(
             PopoverContainer,
             PADDING_BLOCK(S_MEDIUM(store)),
-            FULL_VIEW,
+            FULL_WIDTH_HEIGHT,
             BG_COLOR(C_BG(store)),
             BORDER_NONE,
             OPACITY("0"),

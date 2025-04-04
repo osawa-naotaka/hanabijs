@@ -66,7 +66,7 @@ export function DEFAULT_RESPONSIVE_PAGE_WIDTH(store: Store): Properties {
     };
 }
 
-export const FULL_VIEW: Properties = {
+export const FULL_WIDTH_HEIGHT: Properties = {
     width: "100%",
     height: "100svh",
 };
