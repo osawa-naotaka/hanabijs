@@ -1,6 +1,6 @@
 import type { HComponentFn, HComponentFnArg, HElementFn } from "./component";
-import { default_design_rule, default_design_rule_scaling, generateDesignRule } from "./design";
-import type { PartialDesignRule, PartialDesignRuleScaling, RequiredDesignRule } from "./design";
+import { default_design_rule } from "./design";
+import type { DesignRule } from "./design";
 import type { StyleRule } from "./style";
 
 // hanabi element data structure for register element to repository, internal use only.
@@ -12,16 +12,13 @@ export type HComponent = {
 
 export type Store = {
     components: Map<string, HComponent>;
-    designrule: RequiredDesignRule;
+    designrule: DesignRule;
 };
 
-export function generateStore(
-    rule: PartialDesignRule = default_design_rule,
-    scale: PartialDesignRuleScaling = default_design_rule_scaling,
-): Store {
+export function generateStore(rule: Partial<DesignRule> = default_design_rule): Store {
     return {
         components: new Map<string, HComponent>(),
-        designrule: generateDesignRule(rule, Object.assign({}, default_design_rule_scaling, scale)),
+        designrule: { ...default_design_rule, ...rule },
     };
 }
 

@@ -5,7 +5,7 @@ import { registerElement } from "../repository";
 import type { Store } from "../repository";
 import { style } from "../style";
 import type { StyleRule } from "../style";
-import { BG_COLOR, C_BG, C_PRIMARY, MIX_BLACK, MIX_WHITE } from "../stylerules";
+import { BG_COLOR, B_LIGHTER, C_BG, C_TEXT, MIX_BLACK, MIX_WHITE } from "../stylerules";
 import { hash_djb2, joinAll } from "../util";
 
 export type HButtonType = "filled" | "outlined" | "text";
@@ -43,8 +43,8 @@ export function buttonStyles<T extends HArgument>(
     ...prop: Properties[]
 ): StyleRule[] {
     const color: HButtonProperties = {
-        color: type === "filled" ? store.designrule.color.main.background.light : C_PRIMARY(store),
-        background_color: type === "filled" ? store.designrule.color.main.text.light : C_BG(store),
+        color: type === "filled" ? MIX_WHITE(C_BG(store))(B_LIGHTER(store)) : C_TEXT(store),
+        background_color: type === "filled" ? MIX_WHITE(C_TEXT(store))(B_LIGHTER(store)) : C_BG(store),
     };
     const component_styles = [style(top, color, HBUTTON(prop))];
     switch (type) {

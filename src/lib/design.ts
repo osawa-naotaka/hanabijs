@@ -1,32 +1,29 @@
-import { MIX_BLACK, MIX_WHITE } from "./stylerules";
-
-export type ColorValue = string; // rgb
-export type SizeValue = number; // rem
+export type ColorValue = [number, number, number]; // rgb
+export type SizeValue = string; // rem or other value
+export type BrightnessValue = string; // persentage (color mix to black or white)
 
 export type ColorSet = {
-    default: ColorValue;
-    light?: ColorValue;
-    dark?: ColorValue;
-};
-
-export type MainColorSet<C extends Required<ColorSet> | ColorSet> = {
-    primary: C;
-    secondary: C;
-    accent: C;
-    background: C;
-    text: C;
-};
-
-export type SubColorSet = {
+    primary: ColorValue;
+    secondary: ColorValue;
+    accent: ColorValue;
+    background: ColorValue;
+    text: ColorValue;
     success: ColorValue;
     error: ColorValue;
     warning: ColorValue;
     info: ColorValue;
 };
 
-export type ColorRule<C extends Required<ColorSet> | ColorSet> = {
-    main: MainColorSet<C>;
-    sub: SubColorSet;
+export type BrightnessSet = {
+    lightest: BrightnessValue;
+    light: BrightnessValue;
+    dark: BrightnessValue;
+    darkest: BrightnessValue;
+};
+
+export type ColorRule = {
+    category: ColorSet;
+    brightness: BrightnessSet;
 };
 
 export type SizeRem = {
@@ -47,164 +44,75 @@ export type SizeRule<S extends SizeRem | Partial<SizeRem>> = {
     width: S;
 };
 
-export type DesignRule<S extends SizeRem | Partial<SizeRem>, C extends Required<ColorSet> | ColorSet> = {
-    color: ColorRule<C>;
-    size: SizeRule<S>;
-    font_family: string[];
-};
-
-export type RequiredDesignRule = DesignRule<SizeRem, Required<ColorSet>>;
-export type PartialDesignRule = DesignRule<Partial<SizeRem>, ColorSet>;
-
-export const default_design_rule: PartialDesignRule = {
+export type DesignRule = {
     color: {
-        main: {
-            primary: { default: "#3f51b5" },
-            secondary: { default: "#21ba45" },
-            accent: { default: "#ff4081" },
-            text: { default: "#303030" },
-            background: { default: "#f0f0f0" },
-        },
-        sub: {
-            success: "#21ba45",
-            error: "#db2828",
-            warning: "#f2711c",
-            info: "#31ccec",
-        },
-    },
+        category: ColorSet;
+        brightness: BrightnessSet;
+    };
     size: {
-        root: 18,
-        line_height: 1.8,
-
-        font: {},
-        spacing: {},
-        width: {},
-    },
-    font_family: ['"Helvetica Neue"', "Arial", "sans-serif"],
-};
-
-export type DesignRuleScaling<
-    C extends ColorScaling | Partial<ColorScaling>,
-    S extends SizeScaling | Partial<SizeScaling>,
-> = {
-    color: C;
-    size: {
-        font: S;
-        spacing: S;
-        width: S;
+        font: SizeRem;
+        spacing: SizeRem;
+        width: SizeRem;
+    };
+    font: {
+        family: string[];
+        base_size: string;
+        line_height: string;
     };
 };
 
-type ColorScaling = {
-    light: string;
-    dark: string;
-};
-
-type SizeScaling = {
-    tiny: number;
-    small: number;
-    medium: number;
-    large: number;
-    xlarge: number;
-    x2large: number;
-    x3large: number;
-};
-
-export type PartialDesignRuleScaling = DesignRuleScaling<Partial<ColorScaling>, Partial<SizeScaling>>;
-export type RequiredDesignRuleScaling = DesignRuleScaling<ColorScaling, SizeScaling>;
-
-export const default_design_rule_scaling: RequiredDesignRuleScaling = {
+export const default_design_rule: DesignRule = {
     color: {
-        light: "90%",
-        dark: "90%",
+        category: {
+            primary: [63, 81, 181], // #3f51b5
+            secondary: [33, 186, 69], // #21ba45
+            accent: [255, 64, 129], // #ff4081
+            text: [48, 48, 48], // #303030
+            background: [240, 240, 240], // #f0f0f0
+            success: [33, 186, 69], // #21ba45
+            error: [219, 40, 40], // #db2828
+            warning: [242, 113, 28], // #f2711c
+            info: [49, 204, 236], // #31ccec
+        },
+        brightness: {
+            lightest: "80%",
+            light: "90%",
+            dark: "90%",
+            darkest: "80%",
+        },
     },
     size: {
-        // under 1rem = 18px
         font: {
-            tiny: 0.75,
-            small: 0.875,
-            medium: 1,
-            large: 1.125,
-            xlarge: 1.25,
-            x2large: 1.5,
-            x3large: 2,
+            tiny: "0.75rem",
+            small: "0.875rem",
+            medium: "1rem",
+            large: "1.125rem",
+            xlarge: "1.25rem",
+            x2large: "1.5rem",
+            x3large: "2rem",
         },
         spacing: {
-            tiny: 0.25,
-            small: 0.5,
-            medium: 1,
-            large: 1.25,
-            xlarge: 1.5,
-            x2large: 2,
-            x3large: 4,
+            tiny: "0.25rem",
+            small: "0.5rem",
+            medium: "1rem",
+            large: "1.25rem",
+            xlarge: "1.5rem",
+            x2large: "2rem",
+            x3large: "4rem",
         },
         width: {
-            tiny: 25, // 450px
-            small: 30, // 540px
-            medium: 40, // 720px
-            large: 53, // 960px
-            xlarge: 66, // 12000px
-            x2large: 80, // 1440px
-            x3large: 88, // 1600px
+            tiny: "450px", // 25rem
+            small: "540px", // 30rem
+            medium: "720px", // 40rem
+            large: "960px", // 53rem
+            xlarge: "1200px", // 66rem
+            x2large: "1440px", // 80rem
+            x3large: "1600px", // 88rem
         },
     },
+    font: {
+        family: ['"Helvetica Neue"', "Arial", "sans-serif"],
+        base_size: "18px",
+        line_height: "1.8",
+    },
 };
-
-export function generateDesignRule(rule: PartialDesignRule, scale: RequiredDesignRuleScaling): RequiredDesignRule {
-    const initial_scale = Object.assign({}, default_design_rule_scaling, scale);
-    const initial_rule = { ...default_design_rule, ...rule };
-
-    const primary = mixColor(initial_rule.color.main.primary, scale.color);
-    const secondary = mixColor(initial_rule.color.main.secondary, scale.color);
-    const accent = mixColor(initial_rule.color.main.accent, scale.color);
-    const text = mixColor(initial_rule.color.main.text, scale.color);
-    const background = mixColor(initial_rule.color.main.background, scale.color);
-
-    const font = setDefault(initial_rule.size.font, initial_scale.size.font);
-    const spacing = setDefault(initial_rule.size.spacing, initial_scale.size.spacing);
-    const width = interpolate(initial_rule.size.width, initial_rule.size.root, initial_scale.size.width);
-
-    return {
-        color: {
-            main: { primary, secondary, accent, text, background },
-            sub: initial_rule.color.sub,
-        },
-        size: { font, spacing, width, root: initial_rule.size.root, line_height: initial_rule.size.line_height },
-        font_family: initial_rule.font_family,
-    };
-}
-
-function setDefault<T extends Record<string, number>, S extends Record<string, number>>(
-    values: Partial<T>,
-    default_val: S,
-): T {
-    const ret = JSON.parse(JSON.stringify(values));
-    for (const key of Object.keys(default_val)) {
-        if (ret[key] === undefined) {
-            ret[key] = default_val[key];
-        }
-    }
-    return ret;
-}
-
-export function interpolate<T extends Record<string, number>, S extends Record<string, number>>(
-    values: Partial<T>,
-    main_val: number,
-    scale: S,
-): T {
-    const inter = JSON.parse(JSON.stringify(values));
-    for (const key of Object.keys(scale)) {
-        if (inter[key] === undefined) {
-            inter[key] = main_val * scale[key];
-        }
-    }
-    return inter;
-}
-
-export function mixColor(value: ColorSet, scale: ColorScaling): Required<ColorSet> {
-    return {
-        default: value.default,
-        light: value.light || MIX_WHITE(value.default)(scale.light),
-        dark: value.dark || MIX_BLACK(value.default)(scale.dark),
-    };
-}
