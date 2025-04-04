@@ -1,6 +1,7 @@
 import {
     ALIGN_NOMAL,
     BG_COLOR,
+    BOLD,
     BORDER_LEFT_THIC,
     BORDER_UNDERLINE,
     COLUMN,
@@ -11,6 +12,7 @@ import {
     LIST_DISC,
     MARGIN_BLOCK,
     MARGIN_INLINE,
+    PADDING,
     PADDING_BLOCK,
     PADDING_INLINE,
     ROUND,
@@ -21,7 +23,8 @@ import {
     TEXT_COLOR,
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
-} from "@/lib/stylerules";
+    as,
+} from "@/main";
 import { A, H2, H3, H4, H5, Li, Ol, P, Ul, buttonStyles, component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
@@ -37,7 +40,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
     const Article = element("article", { tag: "article" });
     const ArticleHeader = articleHeader(store);
     const Author = element("author");
-    const Tag = tag();
+    const ArticleTag = as("article-tag", tag());
     const DateTime = dateTime();
     const ArticleText = element("article-text");
     const ShareX = shareX();
@@ -46,8 +49,10 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
         style(Article, MARGIN_BLOCK(S_2XLARGE(store))),
 
         style([ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
-        ...buttonStyles(Tag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
+        ...buttonStyles(ArticleTag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
         ...buttonStyles(ShareX, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
+        style(ArticleTag, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
+        style(ShareX, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
 
         style(ArticleText, COLUMN("0"), TEXT_JUSTIFY, ALIGN_NOMAL),
         style(
@@ -83,7 +88,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
                     })(
                         Author({})(data.author),
                         DateTime({ datetime: data.date })(),
-                        ...(data.tag || []).map((x) => Tag({ slug: x })()),
+                        ...(data.tag || []).map((x) => ArticleTag({ slug: x })()),
                         ShareX({ title: data.title, url: `http://localhost/posts/${slug}` })(),
                     ),
                     ArticleText({})(...child),

@@ -11,13 +11,12 @@ export type SummariesArgument = {
 
 export function summaries(store: Store): HComponentFn<SummariesArgument> {
     const Summaries = element("summaries", { tag: "section" });
-    const SummariesList = element("summaries-list", { tag: "ul" });
     const Summary = summary(store);
     const styles = [style(Summaries, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
     registerComponent(store, Summaries, styles);
 
     return component(Summaries, ({ posts }) => () => {
-        return Summaries({})(SummariesList({})(...posts.map((post) => Summary(post)())));
+        return Summaries({})(...posts.map((post) => Summary(post)()));
     });
 }

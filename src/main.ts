@@ -6,3 +6,4 @@ export * from "./lib/util";
 export * from "./lib/elements";
 export * from "./lib/ui/button";
 export * from "./lib/ui/icon";
+export * from "./lib/stylerules";

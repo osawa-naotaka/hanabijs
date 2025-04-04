@@ -13,6 +13,6 @@ export function shareX(): HComponentFn<ShareXArgument> {
 
     return component(ShareX, ({ title, url }) => () => {
         const href = `https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
-        return ShareX({ href })(XIcon, Span({})("SHARE"));
+        return ShareX({ href, target: "__blank" })(XIcon, Span({})("SHARE"));
     });
 }

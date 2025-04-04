@@ -1,4 +1,4 @@
-import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_SMALL, S_TINY, S_XLARGE } from "@/lib/stylerules";
+import { BOLD, FONT_SIZE, F_XLARGE, MARGIN_BLOCK, PADDING, S_SMALL, S_TINY, S_XLARGE } from "@/lib/stylerules";
 import { A, H2, as, buttonStyles, component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
@@ -19,7 +19,8 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
     const component_styles = [
         style(Summary, MARGIN_BLOCK(S_XLARGE(store))),
         style([Summary, ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
-        ...buttonStyles(SummaryTag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
+        ...buttonStyles(SummaryTag, "filled", store),
+        style(SummaryTag, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
     ];
 
     registerComponent(store, Summary, component_styles);

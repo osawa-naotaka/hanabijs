@@ -1,4 +1,17 @@
-import { A, Div, Li, as, buttonStyles, component, createDom, element, hIcon, registerComponent, style } from "@/main";
+import {
+    A,
+    Div,
+    Li,
+    PADDING,
+    as,
+    buttonStyles,
+    component,
+    createDom,
+    element,
+    hIcon,
+    registerComponent,
+    style,
+} from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
@@ -73,6 +86,7 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
 }
 
 import {
+    BOLD,
     BORDER_UNDERLINE,
     DEFAULT_RESPONSIVE_PAGE_WIDTH,
     DEFAULT_TEXT_BG,
@@ -114,7 +128,8 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const component_styles = [
         style(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
         style(SearchResultItemDescription, FONT_SIZE(F_TINY(store))),
-        ...buttonStyles(SearchResultItemTag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
+        ...buttonStyles(SearchResultItemTag, "filled", store),
+        style(SearchResultItemTag, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
     ];
 
     registerComponent(store, SearchResultItem, component_styles);
