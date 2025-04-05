@@ -10,12 +10,12 @@ export function search(store: Store): HComponentFn<HArgument> {
     const SearchResultItem = element("search-result-item", { tag: "li" });
 
     const component_sytles = [
-        style(Search, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
-        style(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),
-        style(SearchInput, DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
-        style([[SearchInput, "::placeholder"]], OPACITY("0.5")),
-        style(SearchResult, MARGIN_BLOCK(S_LARGE(store))),
-        style(SearchResultItem, MARGIN_BLOCK(S_XLARGE(store))),
+        style(Search)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(SearchBar)(ROW("0.5rem"), BORDER_UNDERLINE),
+        style(SearchInput)(DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
+        style([SearchInput, "::placeholder"])(OPACITY("0.5")),
+        style(SearchResult)(MARGIN_BLOCK(S_LARGE(store))),
+        style(SearchResultItem)(MARGIN_BLOCK(S_XLARGE(store))),
     ];
 
     registerComponent(store, Search, component_sytles, import.meta.path);
@@ -112,8 +112,8 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const SearchResultItemTag = as("serch-result-item-tag", tag());
 
     const component_styles = [
-        style(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
-        style(SearchResultItemDescription, FONT_SIZE(F_TINY(store))),
+        style(SearchResultItemMeta)(ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
+        style(SearchResultItemDescription)(FONT_SIZE(F_TINY(store))),
         TAG_DESIGN(store, "text", SearchResultItemTag),
     ];
 

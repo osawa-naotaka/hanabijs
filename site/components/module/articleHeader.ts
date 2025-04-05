@@ -23,9 +23,8 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
     const ArticleHeaderMeta = element("article-header-meta");
 
     const component_styles = [
-        style(ArticleHeaderTitle, BORDER_UNDERLINE),
-        style(
-            ArticleHeaderMeta,
+        style(ArticleHeaderTitle)(BORDER_UNDERLINE),
+        style(ArticleHeaderMeta)(
             ROW(S_SMALL(store)),
             FLEX_END,
             FLEX_WRAP,

@@ -33,11 +33,11 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const Search = search(store);
 
     const component_styles = [
-        style(PageHeader, FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),
-        style(Drawer, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
-        style(H1, FONT_SIZE(F_3XLARGE(store))),
-        style(OpenButton, FONT_SIZE(F_LARGE(store))),
-        style(MenuButton, FONT_SIZE(F_LARGE(store))),
+        style(PageHeader)(FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),
+        style(Drawer)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(H1)(FONT_SIZE(F_3XLARGE(store))),
+        style(OpenButton)(FONT_SIZE(F_LARGE(store))),
+        style(MenuButton)(FONT_SIZE(F_LARGE(store))),
     ];
 
     registerComponent(store, PageHeader, component_styles);

@@ -4,12 +4,12 @@ import type { PropertyOf, StyleRule } from "./style";
 import { atStyle } from "./style";
 
 export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
-    atStyle([["@layer", "base"]], "*", {
+    atStyle(["@layer", "base"])("*")({
         margin: "0",
         padding: "0",
         box_sizing: "border-box",
     }),
-    atStyle([["@layer", "base"]], "a", {
+    atStyle(["@layer", "base"])("a")({
         text_decoration: "none",
         color: "inherit",
     }),
@@ -20,7 +20,7 @@ export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
             list_style_type: "none",
         },
     },
-    atStyle([["@layer", "base"]], "input", {
+    atStyle(["@layer", "base"])("input")({
         width: "100%",
         border: ["0", "none"],
         outline: "none",
@@ -37,12 +37,12 @@ export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
 
 export function DEFAULT_STYLES(store: Store) {
     return [
-        atStyle([["@layer", "base"]], ":root", {
+        atStyle(["@layer", "base"])(":root")({
             font_size: store.designrule.font.base_size,
             line_height: store.designrule.font.line_height,
             font_family: store.designrule.font.family.join(", "),
         }),
-        atStyle([["@layer", "base"]], "body", DEFAULT_TEXT_BG(store)),
+        atStyle(["@layer", "base"])("body")(DEFAULT_TEXT_BG(store)),
     ];
 }
 

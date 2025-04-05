@@ -46,29 +46,29 @@ export function buttonStyles<T extends HArgument>(
         color: type === "filled" ? MIX_WHITE(C_BG(store))(B_LIGHTER(store)) : C_TEXT(store),
         background_color: type === "filled" ? MIX_WHITE(C_TEXT(store))(B_LIGHTER(store)) : C_BG(store),
     };
-    const component_styles = [style(top, color, HBUTTON(prop))];
+    const component_styles = [style(top)(color, HBUTTON(prop))];
     switch (type) {
         case "filled": {
             component_styles.push(
-                style(top, HBUTTON_FILLED),
-                style([[top, ":hover"]], HBUTTON_FILLED_HOVER(color)),
-                style([[top, ":active"]], HBUTTON_FILLED_ACTIVE),
+                style(top)(HBUTTON_FILLED),
+                style([top, ":hover"])(HBUTTON_FILLED_HOVER(color)),
+                style([top, ":active"])(HBUTTON_FILLED_ACTIVE),
             );
             break;
         }
         case "outlined": {
             component_styles.push(
-                style(top, HBUTTON_OUTLINED),
-                style([[top, ":hover"]], HBUTTON_BG_HOVER(color)),
-                style([[top, ":active"]], HBUTTON_BG_ACTIVE(color)),
+                style(top)(HBUTTON_OUTLINED),
+                style([top, ":hover"])(HBUTTON_BG_HOVER(color)),
+                style([top, ":active"])(HBUTTON_BG_ACTIVE(color)),
             );
             break;
         }
         case "text": {
             component_styles.push(
-                style(top, HBUTTON_TEXT),
-                style([[top, ":hover"]], HBUTTON_BG_HOVER(color)),
-                style([[top, ":active"]], HBUTTON_BG_ACTIVE(color)),
+                style(top)(HBUTTON_TEXT),
+                style([top, ":hover"])(HBUTTON_BG_HOVER(color)),
+                style([top, ":active"])(HBUTTON_BG_ACTIVE(color)),
             );
             break;
         }

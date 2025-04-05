@@ -24,8 +24,8 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
     const Article = article(store);
 
     const styles = [
-        style(PageMainArea, MARGIN_BLOCK("0", S_2XLARGE(store))),
-        style(PageSection, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(PageMainArea)(MARGIN_BLOCK("0", S_2XLARGE(store))),
+        style(PageSection)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
     ];
 
     registerRootPage(store, styles);

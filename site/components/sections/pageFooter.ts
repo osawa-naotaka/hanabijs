@@ -21,9 +21,9 @@ export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
     const PageFooterCopyright = element("page-footer-copyright");
 
     const component_styles = [
-        style(PageFooter, FIX_BOTTOM, TEXT_COLOR(C_BG(store)), BG_COLOR(C_TEXT(store))),
-        style(PageFooterContent, DEFAULT_COLUMN(store), ABSOLUTE_ANCHOR),
-        style(PageFooterCopyright, TEXT_ALIGN_CENTER),
+        style(PageFooter)(FIX_BOTTOM, TEXT_COLOR(C_BG(store)), BG_COLOR(C_TEXT(store))),
+        style(PageFooterContent)(DEFAULT_COLUMN(store), ABSOLUTE_ANCHOR),
+        style(PageFooterCopyright)(TEXT_ALIGN_CENTER),
     ];
 
     registerComponent(store, PageFooter, component_styles);

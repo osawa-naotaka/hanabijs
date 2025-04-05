@@ -12,7 +12,7 @@ export type SummariesArgument = {
 export function summaries(store: Store): HComponentFn<SummariesArgument> {
     const Summaries = element("summaries", { tag: "section" });
     const Summary = summary(store);
-    const styles = [style(Summaries, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
+    const styles = [style(Summaries)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
     registerComponent(store, Summaries, styles);
 

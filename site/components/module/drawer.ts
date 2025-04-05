@@ -28,13 +28,13 @@ export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgu
     const DrawerOpenButton = element("drawer-open-button", { tag: "label" });
 
     const styles = [
-        style(Drawer, { overflow: "hidden" }),
-        style(DrawerTitle, DEFAULT_ROW(store), SPACE_BETWEEN),
-        style(DrawerHeaderSpace, DEFAULT_ROW(store)),
-        style(DrawerOpenState, DISPLAY("none")),
-        style(DrawerOpenButton, CURSOR("pointer")),
-        style(DrawerContent, HEIGHT("0"), TRANSITION("height", "0.25s")),
-        style([[`#${button_id}`, ":checked"], "~", DrawerContent], HEIGHT("calc-size(fit-content, size)")),
+        style(Drawer)({ overflow: "hidden" }),
+        style(DrawerTitle)(DEFAULT_ROW(store), SPACE_BETWEEN),
+        style(DrawerHeaderSpace)(DEFAULT_ROW(store)),
+        style(DrawerOpenState)(DISPLAY("none")),
+        style(DrawerOpenButton)(CURSOR("pointer")),
+        style(DrawerContent)(HEIGHT("0"), TRANSITION("height", "0.25s")),
+        style([`#${button_id}`, ":checked"], "~", DrawerContent)(HEIGHT("calc-size(fit-content, size)")),
     ];
 
     registerComponent(store, Drawer, styles);

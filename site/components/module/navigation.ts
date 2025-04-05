@@ -15,8 +15,8 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
     const NavigationListItem = element("navigation-list-item", { tag: "li" });
 
     const component_styles = [
-        style(Navigation, BOLD, FONT_SIZE(F_XLARGE(store))),
-        style(NavigationList, ROW(S_XLARGE(store)), JUSTIFY_CENTER),
+        style(Navigation)(BOLD, FONT_SIZE(F_XLARGE(store))),
+        style(NavigationList)(ROW(S_XLARGE(store)), JUSTIFY_CENTER),
     ];
 
     registerComponent(store, Navigation, component_styles);

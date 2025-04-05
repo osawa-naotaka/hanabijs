@@ -55,27 +55,27 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const page_styles = [
         INIT_CSS,
         DEFAULT_STYLES(store),
-        style(Main, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(Main)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
 
-        style(BText, BOX_TEXT(store, kind), default_styles),
-        style([[BText, ":hover"]], BOX_TEXT_EM_LIGHT(store, kind)),
-        style([[BText, ":active"]], BOX_TEXT_EM_STRONG(store, kind)),
+        style(BText)(BOX_TEXT(store, kind), default_styles),
+        style([BText, ":hover"])(BOX_TEXT_EM_LIGHT(store, kind)),
+        style([BText, ":active"])(BOX_TEXT_EM_STRONG(store, kind)),
 
-        style(BOutlined, BOX_OUTLINED(store, kind), default_styles),
-        style([[BOutlined, ":hover"]], BOX_OUTLINED_EM_LIGHT(store, kind)),
-        style([[BOutlined, ":active"]], BOX_OUTLINED_EM_STRONG(store, kind)),
+        style(BOutlined)(BOX_OUTLINED(store, kind), default_styles),
+        style([BOutlined, ":hover"])(BOX_OUTLINED_EM_LIGHT(store, kind)),
+        style([BOutlined, ":active"])(BOX_OUTLINED_EM_STRONG(store, kind)),
 
-        style(BTonal, BOX_TONAL(store, kind), default_styles),
-        style([[BTonal, ":hover"]], BOX_TONAL_EM_LIGHT(store, kind)),
-        style([[BTonal, ":active"]], BOX_TONAL_EM_STRONG(store, kind)),
+        style(BTonal)(BOX_TONAL(store, kind), default_styles),
+        style([BTonal, ":hover"])(BOX_TONAL_EM_LIGHT(store, kind)),
+        style([BTonal, ":active"])(BOX_TONAL_EM_STRONG(store, kind)),
 
-        style(BFilled, BOX_FILLED(store, kind), default_styles),
-        style([[BFilled, ":hover"]], BOX_FILLED_EM_LIGHT(store, kind)),
-        style([[BFilled, ":active"]], BOX_FILLED_EM_STRONG(store, kind)),
+        style(BFilled)(BOX_FILLED(store, kind), default_styles),
+        style([BFilled, ":hover"])(BOX_FILLED_EM_LIGHT(store, kind)),
+        style([BFilled, ":active"])(BOX_FILLED_EM_STRONG(store, kind)),
 
-        style(BElevated, BOX_ELEVATED(store, kind), default_styles),
-        style([[BElevated, ":hover"]], BOX_ELEVATED_EM_LIGHT(store, kind)),
-        style([[BElevated, ":active"]], BOX_ELEVATED_EM_STRONG(store, kind)),
+        style(BElevated)(BOX_ELEVATED(store, kind), default_styles),
+        style([BElevated, ":hover"])(BOX_ELEVATED_EM_LIGHT(store, kind)),
+        style([BElevated, ":active"])(BOX_ELEVATED_EM_STRONG(store, kind)),
     ];
 
     registerRootPage(store, page_styles);

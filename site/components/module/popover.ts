@@ -32,8 +32,7 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
     const PopoverContent = element("popover-content");
 
     const styles = [
-        style(
-            PopoverContainer,
+        style(PopoverContainer)(
             PADDING_BLOCK(S_MEDIUM(store)),
             FULL_WIDTH_HEIGHT,
             BG_COLOR(C_BG(store)),
@@ -42,11 +41,11 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
             DISPLAY("none"),
             TRANSITION("all", "0.25s", "allow-discrete"),
         ),
-        style([[PopoverContainer, ":popover-open"]], DEFAULT_COLUMN(store), OPACITY("1")),
-        atStyle([["@layer", "high"], ["@starting-style"]], [[PopoverContainer, ":popover-open"]], OPACITY("0")),
-        style(PopoverContent, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
-        style(PopoverButton, BORDER_NONE, CURSOR("pointer")),
-        style(PopoverCloseArea, MARGIN_BLOCK("0", S_MEDIUM(store)), DEFAULT_ROW(store), FLEX_END),
+        style([PopoverContainer, ":popover-open"])(DEFAULT_COLUMN(store), OPACITY("1")),
+        atStyle(["@layer", "high"], ["@starting-style"])([PopoverContainer, ":popover-open"])(OPACITY("0")),
+        style(PopoverContent)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(PopoverButton)(BORDER_NONE, CURSOR("pointer")),
+        style(PopoverCloseArea)(MARGIN_BLOCK("0", S_MEDIUM(store)), DEFAULT_ROW(store), FLEX_END),
     ];
 
     registerComponent(store, Popover, styles);

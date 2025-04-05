@@ -18,9 +18,8 @@ import type { ColorKind, HComponentFn, Store } from "@/main";
 
 export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T>): StyleRule[] {
     return [
-        style(top, BOX_FILLED(store, kind)),
-        style(
-            top,
+        style(top)(BOX_FILLED(store, kind)),
+        style(top)(
             INLINE_FLEX,
             BOLD,
             LINE_HEIGHT("1"),
@@ -30,6 +29,6 @@ export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T
             TRANSITION("all", "0.25s", "ease-in-out"),
             PADDING(S_TINY(store), S_SMALL(store)),
         ),
-        style([[top, ":hover"]], BOX_FILLED_EM_LIGHT(store, kind)),
+        style([top, ":hover"])(BOX_FILLED_EM_LIGHT(store, kind)),
     ];
 }

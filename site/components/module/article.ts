@@ -50,17 +50,16 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
     const ShareX = shareX();
 
     const component_styles = [
-        style(Article, MARGIN_BLOCK(S_2XLARGE(store))),
+        style(Article)(MARGIN_BLOCK(S_2XLARGE(store))),
 
-        style([ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
+        style(ArticleHeader, H2)(FONT_SIZE(F_XLARGE(store))),
         TAG_DESIGN(store, "text", ArticleTag),
         TAG_DESIGN(store, "text", ShareX),
-        style(ArticleTag, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
-        style(ShareX, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
+        style(ArticleTag)(PADDING(S_TINY(store), S_SMALL(store)), BOLD),
+        style(ShareX)(PADDING(S_TINY(store), S_SMALL(store)), BOLD),
 
-        style(ArticleText, COLUMN("0"), TEXT_JUSTIFY, ALIGN_NOMAL),
-        style(
-            [ArticleText, H3],
+        style(ArticleText)(COLUMN("0"), TEXT_JUSTIFY, ALIGN_NOMAL),
+        style(ArticleText, H3)(
             FONT_SIZE(F_XLARGE(store)),
             ROUND("4px"),
             PADDING_INLINE(S_MEDIUM(store)),
@@ -69,15 +68,15 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
             TEXT_COLOR(C_BG(store)),
             BG_COLOR(MIX_WHITE(C_TEXT(store))(B_LIGHTER(store))),
         ),
-        style([ArticleText, P], MARGIN_BLOCK("0", S_2XLARGE(store)), {
+        style(ArticleText, P)(MARGIN_BLOCK("0", S_2XLARGE(store)), {
             text_indent: S_MEDIUM(store),
         }),
-        style([ArticleText, H4], BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
-        style([ArticleText, H5], BORDER_LEFT_THIC),
-        style([ArticleText, Ul], LIST_DISC),
-        style([ArticleText, Ol], LIST_DECIMAL),
-        style([ArticleText, A], TEXT_UNDERLINE),
-        style([ArticleText, Li], MARGIN_INLINE(S_2XLARGE(store))),
+        style(ArticleText, H4)(BORDER_UNDERLINE, MARGIN_BLOCK(S_MEDIUM(store))),
+        style(ArticleText, H5)(BORDER_LEFT_THIC),
+        style(ArticleText, Ul)(LIST_DISC),
+        style(ArticleText, Ol)(LIST_DECIMAL),
+        style(ArticleText, A)(TEXT_UNDERLINE),
+        style(ArticleText, Li)(MARGIN_INLINE(S_2XLARGE(store))),
     ];
 
     registerComponent(store, Article, component_styles);

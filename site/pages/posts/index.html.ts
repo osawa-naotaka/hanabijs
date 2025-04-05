@@ -11,7 +11,7 @@ export default function Root(store: Store): HRootPageFn<void> {
     const ArticleList = element("article-list", { tag: "ul" });
     const ArticleListItem = element("article-list-item", { tag: "li" });
 
-    const styles = [style(ArticleList, DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
+    const styles = [style(ArticleList)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
     registerRootPage(store, styles);
     return async () => {

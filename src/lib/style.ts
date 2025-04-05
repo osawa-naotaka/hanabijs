@@ -26,19 +26,22 @@ export type Selector = SimpleSelector | CompoundSelector | Combinator;
 
 export type SelectorContext = SimpleSelector | Selector[];
 
-export function style(context: SelectorContext, ...properties: Properties[]): StyleRule {
-    return {
+export function style(...context: Selector[]): (...properties: Properties[]) => StyleRule {
+    return (...properties: Properties[]) => ({
         selector: [context],
         properties: unionArrayOfRecords(properties),
-    };
+    });
 }
 
-export function atStyle(atrules: Atrule[], context: SelectorContext, ...properties: Properties[]): StyleRule {
-    return {
-        atrules,
-        selector: [context],
-        properties: unionArrayOfRecords(properties),
-    };
+export function atStyle(
+    ...atrules: Atrule[]
+): (...context: SelectorContext[]) => (...properties: Properties[]) => StyleRule {
+    return (context: SelectorContext) =>
+        (...properties: Properties[]) => ({
+            atrules,
+            selector: [context],
+            properties: unionArrayOfRecords(properties),
+        });
 }
 
 // Inserter (HNode).

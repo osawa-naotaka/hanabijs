@@ -18,8 +18,8 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
     const DateTime = dateTime();
 
     const component_styles: (StyleRule | StyleRule[])[] = [
-        style(Summary, MARGIN_BLOCK(S_XLARGE(store))),
-        style([Summary, ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
+        style(Summary)(MARGIN_BLOCK(S_XLARGE(store))),
+        style(Summary, ArticleHeader, H2)(FONT_SIZE(F_XLARGE(store))),
         TAG_DESIGN(store, "text", SummaryTag),
     ];
 
