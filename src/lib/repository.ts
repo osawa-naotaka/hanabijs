@@ -30,20 +30,31 @@ export function component<T, K>(name_fn: HComponentFn<K> | string, component_fn:
 export function registerComponent<K>(
     store: Store,
     name_fn: HComponentFn<K> | string,
-    style: StyleRule[],
+    raw_style: (StyleRule | StyleRule[])[],
     path?: string,
 ): void {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
+    const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
+
     store.components.set(component_name, { component_name, path, style });
 }
 
-export function registerElement<K>(store: Store, element_fn: HElementFn<K>, style: StyleRule[], path?: string): void {
+export function registerElement<K>(
+    store: Store,
+    element_fn: HElementFn<K>,
+    raw_style: (StyleRule | StyleRule[])[],
+    path?: string,
+): void {
     const component_name = element_fn.name;
+    const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
+
     store.components.set(component_name, { component_name, path, style });
 }
 
-export function registerRootPage(store: Store, style: StyleRule[], path?: string): void {
+export function registerRootPage(store: Store, raw_style: (StyleRule | StyleRule[])[], path?: string): void {
     const component_name = "hanabi-root-page";
+    const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
+
     store.components.set(component_name, { component_name, path, style });
 }
 

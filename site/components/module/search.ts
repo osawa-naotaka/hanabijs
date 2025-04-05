@@ -1,17 +1,4 @@
-import {
-    A,
-    Div,
-    Li,
-    PADDING,
-    as,
-    buttonStyles,
-    component,
-    createDom,
-    element,
-    hIcon,
-    registerComponent,
-    style,
-} from "@/main";
+import { A, Div, Li, as, component, createDom, element, hIcon, registerComponent, style } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
@@ -27,8 +14,8 @@ export function search(store: Store): HComponentFn<HArgument> {
         style(SearchBar, ROW("0.5rem"), BORDER_UNDERLINE),
         style(SearchInput, DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
         style([[SearchInput, "::placeholder"]], OPACITY("0.5")),
-        style(SearchResult, MARGIN_BLOCK(S_3XLARGE(store))),
-        style(SearchResultItem, MARGIN_BLOCK(S_3XLARGE(store))),
+        style(SearchResult, MARGIN_BLOCK(S_LARGE(store))),
+        style(SearchResultItem, MARGIN_BLOCK(S_XLARGE(store))),
     ];
 
     registerComponent(store, Search, component_sytles, import.meta.path);
@@ -86,7 +73,6 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
 }
 
 import {
-    BOLD,
     BORDER_UNDERLINE,
     DEFAULT_RESPONSIVE_PAGE_WIDTH,
     DEFAULT_TEXT_BG,
@@ -99,13 +85,13 @@ import {
     ROW,
     ROW_WRAP,
     S_2XLARGE,
-    S_3XLARGE,
-    S_SMALL,
-    S_TINY,
+    S_LARGE,
+    S_XLARGE,
 } from "@/lib/stylerules";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
 import { postFmSchema } from "@site/config/site.config";
+import { TAG_DESIGN } from "@site/styles/design";
 import * as v from "valibot";
 
 export const SearchKeySchema = v.object({
@@ -128,8 +114,7 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const component_styles = [
         style(SearchResultItemMeta, ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
         style(SearchResultItemDescription, FONT_SIZE(F_TINY(store))),
-        ...buttonStyles(SearchResultItemTag, "filled", store),
-        style(SearchResultItemTag, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
+        TAG_DESIGN(store, "text", SearchResultItemTag),
     ];
 
     registerComponent(store, SearchResultItem, component_styles);

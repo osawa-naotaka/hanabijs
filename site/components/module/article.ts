@@ -28,9 +28,10 @@ import {
     TEXT_UNDERLINE,
     as,
 } from "@/main";
-import { A, H2, H3, H4, H5, Li, Ol, P, Ul, buttonStyles, component, element, registerComponent, style } from "@/main";
+import { A, H2, H3, H4, H5, Li, Ol, P, Ul, component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
+import { TAG_DESIGN } from "@site/styles/design";
 import { dateTime } from "../element/dateTime";
 import { shareX } from "../element/shareX";
 import { tag } from "../element/tag";
@@ -52,8 +53,8 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
         style(Article, MARGIN_BLOCK(S_2XLARGE(store))),
 
         style([ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
-        ...buttonStyles(ArticleTag, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
-        ...buttonStyles(ShareX, "filled", store, { padding: [S_TINY(store), S_SMALL(store)] }),
+        TAG_DESIGN(store, "text", ArticleTag),
+        TAG_DESIGN(store, "text", ShareX),
         style(ArticleTag, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
         style(ShareX, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
 

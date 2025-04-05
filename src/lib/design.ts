@@ -75,10 +75,10 @@ export const default_design_rule: DesignRule = {
             info: [49, 204, 236], // #31ccec
         },
         brightness: {
-            lightest: "80%",
-            light: "90%",
-            dark: "90%",
-            darkest: "80%",
+            lightest: "60%",
+            light: "80%",
+            dark: "80%",
+            darkest: "60%",
         },
     },
     size: {

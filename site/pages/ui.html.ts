@@ -53,8 +53,8 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     );
 
     const page_styles = [
-        ...INIT_CSS,
-        ...DEFAULT_STYLES(store),
+        INIT_CSS,
+        DEFAULT_STYLES(store),
         style(Main, DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
 
         style(BText, BOX_TEXT(store, kind), default_styles),

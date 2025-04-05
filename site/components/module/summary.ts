@@ -1,7 +1,8 @@
-import { BOLD, FONT_SIZE, F_XLARGE, MARGIN_BLOCK, PADDING, S_SMALL, S_TINY, S_XLARGE } from "@/lib/stylerules";
-import { A, H2, as, buttonStyles, component, element, registerComponent, style } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "@/lib/stylerules";
+import { A, H2, as, component, element, registerComponent, style } from "@/main";
+import type { HComponentFn, Store, StyleRule } from "@/main";
 import type { PostFm } from "@site/config/site.config";
+import { TAG_DESIGN } from "@site/styles/design";
 import { dateTime } from "../element/dateTime";
 import { tag } from "../element/tag";
 import type { Markdown } from "../library/post";
@@ -16,11 +17,10 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
     const SummaryTag = as("summary-tag", tag());
     const DateTime = dateTime();
 
-    const component_styles = [
+    const component_styles: (StyleRule | StyleRule[])[] = [
         style(Summary, MARGIN_BLOCK(S_XLARGE(store))),
         style([Summary, ArticleHeader, H2], FONT_SIZE(F_XLARGE(store))),
-        ...buttonStyles(SummaryTag, "filled", store),
-        style(SummaryTag, PADDING(S_TINY(store), S_SMALL(store)), BOLD),
+        TAG_DESIGN(store, "text", SummaryTag),
     ];
 
     registerComponent(store, Summary, component_styles);
