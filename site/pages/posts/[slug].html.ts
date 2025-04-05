@@ -20,13 +20,9 @@ export async function rootPageFnParameters(): Promise<RootParameter[]> {
 export default function Root(store: Store): HRootPageFn<RootParameter> {
     const Page = page(store);
     const PageMainArea = element("page-main-area", { tag: "main" });
-    const PageSection = element("page-section", { tag: "section" });
     const Article = article(store);
 
-    const styles = [
-        style(PageMainArea)(MARGIN_BLOCK("0", S_2XLARGE(store))),
-        style(PageSection)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
-    ];
+    const styles = [style(PageMainArea)(MARGIN_BLOCK("0", S_2XLARGE(store)), DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
     registerRootPage(store, styles);
 
@@ -40,6 +36,6 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
             lang: site.lang,
             name: site.name,
             navitem: navitem,
-        })(PageMainArea({})(PageSection({})(Article(md)(RawHTML({})(raw_html)))));
+        })(PageMainArea({})(Article(md)(RawHTML({})(raw_html))));
     };
 }

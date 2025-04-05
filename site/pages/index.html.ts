@@ -1,4 +1,4 @@
-import { element } from "@/main";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH, element, registerRootPage, style } from "@/main";
 import type { HRootPageFn, Store } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
@@ -12,6 +12,10 @@ export default function Root(store: Store): HRootPageFn<void> {
     const Hero = hero(store);
     const PageMainArea = element("page-main-area", { tag: "main" });
     const Summaries = summaries(store);
+
+    const styles = [style(PageMainArea)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
+
+    registerRootPage(store, styles);
 
     return async () => {
         const posts = await getAllMarkdowns(posts_dir, postFmSchema);

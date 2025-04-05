@@ -15,7 +15,7 @@ export type Store = {
     designrule: DesignRule;
 };
 
-export function generateStore(rule: Partial<DesignRule> = default_design_rule): Store {
+export function generateStore(rule: Partial<DesignRule> = {}): Store {
     return {
         components: new Map<string, HComponent>(),
         designrule: { ...default_design_rule, ...rule },
