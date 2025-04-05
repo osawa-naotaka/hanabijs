@@ -28,8 +28,7 @@ export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
 
     registerComponent(store, PageFooter, component_styles);
 
-    return component(
-        PageFooter,
+    return component(PageFooter)(
         ({ site_name }) =>
             () =>
                 PageFooter({})(PageFooterContent({})(), PageFooterCopyright({})(`© 2025 ${site_name}`)),

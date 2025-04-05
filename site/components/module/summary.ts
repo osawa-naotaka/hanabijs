@@ -25,8 +25,7 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
 
     registerComponent(store, Summary, component_styles);
 
-    return component(
-        Summary,
+    return component(Summary)(
         ({ slug, data }) =>
             () =>
                 Summary({})(

@@ -81,8 +81,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
     registerComponent(store, Article, component_styles);
 
-    return component(
-        Article,
+    return component(Article)(
         ({ data, slug }) =>
             (...child) =>
                 Article({})(

@@ -22,9 +22,11 @@ export function generateStore(rule: Partial<DesignRule> = default_design_rule): 
     };
 }
 
-export function component<T, K>(name_fn: HComponentFn<K> | string, component_fn: HComponentFn<T>): HComponentFn<T> {
-    const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
-    return { [component_name]: (argument: HComponentFnArg<T>) => component_fn(argument) }[component_name];
+export function component<K>(name_fn: HComponentFn<K> | string): <T>(component_fn: HComponentFn<T>) => HComponentFn<T> {
+    return <T>(component_fn: HComponentFn<T>) => {
+        const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
+        return { [component_name]: (argument: HComponentFnArg<T>) => component_fn(argument) }[component_name];
+    };
 }
 
 export function registerComponent<K>(

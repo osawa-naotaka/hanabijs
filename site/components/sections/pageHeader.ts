@@ -42,8 +42,7 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
 
     registerComponent(store, PageHeader, component_styles);
 
-    return component(
-        PageHeader,
+    return component(PageHeader)(
         ({ title, navitem }) =>
             () =>
                 PageHeader({})(

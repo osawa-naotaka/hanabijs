@@ -39,8 +39,7 @@ export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgu
 
     registerComponent(store, Drawer, styles);
 
-    return component(
-        Drawer,
+    return component(Drawer)(
         (argument) => () =>
             Drawer({})(
                 DrawerOpenState({ type: "checkbox", id: button_id })(),

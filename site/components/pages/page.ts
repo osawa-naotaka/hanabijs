@@ -23,8 +23,7 @@ export function page(store: Store): HComponentFn<PageArgument> {
 
     registerComponent(store, Html, [INIT_CSS, DEFAULT_STYLES(store)]);
 
-    return component(
-        Html,
+    return component(Html)(
         ({ lang, name, title, description, navitem }) =>
             (...child) =>
                 Html({ lang })(

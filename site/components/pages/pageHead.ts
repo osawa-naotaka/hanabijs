@@ -7,8 +7,7 @@ export type PageHeadArgument = {
 };
 
 export function pageHead(): HComponentFn<PageHeadArgument> {
-    return component(
-        Head,
+    return component(Head)(
         ({ title, description }) =>
             () =>
                 Head({ class: "page-head" })(

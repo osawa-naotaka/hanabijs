@@ -20,8 +20,7 @@ export function search(store: Store): HComponentFn<HArgument> {
 
     registerComponent(store, Search, component_sytles, import.meta.path);
 
-    return component(
-        Search,
+    return component(Search)(
         () => () =>
             Search({})(
                 SearchBar({})(SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(), SearchInputIcon({})()),
@@ -119,7 +118,7 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
 
     registerComponent(store, SearchResultItem, component_styles);
 
-    return component(SearchResultItem, ({ result }) => () => {
+    return component(SearchResultItem)(({ result }) => () => {
         const key = v.parse(SearchKeySchema, result.key);
         return SearchResultItem({})(
             SearchResultItemMeta({})(

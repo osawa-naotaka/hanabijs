@@ -23,5 +23,5 @@ export function hero(store: Store): HComponentFn<HArgument> {
 
     registerComponent(store, Hero, component_styles);
 
-    return component(Hero, () => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE")));
+    return component(Hero)(() => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE")));
 }
