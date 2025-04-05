@@ -25,14 +25,14 @@ export type PopoverArgument = {
 };
 
 export function popover(store: Store, button_id: string): HComponentFn<PopoverArgument> {
-    const Popover = element("popover");
-    const PopoverButton = element("popover-button", { tag: "button" });
-    const PopoverCloseArea = element("popover-close-area");
-    const PopoverContainer = element("popover-container");
-    const PopoverContent = element("popover-content");
+    const Top = element("popover");
+    const Button = element("popover-button", { tag: "button" });
+    const CloseArea = element("popover-close-area");
+    const Container = element("popover-container");
+    const Content = element("popover-content");
 
     const styles = [
-        style(PopoverContainer)(
+        style(Container)(
             PADDING_BLOCK(S_MEDIUM(store)),
             FULL_WIDTH_HEIGHT,
             BG_COLOR(C_BG(store)),
@@ -41,24 +41,22 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
             DISPLAY("none"),
             TRANSITION("all", "0.25s", "allow-discrete"),
         ),
-        style([PopoverContainer, ":popover-open"])(DEFAULT_COLUMN(store), OPACITY("1")),
-        atStyle(["@layer", "high"], ["@starting-style"])([PopoverContainer, ":popover-open"])(OPACITY("0")),
-        style(PopoverContent)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
-        style(PopoverButton)(BORDER_NONE, CURSOR("pointer")),
-        style(PopoverCloseArea)(MARGIN_BLOCK("0", S_MEDIUM(store)), DEFAULT_ROW(store), FLEX_END),
+        style([Container, ":popover-open"])(DEFAULT_COLUMN(store), OPACITY("1")),
+        atStyle(["@layer", "high"], ["@starting-style"])([Container, ":popover-open"])(OPACITY("0")),
+        style(Content)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(Button)(BORDER_NONE, CURSOR("pointer")),
+        style(CloseArea)(MARGIN_BLOCK("0", S_MEDIUM(store)), DEFAULT_ROW(store), FLEX_END),
     ];
 
-    registerComponent(store, Popover, styles);
+    registerComponent(store, Top, styles);
 
-    return component(Popover)(
+    return component(Top)(
         (argument) => () =>
-            Popover({})(
-                PopoverButton({ type: "button", popovertarget: button_id })(argument.open_button),
-                PopoverContainer({ popover: null, id: button_id })(
-                    PopoverContent({})(
-                        PopoverCloseArea({})(
-                            PopoverButton({ type: "button", popovertarget: button_id })(argument.close_button),
-                        ),
+            Top({})(
+                Button({ type: "button", popovertarget: button_id })(argument.open_button),
+                Container({ popover: null, id: button_id })(
+                    Content({})(
+                        CloseArea({})(Button({ type: "button", popovertarget: button_id })(argument.close_button)),
                         argument.body,
                     ),
                 ),

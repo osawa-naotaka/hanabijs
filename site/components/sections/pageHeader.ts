@@ -7,7 +7,7 @@ import {
     F_LARGE,
     OPACITY,
 } from "@/lib/stylerules";
-import { A, H1, component, element, hIcon, registerComponent, style } from "@/main";
+import { A, H1, as, component, element, hIcon, registerComponent, style } from "@/main";
 import type { HBrandIconName, HComponentFn, Store } from "@/main";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
@@ -26,9 +26,9 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const PageHeader = element("page-header", { tag: "header" });
     const Drawer = drawer(store, "page-header-toggle-button");
     const Popover = popover(store, "search-popover");
-    const OpenButton = hIcon({ type: "solid", name: "search" });
-    const CloseButton = hIcon({ type: "solid", name: "close" });
-    const MenuButton = hIcon({ type: "solid", name: "bars" });
+    const OpenButton = as("page-header-open-button", hIcon());
+    const CloseButton = as("page-header-close-button", hIcon());
+    const MenuButton = as("page-header-menu-button", hIcon());
     const Navigation = navigation(store);
     const Search = search(store);
 
@@ -49,11 +49,11 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
                     Drawer({
                         title: H1({})(A({ href: "/" })(title)),
                         header_space: Popover({
-                            open_button: OpenButton({})(),
-                            close_button: CloseButton({})(),
+                            open_button: OpenButton({ type: "solid", name: "search" })(),
+                            close_button: CloseButton({ type: "solid", name: "close" })(),
                             body: Search({})(),
                         })(),
-                        open_button: MenuButton({})(),
+                        open_button: MenuButton({ type: "solid", name: "bars" })(),
                         content: Navigation({ navitem })(),
                     })(),
                 ),

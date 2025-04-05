@@ -1,6 +1,7 @@
 import {
     BOLD,
     BORDER_RADIUS,
+    BORDER_UNDERLINE,
     BOX_FILLED,
     BOX_FILLED_EM_LIGHT,
     CURSOR,
@@ -13,7 +14,7 @@ import {
     TRANSITION,
     style,
 } from "@/main";
-import type { StyleRule } from "@/main";
+import type { Selector, StyleRule } from "@/main";
 import type { ColorKind, HComponentFn, Store } from "@/main";
 
 export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T>): StyleRule[] {
@@ -31,4 +32,8 @@ export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T
         ),
         style([top, ":hover"])(BOX_FILLED_EM_LIGHT(store, kind)),
     ];
+}
+
+export function LINK_DESIGN(...sel: Selector[]): StyleRule[] {
+    return [style(...sel)(BORDER_UNDERLINE)]
 }

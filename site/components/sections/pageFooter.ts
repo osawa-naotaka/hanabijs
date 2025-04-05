@@ -17,13 +17,13 @@ export type PageFooterArgument = {
 
 export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
     const PageFooter = element("page-footer", { tag: "footer" });
-    const PageFooterContent = element("page-footer-content");
-    const PageFooterCopyright = element("page-footer-copyright");
+    const Content = element("page-footer-content");
+    const Copyright = element("page-footer-copyright");
 
     const component_styles = [
         style(PageFooter)(FIX_BOTTOM, TEXT_COLOR(C_BG(store)), BG_COLOR(C_TEXT(store))),
-        style(PageFooterContent)(DEFAULT_COLUMN(store), ABSOLUTE_ANCHOR),
-        style(PageFooterCopyright)(TEXT_ALIGN_CENTER),
+        style(Content)(DEFAULT_COLUMN(store), ABSOLUTE_ANCHOR),
+        style(Copyright)(TEXT_ALIGN_CENTER),
     ];
 
     registerComponent(store, PageFooter, component_styles);
@@ -31,6 +31,6 @@ export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
     return component(PageFooter)(
         ({ site_name }) =>
             () =>
-                PageFooter({})(PageFooterContent({})(), PageFooterCopyright({})(`© 2025 ${site_name}`)),
+                PageFooter({})(Content({})(), Copyright({})(`© 2025 ${site_name}`)),
     );
 }

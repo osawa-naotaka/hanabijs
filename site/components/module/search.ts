@@ -2,29 +2,27 @@ import { A, Div, Li, as, component, createDom, element, hIcon, registerComponent
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
-    const Search = element("search");
+    const Top = element("search");
     const SearchBar = element("search-bar");
-    const SearchInput = element("search-input", { tag: "input" });
-    const SearchInputIcon = hIcon({ type: "solid", name: "magnifying-glass" });
-    const SearchResult = element("search-result", { tag: "ul" });
-    const SearchResultItem = element("search-result-item", { tag: "li" });
+    const Input = element("search-input", { tag: "input" });
+    const InputIcon = hIcon()({ type: "solid", name: "magnifying-glass" })();
+    const Result = element("search-result", { tag: "ul" });
 
     const component_sytles = [
-        style(Search)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(Top)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
         style(SearchBar)(ROW("0.5rem"), BORDER_UNDERLINE),
-        style(SearchInput)(DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
-        style([SearchInput, "::placeholder"])(OPACITY("0.5")),
-        style(SearchResult)(MARGIN_BLOCK(S_LARGE(store))),
-        style(SearchResultItem)(MARGIN_BLOCK(S_XLARGE(store))),
+        style(Input)(DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
+        style([Input, "::placeholder"])(OPACITY("0.5")),
+        style(Result)(MARGIN_BLOCK(S_LARGE(store))),
     ];
 
-    registerComponent(store, Search, component_sytles, import.meta.path);
+    registerComponent(store, Top, component_sytles, import.meta.path);
 
-    return component(Search)(
+    return component(Top)(
         () => () =>
-            Search({})(
-                SearchBar({})(SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(), SearchInputIcon({})()),
-                SearchResult({})(SearchResultItem({})("no result.")),
+            Top({})(
+                SearchBar({})(Input({ type: "search", placeholder: "SEARCH KEYWORDS" })(), InputIcon),
+                Result({})(),
             ),
     );
 }
@@ -85,7 +83,6 @@ import {
     ROW_WRAP,
     S_2XLARGE,
     S_LARGE,
-    S_XLARGE,
 } from "@/lib/stylerules";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
@@ -103,31 +100,32 @@ type SearchResultItemAttribute = {
 };
 
 function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute> {
-    const SearchResultItem = element("search-result-item", { tag: "li" });
-    const SearchResultItemMeta = element("search-result-item-meta");
-    const SearchResultItemTitle = element("search-result-item-title");
-    const SearchResultItemDescription = element("search-result-item-description");
+    const Top = element("search-result-item", { tag: "li" });
+    const Meta = element("search-result-item-meta");
+    const Title = element("search-result-item-title");
+    const Description = element("search-result-item-description");
     const DateTime = dateTime();
-    const SearchResultItemTag = as("serch-result-item-tag", tag());
+    const Tag = as("serch-result-item-tag", tag());
 
     const component_styles = [
-        style(SearchResultItemMeta)(ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
-        style(SearchResultItemDescription)(FONT_SIZE(F_TINY(store))),
-        TAG_DESIGN(store, "text", SearchResultItemTag),
+        style(Top)(MARGIN_BLOCK(S_2XLARGE(store), "0")),
+        style(Meta)(ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
+        style(Description)(FONT_SIZE(F_TINY(store))),
+        TAG_DESIGN(store, "text", Tag),
     ];
 
-    registerComponent(store, SearchResultItem, component_styles);
+    registerComponent(store, Top, component_styles);
 
-    return component(SearchResultItem)(({ result }) => () => {
+    return component(Top)(({ result }) => () => {
         const key = v.parse(SearchKeySchema, result.key);
-        return SearchResultItem({})(
-            SearchResultItemMeta({})(
+        return Top({})(
+            Meta({})(
                 Div({})(key.data.author),
                 DateTime({ datetime: key.data.date })(),
-                ...(key.data.tag || []).map((x) => SearchResultItemTag({ slug: x })()),
+                ...(key.data.tag || []).map((x) => Tag({ slug: x })()),
             ),
-            SearchResultItemTitle({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
-            SearchResultItemDescription({})(result.refs[0].wordaround || ""),
+            Title({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
+            Description({})(result.refs[0].wordaround || ""),
         );
     });
 }

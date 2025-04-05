@@ -10,28 +10,27 @@ export type NavigationArgument = {
 };
 
 export function navigation(store: Store): HComponentFn<NavigationArgument> {
-    const Navigation = element("navigation", { tag: "nav" });
-    const NavigationList = element("navigation-list", { tag: "ul" });
-    const NavigationListItem = element("navigation-list-item", { tag: "li" });
+    const Top = element("navigation", { tag: "nav" });
+    const List = element("navigation-list", { tag: "ul" });
+    const Item = element("navigation-list-item", { tag: "li" });
+    const Icon = hIcon();
 
     const component_styles = [
-        style(Navigation)(BOLD, FONT_SIZE(F_XLARGE(store))),
-        style(NavigationList)(ROW(S_XLARGE(store)), JUSTIFY_CENTER),
+        style(Top)(BOLD, FONT_SIZE(F_XLARGE(store))),
+        style(List)(ROW(S_XLARGE(store)), JUSTIFY_CENTER),
     ];
 
-    registerComponent(store, Navigation, component_styles);
+    registerComponent(store, Top, component_styles);
 
-    return component(Navigation)(
+    return component(Top)(
         ({ navitem }) =>
             () =>
-                Navigation({})(
-                    NavigationList({})(
-                        NavigationListItem({})(A({ href: "/posts" })("blog")),
+                Top({})(
+                    List({})(
+                        Item({})(A({ href: "/posts" })("blog")),
                         ...navitem.map((item) =>
-                            NavigationListItem({})(
-                                A({ href: item.url, target: "__blank" })(
-                                    hIcon({ type: "brands", name: item.icon })({})(),
-                                ),
+                            Item({})(
+                                A({ href: item.url, target: "__blank" })(Icon({ type: "brands", name: item.icon })()),
                             ),
                         ),
                     ),

@@ -1,7 +1,6 @@
 import {
     ALIGN_NOMAL,
     BG_COLOR,
-    BOLD,
     BORDER_LEFT_THIC,
     BORDER_UNDERLINE,
     B_LIGHTER,
@@ -15,14 +14,11 @@ import {
     MARGIN_BLOCK,
     MARGIN_INLINE,
     MIX_WHITE,
-    PADDING,
     PADDING_BLOCK,
     PADDING_INLINE,
     ROUND,
     S_2XLARGE,
     S_MEDIUM,
-    S_SMALL,
-    S_TINY,
     TEXT_COLOR,
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
@@ -55,8 +51,6 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
         style(ArticleHeader, H2)(FONT_SIZE(F_XLARGE(store))),
         TAG_DESIGN(store, "text", ArticleTag),
         TAG_DESIGN(store, "text", ShareX),
-        style(ArticleTag)(PADDING(S_TINY(store), S_SMALL(store)), BOLD),
-        style(ShareX)(PADDING(S_TINY(store), S_SMALL(store)), BOLD),
 
         style(ArticleText)(COLUMN("0"), TEXT_JUSTIFY, ALIGN_NOMAL),
         style(ArticleText, H3)(

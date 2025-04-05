@@ -21,7 +21,9 @@ export function page(store: Store): HComponentFn<PageArgument> {
     const PageHeader = pageHeader(store);
     const PageFooter = pageFooter(store);
 
-    registerComponent(store, Html, [INIT_CSS, DEFAULT_STYLES(store)]);
+    const styles = [INIT_CSS, DEFAULT_STYLES(store)];
+
+    registerComponent(store, Html, styles);
 
     return component(Html)(
         ({ lang, name, title, description, navitem }) =>
