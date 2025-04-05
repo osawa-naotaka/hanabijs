@@ -10,10 +10,10 @@ import {
     PADDING,
     S_SMALL,
     S_TINY,
-    type StyleRule,
     TRANSITION,
     style,
 } from "@/main";
+import type { StyleRule } from "@/main";
 import type { ColorKind, HComponentFn, Store } from "@/main";
 
 export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T>): StyleRule[] {
