@@ -19,12 +19,12 @@ export type ArticleHeaderArgument = {
 
 export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument> {
     const ArticleHeader = element("article-header", { tag: "header" });
-    const ArticleHeaderTitle = element("article-header-title");
-    const ArticleHeaderMeta = element("article-header-meta");
+    const Title = element("article-header-title");
+    const Meta = element("article-header-meta");
 
     const component_styles = [
-        style(ArticleHeaderTitle)(BORDER_UNDERLINE),
-        style(ArticleHeaderMeta)(
+        style(Title)(BORDER_UNDERLINE),
+        style(Meta)(
             ROW(S_SMALL(store)),
             FLEX_END,
             FLEX_WRAP,
@@ -36,9 +36,10 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
 
     registerComponent(store, ArticleHeader, component_styles);
 
-    return component(ArticleHeader)(
-        ({ title }) =>
-            (...child) =>
-                ArticleHeader({})(ArticleHeaderTitle({})(title), ArticleHeaderMeta({})(...child)),
-    );
+    return component(ArticleHeader)(({ title }) => (...child) => (
+        <ArticleHeader>
+            <Title>{title}</Title>
+            <Meta>{child}</Meta>
+        </ArticleHeader>
+    ));
 }

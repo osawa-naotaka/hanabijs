@@ -35,7 +35,7 @@ export async function build() {
         console.log("hanabi: no page directory.");
         exit(-1);
     }
-    for await (const filename_in_dir of globExt(page_dir, ".tsx")) {
+    for await (const filename_in_dir of globExt(page_dir, ".{ts,tsx}")) {
         const import_start = performance.now();
         const page_fn = await import(path.join(page_dir, filename_in_dir));
         console.log(`import ${filename_in_dir} in ${(performance.now() - import_start).toFixed(2)}ms`);

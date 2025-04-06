@@ -259,6 +259,10 @@ export type GlobalAttributes = {
     tabindex: string;
     title: string;
     translate: "yes" | "no";
+    // biome-ignore lint: using any.
+    children: any;
+    // biome-ignore lint: using any.
+    key: any;
 };
 
 // グローバル属性の名前のユニオン型

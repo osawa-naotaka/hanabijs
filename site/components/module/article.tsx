@@ -75,19 +75,15 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
     registerComponent(store, Article, component_styles);
 
-    return component(Article)(
-        ({ data, slug }) =>
-            (...child) =>
-                Article({})(
-                    ArticleHeader({
-                        title: H2({})(data.title),
-                    })(
-                        Author({})(data.author),
-                        DateTime({ datetime: data.date })(),
-                        ...(data.tag || []).map((x) => ArticleTag({ slug: x })()),
-                        ShareX({ title: data.title, url: `http://localhost/posts/${slug}` })(),
-                    ),
-                    ArticleText({})(...child),
-                ),
-    );
+    return component(Article)(({ data, slug }) => (...child) => (
+        <Article>
+            <ArticleHeader title={<h2>{data.title}</h2>}>
+                <Author>{data.author}</Author>
+                <DateTime datetime={data.date} />
+                {...(data.tag || []).map((x) => <ArticleTag slug={x} key={x} />)}
+                <ShareX title={data.title} url={`http://localhost/posts/${slug}`} />
+            </ArticleHeader>
+            <ArticleText>{child}</ArticleText>
+        </Article>
+    ));
 }

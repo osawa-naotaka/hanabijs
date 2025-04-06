@@ -8,7 +8,7 @@ import {
     S_2XLARGE,
     TEXT_COLOR,
 } from "@/lib/stylerules";
-import { Em, component, element, registerComponent, style } from "@/main";
+import { component, element, registerComponent, style } from "@/main";
 import type { HArgument, HComponentFn, Store } from "@/main";
 
 export function hero(store: Store): HComponentFn<HArgument> {
@@ -23,5 +23,11 @@ export function hero(store: Store): HComponentFn<HArgument> {
 
     registerComponent(store, Hero, component_styles);
 
-    return component(Hero)(() => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE")));
+    return component(Hero)(() => () => (
+        <Hero>
+            <HeroText>
+                LULLIECA<em>T</em> IS <em>A</em>LIVE
+            </HeroText>
+        </Hero>
+    ));
 }

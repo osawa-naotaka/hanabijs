@@ -1,11 +1,11 @@
-import { A, Div, Li, as, component, createDom, element, hIcon, registerComponent, style } from "@/main";
+import { as, component, createDom, element, hIcon, registerComponent, style } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
     const Top = element("search");
     const SearchBar = element("search-bar");
     const Input = element("search-input", { tag: "input" });
-    const InputIcon = hIcon()({ type: "solid", name: "magnifying-glass" })();
+    const InputIcon = hIcon();
     const Result = element("search-result", { tag: "ul" });
 
     const component_sytles = [
@@ -18,13 +18,15 @@ export function search(store: Store): HComponentFn<HArgument> {
 
     registerComponent(store, Top, component_sytles, import.meta.path);
 
-    return component(Top)(
-        () => () =>
-            Top({})(
-                SearchBar({})(Input({ type: "search", placeholder: "SEARCH KEYWORDS" })(), InputIcon),
-                Result({})(),
-            ),
-    );
+    return component(Top)(() => () => (
+        <Top>
+            <SearchBar>
+                <Input type="search" placeholder="SEARCH KEYWORDS" />
+                <InputIcon type="solid" name="magnifying-glass" />
+            </SearchBar>
+            <Result />
+        </Top>
+    ));
 }
 
 import { StaticSeekError, createSearchFn } from "staticseek";
@@ -41,7 +43,7 @@ export default function clientFunction(store: Store): HClientFn {
         search_input_e.addEventListener("input", async () => {
             const results = await search_fn(search_input_e.value);
             if (results instanceof StaticSeekError) {
-                setChild(search_result_e, [Li({})(`search function internal errror: ${results}`)]);
+                setChild(search_result_e, [<li key="0">{`search function internal errror: ${results}`}</li>]);
             } else {
                 setChild(
                     search_result_e,
@@ -118,14 +120,18 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
 
     return component(Top)(({ result }) => () => {
         const key = v.parse(SearchKeySchema, result.key);
-        return Top({})(
-            Meta({})(
-                Div({})(key.data.author),
-                DateTime({ datetime: key.data.date })(),
-                ...(key.data.tag || []).map((x) => Tag({ slug: x })()),
-            ),
-            Title({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
-            Description({})(result.refs[0].wordaround || ""),
+        return (
+            <Top>
+                <Meta>
+                    <div>{key.data.author}</div>
+                    <DateTime datetime={key.data.date} />
+                    {...(key.data.tag || []).map((x) => <Tag slug={x} key={x} />)}
+                </Meta>
+                <Title>
+                    <a href={`/posts/${key.slug}`}>{key.data.title}</a>
+                </Title>
+                <Description>{result.refs[0].wordaround || ""}</Description>
+            </Top>
         );
     });
 }

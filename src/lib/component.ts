@@ -60,7 +60,8 @@ function addClassToHead<T extends { class?: string | string[] }>(
 
 // hanabi Component (is function)
 export type HComponentFn<T> = (argument: HComponentFnArg<T>) => (...child: HNode[]) => HNode;
-export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string };
+// biome-ignore lint: using any.
+export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string; children?: any; key?: any };
 
 // biome-ignore lint/suspicious/noExplicitAny: HAnyComponent uses only for function.name
 export type HAnyComponentFn = HComponentFn<any>;

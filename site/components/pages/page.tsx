@@ -1,5 +1,5 @@
 import { DEFAULT_STYLES, INIT_CSS } from "@/lib/stylerules";
-import { Body, Html, component, registerComponent } from "@/main";
+import { component, registerComponent } from "@/main";
 import type { HBrandIconName, HComponentFn, Store } from "@/main";
 import { pageHead } from "@site/components/pages/pageHead";
 import { pageFooter } from "@site/components/sections/pageFooter";
@@ -23,18 +23,16 @@ export function page(store: Store): HComponentFn<PageArgument> {
 
     const styles = [INIT_CSS, DEFAULT_STYLES(store)];
 
-    registerComponent(store, Html, styles);
+    registerComponent(store, "html", styles);
 
-    return component(Html)(
-        ({ lang, name, title, description, navitem }) =>
-            (...child) =>
-                Html({ lang })(
-                    PageHead({ title, description })(),
-                    Body({ id: "top-of-page" })(
-                        PageHeader({ title: name, navitem })(),
-                        ...child,
-                        PageFooter({ site_name: name })(),
-                    ),
-                ),
-    );
+    return component("html")(({ lang, name, title, description, navitem }) => (...child) => (
+        <html lang={lang}>
+            <PageHead title={title} description={description} />
+            <body>
+                <PageHeader title={name} navitem={navitem} />
+                {...child}
+                <PageFooter site_name={name} />
+            </body>
+        </html>
+    ));
 }

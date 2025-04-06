@@ -2,7 +2,7 @@ import type { HRootPageFn, Store } from "hanabijs";
 
 export default function Root(_store: Store): HRootPageFn<void> {
     return async () => (
-        <html>
+        <html lang="en-US">
             <body>
                 <h1>Hello World</h1>
                 <h1>Hello Again</h1>

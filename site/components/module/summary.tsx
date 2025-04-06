@@ -27,17 +27,19 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
 
     registerComponent(store, Summary, component_styles);
 
-    return component(Summary)(
-        ({ slug, data }) =>
-            () =>
-                Summary({})(
-                    ArticleHeader({
-                        title: HLink({ href: `/posts/${slug}` })(H2({})(data.title)),
-                    })(
-                        Author({})(data.author),
-                        DateTime({ datetime: data.date })(),
-                        ...(data.tag || []).map((s) => SummaryTag({ slug: s })()),
-                    ),
-                ),
-    );
+    return component(Summary)(({ slug, data }) => () => (
+        <Summary>
+            <ArticleHeader
+                title={
+                    <HLink href={`/posts/${slug}`}>
+                        <h2>{data.title}</h2>
+                    </HLink>
+                }
+            >
+                <Author>{data.author}</Author>
+                <DateTime datetime={data.date} />
+                {...(data.tag || []).map((x) => <SummaryTag slug={x} key={x} />)}
+            </ArticleHeader>
+        </Summary>
+    ));
 }

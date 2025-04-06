@@ -66,7 +66,7 @@ export async function createPageRouteTable(rootdir: string): Promise<RouteTable[
         }
     }
 
-    for (const file of await Array.fromAsync(globExt(rootdir, ".ts"))) {
+    for (const file of await Array.fromAsync(globExt(rootdir, ".{ts,tsx}"))) {
         const target_file = path.join("/", file);
         const path_without_ts = withoutExt(target_file);
         const path_without_ts_p = path.parse(path_without_ts);

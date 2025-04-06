@@ -5,17 +5,8 @@ import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
 import { summaries } from "@site/components/sections/summaries";
 import { navitem, postFmSchema, posts_dir, site } from "@site/config/site.config";
-import { tag_map } from "@site/config/site.config";
 
-type RootParameter = {
-    tag: string;
-};
-
-export function rootPageFnParameters(): RootParameter[] {
-    return Object.keys(tag_map).map((tag) => ({ tag }));
-}
-
-export default function Root(store: Store): HRootPageFn<RootParameter> {
+export default function Root(store: Store): HRootPageFn<void> {
     const Page = page(store);
     const PageMainArea = element("page-main-area", { tag: "main" });
     const Summaries = summaries(store);
@@ -24,15 +15,16 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
 
     registerRootPage(store, styles);
 
-    return async ({ tag }) => {
-        const md = (await getAllMarkdowns(posts_dir, postFmSchema)).filter((x) => x.data.tag?.includes(tag));
+    return async () => {
+        const posts = await getAllMarkdowns(posts_dir, postFmSchema);
+        const posts_sorted = posts.sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime());
 
-        return Page({
-            title: `${tag || ""} | ${site.name}`,
-            description: site.description,
-            lang: site.lang,
-            name: site.name,
-            navitem: navitem,
-        })(PageMainArea({})(Summaries({ posts: md })()));
+        return (
+            <Page title={site.name} description={site.description} lang={site.lang} name={site.name} navitem={navitem}>
+                <PageMainArea>
+                    <Summaries posts={posts_sorted} />
+                </PageMainArea>
+            </Page>
+        );
     };
 }

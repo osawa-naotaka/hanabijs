@@ -16,6 +16,6 @@ export function dateTime(): HComponentFn<DateTimeArgument> {
             day: "numeric",
         });
 
-        return DateTime({ datetime: date.toISOString() })(date_string);
+        return <DateTime datetime={date.toISOString()}>{date_string}</DateTime>;
     });
 }

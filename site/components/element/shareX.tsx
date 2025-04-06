@@ -1,5 +1,5 @@
 import { hIcon } from "@/lib/ui/icon";
-import { Span, component, element } from "@/main";
+import { component, element } from "@/main";
 import type { HComponentFn } from "@/main";
 
 export type ShareXArgument = {
@@ -9,10 +9,16 @@ export type ShareXArgument = {
 
 export function shareX(): HComponentFn<ShareXArgument> {
     const ShareX = element("share-x", { tag: "a" });
-    const XIcon = hIcon()({ type: "brands", name: "x-twitter" })();
+    const XIcon = hIcon(); //({ type: "brands", name: "x-twitter" })();
 
     return component(ShareX)(({ title, url }) => () => {
         const href = `https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
-        return ShareX({ href, target: "__blank" })(XIcon, Span({})("SHARE"));
+
+        return (
+            <ShareX href={href} target="__blank">
+                <XIcon type="brands" name="x-twitter" />
+                <span>SHARE</span>
+            </ShareX>
+        );
     });
 }

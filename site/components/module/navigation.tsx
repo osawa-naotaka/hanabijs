@@ -24,20 +24,18 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
 
     registerComponent(store, Top, component_styles);
 
-    return component(Top)(
-        ({ navitem }) =>
-            () =>
-                Top({})(
-                    List({})(
-                        Item({})(HLink({ href: "/posts" })("blog")),
-                        ...navitem.map((item) =>
-                            Item({})(
-                                HLink({ href: item.url, target: "__blank" })(
-                                    Icon({ type: "brands", name: item.icon })(),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-    );
+    return component(Top)(({ navitem }) => () => (
+        <Top>
+            <List>
+                <Item>
+                    <HLink href="/posts">blog</HLink>
+                </Item>
+                {...navitem.map((item) => (
+                    <HLink href={item.url} target="__blank" key={item.url}>
+                        <Icon type="brands" name={item.icon} />
+                    </HLink>
+                ))}
+            </List>
+        </Top>
+    ));
 }

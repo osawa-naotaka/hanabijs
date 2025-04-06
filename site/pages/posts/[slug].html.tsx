@@ -30,12 +30,21 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
         const md = await getMarkdown(posts_dir, slug, postFmSchema);
 
         const raw_html = await markdownToHtml(md.content);
-        return Page({
-            title: `${md.data.title || ""} | ${site.name}`,
-            description: site.description,
-            lang: site.lang,
-            name: site.name,
-            navitem: navitem,
-        })(PageMainArea({})(Article(md)(RawHTML({})(raw_html))));
+
+        return (
+            <Page
+                title={`${md.data.title || ""} | ${site.name}`}
+                description={site.description}
+                lang={site.lang}
+                name={site.name}
+                navitem={navitem}
+            >
+                <PageMainArea>
+                    <Article {...md}>
+                        <RawHTML>{raw_html}</RawHTML>
+                    </Article>
+                </PageMainArea>
+            </Page>
+        );
     };
 }
