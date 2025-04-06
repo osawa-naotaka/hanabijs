@@ -4,6 +4,20 @@
   "description": "lightweight static site generator for typescript",
   "type": "module",
   "main": "build/hanabi-lib.js",
+  "exports": {
+    ".": {
+      "require": "./build/hanabi-lib.js",
+      "types": "./build/hanabi-lib.d.ts"
+    },
+    "./jsx-runtime": {
+      "require": "./build/jsx-runtime/main.js",
+      "types": "./build/jsx-runtime/main.d.ts"
+    },
+    "./jsx-dev-runtime": {
+      "require": "./build/jsx-dev-runtime/main.js",
+      "types": "./build/jsx-dev-runtime/main.d.ts"
+    }
+  },
   "bin": {
     "hanabi": "build/hanabi.js"
   },
