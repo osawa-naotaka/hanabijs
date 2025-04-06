@@ -1,5 +1,5 @@
 import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "@/lib/stylerules";
-import { A, H2, as, component, element, registerComponent, style } from "@/main";
+import { H2, as, component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store, StyleRule } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
@@ -7,6 +7,7 @@ import { dateTime } from "../element/dateTime";
 import { tag } from "../element/tag";
 import type { Markdown } from "../library/post";
 import { articleHeader } from "./articleHeader";
+import { hlink } from "../element/hlink";
 
 export type SummaryArgument = Markdown<PostFm>;
 
@@ -16,6 +17,7 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
     const Author = element("author");
     const SummaryTag = as("summary-tag", tag());
     const DateTime = dateTime();
+    const HLink = hlink(store);
 
     const component_styles: (StyleRule | StyleRule[])[] = [
         style(Summary)(MARGIN_BLOCK(S_XLARGE(store))),
@@ -30,7 +32,7 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
             () =>
                 Summary({})(
                     ArticleHeader({
-                        title: A({ href: `/posts/${slug}` })(H2({})(data.title)),
+                        title: HLink({ href: `/posts/${slug}` })(H2({})(data.title)),
                     })(
                         Author({})(data.author),
                         DateTime({ datetime: data.date })(),

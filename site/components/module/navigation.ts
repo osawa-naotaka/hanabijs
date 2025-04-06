@@ -1,6 +1,7 @@
 import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "@/lib/stylerules";
-import { A, component, element, hIcon, registerComponent, style } from "@/main";
+import { component, element, hIcon, registerComponent, style } from "@/main";
 import type { HBrandIconName, HComponentFn, Store } from "@/main";
+import { hlink } from "../element/hlink";
 
 export type NavigationArgument = {
     navitem: {
@@ -14,6 +15,7 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
     const List = element("navigation-list", { tag: "ul" });
     const Item = element("navigation-list-item", { tag: "li" });
     const Icon = hIcon();
+    const HLink = hlink(store);
 
     const component_styles = [
         style(Top)(BOLD, FONT_SIZE(F_XLARGE(store))),
@@ -27,10 +29,10 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
             () =>
                 Top({})(
                     List({})(
-                        Item({})(A({ href: "/posts" })("blog")),
+                        Item({})(HLink({ href: "/posts" })("blog")),
                         ...navitem.map((item) =>
                             Item({})(
-                                A({ href: item.url, target: "__blank" })(Icon({ type: "brands", name: item.icon })()),
+                                HLink({ href: item.url, target: "__blank" })(Icon({ type: "brands", name: item.icon })()),
                             ),
                         ),
                     ),

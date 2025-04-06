@@ -123,9 +123,6 @@ export const DARKEST = (store: Store, kind: ColorKind) => MIX_BLACK(COLOROF(stor
 export const LIGHTER = (store: Store, kind: ColorKind) => MIX_WHITE(COLOROF(store, kind))(B_LIGHTER(store));
 export const LIGHTEST = (store: Store, kind: ColorKind) => MIX_WHITE(COLOROF(store, kind))(B_LIGHTEST(store));
 
-export const BG_DARKER = (store: Store) => MIX_BLACK(C_BG(store))(B_DARKER(store));
-export const BG_DARKEST = (store: Store) => MIX_BLACK(C_BG(store))(B_DARKEST(store));
-
 export type ColorKind =
     | "primary"
     | "secondary"
