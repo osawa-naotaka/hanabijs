@@ -2,12 +2,11 @@
 title: I Want to Search Even with Typos!
 author: producer
 date: 2025-03-03T00:00:00+09:00
-principalTag:
+tag:
     - techarticle
-associatedTags:
     - staticseek
 ---
-## Measure Before Optimizing
+### Measure Before Optimizing
 
 In our previous work, we achieved fast searching using inverted indexes for all languages representable in Unicode. That's great. Done.
 
@@ -24,7 +23,7 @@ This is sufficiently fast. Even if used on the UI thread, it won't freeze and us
 
 Therefore, there seems to be no reason to use an inverted index. Linear search is sufficient! 
 
-## Fuzzy Search, What I Wanted to Implement from the Beginning
+### Fuzzy Search, What I Wanted to Implement from the Beginning
 
 There's a search feature I wanted to implement from the beginning (truly, I'm serious): fuzzy search. I decided to implement it because it seems technically interesting.
 
@@ -34,7 +33,7 @@ In any case, it's technically interesting, so I'll document it here.
 
 While there are several definitions of fuzzy search, in this article I'll define it as enabling the search of misspelled words. For instance, I sometimes confuse 'r' and 'l' and input them incorrectly. It would be nice to be able to search for such errors as well.
 
-### Defining the Degree of Fuzziness
+#### Defining the Degree of Fuzziness
 
 Before implementing fuzzy search, we need to understand whether "fuzziness" can be expressed numerically. Since we're going to handle the concept of fuzziness in our program, we need to translate it into a concept that can be represented by specific numerical values.
 
@@ -52,7 +51,7 @@ With this definition of edit distance, fuzzy search can be achieved by "checking
 
 This is fundamentally the same as a simple linear search algorithm. The only difference is the use of edit distance in steps 2 and 3.
 
-### Method to Calculate Edit Distance Between Two Strings
+#### Method to Calculate Edit Distance Between Two Strings
 
 From the above explanation, we understand that if we can calculate the edit distance between two strings, we can perform fuzzy search. Next, I'll explain the algorithm to actually calculate edit distance.
 
@@ -60,7 +59,7 @@ To calculate the edit distance between two words, there's an algorithm using [dy
 
 We create a table with the search string on the horizontal axis and the search target on the vertical axis. Each cell in this table represents the distance between the words from the origin to the corresponding vertical and horizontal axes. We first enter the initial state in this table and then fill in the distances according to the rules. It's like solving a Sudoku puzzle, making inferences like "based on the values here and there, the edit distance here must be this." For more details, please refer to the Wikipedia explanation mentioned earlier. It's truly a brilliant algorithm and worth checking out.
 
-### A More Efficient Algorithm
+#### A More Efficient Algorithm
 
 The search algorithm described above is obviously computationally expensive. In particular, it seems inefficient to reinitialize the table and restart the search every time we advance the search target one character (T0, T1, etc.). In fact, by modifying an existing string search algorithm, there's an algorithm that can determine if there exists a string with an edit distance of n or less without reinitializing the intermediate table.
 
@@ -72,7 +71,7 @@ This can be extended to fuzzy search. We create separate state machines for each
 
 For more details on this algorithm, please refer to the Wikipedia link mentioned earlier. It's a very simple and elegant algorithm.
 
-### Implementation and Evaluation of the Bitap Algorithm
+#### Implementation and Evaluation of the Bitap Algorithm
 
 To evaluate anything, I needed to create a function that can perform some kind of fuzzy search, so I [implemented bitap straightforwardly](https://github.com/osawa-naotaka/staticseek/blob/56f3d95bd70a6c554d75bfedc01c04ed34dce8fc/ref/algo.ts#L172-L227).
 
@@ -91,7 +90,7 @@ We can see that fuzzy search is correctly performed for both English and Japanes
 
 Honestly, I'm concerned that implementing this as is might not be very useful due to the excessive increase in false positives. Moreover, the English bitap is particularly slow. Considering that it would run on environments with lower performance than our benchmark environment (I forgot to mention it's Chrome on a Core i5 13400F), we need a faster implementation.
 
-## English: Modifying Trie Search for Fuzzy Search Support
+### English: Modifying Trie Search for Fuzzy Search Support
 
 Since there's a prospect for speeding up English fuzzy search, I'll address this first. Previously, we achieved fast exact match and prefix match searches for English using word inverted indexes. The actual data structure of the inverted index used sorted arrays. However, we found that this data structure is time-consuming for fuzzy search as is. This is because fuzzy search requires executing bitap on all terms in the sorted array. Due to code modifications, there's no script to benchmark in the current repository, my apologies.
 
@@ -101,7 +100,7 @@ The figure below is an example of a trie. "tea," "ted," and "ten" share the same
 
 ![](https://upload.wikimedia.org/wikipedia/commons/b/be/Trie_example.svg)
 
-### Trie Construction and Exact Match Search
+#### Trie Construction and Exact Match Search
 
 The algorithms for constructing and searching a trie are similar. Here's the algorithm for constructing a trie. It's an old implementation and not very elegant, but please also refer to a [very simple implementation example](https://github.com/osawa-naotaka/staticseek/blob/56f3d95bd70a6c554d75bfedc01c04ed34dce8fc/ref/trie.ts#L12-L32).
 
@@ -124,7 +123,7 @@ The algorithm for searching for an exact match term is as follows. In reality, i
 
 Implementing prefix matching is also not difficult. You just need to return all the posting lists of nodes that can be reached from the node corresponding to the last character of the term towards leaves.
 
-### Fuzzy Search with Tries
+#### Fuzzy Search with Tries
 
 As shown, a trie can handle exact matches and prefix matches as is. To adapt a trie for fuzzy search, we need to search the trie.
 
@@ -132,7 +131,7 @@ In the algorithm for exact match searching described earlier, we used the remain
 
 In fuzzy search, in addition to the state of remaining characters of the term, we use the state of remaining edit distance. As long as the remaining edit distance is not 0, we generate all possible states when allowing a one-character edit, and explore all nodes corresponding to those states. The exploration is implemented very simply as a depth-first search. For details, please refer to the [implementation of the search function](https://github.com/osawa-naotaka/staticseek/blob/56f3d95bd70a6c554d75bfedc01c04ed34dce8fc/src/method/trieindex.ts#L132-L169).
 
-### Trie Implementation and Evaluation
+#### Trie Implementation and Evaluation
 
 Below is the benchmark with the trie added to the previously mentioned benchmarks.
 
@@ -146,7 +145,7 @@ The index creation time has tripled. In exchange, the search time is 250 times f
 
 While the issue of false positives remains, since the search performance itself has achieved the goal, I decided to adopt this implementation.
 
-## How to Implement Fuzzy Search with Japanese Bigram Inverted Index?
+### How to Implement Fuzzy Search with Japanese Bigram Inverted Index?
 
 Now, for the problematic fuzzy search using Japanese bigram inverted index. I didn't have many good ideas. For now, I enabled fuzzy search by relaxing the search condition of matching all terms after dividing into bigrams.
 
@@ -176,6 +175,6 @@ This isn't particularly difficult, so I [implemented it as is](https://github.co
 
 As I had imagined, false positives have exploded. They're 1.6 times the number of matches. Honestly, I question whether this is usable. The search time itself has been accelerated, achieving a 20-fold speedup compared to bitap. While I have many concerns, I'll conclude with this method for now.
 
-## Conclusion
+### Conclusion
 
 Fuzzy search, I still feel it might not be very useful. It introduces too much search noise. For English, since there's no IME equivalent and typos are more likely to occur, it could be beneficial for English searches. For Japanese, it's questionable.

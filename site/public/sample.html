@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semantic UI Mini - 使用例</title>
+  <link rel="stylesheet" href="/sample.css">
+  <style>
+    /* サイト固有のスタイル */
+    body {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+    
+    /* カスタムカラー変数の上書き例 */
+    :root {
+      --primary-color: #3f51b5; /* インディゴ */
+      --accent-color: #ff4081; /* ピンク */
+    }
+  </style>
+</head>
+<body>
+  <!-- コンテナ -->
+  <div class="ui container">
+    <!-- ヘッダー -->
+    <h1 class="ui dividing header">Semantic UI Mini</h1>
+    <p>静的サイトジェネレータ向けのシンプルなUIコンポーネント</p>
+
+    <!-- メニュー -->
+    <div class="ui secondary menu">
+      <a class="active item">ホーム</a>
+      <a class="item">機能</a>
+      <a class="item">ドキュメント</a>
+      <a class="item">お問い合わせ</a>
+    </div>
+
+    <!-- メッセージ -->
+    <div class="ui info message">
+      <div class="header">お知らせ</div>
+      <p>このページはSemantic UI Miniの使用例を示しています。</p>
+    </div>
+
+    <!-- グリッド -->
+    <div class="ui grid">
+      <div class="row">
+        <div class="eight wide column">
+          <!-- セグメント -->
+          <div class="ui segment">
+            <h3 class="ui header">シンプルなデザイン</h3>
+            <p>必要最低限のコンポーネントとスタイルだけを含み、サイトの構築を簡単に行えます。</p>
+            <button class="ui button">詳細を見る</button>
+          </div>
+        </div>
+        <div class="eight wide column">
+          <!-- セグメント -->
+          <div class="ui segment">
+            <h3 class="ui header">カスタマイズ可能</h3>
+            <p>CSS変数を使って色やサイズを簡単にカスタマイズできます。</p>
+            <button class="ui primary button">カスタマイズ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- カード -->
+    <h2 class="ui header">コンポーネント例</h2>
+    <div class="ui cards">
+      <div class="card">
+        <div class="content">
+          <div class="header">ボタン</div>
+          <div class="description">
+            <p>様々なスタイルのボタンが利用可能です</p>
+            <button class="ui button">標準</button>
+            <button class="ui primary button">プライマリ</button>
+            <button class="ui secondary button">セカンダリ</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="content">
+          <div class="header">フォーム</div>
+          <div class="description">
+            <div class="ui form">
+              <div class="field">
+                <label>名前</label>
+                <input type="text" placeholder="お名前">
+              </div>
+              <button class="ui button">送信</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="content">
+          <div class="header">メッセージ</div>
+          <div class="description">
+            <div class="ui success message">
+              <div class="header">成功</div>
+              <p>操作が完了しました</p>
+            </div>
+            <div class="ui error message">
+              <div class="header">エラー</div>
+              <p>問題が発生しました</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- テーブル -->
+    <h3 class="ui header">テーブル</h3>
+    <table class="ui table">
+      <thead>
+        <tr>
+          <th>名前</th>
+          <th>説明</th>
+          <th>ステータス</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ボタン</td>
+          <td>クリック可能なUI要素</td>
+          <td><div class="ui primary label">完了</div></td>
+        </tr>
+        <tr>
+          <td>メニュー</td>
+          <td>ナビゲーション要素</td>
+          <td><div class="ui primary label">完了</div></td>
+        </tr>
+        <tr>
+          <td>フォーム</td>
+          <td>ユーザー入力を受け付ける</td>
+          <td><div class="ui primary label">完了</div></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- フッター -->
+    <div class="ui segment center aligned">
+      <p>Semantic UI Mini &copy; 2025</p>
+    </div>
+  </div>
+</body>
+</html>

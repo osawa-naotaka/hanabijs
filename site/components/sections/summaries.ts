@@ -1,5 +1,5 @@
-import { registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import { component, element } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import type { Markdown } from "../library/post";
 import { summary } from "../module/summary";
@@ -8,14 +8,13 @@ export type SummariesArgument = {
     posts: Markdown<PostFm>[];
 };
 
-export function summaries(repo: Repository): HComponentFn<SummariesArgument> {
-    registerComponent(repo, "summaries", [style("&", {})]);
+export function summaries(store: Store): HComponentFn<SummariesArgument> {
+    const Summaries = element("summaries", { tag: "section" });
+    const Summary = summary(store);
 
-    const Summaries = semantic("summaries", { tag: "section", class_names: ["content"] });
-    const SummariesList = semantic("summaries-list", { tag: "ul" });
-    const Summary = summary(repo);
-
-    return (argument) => () => {
-        return Summaries({ class: argument.class })(SummariesList({})(...argument.posts.map((x) => Summary(x)())));
-    };
+    return component(Summaries)(
+        ({ posts }) =>
+            () =>
+                Summaries({})(...posts.map((post) => Summary(post)())),
+    );
 }

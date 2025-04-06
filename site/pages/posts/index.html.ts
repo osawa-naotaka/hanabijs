@@ -1,14 +1,19 @@
-import { A, semantic } from "@/main";
-import type { HRootPageFn, Repository } from "@/main";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
+import { element, registerRootPage, style } from "@/main";
+import type { HRootPageFn, Store } from "@/main";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
+import { summaries } from "@site/components/sections/summaries";
 import { navitem, postFmSchema, posts_dir, site } from "@site/config/site.config";
 
-export default function Root(repo: Repository): HRootPageFn<void> {
-    const Page = page(repo);
-    const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
-    const ArticleList = semantic("article-list", { class_names: ["content"], tag: "ul" });
-    const ArticleListItem = semantic("article-list-item", { tag: "li" });
+export default function Root(store: Store): HRootPageFn<void> {
+    const Page = page(store);
+    const PageMainArea = element("page-main-area", { tag: "main" });
+    const Summaries = summaries(store);
+
+    const styles = [style(PageMainArea)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
+
+    registerRootPage(store, styles);
 
     return async () => {
         const posts = await getAllMarkdowns(posts_dir, postFmSchema);
@@ -20,12 +25,6 @@ export default function Root(repo: Repository): HRootPageFn<void> {
             lang: site.lang,
             name: site.name,
             navitem: navitem,
-        })(
-            PageMainArea({})(
-                ArticleList({})(
-                    ...posts_sorted.map((x) => ArticleListItem({})(A({ href: `/posts/${x.slug}` })(x.data.title))),
-                ),
-            ),
-        );
+        })(PageMainArea({})(Summaries({ posts: posts_sorted })()));
     };
 }

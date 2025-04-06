@@ -1,36 +1,36 @@
-import { registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
-import { appearence } from "@site/config/site.config";
+import {
+    ABSOLUTE_ANCHOR,
+    BG_COLOR,
+    C_BG,
+    C_TEXT,
+    DEFAULT_COLUMN,
+    FIX_BOTTOM,
+    TEXT_ALIGN_CENTER,
+    TEXT_COLOR,
+} from "@/lib/stylerules";
+import { component, element, registerComponent, style } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 
 export type PageFooterArgument = {
     site_name: string;
 };
 
-export function pageFooter(repo: Repository): HComponentFn<PageFooterArgument> {
-    registerComponent(repo, "page-footer", [
-        style("&", {
-            position: "fixed",
-            bottom: "0",
-            left: "0",
-            width: "100%",
-            background_color: appearence.color.main,
-            color: appearence.color.background,
-        }),
-        style(".page-footer-content", {
-            position: "relative",
-            max_width: appearence.layout.content_width,
-            margin_inline: "auto",
-        }),
-        style(".page-footer-copyright", {
-            text_align: "center",
-        }),
-    ]);
+export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
+    const PageFooter = element("page-footer", { tag: "footer" });
+    const Content = element("page-footer-content");
+    const Copyright = element("page-footer-copyright");
 
-    const PageFooter = semantic("page-footer", { tag: "footer" });
-    const PageFooterContent = semantic("page-footer-content");
-    const PageFooterCopyright = semantic("page-footer-copyright");
+    const component_styles = [
+        style(PageFooter)(FIX_BOTTOM, TEXT_COLOR(C_BG(store)), BG_COLOR(C_TEXT(store))),
+        style(Content)(DEFAULT_COLUMN(store), ABSOLUTE_ANCHOR),
+        style(Copyright)(TEXT_ALIGN_CENTER),
+    ];
 
-    return ({ site_name }) =>
-        () =>
-            PageFooter({})(PageFooterContent({})(), PageFooterCopyright({})(`&copy; 2025 ${site_name}`));
+    registerComponent(store, PageFooter, component_styles);
+
+    return component(PageFooter)(
+        ({ site_name }) =>
+            () =>
+                PageFooter({})(Content({})(), Copyright({})(`© 2025 ${site_name}`)),
+    );
 }

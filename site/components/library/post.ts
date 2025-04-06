@@ -2,9 +2,9 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import { globExt } from "@/main";
-import { v } from "@/main";
 import { posts_dir } from "@site/config/site.config";
 import matter from "gray-matter";
+import * as v from "valibot";
 
 export type Markdown<T> = {
     slug: string;

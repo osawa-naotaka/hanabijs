@@ -1,6 +1,22 @@
-import { compoundStyle, layout, registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, HNode, Repository } from "@/main";
-import { appearence } from "@site/config/site.config";
+import {
+    BG_COLOR,
+    BORDER_NONE,
+    CURSOR,
+    C_BG,
+    DEFAULT_COLUMN,
+    DEFAULT_RESPONSIVE_PAGE_WIDTH,
+    DEFAULT_ROW,
+    DISPLAY,
+    FLEX_END,
+    FULL_WIDTH_HEIGHT,
+    MARGIN_BLOCK,
+    OPACITY,
+    PADDING_BLOCK,
+    S_MEDIUM,
+    TRANSITION,
+} from "@/lib/stylerules";
+import { atStyle, component, element, registerComponent, style } from "@/main";
+import type { HComponentFn, HNode, Store } from "@/main";
 
 export type PopoverArgument = {
     open_button: HNode;
@@ -8,54 +24,42 @@ export type PopoverArgument = {
     body: HNode;
 };
 
-export function popover(repo: Repository, button_id: string): HComponentFn<PopoverArgument> {
-    registerComponent(repo, "popover", [
-        style("&", {
-            display: "flex",
-            align_items: "center",
-        }),
-        style(".popover-container", {
-            width: "100%",
-            height: "100svh",
-            padding_block: "1rem",
-            background_color: appearence.color.background,
-            border: ["0px", "none"],
-            display: "none",
-            opacity: "0",
-            transition: ["all", "0.25s", "allow-discrete"],
-        }),
-        compoundStyle([[".popover-container", ":popover-open"]], {
-            display: "flex",
-            opacity: "1",
-        }),
-        style(".popover-button", {
-            border: ["0px", "none"],
-            background: "none",
-            cursor: "pointer",
-        }),
-        style(".popover-close-area", {
-            display: "flex",
-            justify_content: "flex-end",
-            margin_block_end: "1rem",
-        }),
-    ]);
+export function popover(store: Store, button_id: string): HComponentFn<PopoverArgument> {
+    const Top = element("popover");
+    const Button = element("popover-button", { tag: "button" });
+    const CloseArea = element("popover-close-area");
+    const Container = element("popover-container");
+    const Content = element("popover-content");
 
-    const Popover = semantic("popover");
-    const PopoverButton = semantic("popover-button", { tag: "button" });
-    const PopoverCloseArea = layout("popover-close-area");
-    const PopoverContainer = layout("popover-container", { class_names: ["container"] });
-    const PopoverContent = layout("popover-content", { class_names: ["content"] });
+    const styles = [
+        style(Container)(
+            PADDING_BLOCK(S_MEDIUM(store)),
+            FULL_WIDTH_HEIGHT,
+            BG_COLOR(C_BG(store)),
+            BORDER_NONE,
+            OPACITY("0"),
+            DISPLAY("none"),
+            TRANSITION("all", "0.25s", "allow-discrete"),
+        ),
+        style([Container, ":popover-open"])(DEFAULT_COLUMN(store), OPACITY("1")),
+        atStyle(["@layer", "high"], ["@starting-style"])([Container, ":popover-open"])(OPACITY("0")),
+        style(Content)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(Button)(BORDER_NONE, CURSOR("pointer")),
+        style(CloseArea)(MARGIN_BLOCK("0", S_MEDIUM(store)), DEFAULT_ROW(store), FLEX_END),
+    ];
 
-    return (argument) => () =>
-        Popover({ class: argument.class })(
-            PopoverButton({ type: "button", popovertarget: button_id })(argument.open_button),
-            PopoverContainer({ popover: "", id: button_id })(
-                PopoverContent({})(
-                    PopoverCloseArea({})(
-                        PopoverButton({ type: "button", popovertarget: button_id })(argument.close_button),
+    registerComponent(store, Top, styles);
+
+    return component(Top)(
+        (argument) => () =>
+            Top({})(
+                Button({ type: "button", popovertarget: button_id })(argument.open_button),
+                Container({ popover: null, id: button_id })(
+                    Content({})(
+                        CloseArea({})(Button({ type: "button", popovertarget: button_id })(argument.close_button)),
+                        argument.body,
                     ),
-                    argument.body,
                 ),
             ),
-        );
+    );
 }

@@ -1,41 +1,43 @@
-import { A, registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
-import { svgIcon } from "@site/components/element/svgIcon";
+import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "@/lib/stylerules";
+import { component, element, hIcon, registerComponent, style } from "@/main";
+import type { HBrandIconName, HComponentFn, Store } from "@/main";
+import { hlink } from "../element/hlink";
 
 export type NavigationArgument = {
     navitem: {
         url: string;
-        icon: string;
+        icon: HBrandIconName;
     }[];
 };
 
-export function navigation(repo: Repository): HComponentFn<NavigationArgument> {
-    registerComponent(repo, "navigation", [
-        style("&", {
-            font_weight: "bold",
-            font_size: "1.4rem",
-        }),
-        style(".navigation-list", {
-            display: "flex",
-            justify_content: "center",
-            align_items: "center",
-            list_style_type: "none",
-            gap: "2rem",
-        }),
-    ]);
+export function navigation(store: Store): HComponentFn<NavigationArgument> {
+    const Top = element("navigation", { tag: "nav" });
+    const List = element("navigation-list", { tag: "ul" });
+    const Item = element("navigation-list-item", { tag: "li" });
+    const Icon = hIcon();
+    const HLink = hlink(store);
 
-    const Navigation = semantic("navigation", { tag: "nav" });
-    const NavigationList = semantic("navigation-list", { tag: "ul" });
-    const NavigationListItem = semantic("navigation-list-item", { tag: "li" });
+    const component_styles = [
+        style(Top)(BOLD, FONT_SIZE(F_XLARGE(store))),
+        style(List)(ROW(S_XLARGE(store)), JUSTIFY_CENTER),
+    ];
 
-    const SvgIcon = svgIcon(repo);
-    return (argument) => () =>
-        Navigation({ class: argument.class })(
-            NavigationList({})(
-                NavigationListItem({})(A({ href: "/posts" })("blog")),
-                ...argument.navitem.map((item) =>
-                    NavigationListItem({})(A({ href: item.url, target: "__blank" })(SvgIcon({ name: item.icon })())),
+    registerComponent(store, Top, component_styles);
+
+    return component(Top)(
+        ({ navitem }) =>
+            () =>
+                Top({})(
+                    List({})(
+                        Item({})(HLink({ href: "/posts" })("blog")),
+                        ...navitem.map((item) =>
+                            Item({})(
+                                HLink({ href: item.url, target: "__blank" })(
+                                    Icon({ type: "brands", name: item.icon })(),
+                                ),
+                            ),
+                        ),
+                    ),
                 ),
-            ),
-        );
+    );
 }

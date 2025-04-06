@@ -1,5 +1,16 @@
-import { Input, Label, compoundStyle, layout, registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, HNode, Repository } from "@/main";
+import {
+    CURSOR,
+    DEFAULT_ROW,
+    DISPLAY,
+    HEIGHT,
+    SPACE_BETWEEN,
+    TRANSITION,
+    component,
+    element,
+    registerComponent,
+    style,
+} from "@/main";
+import type { HComponentFn, HNode, Store } from "@/main";
 
 export type DrawerArgument = {
     title: HNode;
@@ -8,42 +19,38 @@ export type DrawerArgument = {
     content: HNode;
 };
 
-export function drawer(repo: Repository, button_id: string): HComponentFn<DrawerArgument> {
-    registerComponent(repo, "drawer", [
-        style("&", { overflow: "hidden" }),
-        style(".drawer-title", {
-            display: "flex",
-            justify_content: "space-between",
-            align_items: "center",
-        }),
-        style(".drawer-header-space", {
-            display: "flex",
-            gap: "1rem",
-            align_items: "center",
-        }),
-        style(".drawer-open-state", { display: "none" }),
-        style(".drawer-open-button", { cursor: "pointer" }),
-        style(".drawer-content", { height: "0", transition: ["height", "0.25s"] }),
-        compoundStyle([[`#${button_id}`, ":checked"], "~", ".drawer-content"], {
-            height: "calc-size(fit-content, size)",
-        }),
-    ]);
+export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgument> {
+    const Drawer = element("drawer");
+    const DrawerTitle = element("drawer-title");
+    const DrawerHeaderSpace = element("drawer-header-space");
+    const DrawerContent = element("drawer-content");
+    const DrawerOpenState = element("drawer-open-state", { tag: "input" });
+    const DrawerOpenButton = element("drawer-open-button", { tag: "label" });
 
-    const Drawer = semantic("drawer");
-    const DrawerTitle = semantic("drawer-title");
-    const DrawerHeaderSpace = layout("drawer-header-space");
-    const DrawerContent = layout("drawer-content");
+    const styles = [
+        style(Drawer)({ overflow: "hidden" }),
+        style(DrawerTitle)(DEFAULT_ROW(store), SPACE_BETWEEN),
+        style(DrawerHeaderSpace)(DEFAULT_ROW(store)),
+        style(DrawerOpenState)(DISPLAY("none")),
+        style(DrawerOpenButton)(CURSOR("pointer")),
+        style(DrawerContent)(HEIGHT("0"), TRANSITION("height", "0.25s")),
+        style([`#${button_id}`, ":checked"], "~", DrawerContent)(HEIGHT("calc-size(fit-content, size)")),
+    ];
 
-    return (argument) => () =>
-        Drawer({ class: argument.class })(
-            Input({ class: "drawer-open-state", type: "checkbox", id: button_id })(),
-            DrawerTitle({})(
-                argument.title,
-                DrawerHeaderSpace({})(
-                    argument.header_space,
-                    Label({ class: "drawer-open-button", for: button_id })(argument.open_button),
+    registerComponent(store, Drawer, styles);
+
+    return component(Drawer)(
+        (argument) => () =>
+            Drawer({})(
+                DrawerOpenState({ type: "checkbox", id: button_id })(),
+                DrawerTitle({})(
+                    argument.title,
+                    DrawerHeaderSpace({})(
+                        argument.header_space,
+                        DrawerOpenButton({ for: button_id })(argument.open_button),
+                    ),
                 ),
+                DrawerContent({})(argument.content),
             ),
-            DrawerContent({})(argument.content),
-        );
+    );
 }

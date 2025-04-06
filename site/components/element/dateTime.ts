@@ -1,28 +1,21 @@
-import { registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
+import { component, element } from "@/main";
+import type { HComponentFn } from "@/main";
 
 export type DateTimeArgument = {
     datetime: string | Date;
+    lang?: string;
 };
 
-export function dateTime(repo: Repository): HComponentFn<DateTimeArgument> {
-    registerComponent(repo, "date-time", [
-        style("&", {
-            display: "block",
-        }),
-    ]);
+export function dateTime(): HComponentFn<DateTimeArgument> {
+    const DateTime = element("date-time", { tag: "time" });
+    return component(DateTime)(({ datetime, lang = "en-us" }) => () => {
+        const date = datetime instanceof Date ? datetime : new Date(datetime);
+        const date_string = date.toLocaleDateString(lang, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
 
-    const DateTime = semantic("date-time", { tag: "time" });
-
-    return ({ datetime }) =>
-        () => {
-            const date = datetime instanceof Date ? datetime : new Date(datetime);
-            const date_string = date.toLocaleDateString("ja-jp", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-            });
-
-            return DateTime({ datetime: date.toISOString() })(date_string);
-        };
+        return DateTime({ datetime: date.toISOString() })(date_string);
+    });
 }

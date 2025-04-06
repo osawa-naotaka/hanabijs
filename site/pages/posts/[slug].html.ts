@@ -1,12 +1,12 @@
 import path from "node:path";
 import { markdownToHtml } from "@/lib/markdown";
-import { RawHTML, registerComponent, semantic, style } from "@/main";
-import type { HRootPageFn, Repository } from "@/main";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH, MARGIN_BLOCK, S_2XLARGE } from "@/lib/stylerules";
+import { RawHTML, element, registerRootPage, style } from "@/main";
+import type { HRootPageFn, Store } from "@/main";
 import { getMarkdown, listFiles } from "@site/components/library/post";
 import { article } from "@site/components/module/article";
 import { page } from "@site/components/pages/page";
 import { navitem, posts_dir, site } from "@site/config/site.config";
-import { appearence } from "@site/config/site.config";
 import { postFmSchema } from "@site/config/site.config";
 
 type RootParameter = {
@@ -17,20 +17,17 @@ export async function rootPageFnParameters(): Promise<RootParameter[]> {
     return (await listFiles(posts_dir, ".md")).map((y) => ({ slug: path.basename(y, ".md") }));
 }
 
-export default function Root(repo: Repository): HRootPageFn<RootParameter> {
-    registerComponent(repo, "root", [
-        style("page-main-area", {
-            margin_block_end: appearence.layout.space_block_large,
-        }),
-    ]);
+export default function Root(store: Store): HRootPageFn<RootParameter> {
+    const Page = page(store);
+    const PageMainArea = element("page-main-area", { tag: "main" });
+    const Article = article(store);
 
-    const Page = page(repo);
-    const PageMainArea = semantic("page-main-area", { class_names: ["container"], tag: "main" });
-    const PageSection = semantic("page-section", { class_names: ["section", "content"], tag: "section" });
-    const Article = article(repo);
+    const styles = [style(PageMainArea)(MARGIN_BLOCK("0", S_2XLARGE(store)), DEFAULT_RESPONSIVE_PAGE_WIDTH(store))];
 
-    return async (argument) => {
-        const md = await getMarkdown(posts_dir, argument.slug, postFmSchema);
+    registerRootPage(store, styles);
+
+    return async ({ slug }) => {
+        const md = await getMarkdown(posts_dir, slug, postFmSchema);
 
         const raw_html = await markdownToHtml(md.content);
         return Page({
@@ -39,6 +36,6 @@ export default function Root(repo: Repository): HRootPageFn<RootParameter> {
             lang: site.lang,
             name: site.name,
             navitem: navitem,
-        })(PageMainArea({})(PageSection({})(Article(md)(RawHTML({})(raw_html)))));
+        })(PageMainArea({})(Article(md)(RawHTML({})(raw_html))));
     };
 }

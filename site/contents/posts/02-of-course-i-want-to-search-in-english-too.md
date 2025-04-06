@@ -2,12 +2,11 @@
 title: Of Course I Want to Search in English Too!
 author: producer
 date: 2025-03-02T00:00:00+09:00
-principalTag:
+tag:
     - techarticle
-associatedTags:
     - staticseek
 ---
-## Are character 2-grams ineffective in English?
+### Are character 2-grams ineffective in English?
 
 I previously evaluated the character n-gram inverted index using a Japanese dataset. Since the library I'm developing aims to be language-independent, I decided to evaluate it with an English dataset as well.
 
@@ -31,11 +30,11 @@ This reveals that Japanese and English require different search algorithms. At t
 
 Additionally, the English benchmark is an order of magnitude slower than the Japanese benchmark. The reason for this is not immediately clear. The total number of hits (matches plus false positives) is seven times higher than in Japanese, which might explain the difference.
 
-## Adopting Different Strategies for Japanese and English
+### Adopting Different Strategies for Japanese and English
 
 Having decided to implement different strategies based on language, I first created a function to separate and organize text by language. It [divides text by removing whitespace and special characters as delimiters](https://github.com/osawa-naotaka/staticseek/blob/56f3d95bd70a6c554d75bfedc01c04ed34dce8fc/src/util/preprocess.ts#L24-L29), then [checks character codes to split at the boundaries between English and Japanese](https://github.com/osawa-naotaka/staticseek/blob/56f3d95bd70a6c554d75bfedc01c04ed34dce8fc/src/util/preprocess.ts#L31-L102). In practice, languages are classified into two types: "languages where word segmentation is difficult" and "languages where words can be extracted using spaces." Text fragments are stored in separate indices based on this classification. Search queries are processed through the same function, with searches conducted separately and then intersected to produce the final results.
 
-### Digression: Character Segmentation at the Grapheme Level
+#### Digression: Character Segmentation at the Grapheme Level
 
 In the aforementioned function, I use a [segmenter](https://github.com/osawa-naotaka/staticseek/blob/56f3d95bd70a6c554d75bfedc01c04ed34dce8fc/src/util/preprocess.ts#L80) to extract individual characters from a `string`. But what exactly constitutes a single character?
 
@@ -45,7 +44,7 @@ In Unicode, however, what we perceive as a "single character" can sometimes be c
 
 [Staticseek](https://staticseek.lulliecat.com/) treats grapheme units as individual characters, extracts the first code point of each grapheme as a representative character, and performs searches accordingly. This enables stable search capabilities across all languages.
 
-### Digression: Text Preprocessing
+#### Digression: Text Preprocessing
 
 [Staticseek](https://staticseek.lulliecat.com/) performs several preprocessing operations on text. During grapheme-level character segmentation, it also removes special characters (symbols, punctuation, etc.). This can also be considered a form of preprocessing.
 
@@ -59,7 +58,7 @@ Although these are relatively simple measures, they contribute to search stabili
 
 Incidentally, I have not implemented stopword removal or stemming due to the language-neutral approach (this is not merely an excuse).
 
-## Adopting Japanese n-gram and English Word Inverted Indices
+### Adopting Japanese n-gram and English Word Inverted Indices
 
 Having separated indices for English and Japanese, I decided to implement a standard word-based inverted index for English. The word inverted index is implemented as a sorted array. To support both exact matches and prefix searches, I modified the binary search algorithm for the inverted index to return ranges of arrays that match prefixes. For details on the algorithm, please refer to the implementation of the [refine() function](https://github.com/osawa-naotaka/staticseek/blob/56f3d95bd70a6c554d75bfedc01c04ed34dce8fc/ref/algo.ts#L118-L170). Benchmarks can be run using the [same benchmark execution script as before](https://github.com/osawa-naotaka/staticseek/blob/main/ref/bench/benchmark_ngram.ts). The dataset content is identical to what was used previously.
 

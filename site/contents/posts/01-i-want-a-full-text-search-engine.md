@@ -2,16 +2,15 @@
 title: I Want a Full-Text Search Engine!
 author: producer
 date: 2025-03-01T00:00:00+09:00
-principalTag:
+tag:
     - techarticle
-associatedTags:
     - staticseek
 ---
 
 In this article, I will explain the reasons and methods that led me to create a full-text search engine. I will also explain one of the components of the search engine. The project mentioned in the title is published as a website. Please take a look. Unfortunately, the site does not yet support Japanese...
 https://staticseek.lulliecat.com/
 
-## Introduction - I Want a Full-Text Search Engine!
+### Introduction - I Want a Full-Text Search Engine!
 
 Are you managing a website? I started one out of necessity. Initially, I reluctantly began with WordPress, but after being influenced by technically-minded internet enthusiasts, I rebuilt my website from scratch. I found this technically engaging and continued the construction bit by bit, despite it becoming somewhat of a detour from my original purpose.
 
@@ -35,7 +34,7 @@ However, there are limitations to what can be achieved. I began to feel that I h
 
 My site is primarily a brand site, but it also includes a blog, so aesthetically, a search box would be beneficial. Although this is a feature I rarely use when visiting other people's sites (making me question its necessity), my motivation was purely technical. Also, I thought it might be convenient to have search functionality if I list products on the website in the future.
 
-## There Are Few Full-Text Search Engines That Support Japanese!
+### There Are Few Full-Text Search Engines That Support Japanese!
 
 The introduction has become quite lengthy. Now for the main topic. Regarding the following topics, Lambda Note has published a book titled [Search Systems - Development Improvement Guide for Practitioners](https://www.lambdanote.com/products/ir-system-ebook?variant=42155477598377), which is very helpful. Those interested should consider reading it.
 
@@ -65,11 +64,11 @@ For example, if we managed to create an index for Japanese using a large word se
 
 Incidentally, in English and similar languages, word normalization is performed to increase hit rates, known as stemming. Other techniques include removing common meaningless words (stop words) like "a" and "the."
 
-## If It Doesn't Exist, I'll Create It! N-gram Inverted Index!
+### If It Doesn't Exist, I'll Create It! N-gram Inverted Index!
 
 Since I couldn't find a full-text search engine supporting Japanese, I decided to create one, but I had an algorithmic approach in mind. If inferring word boundaries is impractical, we can mechanically divide text into segments of 2 characters, 3 characters, etc. This approach is called [character n-gram](https://en.wikipedia.org/wiki/N-gram). It seems to be a standard technique when word segmentation is not possible. Despite being a standard technique, European users are satisfied with space-based word segmentation, so there are very few full-text search engines using n-grams. I searched extensively... that's unfortunate...
 
-### How to Create a Bigram Inverted Index
+#### How to Create a Bigram Inverted Index
 
 I'll explain the actual steps for creating a character n-gram inverted index and using it for searches. The creation of the inverted index is identical to the procedure I explained earlier, just using character n-grams for word segmentation. However, there's one important point when creating n-grams. For example, when dividing text using 2-grams (bigrams, dividing text into 2-character units), we create bigrams by sliding a 2-character window one character at a time.
 
@@ -105,7 +104,7 @@ Let me briefly digress. Does "京都" exist in the above text? Yes, it does. But
 
 This would be a false positive from the perspective of the search intent (unwanted texts appearing in search results). This false positive also occurs with linear search, and in the current environment without word segmentation, there's no simple solution. Therefore, we accept these false positives.
 
-### How to Search Using a Bigram Inverted Index
+#### How to Search Using a Bigram Inverted Index
 
 Searching involves simply converting the search string into bigrams and looking them up in the bigram inverted index. Here, based on the basic method, character overlap isn't necessary. For example, if the search string is also "東京都渋谷区", it would be divided into these terms:
 
@@ -117,7 +116,7 @@ All of these are included in the bigram inverted index we created. Then, we find
 
 Incidentally, with bigram inverted indices, if the search string length is odd, the last character is duplicated. To search for "東京都", we use ["東京", "京都"]. For other n-gram lengths, if the search string length isn't a multiple of n, the last part is similarly duplicated.
 
-### When the Search String Length is Shorter Than the Character N-gram's N
+#### When the Search String Length is Shorter Than the Character N-gram's N
 
 Let's discuss a detailed point. How do we search for a single character like "都" using a character bigram index? The character bigram index doesn't contain single-character terms, making it impossible to search if the index is implemented as a hash. This would result in false negatives. To enable searching, one of the following approaches must be taken:
 
@@ -136,7 +135,7 @@ Incidentally, for even finer details, with approach 2, searching for "区" isn't
 ["東京", "京都", "都渋", "渋谷", "谷区", "区"]
 ```
 
-### Persistent False Positives
+#### Persistent False Positives
 
 The algorithms discussed so far have largely eliminated false negatives. However, false positives still occur due to the index structure. This structure identifies whether individual terms belong to a document but doesn't indicate whether terms appear consecutively. For instance, when searching for "東京都", if "東京" and "京都" exist in distant positions, that document would still match. This frequently occurs when n-gram divisions coincidentally form words with different meanings. This is an unavoidable structural false positive with the current index.
 
@@ -156,7 +155,7 @@ In this case, information about the continuity between "東京都" and "渋谷�
 
 Terms like "京都渋" or "都渋谷" rarely appear in normal text. By leveraging this, we can confirm that "東京都" and "渋谷区" appear consecutively in the text.
 
-### Creating Bigram Inverted Index Functions and Benchmarking
+#### Creating Bigram Inverted Index Functions and Benchmarking
 
 With the algorithm direction established, I needed to determine the specific value of n and evaluate whether the performance and index size would be satisfactory with either of the two algorithm proposals for cases where search string length is less than n. I began implementation.
 
@@ -188,7 +187,7 @@ In summary, if we increase n, it should be to 4 at most. However, since index si
 
 However, regarding point 3, there might be issues with my dataset selection, possibly due to a lack of longer search keyword data. So please take this with a grain of salt.
 
-# Conclusion
+### Conclusion
 
 I initially intended to complete this in one article, but it became too lengthy, so I decided to split it. There are several topics to cover, including fuzzy search support and WebGPU utilization. Preprocessing, query parsing, and search result scoring are also important elements, but I'm still undecided about discussing those.
 

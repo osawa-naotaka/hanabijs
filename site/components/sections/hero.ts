@@ -1,24 +1,27 @@
-import { Em, compoundStyle, registerComponent, semantic, style } from "@/main";
-import type { HArgument, HComponentFn, Repository } from "@/main";
-import { appearence } from "@site/config/site.config";
+import {
+    BOLD,
+    C_ACCENT,
+    DEFAULT_RESPONSIVE_PAGE_WIDTH,
+    FONT_SIZE,
+    LINE_HEIGHT,
+    MARGIN_BLOCK,
+    S_2XLARGE,
+    TEXT_COLOR,
+} from "@/lib/stylerules";
+import { Em, component, element, registerComponent, style } from "@/main";
+import type { HArgument, HComponentFn, Store } from "@/main";
 
-export function hero(repo: Repository): HComponentFn<HArgument> {
-    registerComponent(repo, "hero", [
-        style("&", {
-            font_size: "min(17vw, 7rem)",
-            font_weight: "bold",
-            line_height: "1.2",
-            margin_block_end: appearence.layout.space_block_large,
-        }),
-        compoundStyle([".hero-text", " ", "em"], {
-            font_style: "normal",
-            font_weight: "bold",
-            color: appearence.color.accent,
-        }),
-    ]);
+export function hero(store: Store): HComponentFn<HArgument> {
+    const Hero = element("hero");
+    const HeroText = element("hero-text");
 
-    const Hero = semantic("hero", { class_names: ["container"] });
-    const HeroText = semantic("hero-text", { class_names: ["content"] });
+    const component_styles = [
+        style(Hero)(BOLD, MARGIN_BLOCK("0", S_2XLARGE(store)), FONT_SIZE("min(17vw, 7rem)"), LINE_HEIGHT("1.2")),
+        style(HeroText)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(HeroText, "em")(BOLD, TEXT_COLOR(C_ACCENT(store))),
+    ];
 
-    return () => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE"));
+    registerComponent(store, Hero, component_styles);
+
+    return component(Hero)(() => () => Hero({})(HeroText({})("LULLIECA", Em({})("T"), " IS ", Em({})("A"), "LIVE")));
 }

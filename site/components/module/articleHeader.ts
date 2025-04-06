@@ -1,35 +1,44 @@
-import { registerComponent, semantic, style } from "@/main";
-import type { HComponentFn, HNode, Repository } from "@/main";
+import {
+    BORDER_UNDERLINE,
+    FLEX_END,
+    FLEX_WRAP,
+    FONT_SIZE,
+    F_SMALL,
+    LINE_HEIGHT,
+    MARGIN_BLOCK,
+    ROW,
+    S_SMALL,
+    S_TINY,
+} from "@/lib/stylerules";
+import { component, element, registerComponent, style } from "@/main";
+import type { HComponentFn, HNode, Store } from "@/main";
 
 export type ArticleHeaderArgument = {
     title: HNode;
 };
 
-export function articleHeader(repo: Repository): HComponentFn<ArticleHeaderArgument> {
-    registerComponent(repo, "article-header", [
-        style("&", { margin_block_end: "1.5rem" }),
-        style(".article-header-title", {
-            border_bottom: "3px solid",
-        }),
-        style(".article-header-meta", {
-            display: "flex",
-            justify_content: "flex-end",
-            align_items: "center",
-            margin_block_start: "4px",
-            gap: "0.5rem",
-            flex_wrap: "wrap",
-            font_size: "0.8rem",
-        }),
-    ]);
+export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument> {
+    const ArticleHeader = element("article-header", { tag: "header" });
+    const ArticleHeaderTitle = element("article-header-title");
+    const ArticleHeaderMeta = element("article-header-meta");
 
-    const ArticleHeader = semantic("article-header", { tag: "header" });
-    const ArticleHeaderTitle = semantic("article-header-title");
-    const ArticleHeaderMeta = semantic("article-header-meta");
+    const component_styles = [
+        style(ArticleHeaderTitle)(BORDER_UNDERLINE),
+        style(ArticleHeaderMeta)(
+            ROW(S_SMALL(store)),
+            FLEX_END,
+            FLEX_WRAP,
+            FONT_SIZE(F_SMALL(store)),
+            LINE_HEIGHT("1"),
+            MARGIN_BLOCK(S_TINY(store), "0"),
+        ),
+    ];
 
-    return (argument) =>
-        (...child) =>
-            ArticleHeader({ class: argument.class })(
-                ArticleHeaderTitle({})(argument.title),
-                ArticleHeaderMeta({})(...child),
-            );
+    registerComponent(store, ArticleHeader, component_styles);
+
+    return component(ArticleHeader)(
+        ({ title }) =>
+            (...child) =>
+                ArticleHeader({})(ArticleHeaderTitle({})(title), ArticleHeaderMeta({})(...child)),
+    );
 }

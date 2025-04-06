@@ -1,64 +1,37 @@
-import { A, Div, Li, compoundStyle, createDom, registerComponent, semantic, style } from "@/main";
-import type { HArgument, HClientFn, HComponentFn, HNode, Repository } from "@/main";
-import { svgIcon } from "@site/components/element/svgIcon";
-import { appearence } from "@site/config/site.config";
+import { A, Div, Li, as, component, createDom, element, hIcon, registerComponent, style } from "@/main";
+import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
-export function search(repo: Repository): HComponentFn<HArgument> {
-    registerComponent(
-        repo,
-        "search",
-        [
-            style(".search-bar", {
-                display: "flex",
-                align_items: "center",
-                gap: "0.5rem",
-                padding_block_end: "0.25rem",
-                border_block_end: ["2px", "solid"],
-            }),
-            style(".search-input", {
-                width: "100%",
-                height: "1.5rem",
-                border: ["0", "none"],
-                outline: "none",
-                font_size: "1rem",
-                background_color: appearence.color.background,
-            }),
-            compoundStyle([[".search-input", "::placeholder"]], {
-                opacity: "0.5",
-            }),
-            style(".search-result", {
-                margin_block: "2rem",
-                list_style_type: "none",
-            }),
-            style(".search-result-item", {
-                margin_block: "2rem",
-            }),
-        ],
-        import.meta.path,
-    );
+export function search(store: Store): HComponentFn<HArgument> {
+    const Top = element("search");
+    const SearchBar = element("search-bar");
+    const Input = element("search-input", { tag: "input" });
+    const InputIcon = hIcon()({ type: "solid", name: "magnifying-glass" })();
+    const Result = element("search-result", { tag: "ul" });
 
-    const Search = semantic("search", { class_names: ["content"] });
-    const SearchBar = semantic("search-bar");
-    const SearchInput = semantic("search-input", { tag: "input" });
-    const SearchInputIcon = svgIcon(repo);
-    const SearchResult = semantic("search-result", { tag: "ul" });
-    const SearchResultItem = semantic("search-result-item", { tag: "li" });
+    const component_sytles = [
+        style(Top)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(SearchBar)(ROW("0.5rem"), BORDER_UNDERLINE),
+        style(Input)(DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
+        style([Input, "::placeholder"])(OPACITY("0.5")),
+        style(Result)(MARGIN_BLOCK(S_LARGE(store))),
+    ];
 
-    return (argument) => () =>
-        Search({ class: argument.class })(
-            SearchBar({})(
-                SearchInput({ type: "search", placeholder: "SEARCH KEYWORDS" })(),
-                SearchInputIcon({ name: "magnifier-glass" })(),
+    registerComponent(store, Top, component_sytles, import.meta.path);
+
+    return component(Top)(
+        () => () =>
+            Top({})(
+                SearchBar({})(Input({ type: "search", placeholder: "SEARCH KEYWORDS" })(), InputIcon),
+                Result({})(),
             ),
-            SearchResult({})(SearchResultItem({})("no result.")),
-        );
+    );
 }
 
 import { StaticSeekError, createSearchFn } from "staticseek";
 import type { SearchResult } from "staticseek";
 
-export default function clientFunction(repo: Repository): HClientFn {
-    const SearchResultItem = searchResultItem(repo);
+export default function clientFunction(store: Store): HClientFn {
+    const SearchResultItem = searchResultItem(store);
 
     return async () => {
         const search_fn = createSearchFn("/search-index.json");
@@ -96,10 +69,26 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
     }
 }
 
-import { v } from "@/main";
-import { postFmSchema } from "@site/config/site.config";
+import {
+    BORDER_UNDERLINE,
+    DEFAULT_RESPONSIVE_PAGE_WIDTH,
+    DEFAULT_TEXT_BG,
+    FONT_SIZE,
+    F_SMALL,
+    F_TINY,
+    HEIGHT,
+    MARGIN_BLOCK,
+    OPACITY,
+    ROW,
+    ROW_WRAP,
+    S_2XLARGE,
+    S_LARGE,
+} from "@/lib/stylerules";
 import { dateTime } from "@site/components/element/dateTime";
-import { tagList } from "@site/components/element/tagList";
+import { tag } from "@site/components/element/tag";
+import { postFmSchema } from "@site/config/site.config";
+import { TAG_DESIGN } from "@site/styles/design";
+import * as v from "valibot";
 
 export const SearchKeySchema = v.object({
     slug: v.string(),
@@ -110,40 +99,33 @@ type SearchResultItemAttribute = {
     result: SearchResult;
 };
 
-function searchResultItem(repo: Repository): HComponentFn<SearchResultItemAttribute> {
-    registerComponent(repo, "search-result-item", [
-        style(".search-result-item-meta", {
-            display: "flex",
-            flex_wrap: "wrap",
-            align_items: "center",
-            gap: ["2px", "0.5rem"],
-            border_block_end: ["2px", "solid"],
-            padding_block_end: "2px",
-            font_size: "0.8rem",
-        }),
-        style(".search-result-item-description", {
-            font_size: "0.7rem",
-        }),
-    ]);
+function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute> {
+    const Top = element("search-result-item", { tag: "li" });
+    const Meta = element("search-result-item-meta");
+    const Title = element("search-result-item-title");
+    const Description = element("search-result-item-description");
+    const DateTime = dateTime();
+    const Tag = as("serch-result-item-tag", tag());
 
-    const SearchResultItem = semantic("search-result-item", { tag: "li" });
-    const SearchResultItemMeta = semantic("search-result-item-meta");
-    const SearchResultItemTitle = semantic("search-result-item-title");
-    const SearchResultItemDescription = semantic("search-result-item-description");
-    const DateTime = dateTime(repo);
-    const Tags = tagList(repo);
+    const component_styles = [
+        style(Top)(MARGIN_BLOCK(S_2XLARGE(store), "0")),
+        style(Meta)(ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
+        style(Description)(FONT_SIZE(F_TINY(store))),
+        TAG_DESIGN(store, "text", Tag),
+    ];
 
-    return ({ result }) =>
-        () => {
-            const key = v.parse(SearchKeySchema, result.key);
-            return SearchResultItem({})(
-                SearchResultItemMeta({})(
-                    Div({})(key.data.author),
-                    DateTime({ datetime: key.data.date })(),
-                    Tags({ slugs: key.data.principalTag.concat(key.data.associatedTags || []) })(),
-                ),
-                SearchResultItemTitle({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
-                SearchResultItemDescription({})(result.refs[0].wordaround || ""),
-            );
-        };
+    registerComponent(store, Top, component_styles);
+
+    return component(Top)(({ result }) => () => {
+        const key = v.parse(SearchKeySchema, result.key);
+        return Top({})(
+            Meta({})(
+                Div({})(key.data.author),
+                DateTime({ datetime: key.data.date })(),
+                ...(key.data.tag || []).map((x) => Tag({ slug: x })()),
+            ),
+            Title({})(A({ href: `/posts/${key.slug}` })(key.data.title)),
+            Description({})(result.refs[0].wordaround || ""),
+        );
+    });
 }

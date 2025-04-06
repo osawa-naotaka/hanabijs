@@ -1,19 +1,18 @@
-import { A, registerComponent } from "@/main";
-import type { HComponentFn, Repository } from "@/main";
-import { svgIcon } from "./svgIcon";
+import { hIcon } from "@/lib/ui/icon";
+import { Span, component, element } from "@/main";
+import type { HComponentFn } from "@/main";
 
 export type ShareXArgument = {
     title: string;
     url: string;
 };
 
-export function shareX(repo: Repository): HComponentFn<ShareXArgument> {
-    registerComponent(repo, "share-x", []);
-    const SvgIcon = svgIcon(repo);
+export function shareX(): HComponentFn<ShareXArgument> {
+    const ShareX = element("share-x", { tag: "a" });
+    const XIcon = hIcon()({ type: "brands", name: "x-twitter" })();
 
-    return (argument) => () => {
-        const link = `https://x.com/intent/tweet?text=${encodeURIComponent(argument.title)}&url=${encodeURIComponent(argument.url)}`;
-
-        return A({ href: link, target: "__blank" })(SvgIcon({ name: "x-share" })());
-    };
+    return component(ShareX)(({ title, url }) => () => {
+        const href = `https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+        return ShareX({ href, target: "__blank" })(XIcon, Span({})("SHARE"));
+    });
 }

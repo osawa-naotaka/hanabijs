@@ -2,12 +2,11 @@
 title: I Want to Search with WebGPU!
 author: producer
 date: 2025-03-04T00:00:00+09:00
-principalTag:
+tag:
     - techarticle
-associatedTags:
     - staticseek
 ---
-## WebGPU for Search, Who Knew This Was Possible
+### WebGPU for Search, Who Knew This Was Possible
 
 In our previous explorations, we successfully implemented fuzzy search for English with good performance. However, for Japanese text, the implementation using bigrams that permit insufficient n-gram matches resulted in an excessive number of false positives, making it seemingly ineffective. We need to consider alternative approaches.
 
@@ -15,7 +14,7 @@ During this time, a colleague mentioned "offloading search operations to the GPU
 
 In Chrome, [WebGPU](https://developer.mozilla.org/ja/docs/Web/API/WebGPU_API) enables direct GPU utilization from the browser. WebGPU supports compute shaders in addition to traditional 3D graphics shaders. This aligns perfectly with our objectives, so I opted to implement using WebGPU.
 
-## Understanding GPU Architecture
+### Understanding GPU Architecture
 
 Having previously worked with OpenGL ES2.0, I initially approached this with a casual attitude, assuming I could simply write shaders without deep consideration. However, this proved to be an insufficient approach, resulting in poor performance. Recognizing the need to revisit fundamentals, I decided to investigate GPU microarchitecture.
 
@@ -37,7 +36,7 @@ In RDNA3.5, I believe one Wave32/64 is assigned to one SIMD for concurrent execu
 
 A crucial point concerns VALUs and VGPRs. When thinking of SIMD, one might envision vector operations as "calculating four different values x, y, z, w in a single instruction." However, this doesn't appear to be the case. Despite being labeled "Vector," registers aren't bundled as xyzw in a single register but are composed of standard 32-bit floating-point registers. Therefore, shaders should be written as conventional scalar programs, with the caveat that threads must synchronize efficiently.
 
-## Steps for Computation Using WebGPU
+### Steps for Computation Using WebGPU
 
 Executing compute shaders with WebGPU involves the following steps:
 
@@ -77,7 +76,7 @@ While these steps may seem complex, once a functioning program is established, s
 
 Steps 1-4 serve as preprocessing and can be reused across multiple GPU commands. The search text is also written once during initialization and reused. (5) Other buffer writes and (6) `GPUCommandBuffer` generation must be performed for each GPU execution.
 
-## Writing Compute Shaders
+### Writing Compute Shaders
 
 Compute shaders are written in [WGSL](https://gpuweb.github.io/gpuweb/wgsl/). Here's a simple shader example that searches for the character "痔" (hemorrhoid). It is [committed to the repository](https://github.com/osawa-naotaka/staticseek/blob/main/ref/webgpu/1char.ts). The [TypeScript code](https://github.com/osawa-naotaka/staticseek/blob/main/ref/webgpu/1char.ts) that executes this WGSL code is also available for reference.
 
@@ -111,7 +110,7 @@ fn cs(id: vec3u) {
 
 While the function name can be anything, I've defined it as `cs` here. This function is designated as a compute shader [entry point](https://gpuweb.github.io/gpuweb/wgsl/#entry-point-decl) by specifying the `@compute` attribute. The entry point is also specified by name in [createComputePipeline](https://github.com/osawa-naotaka/staticseek/blob/410f92136bbd81fcb626cefb34cb172ac801a45c/ref/webgpu/1char.ts#L11-L18) (though this can be omitted if there's only one function). Compute shader parameters can include any number of [built-in input values](https://gpuweb.github.io/gpuweb/wgsl/#built-in-input-value). In this example, I've specified the built-in input value `global_invocation_id` to be accessible as `id` via an attribute. Compute shaders have no return values; results are written to GPU buffers.
 
-### Work-item Generation in Compute Shaders
+#### Work-item Generation in Compute Shaders
 
 This shader searches for the character "痔," but notably lacks a for-loop to iterate through the entire text area. This relates to the SIMT architecture discussed earlier.
 
@@ -125,7 +124,7 @@ Under these settings, launching a single workgroup results in `id.x` values rang
 
 The number of workgroups to generate in the x direction depends on the text length. Simply divide the text length by the workgroup_size (256 in this case). This typically results in a remainder, causing out-of-bounds array access which [can cause errors](https://gpuweb.github.io/gpuweb/wgsl/#out-of-bounds-access-sec) that require handling. However, I haven't addressed this yet... I'll need to fix this.
 
-### Determining Workgroup Size Based on Hardware Configuration and Memory Access Methods
+#### Determining Workgroup Size Based on Hardware Configuration and Memory Access Methods
 
 The appropriate workgroup_size is constrained by the architecture discussed earlier. In RDNA3.5's SIMD, 32 work-items (Wave32) are processed simultaneously. Therefore, workgroups (bundles of work-items) should be allocated in multiples of 32. Presumably, non-multiples of 32 would result in unused VALUs, reducing SIMD utilization and consequently extending processing time.
 
@@ -133,11 +132,11 @@ Additionally, I believe performance improves when LSU (Load Store Unit, which tr
 
 Conversely, I created [code that deliberately spaces memory access addresses between adjacent VALUs](https://github.com/osawa-naotaka/staticseek/blob/main/ref/webgpu/loop_1char_uniform.wgsl) for benchmarking. As detailed later, this resulted in a threefold increase in processing time.
 
-### Specifying GPUBuffers
+#### Specifying GPUBuffers
 
 Memory regions accessible from the GPU are created as `GPUBuffer`s and assigned to variables in WGSL. After creating a `GPUBuffer`, a unique ID is assigned via `GPUBindGroupLayout`. By specifying an attribute like `@binding(id)` for a buffer-representing variable in the shader, the buffer assigned to that ID can be used within the GPU.
 
-#### Creating GPU Buffers
+##### Creating GPU Buffers
 
 `GPUBuffer`s are generated using [`createBuffer()`](https://developer.mozilla.org/en-US/docs/Web/API/GPUDevice/createBuffer). This function requires specifying the buffer size in bytes and its [usage purpose](https://developer.mozilla.org/en-US/docs/Web/API/GPUBuffer/usage#value).
 
@@ -165,7 +164,7 @@ result_ptr: device.createBuffer({
 }),
 ```
 
-#### Binding GPUBuffers to WGSL Variables
+##### Binding GPUBuffers to WGSL Variables
 
 To determine which variable name in WGSL can access a generated `GPUBuffer`, we assign unique IDs to GPUBuffers and share these IDs between JavaScript and WGSL.
 
@@ -187,7 +186,7 @@ For the `layout` argument, we can use `getBindGroupLayout()` from the `GPUPipeli
 
 The `GPUBindGroup` containing information about ID-assigned `GPUBuffer`s is linked to the shader using [`setBindGroup()`](https://developer.mozilla.org/en-US/docs/Web/API/GPUComputePassEncoder/setBindGroup). At this point, an additional group ID is assigned to the `GPUBuffer` using the `index` parameter.
 
-#### Declaring Buffers in WGSL
+##### Declaring Buffers in WGSL
 
 In our previous work, we were able to assign IDs to `GPUBuffer`. Now we'll declare variables in WGSL corresponding to these IDs.
 
@@ -205,7 +204,7 @@ In a `var` declaration, we specify the [address space (AS)](https://www.w3.org/T
 
 After the identifier in `var`, we specify the [variable type](https://www.w3.org/TR/WGSL/#plain-types-section) following `:`. There are several types, but in this shader, we're using `u32`, `array<u32>`, and `atomic<u32>`. [`u32`](https://www.w3.org/TR/WGSL/#integer-types) represents a 32-bit unsigned integer and maps to a single-element [`Uint32Array`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array) on the JavaScript side. [`array<u32>`](https://www.w3.org/TR/WGSL/#array-types) is an array of 32-bit unsigned integers and maps to a Uint32Array of arbitrary length. [`atomic<u32>`](https://www.w3.org/TR/WGSL/#atomic-types) is also a 32-bit unsigned integer like `u32`, but operations and read/write actions on this variable can be performed atomically. We'll discuss atomic operations later.
 
-### Writing Results and Atomic Operations
+#### Writing Results and Atomic Operations
 
 After all this lengthy setup, we can finally assign `GPUBuffer` to WGSL variables. Now we just need to read and write normally within the shader program.
 
@@ -229,13 +228,13 @@ To avoid this problem, we use the atomic operations mentioned earlier. `atomicAd
 
 Incidentally, since thread processing order is not fixed, the matching results set in the `result` buffer will be in random order for each execution. In practice, you would often sort them on the JavaScript side.
 
-#### Execution Order of if Statements
+##### Execution Order of if Statements
 
 There's another noteworthy point to understand. In SIMT, threads share the PC. How are conditional branch instructions (if statements) handled in this context?
 
 Since the comparison result of an if statement varies by thread, true paths and false paths may be mixed in a SIMD operation. When these are mixed, SIMD passes through both paths. The PC increments to traverse both paths, but there are flags that determine execution/non-execution for each VALU, controlling which VALUs are executed through masking. Therefore, when there are many conditions that require traversing both paths, VALU efficiency drops and performance decreases. For better performance in SIMD, it's preferable to have uniform conditional branches. However, given the nature of conditional branches, this can be difficult to arrange in advance.
 
-### Reading from GPUBuffer
+#### Reading from GPUBuffer
 
 Despite the computation being quite simple, the buffer handling is so complex that this explanation has become quite lengthy. Now that we can finally perform the calculation, all that's left is to read the results! However, there's still more buffer handling required. It's quite involved.
 
@@ -274,7 +273,7 @@ const resultPtr = new Uint32Array(buffers.result_ptr_copy.getMappedRange());
 
 With this, we can finally execute a program using WebGPU. Well done!
 
-## Exclusive Use of GPU Resources
+### Exclusive Use of GPU Resources
 
 ...or so I'd like to say, but there's one thing I forgot to mention: resource sharing.
 
@@ -289,7 +288,7 @@ Since this is quite a corner case, option 1 seems a bit heavy for regular use. S
 
 Specifically, I implemented a [makeshift Mutex](https://github.com/osawa-naotaka/staticseek/blob/main/src/util/mutex.ts) and [acquire it just before searching with GPU](https://github.com/osawa-naotaka/staticseek/blob/410f92136bbd81fcb626cefb34cb172ac801a45c/src/method/gpulinearindex.ts#L156), then [release it after the GPU search is completely finished](https://github.com/osawa-naotaka/staticseek/blob/410f92136bbd81fcb626cefb34cb172ac801a45c/src/method/gpulinearindex.ts#L209). This should work... hopefully. I say "hopefully" because this makeshift Mutex was generated by an LLM, so I'm not entirely confident in its correctness... If someone could verify it, that would be greatly appreciated...
 
-## Profiling Method
+### Profiling Method
 
 For more detailed profiling of WebGPU programs, [PIX on Windows](https://devblogs.microsoft.com/pix/) can be used. A friend taught me about this tool. By profiling Chrome itself running WebGPU with PIX, you can effectively profile WebGPU. You can follow the instructions on [this site explaining how to take profiles](https://toji.dev/webgpu-profiling/pix.html). Note that PIX may need to be run with administrator privileges.
 
@@ -297,7 +296,7 @@ PIX is primarily a graphics profiler, so settings like "capture 10 frames of pro
 
 With standard Chrome, even if you [insert debug labels](https://gpuweb.github.io/gpuweb/#debug-markers), they won't be displayed, making it unclear which program is running at what time. To display the inserted debug labels in PIX, you need to perform the tasks described in the "Enabling Debug Markers" section of the aforementioned site. This involves retrieving a NuGet package and placing a DLL in the directory containing Chrome's executable, which raises security concerns. Since the package owner is Microsoft, I'm assuming it's safe, but those who are concerned might want to avoid this approach. Also, the DLL gets removed with Chrome updates, so you need to replace it each time Chrome updates.
 
-### Profiling Results for a Simple Character Search Shader
+#### Profiling Results for a Simple Character Search Shader
 
 I took profiles of [single character search](https://github.com/osawa-naotaka/staticseek/blob/main/ref/webgpu/1char.wgsl) and another single character search with [memory allocation that loads data 4kbytes apart from adjacent ALU](https://github.com/osawa-naotaka/staticseek/blob/main/ref/webgpu/loop_1char_uniform.wgsl). The size of the search target text is approximately 4MBytes.
 
@@ -316,13 +315,13 @@ Yes! You can't see anything! I apologize! Here's a rough summary of the results:
 
 Indeed, the Dispatch time (presumably processing time) is 3 times slower when separating by 4kbytes, but the copy time after processing is overwhelmingly longer, making the results somewhat meaningless. Also, when measuring these processes from the JavaScript side, they appeared to take a few ms to 10ms. It seems the overhead is too large compared to how quickly GPU internal processing completes. Although the figure is too small to see, the Wave Occupancy (presumably the operational rate) in the profile was around 70%, indicating there are still bottlenecks.
 
-## Bitap Written in WGSL
+### Bitap Written in WGSL
 
 Now that we have established a method for implementing search using compute shaders, I went ahead with the implementation. Please compare the [bitap algorithm written in WGSL](https://github.com/osawa-naotaka/staticseek/blob/main/src/method/wgsl/bitap_dist1.wgsl) with the [bitap algorithm written in TypeScript](https://github.com/osawa-naotaka/staticseek/blob/410f92136bbd81fcb626cefb34cb172ac801a45c/src/util/algorithm.ts#L108-L143). The general structure should be the same. However, while the TypeScript version loops through `text`, the WGSL version doesn't loop but instead launches threads as mentioned earlier. Also, the `Map` used in the bitap key can't be used in WGSL, so I'm using linear search through an array.
 
 While the GPU bitap doesn't loop through the entire `text`, it launches individual threads for each character position, and [each thread loops through the text starting from its position for the length of the query keyword](https://github.com/osawa-naotaka/staticseek/blob/410f92136bbd81fcb626cefb34cb172ac801a45c/src/method/wgsl/bitap_dist1.wgsl#L21). In other words, if N is the text length and M is the keyword length, the GPU bitap performs O(NM) calculations. In contrast, the CPU bitap has a computational complexity of O(N). There's an M-fold difference in computational complexity, resulting in considerable inefficiency, but I implemented it this way for now. Despite the computational inefficiency, I thought this approach might be faster due to increased data locality between VALUs leading to faster data fetching. Since I haven't implemented an O(N) algorithm on GPU, I currently don't know what the actual performance difference would be.
 
-### Bitap ISA
+#### Bitap ISA
 
 As an aside, before benchmarking, I displayed the assembly language result of compiling the shader for RDNA3.5. Even without having an actual Radeon GPU, you can install [Radeon GPU Analyzer](https://gpuopen.com/rga/) and use the `rga` command from the command line to see the assembly language result of compiled shaders. However, it doesn't support compilation from WGSL, so I compiled [code ported to HLSL](https://github.com/osawa-naotaka/staticseek/blob/main/ref/hlsl/bitap_dist3.hlsl).
 
@@ -336,7 +335,7 @@ Here is the [ISA conversion result](https://github.com/osawa-naotaka/staticseek/
 
 I thought I might learn something by getting the ISA, but my limited expertise made it difficult to understand much. I need to study more. I also ported [single character search](https://github.com/osawa-naotaka/staticseek/blob/main/ref/hlsl/linear.hlsl) to HLSL and [generated its ISA](https://github.com/osawa-naotaka/staticseek/blob/main/ref/hlsl/linear_isa.hlsl). This is shorter and clearer, so staring at it might reveal something.
 
-## Benchmarking and Profiling
+### Benchmarking and Profiling
 
 I ran benchmarks on searching the same 3-4MByte text data as before, now including GPU bitap. The numbers are slightly different as I redid the benchmarks, but the results for methods from the previous time are similar to the earlier figures.
 
@@ -370,6 +369,6 @@ The Dispatch time increased compared to single character search, but for some re
 
 Looking at this profile, operations taking around 780us are densely packed. If that's the case, the processing time should appear to be less than 1ms even from the JavaScript side to match the throughput. Why does it slow down? I don't know. Perhaps there's a long garbage collection operation happening somewhere.
 
-## In Conclusion
+### In Conclusion
 
 While there are still many unclear points, I'll conclude for now since we've achieved an order of magnitude speedup compared to CPU bitap. This benchmark was run on an RTX4070, but I also achieved speedup on the GPU integrated in an Intel N100, so I believe this performance improvement can be experienced across a wide range of platforms.
