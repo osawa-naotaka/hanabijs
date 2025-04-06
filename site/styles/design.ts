@@ -35,5 +35,5 @@ export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T
 }
 
 export function LINK_DESIGN(...sel: Selector[]): StyleRule[] {
-    return [style(...sel)(BORDER_UNDERLINE)]
+    return [style(...sel)(BORDER_UNDERLINE)];
 }

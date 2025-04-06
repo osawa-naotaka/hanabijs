@@ -32,7 +32,9 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
                         Item({})(HLink({ href: "/posts" })("blog")),
                         ...navitem.map((item) =>
                             Item({})(
-                                HLink({ href: item.url, target: "__blank" })(Icon({ type: "brands", name: item.icon })()),
+                                HLink({ href: item.url, target: "__blank" })(
+                                    Icon({ type: "brands", name: item.icon })(),
+                                ),
                             ),
                         ),
                     ),

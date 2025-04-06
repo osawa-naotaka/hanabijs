@@ -4,10 +4,10 @@ import type { HComponentFn, Store, StyleRule } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
 import { dateTime } from "../element/dateTime";
+import { hlink } from "../element/hlink";
 import { tag } from "../element/tag";
 import type { Markdown } from "../library/post";
 import { articleHeader } from "./articleHeader";
-import { hlink } from "../element/hlink";
 
 export type SummaryArgument = Markdown<PostFm>;
 
