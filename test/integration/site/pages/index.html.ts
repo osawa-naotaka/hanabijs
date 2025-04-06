@@ -5,5 +5,5 @@ import { site } from "../config";
 export default function Root(store: Store): HRootPageFn<void> {
     const Page = page(store);
 
-    return async () => Page(site);
+    return async () => Page(site)();
 }
