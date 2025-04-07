@@ -1,18 +1,19 @@
 import type { Attribute, HComponentFn, HNode } from "./lib/component";
 import type { AttributeMap, Tag } from "./lib/elements";
 
-type Component<T extends Attribute> = string | HComponentFn<Partial<T>>;
+export type Component<T extends Attribute> = string | HComponentFn<Partial<T>>;
 
-type IntrinsicElements_ = { [key in keyof AttributeMap]: Partial<AttributeMap[key]> };
+export type IntrinsicElements_ = { [key in keyof AttributeMap]: Partial<AttributeMap[key]> };
 
 export namespace JSX {
     export interface IntrinsicElements extends IntrinsicElements_ {}
 }
 
+export type JSXChildren = HNode | HNode[] | JSXChildren[];
+
 export function jsxDEV<T extends Attribute>(
     element: Component<T>,
-    // biome-ignore lint: using any.
-    props: Partial<T> & { children?: any },
+    props: Partial<T> & { children?: JSXChildren },
     // biome-ignore lint: using any.
     _d1: any,
     // biome-ignore lint: using any.
@@ -23,7 +24,7 @@ export function jsxDEV<T extends Attribute>(
     _d4: any,
 ): HNode {
     const { children, ...attribute } = props;
-    const child = (children === undefined ? [] : Array.isArray(children) ? children : [children]) as HNode[];
+    const child = normalizeChildren(children);
 
     if (typeof element === "string") {
         return {
@@ -36,3 +37,15 @@ export function jsxDEV<T extends Attribute>(
 }
 
 export const jsxsDEV = jsxDEV;
+
+function normalizeChildren(children: JSXChildren | undefined): HNode[] {
+    if (children === undefined) {
+        return [];
+    }
+
+    if (Array.isArray(children)) {
+        return children.flat().flatMap(normalizeChildren);
+    }
+
+    return [children];
+}

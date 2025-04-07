@@ -14,7 +14,7 @@ export function summaries(store: Store): HComponentFn<SummariesArgument> {
 
     return component(Summaries)(({ posts }) => () => (
         <Summaries>
-            {...posts.map((post) => (
+            {posts.map((post) => (
                 <Summary slug={post.slug} data={post.data} content={post.content} key={post.slug} />
             ))}
         </Summaries>

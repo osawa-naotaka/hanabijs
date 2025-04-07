@@ -125,7 +125,9 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
                 <Meta>
                     <div>{key.data.author}</div>
                     <DateTime datetime={key.data.date} />
-                    {...(key.data.tag || []).map((x) => <Tag slug={x} key={x} />)}
+                    {(key.data.tag || []).map((x) => (
+                        <Tag slug={x} key={x} />
+                    ))}
                 </Meta>
                 <Title>
                     <a href={`/posts/${key.slug}`}>{key.data.title}</a>

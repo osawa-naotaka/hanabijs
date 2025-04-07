@@ -30,7 +30,7 @@ export function page(store: Store): HComponentFn<PageArgument> {
             <PageHead title={title} description={description} />
             <body>
                 <PageHeader title={name} navitem={navitem} />
-                {...child}
+                {child}
                 <PageFooter site_name={name} />
             </body>
         </html>

@@ -38,7 +38,9 @@ export function summary(store: Store): HComponentFn<SummaryArgument> {
             >
                 <Author>{data.author}</Author>
                 <DateTime datetime={data.date} />
-                {...(data.tag || []).map((x) => <SummaryTag slug={x} key={x} />)}
+                {(data.tag || []).map((x) => (
+                    <SummaryTag slug={x} key={x} />
+                ))}
             </ArticleHeader>
         </Summary>
     ));

@@ -80,7 +80,9 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
             <ArticleHeader title={<h2>{data.title}</h2>}>
                 <Author>{data.author}</Author>
                 <DateTime datetime={data.date} />
-                {...(data.tag || []).map((x) => <ArticleTag slug={x} key={x} />)}
+                {(data.tag || []).map((x) => (
+                    <ArticleTag slug={x} key={x} />
+                ))}
                 <ShareX title={data.title} url={`http://localhost/posts/${slug}`} />
             </ArticleHeader>
             <ArticleText>{child}</ArticleText>

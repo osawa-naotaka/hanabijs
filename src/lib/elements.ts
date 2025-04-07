@@ -545,7 +545,8 @@ export const attribute_names: AttributeNames[] = [
 ] as const;
 
 // AttributeType型定義
-type AttributeType<T, K extends string> = T & Record<Exclude<AttributeNames, K | GlobalAttributeNames>, undefined>;
+// type AttributeType<T, K extends string> = T & Record<Exclude<AttributeNames, K | GlobalAttributeNames>, undefined>;
+type AttributeType<T, _K extends string> = T;
 
 // HTML要素ごとの属性型定義
 export type AAttributeBase = {

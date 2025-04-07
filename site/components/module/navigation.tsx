@@ -30,7 +30,7 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
                 <Item>
                     <HLink href="/posts">blog</HLink>
                 </Item>
-                {...navitem.map((item) => (
+                {navitem.map((item) => (
                     <HLink href={item.url} target="__blank" key={item.url}>
                         <Icon type="brands" name={item.icon} />
                     </HLink>
