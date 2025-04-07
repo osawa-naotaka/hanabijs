@@ -3,7 +3,7 @@ import type { AttributeMap, Tag } from "./lib/elements";
 
 type Component<T extends Attribute> = string | HComponentFn<Partial<T>>;
 
-type IntrinsicElements_ = { [key in keyof AttributeMap]: Partial<AttributeMap[key]> };
+type IntrinsicElements_ = { [key in keyof AttributeMap]: Partial<AttributeMap[key]> & { children?: HNode | HNode[]; key?: unknown; } };
 
 export namespace JSX {
     export interface IntrinsicElements extends IntrinsicElements_ {}
