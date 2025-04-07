@@ -10,18 +10,14 @@ export namespace JSX {
 }
 
 // biome-ignore lint: using any.
-export function jsx<T extends Attribute>(element: Component<T>, props: Partial<T> & { children?: any }): HNode {
-    const { children, ...attribute } = props;
-    const child = (children === undefined ? [] : Array.isArray(children) ? children : [children]) as HNode[];
-
+export function jsx<T extends Attribute>(element: Component<T>, props: Partial<T> & { children?: HNode | HNode[] }): HNode {
     if (typeof element === "string") {
         return {
             tag: element as Tag,
-            attribute,
-            child,
+            attribute: props,
         };
     }
-    return element(attribute as T)(...child);
+    return element(props);
 }
 
 export const jsxs = jsx;

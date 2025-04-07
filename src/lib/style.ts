@@ -63,23 +63,25 @@ export function insertNodes(root: HNode, selector: Selector[], insert: HNode[], 
         }
     }
 
-    if (matchCompoundSelector(normalizeSelector(selector[0]), root)) {
+    const raw_children = root.attribute.children;
+    const children = raw_children === undefined ? [] : Array.isArray(raw_children) ? raw_children : [raw_children];
+
+    if (matchCompoundSelector(normalizeSelector(selector[0]), root)) {        
         const child =
             selector.length === 1
-                ? [...root.child, ...insert]
-                : root.child.map((c) => insertNodes(c, selector.slice(1), insert, true));
+                ? [...children, ...insert]
+                : children.map((c) => insertNodes(c, selector.slice(1), insert, true));
         return {
             tag: root.tag,
-            attribute: root.attribute,
-            child,
+            attribute: {...root.attribute, children: child },
         };
     }
 
     if (search_deep) {
+        const additional_children = children.map((c) => insertNodes(c, selector, insert, true));
         return {
             tag: root.tag,
-            attribute: root.attribute,
-            child: root.child.map((c) => insertNodes(c, selector, insert, true)),
+            attribute: {...root.attribute, children: additional_children }
         };
     }
     return root;
@@ -92,7 +94,7 @@ function hasClass(className: string, attribute: Attribute): boolean {
     return attribute.class.includes(className);
 }
 
-function matchCompoundSelector(selector: CompoundSelector, element: HElement<{ id?: string }>): boolean {
+function matchCompoundSelector(selector: CompoundSelector, element: HElement<"div">): boolean {
     for (const s of selector) {
         if (typeof s !== "string") {
             throw new Error("matchCompoundSelector: ComponentFn is not supported.");

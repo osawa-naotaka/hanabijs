@@ -75,7 +75,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
     registerComponent(store, Article, component_styles);
 
-    return component(Article)(({ data, slug }) => (...child) => (
+    return component(Article)(({ data, slug, children }) => (
         <Article>
             <ArticleHeader title={<h2>{data.title}</h2>}>
                 <Author>{data.author}</Author>
@@ -83,7 +83,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
                 {...(data.tag || []).map((x) => <ArticleTag slug={x} key={x} />)}
                 <ShareX title={data.title} url={`http://localhost/posts/${slug}`} />
             </ArticleHeader>
-            <ArticleText>{child}</ArticleText>
+            <ArticleText>{children}</ArticleText>
         </Article>
     ));
 }

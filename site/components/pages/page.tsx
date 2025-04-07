@@ -25,12 +25,12 @@ export function page(store: Store): HComponentFn<PageArgument> {
 
     registerComponent(store, "html", styles);
 
-    return component("html")(({ lang, name, title, description, navitem }) => (...child) => (
+    return component("html")(({ lang, name, title, description, navitem, children }) => (
         <html lang={lang}>
             <PageHead title={title} description={description} />
             <body>
                 <PageHeader title={name} navitem={navitem} />
-                {...child}
+                {children}
                 <PageFooter site_name={name} />
             </body>
         </html>

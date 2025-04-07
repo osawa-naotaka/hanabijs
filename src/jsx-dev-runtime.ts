@@ -12,7 +12,7 @@ export namespace JSX {
 export function jsxDEV<T extends Attribute>(
     element: Component<T>,
     // biome-ignore lint: using any.
-    props: Partial<T> & { children?: any },
+    props: Partial<T> & { children?: HNode | HNode[] },
     // biome-ignore lint: using any.
     _d1: any,
     // biome-ignore lint: using any.
@@ -22,17 +22,13 @@ export function jsxDEV<T extends Attribute>(
     // biome-ignore lint: using any.
     _d4: any,
 ): HNode {
-    const { children, ...attribute } = props;
-    const child = (children === undefined ? [] : Array.isArray(children) ? children : [children]) as HNode[];
-
     if (typeof element === "string") {
         return {
             tag: element as Tag,
-            attribute,
-            child,
+            attribute: props,
         };
     }
-    return element(attribute as T)(...child);
+    return element(props);
 }
 
 export const jsxsDEV = jsxDEV;

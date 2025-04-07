@@ -1,10 +1,13 @@
-import { type AttributeMap, Class, type HanabiTag, type Tag } from "./elements";
+import type { AttributeMap, HanabiTag, Tag } from "./elements";
+import { Class } from "./elements";
 import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
 
 // Attribute of HTML Element
-export type AttributeValue = string | string[] | null | undefined;
+export type AttributeValue = unknown;
 export type Attribute = Record<string, AttributeValue>;
 export type AttributeOf<K> = Partial<AttributeMap[K & keyof AttributeMap]>;
+
+export type AttributeOfAndChildren<K> = AttributeOf<K> & { children?: HNode | HNode[]; key?: unknown; };
 
 // HTML DOM Node = string or HTML Element
 export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
@@ -12,12 +15,11 @@ export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 // HTML Element, with custom element name
 export type HElement<K> = {
     tag: Tag | HanabiTag;
-    attribute: Partial<K>;
-    child: HNode[];
+    attribute: AttributeOfAndChildren<K>;
 };
 
 // hanabi Element (is function), expressing HTML element
-export type HElementFn<K> = (attribute: AttributeOf<K>) => (...child: HNode[]) => HNode;
+export type HElementFn<K> = (attribute: AttributeOfAndChildren<K>) => HNode;
 
 export type ElementArg = {
     class?: string | string[];
@@ -29,11 +31,10 @@ export function element<K extends Tag | HanabiTag>(element_name: string, arg: El
     const class_name = arg.class === undefined ? [] : typeof arg.class === "string" ? [arg.class] : arg.class;
     return {
         [dot_name]:
-            (attribute: AttributeOf<K>) =>
-            (...child: HNode[]) => ({
+            (attribute: AttributeOfAndChildren<K>) =>
+            ({
                 tag: arg.tag || "div",
                 attribute: addClassInRecord(attribute, [element_name, ...class_name]),
-                child,
             }),
     }[dot_name];
 }
@@ -59,9 +60,9 @@ function addClassToHead<T extends { class?: string | string[] }>(
 }
 
 // hanabi Component (is function)
-export type HComponentFn<T> = (argument: HComponentFnArg<T>) => (...child: HNode[]) => HNode;
+export type HComponentFn<T> = (argument: HComponentFnArg<T>) => HNode;
 // biome-ignore lint: using any.
-export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string; children?: any; key?: any };
+export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string; children?: HNode | HNode[]; key?: unknown };
 
 // biome-ignore lint/suspicious/noExplicitAny: HAnyComponent uses only for function.name
 export type HAnyComponentFn = HComponentFn<any>;
@@ -73,10 +74,10 @@ export function as<T>(class_name: string, fn: HComponentFn<T>): HComponentFn<T> 
     return {
         [dot_name]:
             (argument: HComponentFnArg<T>) =>
-            (...child: HNode[]) =>
-                Class({ class: class_name })(fn(argument)(...child)),
+                Class({ class: class_name, children: fn(argument) }),
     }[dot_name];
 }
+
 
 // hanabi HTML Top export function
 export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
@@ -111,22 +112,34 @@ function createDomInternal(
             throw new Error(`stringifyToHtml: invalid element name ${node.tag}.`);
         }
 
-        if (node.tag === "unwrap") {
-            return node.child.flatMap(createDomInternal(depth + 1, additional_class, d));
-        }
+        const { key, children, ...other_attribute } = node.attribute;
 
-        if (node.tag === "class") {
-            return node.child.flatMap(createDomInternal(depth + 1, node.attribute.class || [], d));
+        if (node.tag === "unwrap") {
+            if(children !== undefined) {
+                if(Array.isArray(children)) {
+                    return children.flatMap(createDomInternal(depth + 1, additional_class, d));
+                }
+                return createDomInternal(depth + 1, additional_class, d)(children);
+            }
+            return [];
         }
 
         const element = d.createElement(node.tag);
-        setAttribute(element, node.attribute);
+        setAttribute(element, other_attribute);
         const classes = typeof additional_class === "string" ? [additional_class] : additional_class;
         element.classList.add(...classes.map(sanitizeAttributeValue("class")));
 
-        for (const child of node.child) {
-            for (const child_element of createDomInternal(depth + 1, [], d)(child)) {
-                element.appendChild(child_element);
+        if(children !== undefined) {
+            if(Array.isArray(children)) {
+                for (const child of children) {
+                    for (const child_element of createDomInternal(depth + 1, [], d)(child)) {
+                        element.appendChild(child_element);
+                    }
+                }
+            } else {
+                for(const child_element of createDomInternal(depth + 1, [], d)(children)) {
+                    element.appendChild(child_element);
+                }    
             }
         }
         return [element];

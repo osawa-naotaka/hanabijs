@@ -24,7 +24,7 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
 
     registerComponent(store, Top, component_styles);
 
-    return component(Top)(({ navitem }) => () => (
+    return component(Top)(({ navitem }) => (
         <Top>
             <List>
                 <Item>

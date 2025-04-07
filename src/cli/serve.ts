@@ -93,9 +93,9 @@ export async function serve() {
                                 top_component,
                                 ["head"],
                                 [
-                                    Script({ type: "module", src: "/reload.js" })(),
-                                    Script({ type: "module", src: js_name })(),
-                                    Link({ href: css_name, rel: "stylesheet" })(),
+                                    Script({ type: "module", src: "/reload.js" }),
+                                    Script({ type: "module", src: js_name }),
+                                    Link({ href: css_name, rel: "stylesheet" }),
                                 ],
                                 true,
                             );

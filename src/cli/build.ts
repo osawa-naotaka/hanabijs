@@ -119,8 +119,8 @@ async function processAndWriteHtml(
         top_component,
         ["head"],
         [
-            css_link !== "" ? Link({ href: css_link, rel: "stylesheet" })() : "",
-            js_src !== "" ? Script({ type: "module", src: js_src })() : "",
+            css_link !== "" ? Link({ href: css_link, rel: "stylesheet" }) : "",
+            js_src !== "" ? Script({ type: "module", src: js_src }) : "",
         ],
         true,
     );

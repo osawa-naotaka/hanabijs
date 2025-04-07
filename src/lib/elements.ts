@@ -1,4 +1,4 @@
-import type { AttributeOf, HElementFn, HNode } from "./component";
+import type { AttributeOfAndChildren, HElementFn } from "./component";
 
 export type Tag =
     | "a"
@@ -259,10 +259,6 @@ export type GlobalAttributes = {
     tabindex: string;
     title: string;
     translate: "yes" | "no";
-    // biome-ignore lint: using any.
-    children: any;
-    // biome-ignore lint: using any.
-    key: any;
 };
 
 // グローバル属性の名前のユニオン型
@@ -1944,8 +1940,7 @@ export function printDefine() {
 function gt<K extends Tag | HanabiTag>(tag: K): HElementFn<K> {
     return {
         [tag]:
-            (attribute: AttributeOf<K>) =>
-            (...child: HNode[]) => ({ tag, attribute, child }),
+            (attribute: AttributeOfAndChildren<K>) => ({ tag, attribute }),
     }[tag];
 }
 
