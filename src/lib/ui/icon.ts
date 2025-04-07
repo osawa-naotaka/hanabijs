@@ -16,11 +16,7 @@ export type HSolidIconArg = {
 
 export function hIcon(): HComponentFn<HBrandIconArg | HSolidIconArg> {
     const Top = element("h-icon", { tag: "i" });
-    return component(Top)(
-        ({ type, name }) =>
-            () =>
-                Top({ class: [`fa-${type}`, `fa-${name}`] })(),
-    );
+    return component(Top)(({ type, name }) => Top({ class: [`fa-${type}`, `fa-${name}`] }));
 }
 
 export type HBrandIconName =

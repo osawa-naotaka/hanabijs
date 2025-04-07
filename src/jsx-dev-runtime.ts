@@ -1,7 +1,7 @@
 import type { Attribute, HComponentFn, HNode } from "./lib/component";
 import type { AttributeMap, Tag } from "./lib/elements";
 
-export type Component<T extends Attribute> = string | HComponentFn<Partial<T>>;
+export type Component<T extends Attribute> = string | HComponentFn<T>;
 
 export type IntrinsicElements_ = { [key in keyof AttributeMap]: Partial<AttributeMap[key]> };
 
@@ -33,7 +33,7 @@ export function jsxDEV<T extends Attribute>(
             child,
         };
     }
-    return element(attribute as T)(...child);
+    return element(attribute as T, ...child);
 }
 
 export const jsxsDEV = jsxDEV;

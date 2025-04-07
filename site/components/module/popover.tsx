@@ -50,19 +50,19 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
 
     registerComponent(store, Top, styles);
 
-    return component(Top)((argument) => () => (
+    return component(Top)(({ open_button, close_button, body }) => (
         <Top>
             <Button type="button" popovertarget={button_id}>
-                {argument.open_button}
+                {open_button}
             </Button>
             <Container popover={null} id={button_id}>
                 <Content>
                     <CloseArea>
                         <Button type="button" popovertarget={button_id}>
-                            {argument.close_button}
+                            {close_button}
                         </Button>
                     </CloseArea>
-                    {argument.body}
+                    {body}
                 </Content>
             </Container>
         </Top>

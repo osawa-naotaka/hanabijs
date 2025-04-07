@@ -29,7 +29,7 @@ import {
     S_SMALL,
     TRANSITION,
 } from "@/lib/stylerules";
-import { Body, H2, Head, Html, Link, Main, Meta, Title, element, registerRootPage, style, unionRecords } from "@/main";
+import { element, registerRootPage, style, unionRecords } from "@/main";
 import type { ColorKind, HArgument, HRootPageFn, Store } from "@/main";
 
 export default function Root(store: Store): HRootPageFn<HArgument> {
@@ -55,7 +55,7 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const page_styles = [
         INIT_CSS,
         DEFAULT_STYLES(store),
-        style(Main)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style("main")(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
 
         style(BText)(BOX_TEXT(store, kind), default_styles),
         style([BText, ":hover"])(BOX_TEXT_EM_LIGHT(store, kind)),
@@ -80,28 +80,26 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
 
     registerRootPage(store, page_styles);
 
-    return async () =>
-        Html({ lang: "en" })(
-            Head({ class: "page-head" })(
-                Meta({ charset: "utf-8" })(),
-                Meta({
-                    name: "viewport",
-                    content: "width=device-width,initial-scale=1.0",
-                })(),
-                Link({ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" })(),
-                Meta({ name: "generator", content: "template-engine" })(),
+    return async () => (
+        <html lang="en">
+            <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <meta name="generator" content="template-engine" />
 
-                Title({})("ui test"),
-            ),
-            Body({})(
-                Main({})(
-                    H2({})("Buttons"),
-                    BText({})("text"),
-                    BOutlined({})("outlined"),
-                    BTonal({})("tonal"),
-                    BFilled({})("filled"),
-                    BElevated({})("elevated"),
-                ),
-            ),
-        );
+                <title>ui test</title>
+            </head>
+            <body>
+                <main>
+                    <h2>Buttons</h2>
+                    <BText>text</BText>
+                    <BOutlined>outlined</BOutlined>
+                    <BTonal>tonal</BTonal>
+                    <BFilled>filled</BFilled>
+                    <BElevated>elevated</BElevated>
+                </main>
+            </body>
+        </html>
+    );
 }

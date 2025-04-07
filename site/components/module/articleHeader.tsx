@@ -36,7 +36,7 @@ export function articleHeader(store: Store): HComponentFn<ArticleHeaderArgument>
 
     registerComponent(store, ArticleHeader, component_styles);
 
-    return component(ArticleHeader)(({ title }) => (...child) => (
+    return component(ArticleHeader)(({ title }, ...child) => (
         <ArticleHeader>
             <Title>{title}</Title>
             <Meta>{child}</Meta>

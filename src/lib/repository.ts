@@ -1,4 +1,4 @@
-import type { HComponentFn, HComponentFnArg, HElementFn } from "./component";
+import type { HComponentFn, HComponentFnArg, HElementFn, HNode } from "./component";
 import { default_design_rule } from "./design";
 import type { DesignRule } from "./design";
 import type { StyleRule } from "./style";
@@ -25,7 +25,9 @@ export function generateStore(rule: Partial<DesignRule> = {}): Store {
 export function component<K>(name_fn: HComponentFn<K> | string): <T>(component_fn: HComponentFn<T>) => HComponentFn<T> {
     return <T>(component_fn: HComponentFn<T>) => {
         const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
-        return { [component_name]: (argument: HComponentFnArg<T>) => component_fn(argument) }[component_name];
+        return {
+            [component_name]: (argument: HComponentFnArg<T>, ...child: HNode[]) => component_fn(argument, ...child),
+        }[component_name];
     };
 }
 

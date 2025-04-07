@@ -18,7 +18,7 @@ export function search(store: Store): HComponentFn<HArgument> {
 
     registerComponent(store, Top, component_sytles, import.meta.path);
 
-    return component(Top)(() => () => (
+    return component(Top)(() => (
         <Top>
             <SearchBar>
                 <Input type="search" placeholder="SEARCH KEYWORDS" />
@@ -47,7 +47,7 @@ export default function clientFunction(store: Store): HClientFn {
             } else {
                 setChild(
                     search_result_e,
-                    results.map((result) => SearchResultItem({ result })()),
+                    results.map((result) => SearchResultItem({ result })),
                 );
             }
         });
@@ -118,7 +118,7 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
 
     registerComponent(store, Top, component_styles);
 
-    return component(Top)(({ result }) => () => {
+    return component(Top)(({ result }) => {
         const key = v.parse(SearchKeySchema, result.key);
         return (
             <Top>

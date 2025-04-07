@@ -12,7 +12,7 @@ export function summaries(store: Store): HComponentFn<SummariesArgument> {
     const Summaries = element("summaries", { tag: "section" });
     const Summary = summary(store);
 
-    return component(Summaries)(({ posts }) => () => (
+    return component(Summaries)(({ posts }) => (
         <Summaries>
             {posts.map((post) => (
                 <Summary slug={post.slug} data={post.data} content={post.content} key={post.slug} />
