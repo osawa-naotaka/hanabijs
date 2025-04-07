@@ -3,7 +3,9 @@ import type { AttributeMap, Tag } from "./lib/elements";
 
 type Component<T extends Attribute> = string | HComponentFn<Partial<T>>;
 
-type IntrinsicElements_ = { [key in keyof AttributeMap]: Partial<AttributeMap[key]> & { children?: HNode | HNode[]; key?: unknown; } };
+type IntrinsicElements_ = {
+    [key in keyof AttributeMap]: Partial<AttributeMap[key]> & { children?: HNode | HNode[]; key?: unknown };
+};
 
 export namespace JSX {
     export interface IntrinsicElements extends IntrinsicElements_ {}
@@ -31,3 +33,22 @@ export function jsxDEV<T extends Attribute>(
 }
 
 export const jsxsDEV = jsxDEV;
+
+type JSXChild = HNode | string | number | boolean | null | undefined;
+type JSXChildren = JSXChild | JSXChild[] | JSXChildren[];
+
+function normalizeChildren(children: JSXChildren): HNode[] {
+    if (Array.isArray(children)) {
+        return children.flat().flatMap((child) => normalizeChildren(child));
+    }
+
+    if (children === null || children === false || children === true || children === undefined) {
+        return [];
+    }
+
+    if (typeof children === "string" || typeof children === "number") {
+        return [children.toString()];
+    }
+
+    return [children];
+}
