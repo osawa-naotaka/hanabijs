@@ -18,12 +18,14 @@ export function page(): HComponentFn<HArgument> {
                 <meta charset="utf-8" />
                 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
                 <title>{site.name}</title>
-                <script type="module" src="/reload.js"></script>
+                <script type="module" src="/reload.js" />
                 <link rel="stylesheet" href="/hanabi-error.css" />
             </head>
             <body>
                 <PageHeader>
-                    <h1><a href="/">hanabi.js</a></h1>
+                    <h1>
+                        <a href="/">hanabi.js</a>
+                    </h1>
                 </PageHeader>
                 {attribute.children}
                 <PageFooter>

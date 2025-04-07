@@ -9,8 +9,10 @@ export namespace JSX {
     export interface IntrinsicElements extends IntrinsicElements_ {}
 }
 
-// biome-ignore lint: using any.
-export function jsx<T extends Attribute>(element: Component<T>, props: Partial<T> & { children?: HNode | HNode[] }): HNode {
+export function jsx<T extends Attribute>(
+    element: Component<T>,
+    props: Partial<T> & { children?: HNode | HNode[] },
+): HNode {
     if (typeof element === "string") {
         return {
             tag: element as Tag,

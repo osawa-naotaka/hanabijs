@@ -11,5 +11,5 @@ export async function ErrorPage(arg: { name: string; cause: string }): Promise<H
                 <P>{arg.cause}</P>
             </Main>
         </Page>
-    )
+    );
 }

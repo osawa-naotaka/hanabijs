@@ -1,5 +1,5 @@
 import { component, element } from "@/main";
-import type { HComponentFn} from "@/main";
+import type { HComponentFn } from "@/main";
 
 export type DateTimeArgument = {
     datetime: string | Date;

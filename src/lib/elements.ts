@@ -1939,8 +1939,7 @@ export function printDefine() {
 
 function gt<K extends Tag | HanabiTag>(tag: K): HElementFn<K> {
     return {
-        [tag]:
-            (attribute: AttributeOfAndChildren<K>) => ({ tag, attribute }),
+        [tag]: (attribute: AttributeOfAndChildren<K>) => ({ tag, attribute }),
     }[tag];
 }
 

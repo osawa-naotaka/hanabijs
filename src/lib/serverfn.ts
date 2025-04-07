@@ -21,7 +21,8 @@ export function stringifyToHtml(depth: number, additional_class: string | string
             const window = new JSDOM("").window;
             const purify = DOMPurify(window);
 
-            return array_children.map((x) => {
+            return array_children
+                .map((x) => {
                     if (typeof x !== "string") {
                         throw new Error(`Raw node must be string at '${node}'.`);
                     }

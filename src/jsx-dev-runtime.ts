@@ -11,7 +11,6 @@ export namespace JSX {
 
 export function jsxDEV<T extends Attribute>(
     element: Component<T>,
-    // biome-ignore lint: using any.
     props: Partial<T> & { children?: HNode | HNode[] },
     // biome-ignore lint: using any.
     _d1: any,

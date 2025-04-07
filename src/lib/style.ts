@@ -66,14 +66,14 @@ export function insertNodes(root: HNode, selector: Selector[], insert: HNode[], 
     const raw_children = root.attribute.children;
     const children = raw_children === undefined ? [] : Array.isArray(raw_children) ? raw_children : [raw_children];
 
-    if (matchCompoundSelector(normalizeSelector(selector[0]), root)) {        
+    if (matchCompoundSelector(normalizeSelector(selector[0]), root)) {
         const child =
             selector.length === 1
                 ? [...children, ...insert]
                 : children.map((c) => insertNodes(c, selector.slice(1), insert, true));
         return {
             tag: root.tag,
-            attribute: {...root.attribute, children: child },
+            attribute: { ...root.attribute, children: child },
         };
     }
 
@@ -81,7 +81,7 @@ export function insertNodes(root: HNode, selector: Selector[], insert: HNode[], 
         const additional_children = children.map((c) => insertNodes(c, selector, insert, true));
         return {
             tag: root.tag,
-            attribute: {...root.attribute, children: additional_children }
+            attribute: { ...root.attribute, children: additional_children },
         };
     }
     return root;

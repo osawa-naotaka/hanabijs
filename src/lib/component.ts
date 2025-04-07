@@ -7,7 +7,7 @@ export type AttributeValue = unknown;
 export type Attribute = Record<string, AttributeValue>;
 export type AttributeOf<K> = Partial<AttributeMap[K & keyof AttributeMap]>;
 
-export type AttributeOfAndChildren<K> = AttributeOf<K> & { children?: HNode | HNode[]; key?: unknown; };
+export type AttributeOfAndChildren<K> = AttributeOf<K> & { children?: HNode | HNode[]; key?: unknown };
 
 // HTML DOM Node = string or HTML Element
 export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
@@ -30,12 +30,10 @@ export function element<K extends Tag | HanabiTag>(element_name: string, arg: El
     const dot_name = `.${element_name}`;
     const class_name = arg.class === undefined ? [] : typeof arg.class === "string" ? [arg.class] : arg.class;
     return {
-        [dot_name]:
-            (attribute: AttributeOfAndChildren<K>) =>
-            ({
-                tag: arg.tag || "div",
-                attribute: addClassInRecord(attribute, [element_name, ...class_name]),
-            }),
+        [dot_name]: (attribute: AttributeOfAndChildren<K>) => ({
+            tag: arg.tag || "div",
+            attribute: addClassInRecord(attribute, [element_name, ...class_name]),
+        }),
     }[dot_name];
 }
 
@@ -61,8 +59,12 @@ function addClassToHead<T extends { class?: string | string[] }>(
 
 // hanabi Component (is function)
 export type HComponentFn<T> = (argument: HComponentFnArg<T>) => HNode;
-// biome-ignore lint: using any.
-export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string; children?: HNode | HNode[]; key?: unknown };
+export type HComponentFnArg<T> = T & {
+    class?: string | string[];
+    id?: string;
+    children?: HNode | HNode[];
+    key?: unknown;
+};
 
 // biome-ignore lint/suspicious/noExplicitAny: HAnyComponent uses only for function.name
 export type HAnyComponentFn = HComponentFn<any>;
@@ -72,12 +74,9 @@ export type HArgument = Record<string, unknown>;
 export function as<T>(class_name: string, fn: HComponentFn<T>): HComponentFn<T> {
     const dot_name = `.${class_name}`;
     return {
-        [dot_name]:
-            (argument: HComponentFnArg<T>) =>
-                Class({ class: class_name, children: fn(argument) }),
+        [dot_name]: (argument: HComponentFnArg<T>) => Class({ class: class_name, children: fn(argument) }),
     }[dot_name];
 }
-
 
 // hanabi HTML Top export function
 export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
@@ -115,8 +114,8 @@ function createDomInternal(
         const { key, children, ...other_attribute } = node.attribute;
 
         if (node.tag === "unwrap") {
-            if(children !== undefined) {
-                if(Array.isArray(children)) {
+            if (children !== undefined) {
+                if (Array.isArray(children)) {
                     return children.flatMap(createDomInternal(depth + 1, additional_class, d));
                 }
                 return createDomInternal(depth + 1, additional_class, d)(children);
@@ -129,17 +128,17 @@ function createDomInternal(
         const classes = typeof additional_class === "string" ? [additional_class] : additional_class;
         element.classList.add(...classes.map(sanitizeAttributeValue("class")));
 
-        if(children !== undefined) {
-            if(Array.isArray(children)) {
+        if (children !== undefined) {
+            if (Array.isArray(children)) {
                 for (const child of children) {
                     for (const child_element of createDomInternal(depth + 1, [], d)(child)) {
                         element.appendChild(child_element);
                     }
                 }
             } else {
-                for(const child_element of createDomInternal(depth + 1, [], d)(children)) {
+                for (const child_element of createDomInternal(depth + 1, [], d)(children)) {
                     element.appendChild(child_element);
-                }    
+                }
             }
         }
         return [element];
