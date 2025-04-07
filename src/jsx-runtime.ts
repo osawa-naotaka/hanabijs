@@ -24,17 +24,4 @@ export function jsx<T extends Attribute>(element: Component<T>, props: Partial<T
     return element(attribute as T)(...child);
 }
 
-// biome-ignore lint: using any.
-export function jsxs<T extends Attribute>(element: Component<T>, props: Partial<T> & { children?: any }): HNode {
-    const { children, ...attribute } = props;
-    const child = (children === undefined ? [] : Array.isArray(children) ? children : [children]) as HNode[];
-
-    if (typeof element === "string") {
-        return {
-            tag: element as Tag,
-            attribute,
-            child,
-        };
-    }
-    return element(attribute as T)(...child);
-}
+export const jsxs = jsx;
