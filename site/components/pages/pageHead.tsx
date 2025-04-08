@@ -22,16 +22,6 @@ export function pageHead(): HComponentFn<PageHeadArgument> {
             <title>{title}</title>
             <meta name="description" content={description} />
             <meta http-equiv="content-security-policy" content="default-src 'self' https://cdn.jsdelivr.net/;" />
-
-            {/* // fontawesome */}
-            <link rel="stylesheet" href="/assets/css/fontawesome.min.css" />
-            <link rel="stylesheet" href="/assets/css/brands.min.css" />
-            <link rel="stylesheet" href="/assets/css/solid.min.css" />
-
-            {/* // Markdown code syntax highlight */}
-            <link rel="stylesheet" href="/assets/css/prism-atom-dark.css" />
-            <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js" />
-            <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js" />
         </head>
     ));
 }

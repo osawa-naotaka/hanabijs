@@ -5,7 +5,7 @@ import { cwd } from "node:process";
 import type { Attribute, HRootPageFn } from "@/lib/component";
 import { DOCTYPE, Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
-import type { Store } from "@/lib/repository";
+import type { HComponentAsset, HComponentInsert, Store } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
 import { insertNodes, stringifyToCss } from "@/lib/style";
 import { globExt, replaceExt } from "@/lib/util";
@@ -29,6 +29,7 @@ export async function build(conf_file: string | undefined) {
     const public_dir = path.join(root, config.input.public_dir);
 
     const store = generateStore(config.asset, config.designrule);
+    const asset_store = new Map<string, HComponentAsset[]>();
 
     if (config.output.clean_befor_build && existsSync(dist_dir)) {
         await rmdir(dist_dir, { recursive: true });
@@ -46,6 +47,12 @@ export async function build(conf_file: string | undefined) {
         if (typeof page_fn.default === "function") {
             if (path.extname(relative_path) === ".html") {
                 await processHtmlDotTs(store, relative_path, dist_dir, page_fn);
+
+                for (const [key, value] of store.components.entries()) {
+                    if (value.attachment?.assets !== undefined) {
+                        asset_store.set(key, value.attachment.assets);
+                    }
+                }
             } else {
                 await processAnyDotTs(store, relative_path, dist_dir, page_fn);
             }
@@ -55,17 +62,15 @@ export async function build(conf_file: string | undefined) {
     }
 
     // copy assets
-    const components = Array.from(store.components.values())
-        .map((x) => x.attachment?.assets)
-        .filter((x) => x !== undefined);
-    for (const statics of components) {
+    for (const statics of asset_store.values()) {
         for (const entry of statics) {
             const root_dir =
                 entry.package_name === undefined
                     ? cwd()
                     : path.dirname(require.resolve(`${entry.package_name}/package.json`));
+            console.log(root_dir);
             for (const file of entry.copy_files) {
-                copyFiles(root_dir, file.src, path.join(dist_dir, config.asset.target_prefix, file.dist));
+                await copyFiles(root_dir, file.src, path.join(dist_dir, config.asset.target_prefix, file.dist));
             }
         }
     }
@@ -101,10 +106,10 @@ type HtmlPageFn = {
     rootPageFnParameters?: () => Promise<Array<Record<string, string>>>;
 };
 
-async function processHtmlDotTs(repository: Store, relative_path: string, dist_dir: string, page_fn: HtmlPageFn) {
-    clearStore(repository);
-    const root_page_fn = await page_fn.default(repository);
-    const css_js = await bundleAndWriteCssJs(relative_path, dist_dir, repository);
+async function processHtmlDotTs(store: Store, relative_path: string, dist_dir: string, page_fn: HtmlPageFn) {
+    clearStore(store);
+    const root_page_fn = await page_fn.default(store);
+    const css_js = await bundleAndWriteCssJs(relative_path, dist_dir, store);
 
     if (page_fn.rootPageFnParameters !== undefined) {
         const param_list = await page_fn.rootPageFnParameters();
@@ -112,10 +117,10 @@ async function processHtmlDotTs(repository: Store, relative_path: string, dist_d
 
         for (const param of param_list) {
             const file_replaced = param_names.reduce((p, c) => p.replaceAll(`[${c}]`, param[c]), relative_path);
-            await processAndWriteHtml(file_replaced, dist_dir, css_js, root_page_fn, param);
+            await processAndWriteHtml(file_replaced, dist_dir, css_js, root_page_fn, param, store);
         }
     } else {
-        await processAndWriteHtml(relative_path, dist_dir, css_js, root_page_fn, {});
+        await processAndWriteHtml(relative_path, dist_dir, css_js, root_page_fn, {}, store);
     }
 }
 
@@ -142,12 +147,26 @@ async function processAndWriteHtml(
     [css_link, js_src]: [string, string],
     root_page_fn: HRootPageFn<Attribute>,
     params: Record<string, string>,
+    store: Store,
 ): Promise<void> {
     const html_start = performance.now();
 
     const top_component = await root_page_fn(params);
-    const inserted = insertNodes(
+
+    const insert_nodes: [string, HComponentInsert[]][] = [];
+    for (const [key, value] of store.components.entries()) {
+        if (value.attachment?.inserts !== undefined) {
+            insert_nodes.push([key, value.attachment.inserts]);
+        }
+    }
+
+    const inserted = insert_nodes.reduce(
+        (p, c) => c[1].reduce((pp, cc) => insertNodes(pp, cc.selector, cc.nodes, true), p),
         top_component,
+    );
+
+    const html = insertNodes(
+        inserted,
         ["head"],
         [
             css_link !== "" ? Link({ href: css_link, rel: "stylesheet" }) : "",
@@ -156,8 +175,8 @@ async function processAndWriteHtml(
         true,
     );
 
-    const html = DOCTYPE() + stringifyToHtml(0, [])(inserted);
-    writeToFile(html, relative_path, dist_dir, ".html", html_start);
+    const doctype_html = DOCTYPE() + stringifyToHtml(0, [])(html);
+    writeToFile(doctype_html, relative_path, dist_dir, ".html", html_start);
 }
 
 async function bundleAndWriteCssJs(relative_path: string, dist_dir: string, store: Store): Promise<[string, string]> {

@@ -6,7 +6,7 @@ import { createAssetRouter, createPageRouter, createStaticRouter } from "@/cli/r
 import type { Router } from "@/cli/route";
 import { DOCTYPE, Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
-import type { HComponentAsset, Store } from "@/lib/repository";
+import type { HComponentAsset, HComponentInsert, Store } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
 import { insertNodes, stringifyToCss } from "@/lib/style";
 import { contentType, replaceExt } from "@/lib/util";
@@ -110,8 +110,20 @@ export async function serve(conf_file: string | undefined) {
                             const css_name = replaceExt(replaceExt(match_page.target_file, ""), ".css");
                             const js_name = replaceExt(replaceExt(match_page.target_file, ""), ".js");
 
-                            const html = insertNodes(
+                            const insert_nodes: [string, HComponentInsert[]][] = [];
+                            for (const [key, value] of store.components.entries()) {
+                                if (value.attachment?.inserts !== undefined) {
+                                    insert_nodes.push([key, value.attachment.inserts]);
+                                }
+                            }
+
+                            const inserted = insert_nodes.reduce(
+                                (p, c) => c[1].reduce((pp, cc) => insertNodes(pp, cc.selector, cc.nodes, true), p),
                                 top_component,
+                            );
+
+                            const html = insertNodes(
+                                inserted,
                                 ["head"],
                                 [
                                     Script({ type: "module", src: "/reload.js" }),

@@ -11,6 +11,7 @@ import {
     F_XLARGE,
     LIST_DECIMAL,
     LIST_DISC,
+    Link,
     MARGIN_BLOCK,
     MARGIN_INLINE,
     MIX_WHITE,
@@ -24,7 +25,7 @@ import {
     TEXT_UNDERLINE,
     as,
 } from "@/main";
-import { A, H2, H3, H4, H5, Li, Ol, P, Ul, component, element, registerComponent, style } from "@/main";
+import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul, component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import type { PostFm } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
@@ -73,7 +74,21 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
         style(ArticleText, Li)(MARGIN_INLINE(S_2XLARGE(store))),
     ];
 
-    registerComponent(store, Article, component_styles);
+    const prism_cdn = "https://cdn.jsdelivr.net/npm/prismjs@1.30.0";
+    const prism_theme: string = "tomorrow";
+    const css_filename = `prism${prism_theme === "" ? "" : `-${prism_theme}`}.min.css`;
+    registerComponent(store, Article, component_styles, {
+        inserts: [
+            {
+                selector: ["head"],
+                nodes: [
+                    Link({ href: `${prism_cdn}/themes/${css_filename}`, rel: "stylesheet" }),
+                    Script({ src: `${prism_cdn}/components/prism-core.min.js` }),
+                    Script({ src: `${prism_cdn}/plugins/autoloader/prism-autoloader.min.js` }),
+                ],
+            },
+        ],
+    });
 
     return component(Article, ({ data, slug }, ...child) => (
         <Article>

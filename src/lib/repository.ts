@@ -2,7 +2,7 @@ import type { AssetConfig } from "@/cli/config";
 import type { HComponentFn, HComponentFnArg, HNode } from "./component";
 import { default_design_rule } from "./design";
 import type { DesignRule } from "./design";
-import type { StyleRule } from "./style";
+import type { Selector, StyleRule } from "./style";
 
 // hanabi element data structure for register element to repository, internal use only.
 export type HComponent = {
@@ -14,6 +14,7 @@ export type HComponent = {
 export type HComponentAttachment = {
     script?: string;
     assets?: HComponentAsset[];
+    inserts?: HComponentInsert[];
 };
 
 export type HComponentAsset = {
@@ -22,6 +23,11 @@ export type HComponentAsset = {
         src: string;
         dist: string;
     }[];
+};
+
+export type HComponentInsert = {
+    selector: Selector[];
+    nodes: HNode[];
 };
 
 export type Store = {

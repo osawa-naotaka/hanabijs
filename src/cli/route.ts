@@ -160,7 +160,7 @@ async function createAssetRouteTable(asset_prefix: string, assets: HComponentAss
                         entry.copy_files.map(async (file) => {
                             const glob = new Bun.Glob(file.src);
                             return (await Array.fromAsync(glob.scan(root_dir))).map((src) => {
-                                const path_exact = path.join("/", asset_prefix, src);
+                                const path_exact = path.join("/", asset_prefix, file.dist, path.basename(src));
 
                                 return {
                                     path_regexp: new RegExp(`^${escapeForRegExp(path_exact)}$`),

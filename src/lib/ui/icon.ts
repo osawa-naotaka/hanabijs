@@ -1,7 +1,8 @@
 import type { HComponentFn } from "../component";
 import { element } from "../component";
+import { Link } from "../elements";
 import { component, registerComponent } from "../repository";
-import type { Store } from "../repository"
+import type { Store } from "../repository";
 
 export type HIconType = "brands" | "solid";
 
@@ -19,6 +20,16 @@ export function hIcon(store: Store): HComponentFn<HBrandIconArg | HSolidIconArg>
     const Top = element("h-icon", { tag: "i" });
 
     registerComponent(store, Top, [], {
+        inserts: [
+            {
+                selector: ["head"],
+                nodes: [
+                    Link({ href: `${store.asset.target_prefix}/css/fontawesome.min.css`, rel: "stylesheet" }),
+                    Link({ href: `${store.asset.target_prefix}/css/brands.min.css`, rel: "stylesheet" }),
+                    Link({ href: `${store.asset.target_prefix}/css/solid.min.css`, rel: "stylesheet" }),
+                ],
+            },
+        ],
         assets: [
             {
                 package_name: "@fortawesome/fontawesome-free",
