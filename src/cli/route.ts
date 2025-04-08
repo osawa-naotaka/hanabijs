@@ -26,7 +26,7 @@ export async function createPageRouter(rootdir: string): Promise<Router> {
         return (req) => pageRouter(page_route_table, new URL(req.url).pathname);
     }
 
-    return () => new Error("Path Not Found.");
+    throw new Error(`createPageRouter: directory "${rootdir}" not found.`);
 }
 
 export async function createStaticRouter(rootdir: string): Promise<Router> {
@@ -36,7 +36,7 @@ export async function createStaticRouter(rootdir: string): Promise<Router> {
         return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
     }
 
-    return () => new Error("Path Not Found.");
+    throw new Error(`createStaticRouter: directory "${rootdir}" not found.`);
 }
 
 function withoutExt(file: string): string {
@@ -148,7 +148,7 @@ function pageRouter(route_table: RouteTable[], req_url_path: string): Route | Er
         }
     }
 
-    return new Error("Path Not Found.");
+    return new Error(`Path for "${req_url_path}" Not Found.`);
 }
 
 function staticRouter(route_table: RouteTable[], req_url_path: string): Route | Error {
@@ -169,5 +169,5 @@ function staticRouter(route_table: RouteTable[], req_url_path: string): Route | 
             }
         }
     }
-    return new Error("Path Not Found.");
+    return new Error(`Path for "${req_url_path}" Not Found.`);
 }

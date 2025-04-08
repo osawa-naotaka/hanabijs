@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
+import { loadConfig } from "@/cli/config";
 import { createPageRouter, createStaticRouter } from "@/cli/route";
-import { page_subdir, public_subdir, site_subdir } from "@/config";
 import { DOCTYPE, Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
 import type { Store } from "@/lib/repository";
@@ -14,14 +14,16 @@ import hanabi_error_css from "@/page/hanabi-error.css" assert { type: "text" };
 import chokidar from "chokidar";
 import esbuild from "esbuild";
 
-export async function serve() {
-    const root = cwd();
-    const page_dir = path.join(root, page_subdir);
-    const public_dir = path.join(root, public_subdir);
-    const site_dir = path.join(root, site_subdir);
-    const store = generateStore();
+export async function serve(conf_file: string | undefined) {
+    const config = await loadConfig(conf_file);
 
-    const watcher = chokidar.watch(site_dir, { persistent: true });
+    const root = cwd();
+    const page_dir = path.join(root, config.input.page_dir);
+    const public_dir = path.join(root, config.input.public_dir);
+    const watch_dir = path.join(root, config.server.watch_dir);
+
+    const watcher = chokidar.watch(watch_dir, { persistent: true });
+    const store = generateStore(config.designrule);
 
     let page_router = await createPageRouter(page_dir);
     let public_router = await createStaticRouter(public_dir);
@@ -128,10 +130,10 @@ export async function serve() {
                 return normalResponse(hanabi_error_css, ".css");
             }
 
-            return await errorResponse(404, "Route Not Found");
+            return await errorResponse(404, `route for url "${req.url}" not found.`);
         },
-        port: 4132,
-        hostname: "localhost",
+        port: config.server.port,
+        hostname: config.server.hostname,
         async error(error) {
             console.error(error);
             return await errorResponse(500, error.message);

@@ -1,8 +1,7 @@
 import { existsSync } from "node:fs";
 import { rmdir } from "node:fs/promises";
 import path from "node:path";
-import { cwd, exit } from "node:process";
-import { dist_subdir, page_subdir, public_subdir } from "@/config";
+import { cwd } from "node:process";
 import type { Attribute, HRootPageFn } from "@/lib/component";
 import { DOCTYPE, Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
@@ -17,23 +16,26 @@ import typescript from "@rollup/plugin-typescript";
 import virtual from "@rollup/plugin-virtual";
 import esbuild from "esbuild";
 import { rollup } from "rollup";
+import { loadConfig } from "./config";
 
-export async function build() {
+export async function build(conf_file: string | undefined) {
     const start = performance.now();
 
-    const root = cwd();
-    const dist_dir = path.join(root, dist_subdir);
-    const page_dir = path.join(root, page_subdir);
-    const public_dir = path.join(root, public_subdir);
-    const store = generateStore();
+    const config = await loadConfig(conf_file);
 
-    if (existsSync(dist_dir)) {
+    const root = cwd();
+    const dist_dir = path.join(root, config.output.dist_dir);
+    const page_dir = path.join(root, config.input.page_dir);
+    const public_dir = path.join(root, config.input.public_dir);
+
+    const store = generateStore(config.designrule);
+
+    if (config.output.clean_befor_build && existsSync(dist_dir)) {
         await rmdir(dist_dir, { recursive: true });
     }
 
     if (!existsSync(page_dir)) {
-        console.log("hanabi: no page directory.");
-        exit(-1);
+        throw new Error(`hanabi: no page directory found at ${page_dir}.`);
     }
     for await (const filename_in_dir of globExt(page_dir, ".{ts,tsx}")) {
         const import_start = performance.now();
@@ -48,7 +50,7 @@ export async function build() {
                 await processAnyDotTs(store, relative_path, dist_dir, page_fn);
             }
         } else {
-            console.log(`${filename_in_dir} has no default export. skip processing.`);
+            console.warn(`${filename_in_dir} has no default export. skip processing.`);
         }
     }
 
