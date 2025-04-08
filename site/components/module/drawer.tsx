@@ -39,7 +39,7 @@ export function drawer(store: Store, button_id: string): HComponentFn<DrawerArgu
 
     registerComponent(store, Drawer, styles);
 
-    return component(Drawer)(({ title, header_space, open_button, content }) => (
+    return component(Drawer, ({ title, header_space, open_button, content }) => (
         <Drawer>
             <OpenState type="checkbox" id={button_id} />
             <Title>

@@ -2,30 +2,30 @@ import { as, component, createDom, element, hIcon, registerComponent, style } fr
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
-    const Top = element("search");
+    const Search = element("search");
     const SearchBar = element("search-bar");
     const Input = element("search-input", { tag: "input" });
     const InputIcon = hIcon();
     const Result = element("search-result", { tag: "ul" });
 
     const component_sytles = [
-        style(Top)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style(Search)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
         style(SearchBar)(ROW("0.5rem"), BORDER_UNDERLINE),
         style(Input)(DEFAULT_TEXT_BG(store), HEIGHT(S_2XLARGE(store))),
         style([Input, "::placeholder"])(OPACITY("0.5")),
         style(Result)(MARGIN_BLOCK(S_LARGE(store))),
     ];
 
-    registerComponent(store, Top, component_sytles, import.meta.path);
+    registerComponent(store, Search, component_sytles, import.meta.path);
 
-    return component(Top)(() => (
-        <Top>
+    return component(Search, () => (
+        <Search>
             <SearchBar>
                 <Input type="search" placeholder="SEARCH KEYWORDS" />
                 <InputIcon type="solid" name="magnifying-glass" />
             </SearchBar>
             <Result />
-        </Top>
+        </Search>
     ));
 }
 
@@ -102,7 +102,7 @@ type SearchResultItemAttribute = {
 };
 
 function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute> {
-    const Top = element("search-result-item", { tag: "li" });
+    const ResultItem = element("search-result-item", { tag: "li" });
     const Meta = element("search-result-item-meta");
     const Title = element("search-result-item-title");
     const Description = element("search-result-item-description");
@@ -110,18 +110,18 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
     const Tag = as("serch-result-item-tag", tag());
 
     const component_styles = [
-        style(Top)(MARGIN_BLOCK(S_2XLARGE(store), "0")),
+        style(ResultItem)(MARGIN_BLOCK(S_2XLARGE(store), "0")),
         style(Meta)(ROW("2px 0.5rem"), ROW_WRAP, FONT_SIZE(F_SMALL(store)), BORDER_UNDERLINE),
         style(Description)(FONT_SIZE(F_TINY(store))),
         TAG_DESIGN(store, "text", Tag),
     ];
 
-    registerComponent(store, Top, component_styles);
+    registerComponent(store, ResultItem, component_styles);
 
-    return component(Top)(({ result }) => {
+    return component(ResultItem, ({ result }) => {
         const key = v.parse(SearchKeySchema, result.key);
         return (
-            <Top>
+            <ResultItem>
                 <Meta>
                     <div>{key.data.author}</div>
                     <DateTime datetime={key.data.date} />
@@ -133,7 +133,7 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
                     <a href={`/posts/${key.slug}`}>{key.data.title}</a>
                 </Title>
                 <Description>{result.refs[0].wordaround || ""}</Description>
-            </Top>
+            </ResultItem>
         );
     });
 }

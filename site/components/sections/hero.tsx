@@ -23,7 +23,7 @@ export function hero(store: Store): HComponentFn<HArgument> {
 
     registerComponent(store, Hero, component_styles);
 
-    return component(Hero)(() => (
+    return component(Hero, () => (
         <Hero>
             <HeroText>
                 LULLIECA<em>T</em> IS <em>A</em>LIVE

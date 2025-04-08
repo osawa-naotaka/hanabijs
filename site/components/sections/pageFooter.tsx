@@ -28,7 +28,7 @@ export function pageFooter(store: Store): HComponentFn<PageFooterArgument> {
 
     registerComponent(store, PageFooter, component_styles);
 
-    return component(PageFooter)(({ site_name }) => (
+    return component(PageFooter, ({ site_name }) => (
         <PageFooter>
             <Content />
             <Copyright>{`© 2025 ${site_name}`}</Copyright>

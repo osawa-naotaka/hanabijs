@@ -75,7 +75,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
     registerComponent(store, Article, component_styles);
 
-    return component(Article)(({ data, slug }, ...child) => (
+    return component(Article, ({ data, slug }, ...child) => (
         <Article>
             <ArticleHeader title={<h2>{data.title}</h2>}>
                 <Author>{data.author}</Author>

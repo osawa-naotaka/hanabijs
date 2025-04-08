@@ -7,7 +7,7 @@ export type PageHeadArgument = {
 };
 
 export function pageHead(): HComponentFn<PageHeadArgument> {
-    return component(<head />)(({ title, description }) => (
+    return component("head", ({ title, description }) => (
         <head class="page-head">
             {/* Global Metadata */}
             <meta charset="utf-8" />

@@ -25,7 +25,7 @@ export type PopoverArgument = {
 };
 
 export function popover(store: Store, button_id: string): HComponentFn<PopoverArgument> {
-    const Top = element("popover");
+    const Popover = element("popover");
     const Button = element("popover-button", { tag: "button" });
     const CloseArea = element("popover-close-area");
     const Container = element("popover-container");
@@ -48,10 +48,10 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
         style(CloseArea)(MARGIN_BLOCK("0", S_MEDIUM(store)), DEFAULT_ROW(store), FLEX_END),
     ];
 
-    registerComponent(store, Top, styles);
+    registerComponent(store, Popover, styles);
 
-    return component(Top)(({ open_button, close_button, body }) => (
-        <Top>
+    return component(Popover, ({ open_button, close_button, body }) => (
+        <Popover>
             <Button type="button" popovertarget={button_id}>
                 {open_button}
             </Button>
@@ -65,6 +65,6 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
                     {body}
                 </Content>
             </Container>
-        </Top>
+        </Popover>
     ));
 }
