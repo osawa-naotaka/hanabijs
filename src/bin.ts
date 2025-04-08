@@ -92,6 +92,7 @@ async function main() {
             case "build":
                 await build(args.values.config);
                 exit(0);
+                break;
 
             case "dev":
                 await serve(args.values.config);

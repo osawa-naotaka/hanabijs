@@ -63,7 +63,7 @@ export async function serve(conf_file: string | undefined) {
                         switch (match_page.req_ext) {
                             case ".css": {
                                 const css_files = Array.from(store.components.values())
-                                    .map((x) => x.path)
+                                    .map((x) => x.asset?.script)
                                     .filter((x) => x !== undefined);
                                 for (const client of css_files) {
                                     const client_fn = await import(client);
@@ -157,7 +157,7 @@ async function errorResponse(status: number, cause: string): Promise<Response> {
 
 async function bundleScript(store: Store): Promise<string> {
     const script_files = Array.from(store.components.values())
-        .map((x) => x.path)
+        .map((x) => x.asset?.script)
         .filter((x) => x !== undefined);
     const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
     const bundle = await esbuild.build({

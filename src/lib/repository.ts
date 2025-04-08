@@ -1,4 +1,4 @@
-import type { HComponentFn, HComponentFnArg, HElementFn, HNode } from "./component";
+import type { HComponentFn, HComponentFnArg, HNode } from "./component";
 import { default_design_rule } from "./design";
 import type { DesignRule } from "./design";
 import type { StyleRule } from "./style";
@@ -6,8 +6,13 @@ import type { StyleRule } from "./style";
 // hanabi element data structure for register element to repository, internal use only.
 export type HComponent = {
     component_name: string;
-    path?: string;
     style: StyleRule[];
+    asset?: HComponentAsset;
+};
+
+export type HComponentAsset = {
+    script?: string;
+    statics?: string;
 };
 
 export type Store = {
@@ -33,31 +38,19 @@ export function registerComponent<K>(
     store: Store,
     name_fn: HComponentFn<K> | string,
     raw_style: (StyleRule | StyleRule[])[],
-    path?: string,
+    asset?: HComponentAsset,
 ): void {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
     const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
 
-    store.components.set(component_name, { component_name, path, style });
+    store.components.set(component_name, { component_name, style, asset });
 }
 
-export function registerElement<K>(
-    store: Store,
-    element_fn: HElementFn<K>,
-    raw_style: (StyleRule | StyleRule[])[],
-    path?: string,
-): void {
-    const component_name = element_fn.name;
-    const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
-
-    store.components.set(component_name, { component_name, path, style });
-}
-
-export function registerRootPage(store: Store, raw_style: (StyleRule | StyleRule[])[], path?: string): void {
+export function registerRootPage(store: Store, raw_style: (StyleRule | StyleRule[])[], asset?: HComponentAsset): void {
     const component_name = "hanabi-root-page";
     const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
 
-    store.components.set(component_name, { component_name, path, style });
+    store.components.set(component_name, { component_name, style, asset });
 }
 
 export function clearStore(store: Store): void {

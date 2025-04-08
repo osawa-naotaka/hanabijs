@@ -136,7 +136,7 @@ async function bundleAndWriteCssJs(relative_path: string, dist_dir: string, stor
     const css_start = performance.now();
     let css_link = "";
     const css_files = Array.from(store.components.values())
-        .map((x) => x.path)
+        .map((x) => x.asset?.script)
         .filter((x) => x !== undefined);
     for (const client of css_files) {
         const client_fn = await import(client);
@@ -174,7 +174,7 @@ function writeToFile(content: string, file_name: string, dist_dir: string, ext: 
 
 export async function bundleScriptEsbuild(store: Store): Promise<string | null> {
     const script_files = Array.from(store.components.values())
-        .map((x) => x.path)
+        .map((x) => x.asset?.script)
         .filter((x) => x !== undefined);
     if (script_files.length === 0) {
         return null;
@@ -205,7 +205,7 @@ export async function bundleScriptEsbuild(store: Store): Promise<string | null> 
 
 export async function bundleScriptRollup(store: Store): Promise<string | null> {
     const script_files = Array.from(store.components.values())
-        .map((x) => x.path)
+        .map((x) => x.asset?.script)
         .filter(Boolean);
     if (script_files.length === 0) {
         return null;
