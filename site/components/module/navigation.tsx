@@ -14,7 +14,7 @@ export function navigation(store: Store): HComponentFn<NavigationArgument> {
     const Navigation = element("navigation", { tag: "nav" });
     const List = element("navigation-list", { tag: "ul" });
     const Item = element("navigation-list-item", { tag: "li" });
-    const Icon = hIcon();
+    const Icon = hIcon(store);
     const HLink = hlink(store);
 
     const component_styles = [

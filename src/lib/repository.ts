@@ -1,3 +1,4 @@
+import type { AssetConfig } from "@/cli/config";
 import type { HComponentFn, HComponentFnArg, HNode } from "./component";
 import { default_design_rule } from "./design";
 import type { DesignRule } from "./design";
@@ -7,23 +8,33 @@ import type { StyleRule } from "./style";
 export type HComponent = {
     component_name: string;
     style: StyleRule[];
-    asset?: HComponentAsset;
+    attachment?: HComponentAttachment;
+};
+
+export type HComponentAttachment = {
+    script?: string;
+    assets?: HComponentAsset[];
 };
 
 export type HComponentAsset = {
-    script?: string;
-    statics?: string;
+    package_name: string;
+    copy_files: {
+        src: string;
+        dist: string;
+    }[];
 };
 
 export type Store = {
     components: Map<string, HComponent>;
     designrule: DesignRule;
+    asset: AssetConfig;
 };
 
-export function generateStore(rule: Partial<DesignRule> = {}): Store {
+export function generateStore(asset: AssetConfig, rule: Partial<DesignRule> = {}): Store {
     return {
         components: new Map<string, HComponent>(),
         designrule: { ...default_design_rule, ...rule },
+        asset,
     };
 }
 
@@ -38,19 +49,23 @@ export function registerComponent<K>(
     store: Store,
     name_fn: HComponentFn<K> | string,
     raw_style: (StyleRule | StyleRule[])[],
-    asset?: HComponentAsset,
+    attachment?: HComponentAttachment,
 ): void {
     const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
     const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
 
-    store.components.set(component_name, { component_name, style, asset });
+    store.components.set(component_name, { component_name, style, attachment });
 }
 
-export function registerRootPage(store: Store, raw_style: (StyleRule | StyleRule[])[], asset?: HComponentAsset): void {
+export function registerRootPage(
+    store: Store,
+    raw_style: (StyleRule | StyleRule[])[],
+    attachment?: HComponentAttachment,
+): void {
     const component_name = "hanabi-root-page";
     const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
 
-    store.components.set(component_name, { component_name, style, asset });
+    store.components.set(component_name, { component_name, style, attachment });
 }
 
 export function clearStore(store: Store): void {

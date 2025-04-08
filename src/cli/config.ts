@@ -3,6 +3,10 @@ import path from "node:path";
 import { cwd } from "node:process";
 import { type DesignRule, default_design_rule } from "@/lib/design";
 
+export type AssetConfig = {
+    target_prefix: string;
+};
+
 export type HanabiConfig = {
     server: {
         hostname: string;
@@ -17,6 +21,7 @@ export type HanabiConfig = {
         clean_befor_build: boolean;
         dist_dir: string;
     };
+    asset: AssetConfig;
     designrule: DesignRule;
 };
 
@@ -33,6 +38,9 @@ const defaultConfig: HanabiConfig = {
     output: {
         clean_befor_build: true,
         dist_dir: "dist",
+    },
+    asset: {
+        target_prefix: "/assets",
     },
     designrule: default_design_rule,
 };

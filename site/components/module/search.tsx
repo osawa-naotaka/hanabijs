@@ -5,7 +5,7 @@ export function search(store: Store): HComponentFn<HArgument> {
     const Search = element("search");
     const SearchBar = element("search-bar");
     const Input = element("search-input", { tag: "input" });
-    const InputIcon = hIcon();
+    const InputIcon = hIcon(store);
     const Result = element("search-result", { tag: "ul" });
 
     const component_sytles = [

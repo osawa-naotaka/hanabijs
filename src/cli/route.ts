@@ -1,5 +1,7 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { cwd } from "node:process";
+import type { HComponentAsset } from "@/main";
 import type { Attribute } from "../lib/component";
 import { globExt } from "../lib/util";
 
@@ -37,6 +39,12 @@ export async function createStaticRouter(rootdir: string): Promise<Router> {
     }
 
     throw new Error(`createStaticRouter: directory "${rootdir}" not found.`);
+}
+
+export async function createAssetRouter(asset_prefix: string, assets: HComponentAsset[]): Promise<Router> {
+    const asset_route_table = await createAssetRouteTable(asset_prefix, assets);
+
+    return (req) => pageRouter(asset_route_table, new URL(req.url).pathname);
 }
 
 function withoutExt(file: string): string {
@@ -137,6 +145,37 @@ async function createStaticRouteTable(rootdir: string): Promise<RouteTable[]> {
         const path_regexp = new RegExp(`^${escapeForRegExp(path_exact)}$`);
         return { path_regexp, path_exact, target_file, target_ext: path.extname(name), auto_generate: false };
     });
+}
+
+async function createAssetRouteTable(asset_prefix: string, assets: HComponentAsset[]): Promise<RouteTable[]> {
+    return (
+        await Promise.all(
+            assets.map(async (entry) => {
+                const root_dir =
+                    entry.package_name === undefined
+                        ? cwd()
+                        : path.dirname(require.resolve(`${entry.package_name}/package.json`));
+                return (
+                    await Promise.all(
+                        entry.copy_files.map(async (file) => {
+                            const glob = new Bun.Glob(file.src);
+                            return (await Array.fromAsync(glob.scan(root_dir))).map((src) => {
+                                const path_exact = path.join("/", asset_prefix, src);
+
+                                return {
+                                    path_regexp: new RegExp(`^${escapeForRegExp(path_exact)}$`),
+                                    path_exact,
+                                    target_file: path.join(root_dir, src),
+                                    target_ext: path.extname(src),
+                                    auto_generate: false,
+                                };
+                            });
+                        }),
+                    )
+                ).flat();
+            }),
+        )
+    ).flat();
 }
 
 function pageRouter(route_table: RouteTable[], req_url_path: string): Route | Error {

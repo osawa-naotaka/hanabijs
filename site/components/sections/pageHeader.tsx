@@ -26,7 +26,7 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const PageHeader = element("page-header", { tag: "header" });
     const Drawer = drawer(store, "page-header-toggle-button");
     const Popover = popover(store, "search-popover");
-    const Icon = as("page-header-icon", hIcon());
+    const Icon = as("page-header-icon", hIcon(store));
     const Navigation = navigation(store);
     const Search = search(store);
 

@@ -24,9 +24,9 @@ export function pageHead(): HComponentFn<PageHeadArgument> {
             <meta http-equiv="content-security-policy" content="default-src 'self' https://cdn.jsdelivr.net/;" />
 
             {/* // fontawesome */}
-            <link rel="stylesheet" href="/assets/webfonts/fontawesome.css" />
-            <link rel="stylesheet" href="/assets/webfonts/brands.css" />
-            <link rel="stylesheet" href="/assets/webfonts/solid.css" />
+            <link rel="stylesheet" href="/assets/css/fontawesome.min.css" />
+            <link rel="stylesheet" href="/assets/css/brands.min.css" />
+            <link rel="stylesheet" href="/assets/css/solid.min.css" />
 
             {/* // Markdown code syntax highlight */}
             <link rel="stylesheet" href="/assets/css/prism-atom-dark.css" />

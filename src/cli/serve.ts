@@ -2,10 +2,11 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import { loadConfig } from "@/cli/config";
-import { createPageRouter, createStaticRouter } from "@/cli/route";
+import { createAssetRouter, createPageRouter, createStaticRouter } from "@/cli/route";
+import type { Router } from "@/cli/route";
 import { DOCTYPE, Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
-import type { Store } from "@/lib/repository";
+import type { HComponentAsset, Store } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
 import { insertNodes, stringifyToCss } from "@/lib/style";
 import { contentType, replaceExt } from "@/lib/util";
@@ -23,10 +24,11 @@ export async function serve(conf_file: string | undefined) {
     const watch_dir = path.join(root, config.server.watch_dir);
 
     const watcher = chokidar.watch(watch_dir, { persistent: true });
-    const store = generateStore(config.designrule);
+    const store = generateStore(config.asset, config.designrule);
 
     let page_router = await createPageRouter(page_dir);
     let public_router = await createStaticRouter(public_dir);
+    let asset_router = new Map<string, Router>();
 
     const server = Bun.serve({
         websocket: {
@@ -35,6 +37,7 @@ export async function serve(conf_file: string | undefined) {
                 watcher.on("change", async () => {
                     page_router = await createPageRouter(page_dir);
                     public_router = await createStaticRouter(public_dir);
+                    asset_router = new Map<string, Router>();
                     ws.send("reload");
                 });
             },
@@ -63,7 +66,7 @@ export async function serve(conf_file: string | undefined) {
                         switch (match_page.req_ext) {
                             case ".css": {
                                 const css_files = Array.from(store.components.values())
-                                    .map((x) => x.asset?.script)
+                                    .map((x) => x.attachment?.script)
                                     .filter((x) => x !== undefined);
                                 for (const client of css_files) {
                                     const client_fn = await import(client);
@@ -87,6 +90,22 @@ export async function serve(conf_file: string | undefined) {
 
                     switch (match_page.req_ext) {
                         case ".html": {
+                            // create asset router
+                            const asset_files: [string, HComponentAsset[]][] = [];
+                            for (const [key, value] of store.components.entries()) {
+                                if (value.attachment?.assets !== undefined) {
+                                    asset_files.push([key, value.attachment.assets]);
+                                }
+                            }
+
+                            for (const asset of asset_files) {
+                                asset_router.set(
+                                    asset[0],
+                                    await createAssetRouter(config.asset.target_prefix, asset[1]),
+                                );
+                            }
+
+                            // generate html
                             const top_component = await root_page_fn(match_page.params);
                             const css_name = replaceExt(replaceExt(match_page.target_file, ""), ".css");
                             const js_name = replaceExt(replaceExt(match_page.target_file, ""), ".js");
@@ -116,6 +135,15 @@ export async function serve(conf_file: string | undefined) {
             if (!(match_public instanceof Error)) {
                 const content = await readFile(path.join(public_dir, match_public.target_file));
                 return normalResponse(content, match_public.req_ext);
+            }
+
+            // Asset router
+            for (const router of asset_router.values()) {
+                const match_asset = router(req);
+                if (!(match_asset instanceof Error)) {
+                    const content = await readFile(match_asset.target_file);
+                    return normalResponse(content, match_asset.req_ext);
+                }
             }
 
             // reload plugin
@@ -157,7 +185,7 @@ async function errorResponse(status: number, cause: string): Promise<Response> {
 
 async function bundleScript(store: Store): Promise<string> {
     const script_files = Array.from(store.components.values())
-        .map((x) => x.asset?.script)
+        .map((x) => x.attachment?.script)
         .filter((x) => x !== undefined);
     const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
     const bundle = await esbuild.build({

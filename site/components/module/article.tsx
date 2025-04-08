@@ -43,7 +43,7 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
     const ArticleTag = as("article-tag", tag());
     const DateTime = dateTime();
     const ArticleText = element("article-text");
-    const ShareX = shareX();
+    const ShareX = shareX(store);
 
     const component_styles = [
         style(Article)(MARGIN_BLOCK(S_2XLARGE(store))),

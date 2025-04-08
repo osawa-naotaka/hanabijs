@@ -28,7 +28,7 @@ export async function build(conf_file: string | undefined) {
     const page_dir = path.join(root, config.input.page_dir);
     const public_dir = path.join(root, config.input.public_dir);
 
-    const store = generateStore(config.designrule);
+    const store = generateStore(config.asset, config.designrule);
 
     if (config.output.clean_befor_build && existsSync(dist_dir)) {
         await rmdir(dist_dir, { recursive: true });
@@ -54,17 +54,46 @@ export async function build(conf_file: string | undefined) {
         }
     }
 
+    // copy assets
+    const components = Array.from(store.components.values())
+        .map((x) => x.attachment?.assets)
+        .filter((x) => x !== undefined);
+    for (const statics of components) {
+        for (const entry of statics) {
+            const root_dir =
+                entry.package_name === undefined
+                    ? cwd()
+                    : path.dirname(require.resolve(`${entry.package_name}/package.json`));
+            for (const file of entry.copy_files) {
+                copyFiles(root_dir, file.src, path.join(dist_dir, config.asset.target_prefix, file.dist));
+            }
+        }
+    }
+
     // copy public
     if (existsSync(public_dir)) {
         const start = performance.now();
-        for await (const src of globExt(public_dir, "")) {
-            const file = Bun.file(path.join(public_dir, src));
-            await Bun.write(path.join(dist_dir, src), file);
-        }
+        await copyDir(public_dir, dist_dir);
         console.log(`process public in ${(performance.now() - start).toFixed(2)}ms`);
     }
 
     console.log(`build in ${(performance.now() - start).toFixed(2)}ms`);
+}
+
+async function copyFiles(root: string, pattern: string, dist_dir: string) {
+    const glob = new Bun.Glob(pattern);
+    for await (const src of glob.scan(root)) {
+        const content = Bun.file(path.join(root, src));
+        await Bun.write(path.join(dist_dir, path.parse(src).base), content);
+    }
+}
+
+async function copyDir(root: string, dist_dir: string) {
+    const glob = new Bun.Glob("**/*");
+    for await (const src of glob.scan(root)) {
+        const content = Bun.file(path.join(root, src));
+        await Bun.write(path.join(dist_dir, src), content);
+    }
 }
 
 type HtmlPageFn = {
@@ -136,7 +165,7 @@ async function bundleAndWriteCssJs(relative_path: string, dist_dir: string, stor
     const css_start = performance.now();
     let css_link = "";
     const css_files = Array.from(store.components.values())
-        .map((x) => x.asset?.script)
+        .map((x) => x.attachment?.script)
         .filter((x) => x !== undefined);
     for (const client of css_files) {
         const client_fn = await import(client);
@@ -174,7 +203,7 @@ function writeToFile(content: string, file_name: string, dist_dir: string, ext: 
 
 export async function bundleScriptEsbuild(store: Store): Promise<string | null> {
     const script_files = Array.from(store.components.values())
-        .map((x) => x.asset?.script)
+        .map((x) => x.attachment?.script)
         .filter((x) => x !== undefined);
     if (script_files.length === 0) {
         return null;
@@ -205,7 +234,7 @@ export async function bundleScriptEsbuild(store: Store): Promise<string | null> 
 
 export async function bundleScriptRollup(store: Store): Promise<string | null> {
     const script_files = Array.from(store.components.values())
-        .map((x) => x.asset?.script)
+        .map((x) => x.attachment?.script)
         .filter(Boolean);
     if (script_files.length === 0) {
         return null;

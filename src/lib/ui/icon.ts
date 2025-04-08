@@ -1,6 +1,7 @@
 import type { HComponentFn } from "../component";
 import { element } from "../component";
-import { component } from "../repository";
+import { component, registerComponent } from "../repository";
+import type { Store } from "../repository"
 
 export type HIconType = "brands" | "solid";
 
@@ -14,8 +15,39 @@ export type HSolidIconArg = {
     name: HSolidIconName;
 };
 
-export function hIcon(): HComponentFn<HBrandIconArg | HSolidIconArg> {
+export function hIcon(store: Store): HComponentFn<HBrandIconArg | HSolidIconArg> {
     const Top = element("h-icon", { tag: "i" });
+
+    registerComponent(store, Top, [], {
+        assets: [
+            {
+                package_name: "@fortawesome/fontawesome-free",
+                copy_files: [
+                    {
+                        src: "webfonts/fa-brands-400.*",
+                        dist: "webfonts/",
+                    },
+                    {
+                        src: "webfonts/fa-solid-900.*",
+                        dist: "webfonts/",
+                    },
+                    {
+                        src: "css/fontawesome.min.css",
+                        dist: "css/",
+                    },
+                    {
+                        src: "css/brands.min.css",
+                        dist: "css/",
+                    },
+                    {
+                        src: "css/solid.min.css",
+                        dist: "css/",
+                    },
+                ],
+            },
+        ],
+    });
+
     return component(Top, ({ type, name }) => Top({ class: [`fa-${type}`, `fa-${name}`] }));
 }
 
