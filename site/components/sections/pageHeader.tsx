@@ -5,10 +5,13 @@ import {
     FONT_SIZE,
     F_3XLARGE,
     F_LARGE,
+    HEIGHT,
     OPACITY,
 } from "@/lib/stylerules";
-import { as, component, element, hIcon, registerComponent, style } from "@/main";
-import type { HBrandIconName, HComponentFn, Store } from "@/main";
+import { hSvgIcon } from "@/lib/ui/svgIcon";
+import type { HSvgBrandsIconName } from "@/lib/ui/svgIcon";
+import { component, element, registerComponent, style } from "@/main";
+import type { HComponentFn, Store } from "@/main";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
 import { popover } from "@site/components/module/popover";
@@ -18,7 +21,7 @@ export type PageHeaderArgument = {
     title: string;
     navitem: {
         url: string;
-        icon: HBrandIconName;
+        icon: HSvgBrandsIconName;
     }[];
 };
 
@@ -26,7 +29,9 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const PageHeader = element("page-header", { tag: "header" });
     const Drawer = drawer(store, "page-header-toggle-button");
     const Popover = popover(store, "search-popover");
-    const Icon = as("page-header-icon", hIcon(store));
+    const PopoverOpenIcon = hSvgIcon(store, { type: "solid", name: "magnifying-glass" });
+    const PopoverCloseIcon = hSvgIcon(store, { type: "solid", name: "xmark" });
+    const DrawerOpenIcon = hSvgIcon(store, { type: "solid", name: "bars" });
     const Navigation = navigation(store);
     const Search = search(store);
 
@@ -34,7 +39,9 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
         style(PageHeader)(FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),
         style(Drawer)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
         style("h1")(FONT_SIZE(F_3XLARGE(store))),
-        style(Icon)(FONT_SIZE(F_LARGE(store))),
+        style(PopoverOpenIcon)(HEIGHT(F_LARGE(store))),
+        style(PopoverCloseIcon)(HEIGHT(F_LARGE(store))),
+        style(DrawerOpenIcon)(HEIGHT(F_LARGE(store))),
     ];
 
     registerComponent(store, PageHeader, component_styles);
@@ -48,13 +55,9 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
                     </h1>
                 }
                 header_space={
-                    <Popover
-                        open_button={<Icon type="solid" name="search" />}
-                        close_button={<Icon type="solid" name="close" />}
-                        body={<Search />}
-                    />
+                    <Popover open_button={<PopoverOpenIcon />} close_button={<PopoverCloseIcon />} body={<Search />} />
                 }
-                open_button={<Icon type="solid" name="bars" />}
+                open_button={<DrawerOpenIcon />}
                 content={<Navigation navitem={navitem} />}
             />
         </PageHeader>

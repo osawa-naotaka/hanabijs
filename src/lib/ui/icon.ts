@@ -6,9 +6,9 @@ import type { Store } from "../repository";
 
 export type HIconType = "brands" | "solid";
 
-export type HBrandIconArg = {
+export type HBrandsIconArg = {
     type: "brands";
-    name: HBrandIconName;
+    name: HBrandsIconName;
 };
 
 export type HSolidIconArg = {
@@ -16,7 +16,9 @@ export type HSolidIconArg = {
     name: HSolidIconName;
 };
 
-export function hIcon(store: Store): HComponentFn<HBrandIconArg | HSolidIconArg> {
+export type HIconArg = HBrandsIconArg | HSolidIconArg;
+
+export function hIcon(store: Store): HComponentFn<HIconArg> {
     const Top = element("h-icon", { tag: "i" });
 
     registerComponent(store, Top, [], {
@@ -62,7 +64,7 @@ export function hIcon(store: Store): HComponentFn<HBrandIconArg | HSolidIconArg>
     return component(Top, ({ type, name }) => Top({ class: [`fa-${type}`, `fa-${name}`] }));
 }
 
-export type HBrandIconName =
+export type HBrandsIconName =
     | "monero"
     | "hooli"
     | "yelp"

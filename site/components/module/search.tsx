@@ -1,11 +1,11 @@
-import { as, component, createDom, element, hIcon, registerComponent, style } from "@/main";
+import { as, component, createDom, element, registerComponent, style } from "@/main";
 import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
 
 export function search(store: Store): HComponentFn<HArgument> {
     const Search = element("search");
     const SearchBar = element("search-bar");
     const Input = element("search-input", { tag: "input" });
-    const InputIcon = hIcon(store);
+    const InputIcon = hSvgIcon(store, { type: "solid", name: "magnifying-glass" });
     const Result = element("search-result", { tag: "ul" });
 
     const component_sytles = [
@@ -22,7 +22,7 @@ export function search(store: Store): HComponentFn<HArgument> {
         <Search>
             <SearchBar>
                 <Input type="search" placeholder="SEARCH KEYWORDS" />
-                <InputIcon type="solid" name="magnifying-glass" />
+                <InputIcon />
             </SearchBar>
             <Result />
         </Search>
@@ -86,6 +86,7 @@ import {
     S_2XLARGE,
     S_LARGE,
 } from "@/lib/stylerules";
+import { hSvgIcon } from "@/lib/ui/svgIcon";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
 import { postFmSchema } from "@site/config/site.config";

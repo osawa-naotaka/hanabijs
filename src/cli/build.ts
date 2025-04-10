@@ -68,7 +68,6 @@ export async function build(conf_file: string | undefined) {
                 entry.package_name === undefined
                     ? cwd()
                     : path.dirname(require.resolve(`${entry.package_name}/package.json`));
-            console.log(root_dir);
             for (const file of entry.copy_files) {
                 await copyFiles(root_dir, file.src, path.join(dist_dir, config.asset.target_prefix, file.dist));
             }
