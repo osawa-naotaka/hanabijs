@@ -8,8 +8,8 @@ import {
     HEIGHT,
     OPACITY,
 } from "@/lib/stylerules";
-import { hSvgIcon } from "@/lib/ui/svgIcon";
-import type { HSvgBrandsIconName } from "@/lib/ui/svgIcon";
+import { hIcon } from "@/lib/ui/icon";
+import type { HBrandsIconName } from "@/lib/ui/icon";
 import { component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { drawer } from "@site/components/module/drawer";
@@ -21,7 +21,7 @@ export type PageHeaderArgument = {
     title: string;
     navitem: {
         url: string;
-        icon: HSvgBrandsIconName;
+        icon: HBrandsIconName;
     }[];
 };
 
@@ -29,9 +29,9 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const PageHeader = element("page-header", { tag: "header" });
     const Drawer = drawer(store, "page-header-toggle-button");
     const Popover = popover(store, "search-popover");
-    const PopoverOpenIcon = hSvgIcon(store, { type: "solid", name: "magnifying-glass" });
-    const PopoverCloseIcon = hSvgIcon(store, { type: "solid", name: "xmark" });
-    const DrawerOpenIcon = hSvgIcon(store, { type: "solid", name: "bars" });
+    const PopoverOpenIcon = hIcon(store, { type: "solid", name: "magnifying-glass" });
+    const PopoverCloseIcon = hIcon(store, { type: "solid", name: "xmark" });
+    const DrawerOpenIcon = hIcon(store, { type: "solid", name: "bars" });
     const Navigation = navigation(store);
     const Search = search(store);
 

@@ -1,5 +1,9 @@
-import { type Attribute, type HComponentFn, element } from "../component";
-import { type Store, component, registerComponent } from "../repository";
+import type { Attribute, HComponentFn } from "../component";
+import { element } from "../component";
+import { component, registerComponent } from "../repository";
+import type { Store } from "../repository";
+import { style } from "../style";
+import { DISPLAY, HEIGHT } from "../stylerules";
 
 export type HSvgIconType = "brands" | "solid";
 
@@ -18,7 +22,9 @@ export type HSvgIconArg = HSvgBrandsIconArg | HSvgSolidIconArg;
 export function hSvgIcon(store: Store, arg: HSvgIconArg): HComponentFn<Attribute> {
     const Top = element(`svg-icon-${arg.type}-${arg.name}`, { tag: "img" });
 
-    registerComponent(store, Top, [], {
+    const styles = [style(Top)(DISPLAY("inline"), HEIGHT("inherit"))];
+
+    registerComponent(store, Top, styles, {
         assets: [
             {
                 package_name: "@fortawesome/fontawesome-free",

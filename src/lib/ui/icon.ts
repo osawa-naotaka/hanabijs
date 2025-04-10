@@ -1,4 +1,4 @@
-import type { HComponentFn } from "../component";
+import type { Attribute, HComponentFn } from "../component";
 import { element } from "../component";
 import { Link } from "../elements";
 import { component, registerComponent } from "../repository";
@@ -18,8 +18,11 @@ export type HSolidIconArg = {
 
 export type HIconArg = HBrandsIconArg | HSolidIconArg;
 
-export function hIcon(store: Store): HComponentFn<HIconArg> {
-    const Top = element("h-icon", { tag: "i" });
+export function hIcon(store: Store, icon: HIconArg): HComponentFn<Attribute> {
+    const Top = element(`h-icon-${icon.type}-${icon.name}`, {
+        tag: "i",
+        class: [`fa-${icon.type}`, `fa-${icon.name}`],
+    });
 
     registerComponent(store, Top, [], {
         inserts: [
@@ -61,7 +64,7 @@ export function hIcon(store: Store): HComponentFn<HIconArg> {
         ],
     });
 
-    return component(Top, ({ type, name }) => Top({ class: [`fa-${type}`, `fa-${name}`] }));
+    return component(Top, Top);
 }
 
 export type HBrandsIconName =

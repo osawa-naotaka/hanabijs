@@ -1,4 +1,4 @@
-import { hSvgIcon } from "@/lib/ui/svgIcon";
+import { hIcon } from "@/lib/ui/icon";
 import { component, element } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 
@@ -9,7 +9,7 @@ export type ShareXArgument = {
 
 export function shareX(store: Store): HComponentFn<ShareXArgument> {
     const ShareX = element("share-x", { tag: "a" });
-    const XIcon = hSvgIcon(store, { type: "brands", name: "x-twitter" });
+    const XIcon = hIcon(store, { type: "brands", name: "x-twitter" });
 
     return component(ShareX, ({ title, url }) => {
         const href = `https://x.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;

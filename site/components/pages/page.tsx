@@ -1,7 +1,7 @@
 import { DEFAULT_STYLES, INIT_CSS } from "@/lib/stylerules";
+import type { HBrandsIconName } from "@/lib/ui/icon";
 import { component, registerComponent } from "@/main";
 import type { HComponentFn, Store } from "@/main";
-import type { HSvgBrandsIconName } from "@/lib/ui/svgIcon";
 import { pageHead } from "@site/components/pages/pageHead";
 import { pageFooter } from "@site/components/sections/pageFooter";
 import { pageHeader } from "@site/components/sections/pageHeader";
@@ -13,7 +13,7 @@ export type PageArgument = {
     name: string;
     navitem: {
         url: string;
-        icon: HSvgBrandsIconName;
+        icon: HBrandsIconName;
     }[];
 };
 

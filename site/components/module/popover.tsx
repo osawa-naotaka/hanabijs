@@ -8,6 +8,7 @@ import {
     DEFAULT_ROW,
     DISPLAY,
     FLEX_END,
+    FONT_SIZE,
     FULL_WIDTH_HEIGHT,
     MARGIN_BLOCK,
     OPACITY,
@@ -44,7 +45,7 @@ export function popover(store: Store, button_id: string): HComponentFn<PopoverAr
         style([Container, ":popover-open"])(DEFAULT_COLUMN(store), OPACITY("1")),
         atStyle(["@layer", "high"], ["@starting-style"])([Container, ":popover-open"])(OPACITY("0")),
         style(Content)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
-        style(Button)(BORDER_NONE, CURSOR("pointer")),
+        style(Button)(BORDER_NONE, CURSOR("pointer"), FONT_SIZE("inherit")),
         style(CloseArea)(MARGIN_BLOCK("0", S_MEDIUM(store)), DEFAULT_ROW(store), FLEX_END),
     ];
 

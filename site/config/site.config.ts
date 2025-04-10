@@ -1,4 +1,4 @@
-import type { HSvgBrandsIconName } from "@/lib/ui/svgIcon";
+import type { HBrandsIconName } from "@/lib/ui/icon";
 import * as v from "valibot";
 
 export const site = {
@@ -7,7 +7,7 @@ export const site = {
     description: "lulliecatは皆さまの新しい歩みを支えます",
 };
 
-export const navitem: { name: string; url: string; icon: HSvgBrandsIconName }[] = [
+export const navitem: { name: string; url: string; icon: HBrandsIconName }[] = [
     { name: "github", url: "https://github.com/osawa-naotaka/", icon: "github" },
     { name: "x", url: "https://x.com/lulliecat", icon: "x-twitter" },
     { name: "youtube", url: "https://www.youtube.com/channel/UCUzbZRjQJSZtH715CR2OIXw", icon: "youtube" },
