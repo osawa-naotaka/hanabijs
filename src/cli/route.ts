@@ -47,7 +47,7 @@ export async function createAssetRouter(asset_prefix: string, assets: HComponent
     return (req) => pageRouter(asset_route_table, new URL(req.url).pathname);
 }
 
-function withoutExt(file: string): string {
+export function withoutExt(file: string): string {
     const p = path.parse(file);
     return path.join(p.dir, p.name);
 }
@@ -91,9 +91,9 @@ export async function createPageRouteTable(rootdir: string): Promise<RouteTable[
             continue;
         }
 
-        // .html is expanded to generated .css and .js
+        // .html is expanded to generated .css, .js and .woff2
         const path_base = withoutExt(path_without_ts);
-        for (const ext of [".css", ".js"]) {
+        for (const ext of [".css", ".js", ".woff2"]) {
             exact_route_table.push({
                 path_regexp: new RegExp(`^${escapeForRegExp(path_base)}${escapeForRegExp(ext)}$`),
                 target_file,

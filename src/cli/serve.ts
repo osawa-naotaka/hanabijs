@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import { loadConfig } from "@/cli/config";
-import { createAssetRouter, createPageRouter, createStaticRouter } from "@/cli/route";
+import { createAssetRouter, createPageRouter, createStaticRouter, withoutExt } from "@/cli/route";
 import type { Router } from "@/cli/route";
 import { DOCTYPE, Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
@@ -14,6 +14,8 @@ import { ErrorPage } from "@/page/error";
 import hanabi_error_css from "@/page/hanabi-error.css" assert { type: "text" };
 import chokidar from "chokidar";
 import esbuild from "esbuild";
+import { generateCss, svg2woff2 } from "svg2woff2";
+import type { Svg } from "svg2woff2";
 
 export async function serve(conf_file: string | undefined) {
     const config = await loadConfig(conf_file);
@@ -65,23 +67,15 @@ export async function serve(conf_file: string | undefined) {
                     if (match_page.auto_generate) {
                         switch (match_page.req_ext) {
                             case ".css": {
-                                const css_files = Array.from(store.components.values())
-                                    .map((x) => x.attachment?.script)
-                                    .filter((x) => x !== undefined);
-                                for (const client of css_files) {
-                                    const client_fn = await import(client);
-                                    if (typeof client_fn.default === "function") {
-                                        await client_fn.default(store);
-                                    } else {
-                                        return await errorResponse(500, `${client} does not have default export.`);
-                                    }
-                                }
-                                const css = stringifyToCss(Array.from(store.components.values()));
-                                return normalResponse(css, match_page.req_ext);
+                                return bundleCss(store, withoutExt(withoutExt(match_page.target_file)));
                             }
                             case ".js": {
                                 const js = await bundleScript(store);
                                 return normalResponse(js, match_page.req_ext);
+                            }
+                            case ".woff2": {
+                                const woff2 = await bundleWoff2(store);
+                                return normalResponse(woff2, match_page.req_ext);
                             }
                             default:
                                 return errorResponse(500, `auto generation of ${match_page.req_ext} is not supported.`);
@@ -195,6 +189,24 @@ async function errorResponse(status: number, cause: string): Promise<Response> {
     });
 }
 
+async function bundleCss(store: Store, base_name: string): Promise<Response> {
+    const font_css = generateFontCss(store, base_name);
+
+    const css_files = Array.from(store.components.values())
+        .map((x) => x.attachment?.script)
+        .filter((x) => x !== undefined);
+    for (const client of css_files) {
+        const client_fn = await import(client);
+        if (typeof client_fn.default === "function") {
+            await client_fn.default(store);
+        } else {
+            return await errorResponse(500, `${client} does not have default export.`);
+        }
+    }
+    const css = stringifyToCss(Array.from(store.components.values()));
+    return normalResponse(`${css}${font_css}`, ".css");
+}
+
 async function bundleScript(store: Store): Promise<string> {
     const script_files = Array.from(store.components.values())
         .map((x) => x.attachment?.script)
@@ -220,4 +232,47 @@ async function bundleScript(store: Store): Promise<string> {
     });
 
     return bundle.outputFiles[0].text;
+}
+
+type SvgName = {
+    name: string;
+    src: string;
+};
+
+async function bundleWoff2(store: Store): Promise<Buffer> {
+    const svg_names = listSvgNames(store);
+
+    const svgs: Svg[] = await Promise.all(
+        svg_names.map(async (n) => {
+            const content = (await readFile(n.src)).toString();
+            return { name: n.name, content };
+        }),
+    );
+
+    const woff2 = await svg2woff2(svgs, {
+        font_family: "hanabi generated font",
+        version: "1.0",
+        description: "hanabi font generated from svgs",
+        url: "https://github.com/osawa-naotaka/hanabijs.git",
+    });
+
+    return woff2;
+}
+
+function generateFontCss(store: Store, base_name: string): string {
+    const svg_names: Svg[] = listSvgNames(store).map((n) => ({ name: n.name, content: "" }));
+    return generateCss(svg_names, { font_family: "hanabi generated font", url: `${base_name}.woff2` });
+}
+
+function listSvgNames(store: Store): SvgName[] {
+    const font_components = Array.from(store.components.values())
+        .map((x) => x.attachment?.fonts)
+        .filter((x) => x !== undefined);
+
+    return font_components.flatMap((component) =>
+        component.flatMap((chars) => {
+            const base_dir = path.dirname(require.resolve(`${chars.package_name}/package.json`));
+            return chars.chars.map((c) => ({ name: c.name, src: path.join(base_dir, c.src) }));
+        }),
+    );
 }

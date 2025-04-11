@@ -3,7 +3,6 @@ import { element } from "../component";
 import { component, registerComponent } from "../repository";
 import type { Store } from "../repository";
 import { style } from "../style";
-import { DISPLAY, HEIGHT } from "../stylerules";
 
 export type HSvgIconType = "brands" | "solid";
 
@@ -19,26 +18,26 @@ export type HSvgSolidIconArg = {
 
 export type HSvgIconArg = HSvgBrandsIconArg | HSvgSolidIconArg;
 
-export function hSvgIcon(store: Store, arg: HSvgIconArg): HComponentFn<Attribute> {
-    const Top = element(`svg-icon-${arg.type}-${arg.name}`, { tag: "img" });
-
-    const styles = [style(Top)(DISPLAY("inline"), HEIGHT("inherit"))];
+export function hSvgIconFont(store: Store, arg: HSvgIconArg): HComponentFn<Attribute> {
+    const font_name = `${arg.type}-${arg.name}`;
+    const Top = element(`svg-icon-font-${arg.type}-${arg.name}`, { tag: "i", class: ["hf", `hf-${font_name}`] });
+    const styles = [style(Top)({ font_family: "hanabi generated font", font_style: "normal" })];
 
     registerComponent(store, Top, styles, {
-        assets: [
+        fonts: [
             {
                 package_name: "@fortawesome/fontawesome-free",
-                copy_files: [
+                chars: [
                     {
                         src: `svgs/${arg.type}/${arg.name}.svg`,
-                        dist: `icons/${arg.type}/`,
+                        name: font_name,
                     },
                 ],
             },
         ],
     });
 
-    return component(Top, () => Top({ src: `${store.asset.target_prefix}/icons/${arg.type}/${arg.name}.svg` }));
+    return component(Top, Top);
 }
 
 export type HSvgBrandsIconName =

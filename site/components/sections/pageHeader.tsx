@@ -8,6 +8,7 @@ import {
 } from "@/lib/stylerules";
 import { hIcon } from "@/lib/ui/icon";
 import type { HBrandsIconName } from "@/lib/ui/icon";
+import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 import { component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { drawer } from "@site/components/module/drawer";
@@ -31,6 +32,8 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const Navigation = navigation(store);
     const Search = search(store);
 
+    const OpenButton = hSvgIconFont(store, { type: "solid", name: "magnifying-glass" });
+
     const component_styles = [
         style(PageHeader)(FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),
         style(Drawer)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
@@ -49,7 +52,7 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
                 }
                 header_space={
                     <Popover
-                        open_button={<Icon type="solid" name="magnifying-glass" />}
+                        open_button={<OpenButton />}
                         close_button={<Icon type="solid" name="xmark" />}
                         body={<Search />}
                     />

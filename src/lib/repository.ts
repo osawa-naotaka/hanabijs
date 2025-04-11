@@ -15,6 +15,7 @@ export type HComponentAttachment = {
     script?: string;
     assets?: HComponentAsset[];
     inserts?: HComponentInsert[];
+    fonts?: HIconFontCharacter[];
 };
 
 export type HComponentAsset = {
@@ -22,6 +23,14 @@ export type HComponentAsset = {
     copy_files: {
         src: string;
         dist: string;
+    }[];
+};
+
+export type HIconFontCharacter = {
+    package_name: string;
+    chars: {
+        src: string;
+        name: string;
     }[];
 };
 
