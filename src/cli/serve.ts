@@ -2,8 +2,12 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import { loadConfig } from "@/cli/config";
+import { bundleCss } from "@/cli/css";
+import { bundleWoff2 } from "@/cli/font";
+import { bundleHtml } from "@/cli/html";
 import { createAssetRouter, createPageRouter, createStaticRouter, withoutExt } from "@/cli/route";
 import type { Router } from "@/cli/route";
+import { bundleScriptEsbuild } from "@/cli/script";
 import { Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
 import type { Store } from "@/lib/repository";
@@ -12,10 +16,6 @@ import { contentType } from "@/lib/util";
 import { ErrorPage } from "@/page/error";
 import hanabi_error_css from "@/page/hanabi-error.css" assert { type: "text" };
 import chokidar from "chokidar";
-import { bundleCss } from "@/cli/css";
-import { bundleWoff2 } from "@/cli/font";
-import { bundleHtml } from "@/cli/html";
-import { bundleScriptEsbuild } from "@/cli/script";
 
 export async function serve(conf_file: string | undefined) {
     const config = await loadConfig(conf_file);
