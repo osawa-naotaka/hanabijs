@@ -19,7 +19,7 @@ export type HComponentAttachment = {
 };
 
 export type HComponentAsset = {
-    package_name: string;
+    package_name?: string;
     copy_files: {
         src: string;
         dist: string;
@@ -27,7 +27,7 @@ export type HComponentAsset = {
 };
 
 export type HIconFontCharacter = {
-    package_name: string;
+    package_name?: string;
     chars: {
         src: string;
         name: string;

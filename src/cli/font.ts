@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { cwd } from "node:process";
 import type { Store } from "@/main";
 import type { Svg } from "svg2woff2";
 import { generateCss, svg2woff2 } from "svg2woff2";
@@ -59,7 +60,10 @@ function listSvgNames(store: Store): SvgName[] {
 
     return font_components.flatMap((component) =>
         component.flatMap((chars) => {
-            const base_dir = path.dirname(require.resolve(`${chars.package_name}/package.json`));
+            const base_dir =
+                chars.package_name !== undefined
+                    ? path.dirname(require.resolve(`${chars.package_name}/package.json`))
+                    : cwd();
             return chars.chars.map((c) => ({ name: c.name, src: path.join(base_dir, c.src) }));
         }),
     );

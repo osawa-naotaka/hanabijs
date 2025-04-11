@@ -1,15 +1,10 @@
-import type { Attribute, HComponentFn, HNode } from "./lib/component";
-import type { AttributeMap, Tag } from "./lib/elements";
-
-export type Component<T extends Attribute> = string | HComponentFn<T>;
-
-export type IntrinsicElements_ = { [key in keyof AttributeMap]: Partial<AttributeMap[key]> };
+import type { Component, IntrinsicElements_, JSXChildren } from "./jsx-runtime";
+import { jsx } from "./jsx-runtime";
+import type { Attribute, HNode } from "./lib/component";
 
 export namespace JSX {
     export interface IntrinsicElements extends IntrinsicElements_ {}
 }
-
-export type JSXChildren = HNode | HNode[] | JSXChildren[];
 
 export function jsxDEV<T extends Attribute>(
     element: Component<T>,
@@ -23,29 +18,7 @@ export function jsxDEV<T extends Attribute>(
     // biome-ignore lint: using any.
     _d4: any,
 ): HNode {
-    const { children, ...attribute } = props;
-    const child = normalizeChildren(children);
-
-    if (typeof element === "string") {
-        return {
-            tag: element as Tag,
-            attribute,
-            child,
-        };
-    }
-    return element(attribute as T, ...child);
+    return jsx(element, props);
 }
 
 export const jsxsDEV = jsxDEV;
-
-function normalizeChildren(children: JSXChildren | undefined): HNode[] {
-    if (children === undefined) {
-        return [];
-    }
-
-    if (Array.isArray(children)) {
-        return children.flat().flatMap(normalizeChildren);
-    }
-
-    return [children];
-}
