@@ -5,7 +5,7 @@ export function search(store: Store): HComponentFn<HArgument> {
     const Search = element("search");
     const SearchBar = element("search-bar");
     const Input = element("search-input", { tag: "input" });
-    const InputIcon = hIcon(store, { type: "solid", name: "magnifying-glass" });
+    const InputIcon = hIcon(store);
     const Result = element("search-result", { tag: "ul" });
 
     const component_sytles = [
@@ -22,7 +22,7 @@ export function search(store: Store): HComponentFn<HArgument> {
         <Search>
             <SearchBar>
                 <Input type="search" placeholder="SEARCH KEYWORDS" />
-                <InputIcon />
+                <InputIcon type="solid" name="magnifying-glass" />
             </SearchBar>
             <Result />
         </Search>
