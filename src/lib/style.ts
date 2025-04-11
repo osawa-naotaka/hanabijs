@@ -154,7 +154,7 @@ function normalizeSelector(context: Selector): CompoundSelector {
 
 // Stringify
 export function stringifyToCss(components: HComponent[]): string {
-    return `@charset "utf-8";\n@layer base, low, main, high;\n${components.map(rulesToString).join("")}`;
+    return `@charset "utf-8";\n@layer base, font, low, main, high;\n${components.map(rulesToString).join("")}`;
 }
 
 export function rulesToString(element: HComponent): string {

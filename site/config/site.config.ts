@@ -1,4 +1,4 @@
-import { HSvgBrandsIconName } from "@/lib/ui/svgIconFont";
+import type { HSvgBrandsIconName } from "@/lib/ui/svgIconFont";
 import * as v from "valibot";
 
 export const site = {

@@ -1,0 +1,34 @@
+import type { Attribute, HNode, HRootPageFn } from "@/lib/component";
+import { DOCTYPE } from "@/lib/elements";
+import type { HComponentInsert, Store } from "@/lib/repository";
+import { stringifyToHtml } from "@/lib/serverfn";
+import { insertNodes } from "@/lib/style";
+
+export async function bundleHtml(
+    store: Store,
+    params: Attribute,
+    root_page_fn: HRootPageFn<Attribute>,
+    insert_nodes: HNode[],
+): Promise<string> {
+    const top_node = await root_page_fn(params);
+
+    const attached = insertAttachmentNode(store, top_node);
+
+    const all_processed = insertNodes(attached, ["head"], insert_nodes, true);
+
+    return DOCTYPE() + stringifyToHtml(0, [])(all_processed);
+}
+
+function insertAttachmentNode(store: Store, top_node: HNode) {
+    const insert_nodes: [string, HComponentInsert[]][] = [];
+    for (const [key, value] of store.components.entries()) {
+        if (value.attachment?.inserts !== undefined) {
+            insert_nodes.push([key, value.attachment.inserts]);
+        }
+    }
+
+    return insert_nodes.reduce(
+        (p, c) => c[1].reduce((pp, cc) => insertNodes(pp, cc.selector, cc.nodes, true), p),
+        top_node,
+    );
+}

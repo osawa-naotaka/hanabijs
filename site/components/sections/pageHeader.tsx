@@ -6,7 +6,8 @@ import {
     F_3XLARGE,
     OPACITY,
 } from "@/lib/stylerules";
-import { HSvgBrandsIconName, hSvgIconFont } from "@/lib/ui/svgIconFont";
+import type { HSvgBrandsIconName } from "@/lib/ui/svgIconFont";
+import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 import { component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { drawer } from "@site/components/module/drawer";
@@ -32,7 +33,6 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const PopoverOpenButton = hSvgIconFont(store, { type: "solid", name: "magnifying-glass" });
     const PopoverCloseButton = hSvgIconFont(store, { type: "solid", name: "xmark" });
     const DrawerOpenButton = hSvgIconFont(store, { type: "solid", name: "bars" });
-    
 
     const component_styles = [
         style(PageHeader)(FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),

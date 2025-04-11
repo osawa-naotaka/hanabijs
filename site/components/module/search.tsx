@@ -5,7 +5,7 @@ export function search(store: Store): HComponentFn<HArgument> {
     const Search = element("search");
     const SearchBar = element("search-bar");
     const Input = element("search-input", { tag: "input" });
-    const InputIcon = hSvgIconFont(store, { type: "solid", name: "magnifying-glass"} );
+    const InputIcon = hSvgIconFont(store, { type: "solid", name: "magnifying-glass" });
     const Result = element("search-result", { tag: "ul" });
 
     const component_sytles = [
@@ -86,12 +86,12 @@ import {
     S_2XLARGE,
     S_LARGE,
 } from "@/lib/stylerules";
+import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
 import { postFmSchema } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
 import * as v from "valibot";
-import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 
 export const SearchKeySchema = v.object({
     slug: v.string(),

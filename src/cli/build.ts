@@ -3,20 +3,16 @@ import { rmdir } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
 import type { Attribute, HRootPageFn } from "@/lib/component";
-import { DOCTYPE, Link, Script } from "@/lib/elements";
+import { Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
-import type { HComponentAsset, HComponentInsert, Store } from "@/lib/repository";
-import { stringifyToHtml } from "@/lib/serverfn";
-import { insertNodes, stringifyToCss } from "@/lib/style";
+import type { HComponentAsset, Store } from "@/lib/repository";
 import { globExt, replaceExt } from "@/lib/util";
-import commonjs from "@rollup/plugin-commonjs";
-import nodeResolve from "@rollup/plugin-node-resolve";
-import terser from "@rollup/plugin-terser";
-import typescript from "@rollup/plugin-typescript";
-import virtual from "@rollup/plugin-virtual";
-import esbuild from "esbuild";
-import { rollup } from "rollup";
-import { loadConfig } from "./config";
+import { loadConfig } from "@/cli/config";
+import { bundleCss } from "@/cli/css";
+import { bundleWoff2 } from "@/cli/font";
+import { bundleHtml } from "@/cli/html";
+import { withoutExt } from "@/cli/route";
+import { bundleScriptEsbuild } from "@/cli/script";
 
 export async function build(conf_file: string | undefined) {
     const start = performance.now();
@@ -109,6 +105,7 @@ async function processHtmlDotTs(store: Store, relative_path: string, dist_dir: s
     clearStore(store);
     const root_page_fn = await page_fn.default(store);
     const css_js = await bundleAndWriteCssJs(relative_path, dist_dir, store);
+    await bundleAndWriteWoff2(relative_path, dist_dir, store);
 
     if (page_fn.rootPageFnParameters !== undefined) {
         const param_list = await page_fn.rootPageFnParameters();
@@ -150,55 +147,25 @@ async function processAndWriteHtml(
 ): Promise<void> {
     const html_start = performance.now();
 
-    const top_component = await root_page_fn(params);
+    const insert_nodes = [
+        css_link !== "" ? Link({ href: css_link, rel: "stylesheet" }) : "",
+        js_src !== "" ? Script({ type: "module", src: js_src }) : "",
+    ];
 
-    const insert_nodes: [string, HComponentInsert[]][] = [];
-    for (const [key, value] of store.components.entries()) {
-        if (value.attachment?.inserts !== undefined) {
-            insert_nodes.push([key, value.attachment.inserts]);
-        }
+    const html = await bundleHtml(store, params, root_page_fn, insert_nodes);
+
+    writeToFile(html, relative_path, dist_dir, ".html", html_start);
+}
+
+async function bundleAndWriteWoff2(relative_path: string, dist_dir: string, store: Store) {
+    const start = performance.now();
+    const woff2 = await bundleWoff2(store);
+    if (woff2 !== null) {
+        writeToFile(woff2, relative_path, dist_dir, ".woff2", start);
     }
-
-    const inserted = insert_nodes.reduce(
-        (p, c) => c[1].reduce((pp, cc) => insertNodes(pp, cc.selector, cc.nodes, true), p),
-        top_component,
-    );
-
-    const html = insertNodes(
-        inserted,
-        ["head"],
-        [
-            css_link !== "" ? Link({ href: css_link, rel: "stylesheet" }) : "",
-            js_src !== "" ? Script({ type: "module", src: js_src }) : "",
-        ],
-        true,
-    );
-
-    const doctype_html = DOCTYPE() + stringifyToHtml(0, [])(html);
-    writeToFile(doctype_html, relative_path, dist_dir, ".html", html_start);
 }
 
 async function bundleAndWriteCssJs(relative_path: string, dist_dir: string, store: Store): Promise<[string, string]> {
-    // process css
-    const css_start = performance.now();
-    let css_link = "";
-    const css_files = Array.from(store.components.values())
-        .map((x) => x.attachment?.script)
-        .filter((x) => x !== undefined);
-    for (const client of css_files) {
-        const client_fn = await import(client);
-        if (typeof client_fn.default === "function") {
-            await client_fn.default(store);
-        } else {
-            console.log(`${client} has no default export. skip processing.`);
-        }
-    }
-
-    const css_content = stringifyToCss(Array.from(store.components.values()));
-    if (css_content !== "") {
-        css_link = writeToFile(css_content, relative_path, dist_dir, ".css", css_start);
-    }
-
     // process js
     const js_start = performance.now();
     let js_src = "";
@@ -207,72 +174,34 @@ async function bundleAndWriteCssJs(relative_path: string, dist_dir: string, stor
         js_src = writeToFile(script_content, relative_path, dist_dir, ".js", js_start);
     }
 
+    // process css
+    const css_start = performance.now();
+
+    const css = await bundleCss(store, withoutExt(relative_path));
+    if (css instanceof Error) {
+        console.warn(css);
+        return ["", js_src];
+    }
+
+    let css_link = "";
+    if (css !== null) {
+        css_link = writeToFile(css, relative_path, dist_dir, ".css", css_start);
+    }
+
     return [css_link, js_src];
 }
 
-function writeToFile(content: string, file_name: string, dist_dir: string, ext: string, start: number): string {
+function writeToFile(
+    content: string | Buffer<ArrayBufferLike>,
+    file_name: string,
+    dist_dir: string,
+    ext: string,
+    start: number,
+): string {
     const file_ext = replaceExt(file_name, ext);
     const absolute_path = path.join(dist_dir, file_ext);
     Bun.write(absolute_path, content);
     console.log(`process ${file_ext} in ${(performance.now() - start).toFixed(2)}ms`);
 
     return file_ext;
-}
-
-export async function bundleScriptEsbuild(store: Store): Promise<string | null> {
-    const script_files = Array.from(store.components.values())
-        .map((x) => x.attachment?.script)
-        .filter((x) => x !== undefined);
-    if (script_files.length === 0) {
-        return null;
-    }
-    const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
-    const bundle = await esbuild.build({
-        stdin: {
-            contents: entry,
-            loader: "ts",
-            resolveDir: cwd(),
-        },
-        // supress esbuild warning not to define import.meta in browser.
-        define: {
-            "import.meta.path": "undefined",
-        },
-        bundle: true,
-        format: "esm",
-        platform: "browser",
-        target: "es2024",
-        treeShaking: true,
-        sourcemap: false,
-        write: false,
-        minify: true,
-    });
-
-    return bundle.outputFiles[0].text;
-}
-
-export async function bundleScriptRollup(store: Store): Promise<string | null> {
-    const script_files = Array.from(store.components.values())
-        .map((x) => x.attachment?.script)
-        .filter(Boolean);
-    if (script_files.length === 0) {
-        return null;
-    }
-
-    const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
-    const bundle = await rollup({
-        input: "entry.ts",
-        treeshake: "smallest",
-        plugins: [
-            virtual({
-                "entry.ts": entry,
-            }),
-            typescript(),
-            terser(),
-            nodeResolve(),
-            commonjs(),
-        ],
-    });
-
-    const { output } = await bundle.generate({ format: "esm" });
-    return output[0].code;
 }
