@@ -1,5 +1,5 @@
 import { DEFAULT_STYLES, INIT_CSS } from "@/lib/stylerules";
-import type { HBrandsIconName } from "@/lib/ui/icon";
+import { HSvgBrandsIconName } from "@/lib/ui/svgIconFont";
 import { component, registerComponent } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { pageHead } from "@site/components/pages/pageHead";
@@ -13,7 +13,7 @@ export type PageArgument = {
     name: string;
     navitem: {
         url: string;
-        icon: HBrandsIconName;
+        icon: HSvgBrandsIconName;
     }[];
 };
 

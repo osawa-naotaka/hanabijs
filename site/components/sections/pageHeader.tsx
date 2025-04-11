@@ -6,9 +6,7 @@ import {
     F_3XLARGE,
     OPACITY,
 } from "@/lib/stylerules";
-import { hIcon } from "@/lib/ui/icon";
-import type { HBrandsIconName } from "@/lib/ui/icon";
-import { hSvgIconFont } from "@/lib/ui/svgIconFont";
+import { HSvgBrandsIconName, hSvgIconFont } from "@/lib/ui/svgIconFont";
 import { component, element, registerComponent, style } from "@/main";
 import type { HComponentFn, Store } from "@/main";
 import { drawer } from "@site/components/module/drawer";
@@ -20,7 +18,7 @@ export type PageHeaderArgument = {
     title: string;
     navitem: {
         url: string;
-        icon: HBrandsIconName;
+        icon: HSvgBrandsIconName;
     }[];
 };
 
@@ -28,11 +26,13 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
     const PageHeader = element("page-header", { tag: "header" });
     const Drawer = drawer(store, "page-header-toggle-button");
     const Popover = popover(store, "search-popover");
-    const Icon = hIcon(store);
     const Navigation = navigation(store);
     const Search = search(store);
 
-    const OpenButton = hSvgIconFont(store, { type: "solid", name: "magnifying-glass" });
+    const PopoverOpenButton = hSvgIconFont(store, { type: "solid", name: "magnifying-glass" });
+    const PopoverCloseButton = hSvgIconFont(store, { type: "solid", name: "xmark" });
+    const DrawerOpenButton = hSvgIconFont(store, { type: "solid", name: "bars" });
+    
 
     const component_styles = [
         style(PageHeader)(FIX_TOP_STICKY, DEFAULT_TEXT_BG(store), OPACITY("0.8")),
@@ -52,12 +52,12 @@ export function pageHeader(store: Store): HComponentFn<PageHeaderArgument> {
                 }
                 header_space={
                     <Popover
-                        open_button={<OpenButton />}
-                        close_button={<Icon type="solid" name="xmark" />}
+                        open_button={<PopoverOpenButton />}
+                        close_button={<PopoverCloseButton />}
                         body={<Search />}
                     />
                 }
-                open_button={<Icon type="solid" name="bars" />}
+                open_button={<DrawerOpenButton />}
                 content={<Navigation navitem={navitem} />}
             />
         </PageHeader>

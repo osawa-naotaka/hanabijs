@@ -2,7 +2,6 @@ import type { Attribute, HComponentFn } from "../component";
 import { element } from "../component";
 import { component, registerComponent } from "../repository";
 import type { Store } from "../repository";
-import { style } from "../style";
 
 export type HSvgIconType = "brands" | "solid";
 
@@ -21,9 +20,8 @@ export type HSvgIconArg = HSvgBrandsIconArg | HSvgSolidIconArg;
 export function hSvgIconFont(store: Store, arg: HSvgIconArg): HComponentFn<Attribute> {
     const font_name = `${arg.type}-${arg.name}`;
     const Top = element(`svg-icon-font-${arg.type}-${arg.name}`, { tag: "i", class: ["hf", `hf-${font_name}`] });
-    const styles = [style(Top)({ font_family: "hanabi generated font", font_style: "normal" })];
 
-    registerComponent(store, Top, styles, {
+    registerComponent(store, Top, [], {
         fonts: [
             {
                 package_name: "@fortawesome/fontawesome-free",
