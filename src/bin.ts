@@ -1,4 +1,4 @@
-#!/usr/bin/env -S bun --watch
+#!/usr/bin/env -S node --watch
 
 import { readFileSync } from "node:fs";
 import path from "node:path";

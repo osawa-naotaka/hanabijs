@@ -1,3 +1,4 @@
+export const hanabi_error_css = `
 @charset "utf-8";
 
 * {
@@ -86,3 +87,4 @@ h1 {
 .page-footer-copyright {
     text-align: center;
 }
+`;

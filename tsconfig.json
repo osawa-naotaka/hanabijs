@@ -32,5 +32,6 @@
       "hanabijs/jsx-runtime": ["./src/jsx-runtime.ts"]
     },
   },
-  "include": ["./src/**/*", "./site/**/*"]
+  "include": ["./src/**/*", "./site/**/*"],
+  "typeRoots": ["src", "node_modules/@types"]
 }

@@ -4,6 +4,7 @@ import { cwd } from "node:process";
 import type { Store } from "@/core";
 import type { Svg } from "svg2woff2";
 import { generateCss, svg2woff2 } from "svg2woff2";
+import { createRequire } from "node:module";
 
 type SvgName = {
     name: string;
@@ -60,6 +61,7 @@ function listSvgNames(store: Store): SvgName[] {
 
     return font_components.flatMap((component) =>
         component.flatMap((chars) => {
+            const require = createRequire(import.meta.url);
             const base_dir =
                 chars.package_name !== undefined
                     ? path.dirname(require.resolve(`${chars.package_name}/package.json`))

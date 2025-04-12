@@ -1,4 +1,4 @@
-import { existsSync, rmdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, rmSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { cwd } from "node:process";
 import { loadConfig } from "@/cli/config";
@@ -14,6 +14,7 @@ import type { HComponentAsset, Store } from "@/lib/repository";
 import { replaceExt } from "@/lib/coreutil";
 import { globExt } from "@/server";
 import { glob } from "glob";
+import { createRequire } from "node:module";
 
 export async function build(conf_file: string | undefined) {
     const start = performance.now();
@@ -29,7 +30,7 @@ export async function build(conf_file: string | undefined) {
     const asset_store = new Map<string, HComponentAsset[]>();
 
     if (config.output.clean_befor_build && existsSync(dist_dir)) {
-        rmdirSync(dist_dir, { recursive: true });
+        rmSync(dist_dir, { recursive: true });
     }
 
     if (!existsSync(page_dir)) {
@@ -61,6 +62,7 @@ export async function build(conf_file: string | undefined) {
     // copy assets
     for (const statics of asset_store.values()) {
         for (const entry of statics) {
+            const require = createRequire(import.meta.url);
             const root_dir =
                 entry.package_name === undefined
                     ? cwd()

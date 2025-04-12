@@ -5,6 +5,7 @@ import type { HComponentAsset } from "@/core";
 import type { Attribute } from "../lib/component";
 import { globExt } from "../lib/serverutil";
 import { glob } from "glob";
+import { createRequire } from "node:module";
 
 export type RouteTable = {
     path_regexp: RegExp;
@@ -152,6 +153,7 @@ async function createAssetRouteTable(asset_prefix: string, assets: HComponentAss
     return (
         await Promise.all(
             assets.map(async (entry) => {
+                const require = createRequire(import.meta.url);
                 const root_dir =
                     entry.package_name === undefined
                         ? cwd()

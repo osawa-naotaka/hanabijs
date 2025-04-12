@@ -14,7 +14,7 @@ import type { Store } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
 import { contentType } from "@/lib/coreutil";
 import { ErrorPage } from "@/page/error";
-import hanabi_error_css from "@/page/hanabi-error.css" assert { type: "text" };
+import { hanabi_error_css } from "@/page/hanabi-error";
 import chokidar from "chokidar";
 
 export async function serve(conf_file: string | undefined) {
