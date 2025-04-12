@@ -159,7 +159,7 @@ async function createAssetRouteTable(asset_prefix: string, assets: HComponentAss
                 return (
                     await Promise.all(
                         entry.copy_files.map(async (file) => {
-                            return (await glob(file.src, { cwd: root_dir })).map((src) => {
+                            return (await glob(file.src, { cwd: root_dir, nodir: true })).map((src) => {
                                 const path_exact = path.join("/", asset_prefix, file.dist, path.basename(src));
 
                                 return {

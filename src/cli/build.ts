@@ -82,14 +82,14 @@ export async function build(conf_file: string | undefined) {
 }
 
 async function copyFiles(root: string, pattern: string, dist_dir: string) {
-    for (const src of await glob(pattern, { cwd: root })) {
+    for (const src of await glob(pattern, { cwd: root, nodir: true })) {
         const content = readFileSync(path.join(root, src));
         ensureDirWrite(path.join(dist_dir, path.parse(src).base), content);
     }
 }
 
 async function copyDir(root: string, dist_dir: string) {
-    for (const src of await glob("**/*", { cwd: root })) {
+    for (const src of await glob("**/*", { cwd: root, nodir: true })) {
         const content = readFileSync(path.join(root, src));
         ensureDirWrite(path.join(dist_dir, src), content);
     }
