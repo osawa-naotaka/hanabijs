@@ -116,7 +116,7 @@ export function searchResultItem(store: Store): HComponentFn<SearchResultItemAtt
         TAG_DESIGN(store, "text", Tag),
     ];
 
-    registerComponent(store, ResultItem, component_styles, { script: import.meta.path });
+    registerComponent(store, ResultItem, component_styles);
 
     return component(ResultItem, ({ result }) => {
         const key = v.parse(SearchKeySchema, result.key);
