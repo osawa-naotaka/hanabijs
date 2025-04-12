@@ -37,6 +37,7 @@ const RAW_RUNTIME_STATE =
           ["@types/bun", "npm:1.2.4"],\
           ["@types/jsdom", "npm:21.1.7"],\
           ["@types/node", "npm:22.14.1"],\
+          ["@types/ws", "npm:8.18.1"],\
           ["chokidar", "npm:4.0.3"],\
           ["dompurify", "npm:3.2.5"],\
           ["esbuild", "npm:0.25.2"],\
@@ -57,7 +58,8 @@ const RAW_RUNTIME_STATE =
           ["tsx", "npm:4.19.3"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"],\
           ["unified", "npm:11.0.5"],\
-          ["valibot", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:1.0.0"]\
+          ["valibot", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:1.0.0"],\
+          ["ws", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.18.1"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -1116,6 +1118,14 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@types/ws", [\
+      ["npm:8.18.1", {\
+        "packageLocation": "../.yarn/berry/cache/@types-ws-npm-8.18.1-61dc106ff0-10c0.zip/node_modules/@types/ws/",\
+        "packageDependencies": [\
+          ["@types/ws", "npm:8.18.1"],\
+          ["@types/node", "npm:22.14.1"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:8.5.14", {\
         "packageLocation": "../.yarn/berry/cache/@types-ws-npm-8.5.14-101cd0e216-10c0.zip/node_modules/@types/ws/",\
         "packageDependencies": [\
@@ -2150,6 +2160,7 @@ const RAW_RUNTIME_STATE =
           ["@types/bun", "npm:1.2.4"],\
           ["@types/jsdom", "npm:21.1.7"],\
           ["@types/node", "npm:22.14.1"],\
+          ["@types/ws", "npm:8.18.1"],\
           ["chokidar", "npm:4.0.3"],\
           ["dompurify", "npm:3.2.5"],\
           ["esbuild", "npm:0.25.2"],\
@@ -2170,7 +2181,8 @@ const RAW_RUNTIME_STATE =
           ["tsx", "npm:4.19.3"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"],\
           ["unified", "npm:11.0.5"],\
-          ["valibot", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:1.0.0"]\
+          ["valibot", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:1.0.0"],\
+          ["ws", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.18.1"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -2512,7 +2524,7 @@ const RAW_RUNTIME_STATE =
           ["whatwg-encoding", "npm:3.1.1"],\
           ["whatwg-mimetype", "npm:4.0.0"],\
           ["whatwg-url", "npm:14.2.0"],\
-          ["ws", "virtual:31969fdad2d8b58b3d209d21bf0f25cd8f9755781c1a8b6d348c2d4ece3dca52bc10e0405f0e22dc4be2258dae9060cd729c95b717a9bea9fd4f91acac5672a2#npm:8.18.1"],\
+          ["ws", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.18.1"],\
           ["xml-name-validator", "npm:5.0.0"]\
         ],\
         "packagePeers": [\
@@ -4865,10 +4877,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:31969fdad2d8b58b3d209d21bf0f25cd8f9755781c1a8b6d348c2d4ece3dca52bc10e0405f0e22dc4be2258dae9060cd729c95b717a9bea9fd4f91acac5672a2#npm:8.18.1", {\
-        "packageLocation": "./.yarn/__virtual__/ws-virtual-004f48e1fe/2/.yarn/berry/cache/ws-npm-8.18.1-369b0f5491-10c0.zip/node_modules/ws/",\
+      ["virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.18.1", {\
+        "packageLocation": "./.yarn/__virtual__/ws-virtual-89438266f0/2/.yarn/berry/cache/ws-npm-8.18.1-369b0f5491-10c0.zip/node_modules/ws/",\
         "packageDependencies": [\
-          ["ws", "virtual:31969fdad2d8b58b3d209d21bf0f25cd8f9755781c1a8b6d348c2d4ece3dca52bc10e0405f0e22dc4be2258dae9060cd729c95b717a9bea9fd4f91acac5672a2#npm:8.18.1"],\
+          ["ws", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.18.1"],\
           ["@types/bufferutil", null],\
           ["@types/utf-8-validate", null],\
           ["bufferutil", null],\

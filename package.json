@@ -31,8 +31,8 @@
   },
   "scripts": {
     "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
-    "dev": "tsx --loader=./loader.js src/bin.ts dev",
-    "site": "tsx --loader=./loader.js src/bin.ts build",
+    "dev": "tsx watch --exclude './site/**/*' src/bin.ts dev",
+    "site": "tsx src/bin.ts build",
     "check": "biome check ./src ./site ./test",
     "check-write": "biome check --write ./src ./site ./test"
   },
@@ -50,6 +50,7 @@
     "@biomejs/biome": "1.9.4",
     "@types/bun": "^1.2.4",
     "@types/node": "^22.13.10",
+    "@types/ws": "^8",
     "staticseek": "^2.7.1",
     "tslib": "^2.8.1",
     "tsup": "^8.4.0",
@@ -79,7 +80,8 @@
     "svg2woff2": "^0.1.0",
     "tsx": "^4.19.3",
     "unified": "^11.0.5",
-    "valibot": "^1.0.0"
+    "valibot": "^1.0.0",
+    "ws": "^8.18.1"
   },
   "resolutions": {
     "@types/bun": "1.2.4"

@@ -1,6 +1,9 @@
 import { readFile } from "node:fs/promises";
+import http from "node:http";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
 import { cwd } from "node:process";
+import type { Duplex } from "node:stream";
 import { loadConfig } from "@/cli/config";
 import { bundleCss } from "@/cli/css";
 import { bundleWoff2 } from "@/cli/font";
@@ -8,14 +11,15 @@ import { bundleHtml } from "@/cli/html";
 import { createAssetRouter, createPageRouter, createStaticRouter, withoutExt } from "@/cli/route";
 import type { Router } from "@/cli/route";
 import { bundleScriptEsbuild } from "@/cli/script";
+import { contentType } from "@/lib/coreutil";
 import { Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
 import type { Store } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
-import { contentType } from "@/lib/coreutil";
 import { ErrorPage } from "@/page/error";
 import { hanabi_error_css } from "@/page/hanabi-error";
 import chokidar from "chokidar";
+import { WebSocketServer } from "ws";
 
 export async function serve(conf_file: string | undefined) {
     const config = await loadConfig(conf_file);
@@ -32,28 +36,9 @@ export async function serve(conf_file: string | undefined) {
     let public_router = await createStaticRouter(public_dir);
     let asset_router = new Map<string, Router>();
 
-    const server = Bun.serve({
-        websocket: {
-            open(ws) {
-                watcher.removeAllListeners();
-                watcher.on("change", async () => {
-                    page_router = await createPageRouter(page_dir);
-                    public_router = await createStaticRouter(public_dir);
-                    asset_router = new Map<string, Router>();
-                    ws.send("reload");
-                });
-            },
-            message(_ws, message) {
-                console.log("Received:", message);
-            },
-            close() {
-                watcher.removeAllListeners();
-            },
-        },
-        async fetch(req: Request): Promise<Response> {
-            if (server.upgrade(req)) {
-                return new Response(null, { status: 101 });
-            }
+    const http_server = http.createServer(async (msg: IncomingMessage, resp: ServerResponse) => {
+        try {
+            const req: Request = new Request(new URL(`http://${msg.headers.host}${msg.url}`));
 
             // Page router
             const match_page = page_router(req);
@@ -70,21 +55,30 @@ export async function serve(conf_file: string | undefined) {
                                 const css_name = withoutExt(withoutExt(match_page.target_file));
                                 const css = await bundleCss(store, css_name);
                                 if (css instanceof Error) {
-                                    return errorResponse(500, css.message);
+                                    await errorResponse(resp, 500, css.message);
+                                } else {
+                                    normalResponse(resp, css || "", match_page.req_ext);
                                 }
-                                return normalResponse(css || "", match_page.req_ext);
+                                break;
                             }
                             case ".js": {
                                 const js = await bundleScriptEsbuild(store);
-                                return normalResponse(js || "", match_page.req_ext);
+                                normalResponse(resp, js || "", match_page.req_ext);
+                                break;
                             }
                             case ".woff2": {
                                 const woff2 = await bundleWoff2(store);
-                                return normalResponse(woff2 || "", match_page.req_ext);
+                                normalResponse(resp, woff2 || "", match_page.req_ext);
+                                break;
                             }
                             default:
-                                return errorResponse(500, `auto generation of ${match_page.req_ext} is not supported.`);
+                                await errorResponse(
+                                    resp,
+                                    500,
+                                    `auto generation of ${match_page.req_ext} is not supported.`,
+                                );
                         }
+                        return;
                     }
 
                     switch (match_page.req_ext) {
@@ -104,20 +98,23 @@ export async function serve(conf_file: string | undefined) {
 
                             const html_text = await bundleHtml(store, match_page.params, root_page_fn, insert_nodes);
 
-                            return normalResponse(html_text, ".html");
+                            normalResponse(resp, html_text, ".html");
+                            break;
                         }
                         default:
-                            return normalResponse(await root_page_fn, match_page.req_ext);
+                            normalResponse(resp, await root_page_fn, match_page.req_ext);
                     }
+                    return;
                 }
-                return await errorResponse(500, `${match_page.target_file} does not have default export.`);
+                await errorResponse(resp, 500, `${match_page.target_file} does not have default export.`);
             }
 
             // Public router
             const match_public = public_router(req);
             if (!(match_public instanceof Error)) {
                 const content = await readFile(path.join(public_dir, match_public.target_file));
-                return normalResponse(content, match_public.req_ext);
+                normalResponse(resp, content, match_public.req_ext);
+                return;
             }
 
             // Asset router
@@ -125,7 +122,8 @@ export async function serve(conf_file: string | undefined) {
                 const match_asset = router(req);
                 if (!(match_asset instanceof Error)) {
                     const content = await readFile(match_asset.target_file);
-                    return normalResponse(content, match_asset.req_ext);
+                    normalResponse(resp, content, match_asset.req_ext);
+                    return;
                 }
             }
 
@@ -133,23 +131,61 @@ export async function serve(conf_file: string | undefined) {
             if (new URL(req.url).pathname.endsWith("/reload.js")) {
                 const reload =
                     "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { if (event.data === 'reload') { location.reload(); } }";
-                return normalResponse(reload, ".js");
+                normalResponse(resp, reload, ".js");
+                return;
             }
 
             // css for error page
             if (new URL(req.url).pathname.localeCompare("/hanabi-error.css") === 0) {
-                return normalResponse(hanabi_error_css, ".css");
+                normalResponse(resp, hanabi_error_css, ".css");
+                return;
             }
 
-            return await errorResponse(404, `route for url "${req.url}" not found.`);
-        },
-        port: config.server.port,
-        hostname: config.server.hostname,
-        async error(error) {
-            console.error(error);
-            return await errorResponse(500, error.message);
-        },
+            await errorResponse(resp, 404, `route for url "${req.url}" not found.`);
+        } catch (e) {
+            if (e instanceof Error) {
+                await errorResponse(resp, 500, e.toString());
+                return;
+            }
+            throw e;
+        }
     });
+
+    const wss = new WebSocketServer({ noServer: true });
+
+    wss.on("connection", function connection(ws) {
+        ws.on("open", () => {
+            console.log("open");
+        });
+
+        ws.on("error", console.error);
+
+        ws.on("close", () => {
+            console.log("close");
+            watcher.removeAllListeners();
+        });
+    });
+
+    http_server.on("upgrade", (req: IncomingMessage, socket: Duplex, head: Buffer<ArrayBufferLike>) => {
+        const { pathname } = new URL(req.url || "", `wss://${config.server.hostname}`);
+        if (pathname === "/reload") {
+            wss.handleUpgrade(req, socket, head, async (ws) => {
+                watcher.removeAllListeners();
+                page_router = await createPageRouter(page_dir);
+                public_router = await createStaticRouter(public_dir);
+                asset_router = new Map<string, Router>();
+
+                watcher.on("change", () => {
+                    ws.send("reload");
+                });
+                wss.emit("connection", ws, req);
+            });
+        } else {
+            socket.destroy();
+        }
+    });
+
+    http_server.listen(config.server.port, config.server.hostname);
 }
 
 async function createAssetRouterSet(store: Store, target_prefix: string): Promise<[string, Router][]> {
@@ -163,16 +199,12 @@ async function createAssetRouterSet(store: Store, target_prefix: string): Promis
     return asset_files;
 }
 
-function normalResponse(content: string | Buffer<ArrayBufferLike>, ext: string): Response {
-    return new Response(content, {
-        headers: { "Content-Type": contentType(ext) },
-    });
+function normalResponse(resp: ServerResponse, content: string | Buffer<ArrayBufferLike>, ext: string): void {
+    resp.writeHead(200, { "Content-Type": contentType(ext) });
+    resp.end(content);
 }
 
-async function errorResponse(status: number, cause: string): Promise<Response> {
-    return new Response(stringifyToHtml(0, [])(await ErrorPage({ name: status.toString(), cause })), {
-        status,
-        statusText: cause,
-        headers: { "Content-Type": "text/html" },
-    });
+async function errorResponse(resp: ServerResponse, status: number, cause: string): Promise<void> {
+    resp.writeHead(status, { "Content-Type": "text/html" });
+    resp.end(stringifyToHtml(0, [])(await ErrorPage({ name: status.toString(), cause })));
 }

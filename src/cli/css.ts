@@ -8,10 +8,6 @@ export async function bundleCss(store: Store, base_name: string): Promise<string
         .map((x) => x.attachment?.script)
         .filter((x) => x !== undefined);
 
-    if (css_files.length === 0) {
-        return null;
-    }
-
     for (const client of css_files) {
         const client_fn = await import(client);
         if (typeof client_fn.default === "function") {
@@ -20,6 +16,7 @@ export async function bundleCss(store: Store, base_name: string): Promise<string
             return new Error(`bundleCss: import file "${client}" does not have default export.`);
         }
     }
+
     const css = stringifyToCss(Array.from(store.components.values()));
     return `${css}${font_css}`;
 }

@@ -816,6 +816,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/ws@npm:^8":
+  version: 8.18.1
+  resolution: "@types/ws@npm:8.18.1"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/61aff1129143fcc4312f083bc9e9e168aa3026b7dd6e70796276dcfb2c8211c4292603f9c4864fae702f2ed86e4abd4d38aa421831c2fd7f856c931a481afbab
+  languageName: node
+  linkType: hard
+
 "@types/ws@npm:~8.5.10":
   version: 8.5.14
   resolution: "@types/ws@npm:8.5.14"
@@ -1763,6 +1772,7 @@ __metadata:
     "@types/bun": "npm:^1.2.4"
     "@types/jsdom": "npm:^21.1.7"
     "@types/node": "npm:^22.13.10"
+    "@types/ws": "npm:^8"
     chokidar: "npm:^4.0.3"
     dompurify: "npm:^3.2.4"
     esbuild: "npm:^0.25.1"
@@ -1784,6 +1794,7 @@ __metadata:
     typescript: "npm:^5.8.2"
     unified: "npm:^11.0.5"
     valibot: "npm:^1.0.0"
+    ws: "npm:^8.18.1"
   bin:
     hanabi: build/hanabi.js
   languageName: unknown
@@ -4280,7 +4291,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.18.0":
+"ws@npm:^8.18.0, ws@npm:^8.18.1":
   version: 8.18.1
   resolution: "ws@npm:8.18.1"
   peerDependencies:

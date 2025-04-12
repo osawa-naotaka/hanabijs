@@ -1,11 +1,11 @@
 import { existsSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { cwd } from "node:process";
 import type { HComponentAsset } from "@/core";
+import { glob } from "glob";
 import type { Attribute } from "../lib/component";
 import { globExt } from "../lib/serverutil";
-import { glob } from "glob";
-import { createRequire } from "node:module";
 
 export type RouteTable = {
     path_regexp: RegExp;

@@ -1,4 +1,5 @@
-import { existsSync, rmSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { cwd } from "node:process";
 import { loadConfig } from "@/cli/config";
@@ -8,13 +9,12 @@ import { bundleHtml } from "@/cli/html";
 import { withoutExt } from "@/cli/route";
 import { bundleScriptEsbuild } from "@/cli/script";
 import type { Attribute, HRootPageFn } from "@/lib/component";
+import { replaceExt } from "@/lib/coreutil";
 import { Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
 import type { HComponentAsset, Store } from "@/lib/repository";
-import { replaceExt } from "@/lib/coreutil";
 import { globExt } from "@/server";
 import { glob } from "glob";
-import { createRequire } from "node:module";
 
 export async function build(conf_file: string | undefined) {
     const start = performance.now();
@@ -202,7 +202,7 @@ function writeToFile(
     const file_ext = replaceExt(file_name, ext);
     const absolute_path = path.join(dist_dir, file_ext);
     const base = path.dirname(absolute_path);
-    if(!existsSync(base)) {
+    if (!existsSync(base)) {
         mkdirSync(base);
     }
     ensureDirWrite(absolute_path, content);
@@ -218,8 +218,8 @@ function ensureDirWrite(absolute_path: string, content: string | Buffer<ArrayBuf
 }
 
 function ensureDir(base: string) {
-    if(!existsSync(base)) {
-        const pdir = base.endsWith('/') ? base.slice(0, -1) : base;
+    if (!existsSync(base)) {
+        const pdir = base.endsWith("/") ? base.slice(0, -1) : base;
         ensureDir(path.dirname(pdir));
         mkdirSync(base);
     }

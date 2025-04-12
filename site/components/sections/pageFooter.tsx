@@ -1,3 +1,5 @@
+import { component, element, registerComponent, style } from "@/core";
+import type { HComponentFn, Store } from "@/core";
 import {
     ABSOLUTE_ANCHOR,
     BG_COLOR,
@@ -8,8 +10,6 @@ import {
     TEXT_ALIGN_CENTER,
     TEXT_COLOR,
 } from "@/lib/stylerules";
-import { component, element, registerComponent, style } from "@/core";
-import type { HComponentFn, Store } from "@/core";
 
 export type PageFooterArgument = {
     site_name: string;

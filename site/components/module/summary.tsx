@@ -1,6 +1,6 @@
-import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "@/lib/stylerules";
 import { H2, as, component, element, registerComponent, style } from "@/core";
 import type { HComponentFn, Store, StyleRule } from "@/core";
+import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "@/lib/stylerules";
 import type { PostFm } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
 import { dateTime } from "../element/dateTime";

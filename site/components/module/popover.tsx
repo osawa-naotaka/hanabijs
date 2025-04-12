@@ -1,3 +1,5 @@
+import { atStyle, component, element, registerComponent, style } from "@/core";
+import type { HComponentFn, HNode, Store } from "@/core";
 import {
     BG_COLOR,
     BORDER_NONE,
@@ -16,8 +18,6 @@ import {
     S_MEDIUM,
     TRANSITION,
 } from "@/lib/stylerules";
-import { atStyle, component, element, registerComponent, style } from "@/core";
-import type { HComponentFn, HNode, Store } from "@/core";
 
 export type PopoverArgument = {
     open_button: HNode;

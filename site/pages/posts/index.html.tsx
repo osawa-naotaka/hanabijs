@@ -1,6 +1,6 @@
-import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
 import { element, registerRootPage, style } from "@/core";
 import type { HRootPageFn, Store } from "@/core";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/lib/stylerules";
 import { getAllMarkdowns } from "@site/components/library/post";
 import { page } from "@site/components/pages/page";
 import { summaries } from "@site/components/sections/summaries";

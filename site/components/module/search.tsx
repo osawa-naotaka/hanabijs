@@ -1,25 +1,29 @@
-import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 import { component, element, registerComponent, style } from "@/core";
-import { DEFAULT_TEXT_BG, DEFAULT_RESPONSIVE_PAGE_WIDTH, ROW, BORDER_UNDERLINE, OPACITY, MARGIN_BLOCK, S_LARGE, HEIGHT, S_2XLARGE } from "@/core";
-import type { HArgument, HComponentFn, Store } from "@/core";
-
 import {
-    FONT_SIZE,
-    F_SMALL,
-    F_TINY,
-    ROW_WRAP,
-} from "@/lib/stylerules";
-import { createDom, HClientFn, HNode } from "@/core";
+    BORDER_UNDERLINE,
+    DEFAULT_RESPONSIVE_PAGE_WIDTH,
+    DEFAULT_TEXT_BG,
+    HEIGHT,
+    MARGIN_BLOCK,
+    OPACITY,
+    ROW,
+    S_2XLARGE,
+    S_LARGE,
+} from "@/core";
+import type { HArgument, HComponentFn, Store } from "@/core";
+import { hSvgIconFont } from "@/lib/ui/svgIconFont";
+
+import { type HClientFn, type HNode, createDom } from "@/core";
+import { as } from "@/core";
+import { FONT_SIZE, F_SMALL, F_TINY, ROW_WRAP } from "@/lib/stylerules";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
 import { postFmSchema } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
-import { as } from "@/core";
-import { SearchResult } from "staticseek";
+import type { SearchResult } from "staticseek";
 import * as v from "valibot";
 
 import { StaticSeekError, createSearchFn } from "staticseek";
-
 
 export function search(store: Store): HComponentFn<HArgument> {
     const Search = element("search");
@@ -37,7 +41,7 @@ export function search(store: Store): HComponentFn<HArgument> {
         style(Result)(MARGIN_BLOCK(S_LARGE(store))),
     ];
 
-    registerComponent(store, Search, component_sytles);
+    registerComponent(store, Search, component_sytles, { script: import.meta.filename });
 
     return component(Search, () => (
         <Search>

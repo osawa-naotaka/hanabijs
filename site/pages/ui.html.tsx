@@ -1,3 +1,5 @@
+import { element, registerRootPage, style, unionRecords } from "@/core";
+import type { ColorKind, HArgument, HRootPageFn, Store } from "@/core";
 import type { Properties } from "@/lib/properties";
 import {
     BOLD,
@@ -29,8 +31,6 @@ import {
     S_SMALL,
     TRANSITION,
 } from "@/lib/stylerules";
-import { element, registerRootPage, style, unionRecords } from "@/core";
-import type { ColorKind, HArgument, HRootPageFn, Store } from "@/core";
 
 export default function Root(store: Store): HRootPageFn<HArgument> {
     const BText = element("b-text");

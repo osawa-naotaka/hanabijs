@@ -1,3 +1,5 @@
+import { component, element, registerComponent, style } from "@/core";
+import type { HComponentFn, HNode, Store } from "@/core";
 import {
     BORDER_UNDERLINE,
     FLEX_END,
@@ -10,8 +12,6 @@ import {
     S_SMALL,
     S_TINY,
 } from "@/lib/stylerules";
-import { component, element, registerComponent, style } from "@/core";
-import type { HComponentFn, HNode, Store } from "@/core";
 
 export type ArticleHeaderArgument = {
     title: HNode;
