@@ -9,7 +9,7 @@ import {
     FIX_BOTTOM,
     TEXT_ALIGN_CENTER,
     TEXT_COLOR,
-} from "@/lib/stylerules";
+} from "@/core";
 
 export type PageFooterArgument = {
     site_name: string;

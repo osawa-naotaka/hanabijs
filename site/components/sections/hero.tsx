@@ -9,7 +9,7 @@ import {
     MARGIN_BLOCK,
     S_2XLARGE,
     TEXT_COLOR,
-} from "@/lib/stylerules";
+} from "@/core";
 
 export function hero(store: Store): HComponentFn<HArgument> {
     const Hero = element("hero");

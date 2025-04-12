@@ -11,7 +11,7 @@ import {
     ROW,
     S_SMALL,
     S_TINY,
-} from "@/lib/stylerules";
+} from "@/core";
 
 export type ArticleHeaderArgument = {
     title: HNode;

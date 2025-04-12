@@ -1,13 +1,13 @@
 import { H2, as, component, element, registerComponent, style } from "@/core";
 import type { HComponentFn, Store, StyleRule } from "@/core";
-import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "@/lib/stylerules";
+import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "@/core";
+import { dateTime } from "@site/components/element/dateTime";
+import { hlink } from "@site/components/element/hlink";
+import { tag } from "@site/components/element/tag";
+import type { Markdown } from "@site/components/library/post";
+import { articleHeader } from "@site/components/module/articleHeader";
 import type { PostFm } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
-import { dateTime } from "../element/dateTime";
-import { hlink } from "../element/hlink";
-import { tag } from "../element/tag";
-import type { Markdown } from "../library/post";
-import { articleHeader } from "./articleHeader";
 
 export type SummaryArgument = Markdown<PostFm>;
 

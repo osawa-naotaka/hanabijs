@@ -25,17 +25,16 @@ import {
     TEXT_COLOR,
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
-    as,
 } from "@/core";
-import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul, component, element, registerComponent, style } from "@/core";
+import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul, as, component, element, registerComponent, style } from "@/core";
 import type { HComponentFn, Store } from "@/core";
+import { dateTime } from "@site/components/element/dateTime";
+import { shareX } from "@site/components/element/shareX";
+import { tag } from "@site/components/element/tag";
+import type { Markdown } from "@site/components/library/post";
+import { articleHeader } from "@site/components/module/articleHeader";
 import type { PostFm } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
-import { dateTime } from "../element/dateTime";
-import { shareX } from "../element/shareX";
-import { tag } from "../element/tag";
-import type { Markdown } from "../library/post";
-import { articleHeader } from "./articleHeader";
 
 export type ArticleArgument = Markdown<PostFm>;
 

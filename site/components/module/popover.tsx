@@ -17,7 +17,7 @@ import {
     PADDING_BLOCK,
     S_MEDIUM,
     TRANSITION,
-} from "@/lib/stylerules";
+} from "@/core";
 
 export type PopoverArgument = {
     open_button: HNode;

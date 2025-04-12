@@ -1,4 +1,4 @@
-import { component, element, registerComponent, style } from "@/core";
+import { as, component, createDom, element, hSvgIconFont, registerComponent, style } from "@/core";
 import {
     BORDER_UNDERLINE,
     DEFAULT_RESPONSIVE_PAGE_WIDTH,
@@ -10,12 +10,9 @@ import {
     S_2XLARGE,
     S_LARGE,
 } from "@/core";
-import type { HArgument, HComponentFn, Store } from "@/core";
-import { hSvgIconFont } from "@/lib/ui/svgIconFont";
+import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/core";
 
-import { type HClientFn, type HNode, createDom } from "@/core";
-import { as } from "@/core";
-import { FONT_SIZE, F_SMALL, F_TINY, ROW_WRAP } from "@/lib/stylerules";
+import { FONT_SIZE, F_SMALL, F_TINY, ROW_WRAP } from "@/core";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
 import { postFmSchema } from "@site/config/site.config";

@@ -1,9 +1,7 @@
-import { component, element, registerComponent, style } from "@/core";
-import type { HComponentFn, Store } from "@/core";
+import { component, element, hSvgIconStore, registerComponent, style } from "@/core";
+import type { HComponentFn, HSvgBrandsIconName, Store } from "@/core";
 import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "@/lib/stylerules";
-import type { HSvgBrandsIconName } from "@/lib/ui/svgIconFont";
-import { hSvgIconStore } from "@/lib/ui/svgIconStore";
-import { hlink } from "../element/hlink";
+import { hlink } from "@site/components/element/hlink";
 
 export type NavigationArgument = {
     navitem: {
