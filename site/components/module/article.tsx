@@ -27,11 +27,10 @@ import {
     TEXT_UNDERLINE,
 } from "@/core";
 import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul, as, component, element, registerComponent, style } from "@/core";
-import type { HComponentFn, Store } from "@/core";
+import type { HComponentFn, Markdown, Store } from "@/core";
 import { dateTime } from "@site/components/element/dateTime";
 import { shareX } from "@site/components/element/shareX";
 import { tag } from "@site/components/element/tag";
-import type { Markdown } from "@site/components/library/post";
 import { articleHeader } from "@site/components/module/articleHeader";
 import type { PostFm } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";

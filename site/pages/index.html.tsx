@@ -1,6 +1,6 @@
 import { DEFAULT_RESPONSIVE_PAGE_WIDTH, element, registerRootPage, style } from "@/core";
 import type { HRootPageFn, Store } from "@/core";
-import { getAllMarkdowns } from "@site/components/library/post";
+import { getAllMarkdowns } from "@/server";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
 import { summaries } from "@site/components/sections/summaries";

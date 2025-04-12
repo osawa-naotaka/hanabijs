@@ -1,4 +1,4 @@
-import { getAllMarkdowns } from "@site/components/library/post";
+import { getAllMarkdowns } from "@/server";
 import { postFmSchema, posts_dir } from "@site/config/site.config";
 import { LinearIndex, StaticSeekError, createIndex, indexToObject } from "staticseek";
 

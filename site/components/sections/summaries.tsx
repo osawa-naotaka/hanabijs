@@ -1,6 +1,5 @@
 import { component, element } from "@/core";
-import type { HComponentFn, Store } from "@/core";
-import type { Markdown } from "@site/components/library/post";
+import type { HComponentFn, Markdown, Store } from "@/core";
 import { summary } from "@site/components/module/summary";
 import type { PostFm } from "@site/config/site.config";
 
