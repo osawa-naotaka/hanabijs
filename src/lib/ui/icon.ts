@@ -1,8 +1,8 @@
-import type { HComponentFn } from "../component";
-import { element } from "../component";
-import { Link } from "../elements";
-import { component, registerComponent } from "../repository";
-import type { Store } from "../repository";
+import type { HComponentFn } from "@/lib/core/component";
+import { element } from "@/lib/core/component";
+import { Link } from "@/lib/core/elements";
+import { component, registerComponent } from "@/lib/core/store";
+import type { Store } from "@/lib/core/store";
 
 export type HIconType = "brands" | "solid";
 

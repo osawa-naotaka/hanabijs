@@ -1,6 +1,6 @@
+import type { Attribute, HNode } from "@/lib/core/component";
 import type { Component, IntrinsicElements_, JSXChildren } from "./jsx-runtime";
 import { jsx } from "./jsx-runtime";
-import type { Attribute, HNode } from "./lib/component";
 
 export namespace JSX {
     export interface IntrinsicElements extends IntrinsicElements_ {}

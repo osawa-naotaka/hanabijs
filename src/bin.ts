@@ -4,8 +4,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { cwd, exit } from "node:process";
 import { parseArgs } from "node:util";
-import { build } from "./cli/build";
-import { serve } from "./cli/serve";
+import { build } from "@/cli/build";
+import { serve } from "@/cli/serve";
 
 function getVersion() {
     try {

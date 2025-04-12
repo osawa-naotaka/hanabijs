@@ -1,8 +1,8 @@
-import type { Attribute, HNode, HRootPageFn } from "@/lib/component";
-import { DOCTYPE } from "@/lib/elements";
-import type { HComponentInsert, Store } from "@/lib/repository";
-import { stringifyToHtml } from "@/lib/serverfn";
-import { insertNodes } from "@/lib/style";
+import type { Attribute, HNode, HRootPageFn } from "@/lib/core/component";
+import { DOCTYPE } from "@/lib/core/elements";
+import type { HComponentInsert, Store } from "@/lib/core/store";
+import { insertNodes } from "@/lib/core/style";
+import { stringifyToHtml } from "@/lib/server/serverfn";
 
 export async function bundleHtml(
     store: Store,

@@ -1,5 +1,6 @@
-import type { Attribute, HComponentFn, Store } from "@/core";
-import { hash_djb2 } from "@/core";
+import type { Attribute, HComponentFn } from "@/lib/core/component";
+import { hash_djb2 } from "@/lib/core/coreutil";
+import type { Store } from "@/lib/core/store";
 import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 import type { HSvgIconArg } from "@/lib/ui/svgIconFont";
 

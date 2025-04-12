@@ -4,8 +4,8 @@ import path from "node:path";
 import { cwd } from "node:process";
 import type { HComponentAsset } from "@/core";
 import { glob } from "glob";
-import type { Attribute } from "../lib/component";
-import { globExt } from "../lib/serverutil";
+import type { Attribute } from "../lib/core/component";
+import { globExt } from "../lib/server/serverutil";
 
 export type RouteTable = {
     path_regexp: RegExp;

@@ -1,5 +1,5 @@
 import type { Properties } from "./properties";
-import type { Store } from "./repository";
+import type { Store } from "./store";
 import type { PropertyOf, StyleRule } from "./style";
 import { atStyle } from "./style";
 

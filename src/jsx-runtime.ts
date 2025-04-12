@@ -1,5 +1,5 @@
-import type { AttributeMap, Tag } from "./core";
-import type { Attribute, HComponentFn, HNode } from "./lib/component";
+import type { Attribute, HComponentFn, HNode } from "@/lib/core/component";
+import type { AttributeMap, Tag } from "@/lib/core/elements";
 
 export namespace JSX {
     export interface IntrinsicElements extends IntrinsicElements_ {}

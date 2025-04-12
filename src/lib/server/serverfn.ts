@@ -1,7 +1,8 @@
+import type { Attribute, HNode } from "@/lib/core/component";
+import { addClassInRecord } from "@/lib/core/component";
+import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "@/lib/core/coreutil";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
-import { type Attribute, type HNode, addClassInRecord } from "./component";
-import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./coreutil";
 
 // Strigify
 export function stringifyToHtml(depth: number, additional_class: string | string[]): (node: HNode) => string {

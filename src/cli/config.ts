@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { cwd } from "node:process";
-import { type DesignRule, default_design_rule } from "@/lib/design";
+import { type DesignRule, default_design_rule } from "@/lib/core/design";
 
 export type AssetConfig = {
     target_prefix: string;
