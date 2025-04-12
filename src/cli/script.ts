@@ -17,7 +17,7 @@ export async function bundleScriptEsbuild(store: Store): Promise<string | null> 
         return null;
     }
 
-    const entry = `import { generateStore } from "@/core"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
+    const entry = `import { generateStore } from "@/core"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${decodeURIComponent(new URL(x).pathname)}"; await scr${idx}(store)();`).join("\n")}`;
     const bundle = await esbuild.build({
         stdin: {
             contents: entry,

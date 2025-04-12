@@ -38,7 +38,7 @@ export function search(store: Store): HComponentFn<HArgument> {
         style(Result)(MARGIN_BLOCK(S_LARGE(store))),
     ];
 
-    registerComponent(store, Search, component_sytles, { script: import.meta.filename });
+    registerComponent(store, Search, component_sytles, { script: import.meta.url });
 
     return component(Search, () => (
         <Search>
