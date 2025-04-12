@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import http from "node:http";
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { cwd } from "node:process";
 import type { Duplex } from "node:stream";
@@ -36,6 +37,8 @@ export async function serve(conf_file: string | undefined) {
     let public_router = await createStaticRouter(public_dir);
     let asset_router = new Map<string, Router>();
 
+    const require = createRequire(import.meta.url);
+
     const http_server = http.createServer(async (msg: IncomingMessage, resp: ServerResponse) => {
         try {
             const req: Request = new Request(new URL(`http://${msg.headers.host}${msg.url}`));
@@ -43,7 +46,7 @@ export async function serve(conf_file: string | undefined) {
             // Page router
             const match_page = page_router(req);
             if (!(match_page instanceof Error)) {
-                const page_fn = await import(path.join(page_dir, match_page.target_file));
+                const page_fn = require(path.join(page_dir, match_page.target_file));
                 if (typeof page_fn.default === "function") {
                     clearStore(store);
                     const root_page_fn = await page_fn.default(store);
@@ -53,7 +56,7 @@ export async function serve(conf_file: string | undefined) {
                         switch (match_page.req_ext) {
                             case ".css": {
                                 const css_name = withoutExt(withoutExt(match_page.target_file));
-                                const css = await bundleCss(store, css_name);
+                                const css = await bundleCss(store, css_name, require);
                                 if (css instanceof Error) {
                                     await errorResponse(resp, 500, css.message);
                                 } else {
@@ -154,14 +157,9 @@ export async function serve(conf_file: string | undefined) {
     const wss = new WebSocketServer({ noServer: true });
 
     wss.on("connection", function connection(ws) {
-        ws.on("open", () => {
-            console.log("open");
-        });
-
         ws.on("error", console.error);
 
         ws.on("close", () => {
-            console.log("close");
             watcher.removeAllListeners();
         });
     });
@@ -169,13 +167,15 @@ export async function serve(conf_file: string | undefined) {
     http_server.on("upgrade", (req: IncomingMessage, socket: Duplex, head: Buffer<ArrayBufferLike>) => {
         const { pathname } = new URL(req.url || "", `wss://${config.server.hostname}`);
         if (pathname === "/reload") {
-            wss.handleUpgrade(req, socket, head, async (ws) => {
-                watcher.removeAllListeners();
-                page_router = await createPageRouter(page_dir);
-                public_router = await createStaticRouter(public_dir);
-                asset_router = new Map<string, Router>();
-
-                watcher.on("change", () => {
+            wss.handleUpgrade(req, socket, head, (ws) => {
+                watcher.on("change", async () => {
+                    watcher.removeAllListeners();
+                    for (const key of Object.keys(require.cache)) {
+                        delete require.cache[key];
+                    }
+                    page_router = await createPageRouter(page_dir);
+                    public_router = await createStaticRouter(public_dir);
+                    asset_router = new Map<string, Router>();
                     ws.send("reload");
                 });
                 wss.emit("connection", ws, req);

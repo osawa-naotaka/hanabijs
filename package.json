@@ -31,7 +31,7 @@
   },
   "scripts": {
     "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
-    "dev": "tsx watch --exclude './site/**/*' src/bin.ts dev",
+    "dev": "tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev",
     "site": "tsx src/bin.ts build",
     "check": "biome check ./src ./site ./test",
     "check-write": "biome check --write ./src ./site ./test"

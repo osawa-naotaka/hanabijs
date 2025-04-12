@@ -16,6 +16,8 @@ import type { HComponentAsset, Store } from "@/lib/repository";
 import { globExt } from "@/server";
 import { glob } from "glob";
 
+const require = createRequire(import.meta.url);
+
 export async function build(conf_file: string | undefined) {
     const start = performance.now();
 
@@ -62,7 +64,6 @@ export async function build(conf_file: string | undefined) {
     // copy assets
     for (const statics of asset_store.values()) {
         for (const entry of statics) {
-            const require = createRequire(import.meta.url);
             const root_dir =
                 entry.package_name === undefined
                     ? cwd()
@@ -178,7 +179,7 @@ async function bundleAndWriteCssJs(relative_path: string, dist_dir: string, stor
     // process css
     const css_start = performance.now();
 
-    const css = await bundleCss(store, withoutExt(relative_path));
+    const css = await bundleCss(store, withoutExt(relative_path), require);
     if (css instanceof Error) {
         console.warn(css);
         return ["", js_src];

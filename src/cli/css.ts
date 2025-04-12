@@ -1,7 +1,11 @@
 import { type Store, stringifyToCss } from "@/core";
 import { generateFontCss } from "./font";
 
-export async function bundleCss(store: Store, base_name: string): Promise<string | null | Error> {
+export async function bundleCss(
+    store: Store,
+    base_name: string,
+    require: NodeJS.Require,
+): Promise<string | null | Error> {
     const font_css = generateFontCss(store, base_name);
 
     const css_files = Array.from(store.components.values())
@@ -9,7 +13,7 @@ export async function bundleCss(store: Store, base_name: string): Promise<string
         .filter((x) => x !== undefined);
 
     for (const client of css_files) {
-        const client_fn = await import(client);
+        const client_fn = require(client);
         if (typeof client_fn.default === "function") {
             await client_fn.default(store);
         } else {
