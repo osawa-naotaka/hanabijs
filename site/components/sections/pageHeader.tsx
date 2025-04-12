@@ -1,11 +1,17 @@
-import { component, element, registerComponent, style } from "@/core";
-import type { HComponentFn, HSvgBrandsIconName, Store } from "@/core";
-import { DEFAULT_RESPONSIVE_PAGE_WIDTH, DEFAULT_TEXT_BG, FIX_TOP_STICKY, FONT_SIZE, F_3XLARGE, OPACITY } from "@/core";
-import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
 import { popover } from "@site/components/module/popover";
 import { search } from "@site/components/module/search";
+import { component, element, hSvgIconFont, registerComponent, style } from "hanabijs/core";
+import type { HComponentFn, HSvgBrandsIconName, Store } from "hanabijs/core";
+import {
+    DEFAULT_RESPONSIVE_PAGE_WIDTH,
+    DEFAULT_TEXT_BG,
+    FIX_TOP_STICKY,
+    FONT_SIZE,
+    F_3XLARGE,
+    OPACITY,
+} from "hanabijs/core";
 
 export type PageHeaderArgument = {
     title: string;

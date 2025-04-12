@@ -1,9 +1,9 @@
-import { component, registerComponent } from "@/core";
-import type { HComponentFn, HSvgBrandsIconName, Store } from "@/core";
-import { DEFAULT_STYLES, INIT_CSS } from "@/core";
 import { pageHead } from "@site/components/pages/pageHead";
 import { pageFooter } from "@site/components/sections/pageFooter";
 import { pageHeader } from "@site/components/sections/pageHeader";
+import { component, registerComponent } from "hanabijs/core";
+import type { HComponentFn, HSvgBrandsIconName, Store } from "hanabijs/core";
+import { DEFAULT_STYLES, INIT_CSS } from "hanabijs/core";
 
 export type PageArgument = {
     title: string;

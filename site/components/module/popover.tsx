@@ -1,5 +1,5 @@
-import { atStyle, component, element, registerComponent, style } from "@/core";
-import type { HComponentFn, HNode, Store } from "@/core";
+import { atStyle, component, element, registerComponent, style } from "hanabijs/core";
+import type { HComponentFn, HNode, Store } from "hanabijs/core";
 import {
     BG_COLOR,
     BORDER_NONE,
@@ -17,7 +17,7 @@ import {
     PADDING_BLOCK,
     S_MEDIUM,
     TRANSITION,
-} from "@/core";
+} from "hanabijs/core";
 
 export type PopoverArgument = {
     open_button: HNode;

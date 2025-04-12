@@ -1,7 +1,7 @@
-import { component, element, hSvgIconStore, registerComponent, style } from "@/core";
-import type { HComponentFn, HSvgBrandsIconName, Store } from "@/core";
-import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "@/lib/core/stylerules";
 import { hlink } from "@site/components/element/hlink";
+import { component, element, hSvgIconStore, registerComponent, style } from "hanabijs/core";
+import type { HComponentFn, HSvgBrandsIconName, Store } from "hanabijs/core";
+import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "hanabijs/core";
 
 export type NavigationArgument = {
     navitem: {

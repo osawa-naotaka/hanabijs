@@ -1,3 +1,9 @@
+import { dateTime } from "@site/components/element/dateTime";
+import { shareX } from "@site/components/element/shareX";
+import { tag } from "@site/components/element/tag";
+import { articleHeader } from "@site/components/module/articleHeader";
+import type { PostFm } from "@site/site.config";
+import { TAG_DESIGN } from "@site/styles/design";
 import {
     ALIGN_NOMAL,
     BG_COLOR,
@@ -25,15 +31,25 @@ import {
     TEXT_COLOR,
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
-} from "@/core";
-import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul, as, component, element, registerComponent, style } from "@/core";
-import type { HComponentFn, Markdown, Store } from "@/core";
-import { dateTime } from "@site/components/element/dateTime";
-import { shareX } from "@site/components/element/shareX";
-import { tag } from "@site/components/element/tag";
-import { articleHeader } from "@site/components/module/articleHeader";
-import type { PostFm } from "@site/site.config";
-import { TAG_DESIGN } from "@site/styles/design";
+} from "hanabijs/core";
+import {
+    A,
+    H2,
+    H3,
+    H4,
+    H5,
+    Li,
+    Ol,
+    P,
+    Script,
+    Ul,
+    as,
+    component,
+    element,
+    registerComponent,
+    style,
+} from "hanabijs/core";
+import type { HComponentFn, Markdown, Store } from "hanabijs/core";
 
 export type ArticleArgument = Markdown<PostFm>;
 

@@ -1,5 +1,5 @@
-import { component } from "@/core";
-import type { HComponentFn } from "@/core";
+import { component } from "hanabijs/core";
+import type { HComponentFn } from "hanabijs/core";
 
 export type PageHeadArgument = {
     title: string;

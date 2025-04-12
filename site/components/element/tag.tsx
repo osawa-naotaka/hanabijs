@@ -1,6 +1,6 @@
-import { component, element } from "@/core";
-import type { HComponentFn } from "@/core";
 import { tag_map } from "@site/site.config";
+import { component, element } from "hanabijs/core";
+import type { HComponentFn } from "hanabijs/core";
 
 export type TagArgument = {
     slug: string;

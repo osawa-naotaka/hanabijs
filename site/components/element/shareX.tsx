@@ -1,6 +1,6 @@
-import { component, element } from "@/core";
-import type { HComponentFn, Store } from "@/core";
 import { hSvgIconFont } from "@/lib/ui/svgIconFont";
+import { component, element } from "hanabijs/core";
+import type { HComponentFn, Store } from "hanabijs/core";
 
 export type ShareXArgument = {
     title: string;

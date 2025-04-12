@@ -28,6 +28,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@site/*": ["./site/*"],
+      "hanabijs/core": ["./src/core.ts"],
+      "hanabijs/server": ["./src/server.ts"],
       "hanabijs/jsx-dev-runtime": ["./src/jsx-dev-runtime.ts"],
       "hanabijs/jsx-runtime": ["./src/jsx-runtime.ts"]
     },

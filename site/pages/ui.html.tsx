@@ -1,5 +1,5 @@
-import { element, registerRootPage, style, unionRecords } from "@/core";
-import type { ColorKind, HArgument, HRootPageFn, Properties, Store } from "@/core";
+import { element, registerRootPage, style, unionRecords } from "hanabijs/core";
+import type { ColorKind, HArgument, HRootPageFn, Properties, Store } from "hanabijs/core";
 import {
     BOLD,
     BORDER_RADIUS,
@@ -29,7 +29,7 @@ import {
     S_MEDIUM,
     S_SMALL,
     TRANSITION,
-} from "@/core";
+} from "hanabijs/core";
 
 export default function Root(store: Store): HRootPageFn<HArgument> {
     const BText = element("b-text");

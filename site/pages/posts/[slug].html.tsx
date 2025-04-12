@@ -1,11 +1,11 @@
 import path from "node:path";
-import { RawHTML, element, registerRootPage, style } from "@/core";
-import type { HRootPageFn, Store } from "@/core";
-import { DEFAULT_RESPONSIVE_PAGE_WIDTH, MARGIN_BLOCK, S_2XLARGE } from "@/core";
-import { getMarkdown, listFiles, markdownToHtml } from "@/server";
 import { article } from "@site/components/module/article";
 import { page } from "@site/components/pages/page";
 import { navitem, postFmSchema, posts_dir, site } from "@site/site.config";
+import { RawHTML, element, registerRootPage, style } from "hanabijs/core";
+import type { HRootPageFn, Store } from "hanabijs/core";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH, MARGIN_BLOCK, S_2XLARGE } from "hanabijs/core";
+import { getMarkdown, listFiles, markdownToHtml } from "hanabijs/server";
 
 type RootParameter = {
     slug: string;

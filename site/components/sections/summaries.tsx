@@ -1,7 +1,7 @@
-import { component, element } from "@/core";
-import type { HComponentFn, Markdown, Store } from "@/core";
 import { summary } from "@site/components/module/summary";
 import type { PostFm } from "@site/site.config";
+import { component, element } from "hanabijs/core";
+import type { HComponentFn, Markdown, Store } from "hanabijs/core";
 
 export type SummariesArgument = {
     posts: Markdown<PostFm>[];

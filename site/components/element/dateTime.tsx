@@ -1,5 +1,5 @@
-import { component, element } from "@/core";
-import type { HComponentFn } from "@/core";
+import { component, element } from "hanabijs/core";
+import type { HComponentFn } from "hanabijs/core";
 
 export type DateTimeArgument = {
     datetime: string | Date;

@@ -9,8 +9,8 @@ import {
     element,
     registerComponent,
     style,
-} from "@/core";
-import type { HComponentFn, HNode, Store } from "@/core";
+} from "hanabijs/core";
+import type { HComponentFn, HNode, Store } from "hanabijs/core";
 
 export type DrawerArgument = {
     title: HNode;

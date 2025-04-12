@@ -1,10 +1,10 @@
-import { element, registerRootPage, style } from "@/core";
-import type { HRootPageFn, Store } from "@/core";
-import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/core";
-import { getAllMarkdowns } from "@/server";
 import { page } from "@site/components/pages/page";
 import { summaries } from "@site/components/sections/summaries";
 import { navitem, postFmSchema, posts_dir, site, tag_map } from "@site/site.config";
+import { element, registerRootPage, style } from "hanabijs/core";
+import type { HRootPageFn, Store } from "hanabijs/core";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "hanabijs/core";
+import { getAllMarkdowns } from "hanabijs/server";
 
 type RootParameter = {
     tag: string;

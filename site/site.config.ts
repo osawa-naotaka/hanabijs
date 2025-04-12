@@ -1,4 +1,4 @@
-import type { HSvgBrandsIconName } from "@/core";
+import type { HSvgBrandsIconName } from "hanabijs/core";
 import * as v from "valibot";
 
 export const site = {
