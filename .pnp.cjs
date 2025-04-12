@@ -34,7 +34,6 @@ const RAW_RUNTIME_STATE =
           ["@rollup/plugin-terser", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:0.4.4"],\
           ["@rollup/plugin-typescript", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:12.1.2"],\
           ["@rollup/plugin-virtual", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:3.0.2"],\
-          ["@types/bun", "npm:1.2.4"],\
           ["@types/jsdom", "npm:21.1.7"],\
           ["@types/node", "npm:22.14.1"],\
           ["@types/ws", "npm:8.18.1"],\
@@ -992,16 +991,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@types/bun", [\
-      ["npm:1.2.4", {\
-        "packageLocation": "../.yarn/berry/cache/@types-bun-npm-1.2.4-ca166e2cb8-10c0.zip/node_modules/@types/bun/",\
-        "packageDependencies": [\
-          ["@types/bun", "npm:1.2.4"],\
-          ["bun-types", "npm:1.2.4"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@types/debug", [\
       ["npm:4.1.12", {\
         "packageLocation": "../.yarn/berry/cache/@types-debug-npm-4.1.12-82a3fc4905-10c0.zip/node_modules/@types/debug/",\
@@ -1122,14 +1111,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/@types-ws-npm-8.18.1-61dc106ff0-10c0.zip/node_modules/@types/ws/",\
         "packageDependencies": [\
           ["@types/ws", "npm:8.18.1"],\
-          ["@types/node", "npm:22.14.1"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:8.5.14", {\
-        "packageLocation": "../.yarn/berry/cache/@types-ws-npm-8.5.14-101cd0e216-10c0.zip/node_modules/@types/ws/",\
-        "packageDependencies": [\
-          ["@types/ws", "npm:8.5.14"],\
           ["@types/node", "npm:22.14.1"]\
         ],\
         "linkType": "HARD"\
@@ -1320,17 +1301,6 @@ const RAW_RUNTIME_STATE =
           ["bufferstreams", "npm:4.0.0"],\
           ["readable-stream", "npm:3.6.2"],\
           ["yerror", "npm:8.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["bun-types", [\
-      ["npm:1.2.4", {\
-        "packageLocation": "../.yarn/berry/cache/bun-types-npm-1.2.4-93663959b1-10c0.zip/node_modules/bun-types/",\
-        "packageDependencies": [\
-          ["bun-types", "npm:1.2.4"],\
-          ["@types/node", "npm:22.14.1"],\
-          ["@types/ws", "npm:8.5.14"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -2157,7 +2127,6 @@ const RAW_RUNTIME_STATE =
           ["@rollup/plugin-terser", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:0.4.4"],\
           ["@rollup/plugin-typescript", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:12.1.2"],\
           ["@rollup/plugin-virtual", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:3.0.2"],\
-          ["@types/bun", "npm:1.2.4"],\
           ["@types/jsdom", "npm:21.1.7"],\
           ["@types/node", "npm:22.14.1"],\
           ["@types/ws", "npm:8.18.1"],\
