@@ -4,8 +4,7 @@ import { DEFAULT_RESPONSIVE_PAGE_WIDTH } from "@/core";
 import { getAllMarkdowns } from "@/server";
 import { page } from "@site/components/pages/page";
 import { summaries } from "@site/components/sections/summaries";
-import { navitem, postFmSchema, posts_dir, site } from "@site/config/site.config";
-import { tag_map } from "@site/config/site.config";
+import { navitem, postFmSchema, posts_dir, site, tag_map } from "@site/site.config";
 
 type RootParameter = {
     tag: string;

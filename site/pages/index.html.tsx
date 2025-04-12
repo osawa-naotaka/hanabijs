@@ -4,8 +4,7 @@ import { getAllMarkdowns } from "@/server";
 import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
 import { summaries } from "@site/components/sections/summaries";
-import { navitem, site } from "@site/config/site.config";
-import { postFmSchema, posts_dir } from "@site/config/site.config";
+import { navitem, postFmSchema, posts_dir, site } from "@site/site.config";
 
 export default function Root(store: Store): HRootPageFn<void> {
     const Page = page(store);

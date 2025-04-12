@@ -5,7 +5,7 @@ import { dateTime } from "@site/components/element/dateTime";
 import { hlink } from "@site/components/element/hlink";
 import { tag } from "@site/components/element/tag";
 import { articleHeader } from "@site/components/module/articleHeader";
-import type { PostFm } from "@site/config/site.config";
+import type { PostFm } from "@site/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
 
 export type SummaryArgument = Markdown<PostFm>;

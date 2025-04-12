@@ -5,8 +5,7 @@ import { DEFAULT_RESPONSIVE_PAGE_WIDTH, MARGIN_BLOCK, S_2XLARGE } from "@/core";
 import { getMarkdown, listFiles, markdownToHtml } from "@/server";
 import { article } from "@site/components/module/article";
 import { page } from "@site/components/pages/page";
-import { navitem, posts_dir, site } from "@site/config/site.config";
-import { postFmSchema } from "@site/config/site.config";
+import { navitem, postFmSchema, posts_dir, site } from "@site/site.config";
 
 type RootParameter = {
     slug: string;

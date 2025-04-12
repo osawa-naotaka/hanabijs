@@ -3,7 +3,7 @@ import path from "node:path";
 import { cwd } from "node:process";
 import type { Markdown } from "@/lib/core/types";
 import { globExt } from "@/server";
-import { posts_dir } from "@site/config/site.config";
+import { posts_dir } from "@site/site.config";
 import matter from "gray-matter";
 import rehypeStringify from "rehype-stringify";
 import remarkFrontmatter from "remark-frontmatter";

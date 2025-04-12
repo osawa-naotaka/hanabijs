@@ -1,6 +1,6 @@
 import { component, element } from "@/core";
 import type { HComponentFn } from "@/core";
-import { tag_map } from "@site/config/site.config";
+import { tag_map } from "@site/site.config";
 
 export type TagArgument = {
     slug: string;

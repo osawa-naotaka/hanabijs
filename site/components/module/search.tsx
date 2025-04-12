@@ -15,7 +15,7 @@ import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/core";
 import { FONT_SIZE, F_SMALL, F_TINY, ROW_WRAP } from "@/core";
 import { dateTime } from "@site/components/element/dateTime";
 import { tag } from "@site/components/element/tag";
-import { postFmSchema } from "@site/config/site.config";
+import { postFmSchema } from "@site/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
 import type { SearchResult } from "staticseek";
 import * as v from "valibot";

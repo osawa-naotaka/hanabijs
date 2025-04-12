@@ -1,7 +1,7 @@
 import { component, element } from "@/core";
 import type { HComponentFn, Markdown, Store } from "@/core";
 import { summary } from "@site/components/module/summary";
-import type { PostFm } from "@site/config/site.config";
+import type { PostFm } from "@site/site.config";
 
 export type SummariesArgument = {
     posts: Markdown<PostFm>[];
