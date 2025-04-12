@@ -5,11 +5,6 @@ export function replaceExt(filename: string, ext: string) {
     return filename.replace(/\.[^/.]+$/, ext);
 }
 
-export function globExt(base: string, ext: string): AsyncIterableIterator<string> {
-    const glob = new Bun.Glob(`**/*${ext}`);
-    return glob.scan(base);
-}
-
 export function cloneAndMergeRecord<
     T1 extends Record<string | number | symbol, unknown>,
     T2 extends Record<string | number | symbol, unknown>,

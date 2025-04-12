@@ -2,8 +2,9 @@ import { defineConfig } from "tsup";
 
 export default defineConfig({
     entry: {
-        "hanabi-lib": "src/main.ts",
         "hanabi": "src/bin.ts",
+        "core/main": "src/core.ts",
+        "server/main": "src/server.ts",
         "jsx-runtime/main": "src/jsx-runtime.ts",
         "jsx-dev-runtime/main": "src/jsx-dev-runtime.ts",
     },

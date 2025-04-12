@@ -1,5 +1,5 @@
-import { component, element } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { component, element } from "@/core";
+import type { HComponentFn, Store } from "@/core";
 import type { PostFm } from "@site/config/site.config";
 import type { Markdown } from "../library/post";
 import { summary } from "../module/summary";

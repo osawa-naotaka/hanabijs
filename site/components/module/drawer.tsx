@@ -9,8 +9,8 @@ import {
     element,
     registerComponent,
     style,
-} from "@/main";
-import type { HComponentFn, HNode, Store } from "@/main";
+} from "@/core";
+import type { HComponentFn, HNode, Store } from "@/core";
 
 export type DrawerArgument = {
     title: HNode;

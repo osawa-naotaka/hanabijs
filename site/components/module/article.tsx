@@ -26,9 +26,9 @@ import {
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
     as,
-} from "@/main";
-import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul, component, element, registerComponent, style } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+} from "@/core";
+import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul, component, element, registerComponent, style } from "@/core";
+import type { HComponentFn, Store } from "@/core";
 import type { PostFm } from "@site/config/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
 import { dateTime } from "../element/dateTime";

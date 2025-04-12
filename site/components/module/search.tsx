@@ -1,5 +1,25 @@
-import { as, component, createDom, element, registerComponent, style } from "@/main";
-import type { HArgument, HClientFn, HComponentFn, HNode, Store } from "@/main";
+import { hSvgIconFont } from "@/lib/ui/svgIconFont";
+import { component, element, registerComponent, style } from "@/core";
+import { DEFAULT_TEXT_BG, DEFAULT_RESPONSIVE_PAGE_WIDTH, ROW, BORDER_UNDERLINE, OPACITY, MARGIN_BLOCK, S_LARGE, HEIGHT, S_2XLARGE } from "@/core";
+import type { HArgument, HComponentFn, Store } from "@/core";
+
+import {
+    FONT_SIZE,
+    F_SMALL,
+    F_TINY,
+    ROW_WRAP,
+} from "@/lib/stylerules";
+import { createDom, HClientFn, HNode } from "@/core";
+import { dateTime } from "@site/components/element/dateTime";
+import { tag } from "@site/components/element/tag";
+import { postFmSchema } from "@site/config/site.config";
+import { TAG_DESIGN } from "@site/styles/design";
+import { as } from "@/core";
+import { SearchResult } from "staticseek";
+import * as v from "valibot";
+
+import { StaticSeekError, createSearchFn } from "staticseek";
+
 
 export function search(store: Store): HComponentFn<HArgument> {
     const Search = element("search");
@@ -7,6 +27,7 @@ export function search(store: Store): HComponentFn<HArgument> {
     const Input = element("search-input", { tag: "input" });
     const InputIcon = hSvgIconFont(store, { type: "solid", name: "magnifying-glass" });
     const Result = element("search-result", { tag: "ul" });
+    searchResultItem(store);
 
     const component_sytles = [
         style(Search)(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
@@ -16,7 +37,7 @@ export function search(store: Store): HComponentFn<HArgument> {
         style(Result)(MARGIN_BLOCK(S_LARGE(store))),
     ];
 
-    registerComponent(store, Search, component_sytles, { script: import.meta.path });
+    registerComponent(store, Search, component_sytles);
 
     return component(Search, () => (
         <Search>
@@ -28,9 +49,6 @@ export function search(store: Store): HComponentFn<HArgument> {
         </Search>
     ));
 }
-
-import { StaticSeekError, createSearchFn } from "staticseek";
-import type { SearchResult } from "staticseek";
 
 export default function clientFunction(store: Store): HClientFn {
     const SearchResultItem = searchResultItem(store);
@@ -71,28 +89,6 @@ function setChild(element: HTMLElement, nodes: HNode[]): void {
     }
 }
 
-import {
-    BORDER_UNDERLINE,
-    DEFAULT_RESPONSIVE_PAGE_WIDTH,
-    DEFAULT_TEXT_BG,
-    FONT_SIZE,
-    F_SMALL,
-    F_TINY,
-    HEIGHT,
-    MARGIN_BLOCK,
-    OPACITY,
-    ROW,
-    ROW_WRAP,
-    S_2XLARGE,
-    S_LARGE,
-} from "@/lib/stylerules";
-import { hSvgIconFont } from "@/lib/ui/svgIconFont";
-import { dateTime } from "@site/components/element/dateTime";
-import { tag } from "@site/components/element/tag";
-import { postFmSchema } from "@site/config/site.config";
-import { TAG_DESIGN } from "@site/styles/design";
-import * as v from "valibot";
-
 export const SearchKeySchema = v.object({
     slug: v.string(),
     data: postFmSchema,
@@ -102,7 +98,7 @@ type SearchResultItemAttribute = {
     result: SearchResult;
 };
 
-function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute> {
+export function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute> {
     const ResultItem = element("search-result-item", { tag: "li" });
     const Meta = element("search-result-item-meta");
     const Title = element("search-result-item-title");
@@ -117,7 +113,7 @@ function searchResultItem(store: Store): HComponentFn<SearchResultItemAttribute>
         TAG_DESIGN(store, "text", Tag),
     ];
 
-    registerComponent(store, ResultItem, component_styles);
+    registerComponent(store, ResultItem, component_styles, { script: import.meta.path });
 
     return component(ResultItem, ({ result }) => {
         const key = v.parse(SearchKeySchema, result.key);

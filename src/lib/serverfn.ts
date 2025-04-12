@@ -1,7 +1,7 @@
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 import { type Attribute, type HNode, addClassInRecord } from "./component";
-import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
+import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./coreutil";
 
 // Strigify
 export function stringifyToHtml(depth: number, additional_class: string | string[]): (node: HNode) => string {

@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "description": "lightweight static site generator for typescript",
   "type": "module",
-  "main": "build/hanabi-lib.js",
+  "main": "build/client/main.js",
   "exports": {
-    ".": {
-      "require": "./build/hanabi-lib.js",
-      "types": "./build/hanabi-lib.d.ts"
+    "./client": {
+      "require": "./build/client/main.js",
+      "types": "./build/client/main.d.ts"
+    },
+    "./server": {
+      "require": "./build/server/main.js",
+      "types": "./build/server/main.d.ts"
     },
     "./jsx-runtime": {
       "require": "./build/jsx-runtime/main.js",
@@ -59,6 +63,7 @@
     "chokidar": "^4.0.3",
     "dompurify": "^3.2.4",
     "esbuild": "^0.25.1",
+    "glob": "^11.0.1",
     "gray-matter": "^4.0.3",
     "jsdom": "^26.0.0",
     "rehype-stringify": "^10.0.1",

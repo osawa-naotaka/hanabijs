@@ -1,4 +1,4 @@
-import { type Store, stringifyToCss } from "@/main";
+import { type Store, stringifyToCss } from "@/core";
 import { generateFontCss } from "./font";
 
 export async function bundleCss(store: Store, base_name: string): Promise<string | null | Error> {

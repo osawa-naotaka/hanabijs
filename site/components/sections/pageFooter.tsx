@@ -8,8 +8,8 @@ import {
     TEXT_ALIGN_CENTER,
     TEXT_COLOR,
 } from "@/lib/stylerules";
-import { component, element, registerComponent, style } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { component, element, registerComponent, style } from "@/core";
+import type { HComponentFn, Store } from "@/core";
 
 export type PageFooterArgument = {
     site_name: string;

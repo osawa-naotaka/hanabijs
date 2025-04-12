@@ -29,8 +29,8 @@ import {
     S_SMALL,
     TRANSITION,
 } from "@/lib/stylerules";
-import { element, registerRootPage, style, unionRecords } from "@/main";
-import type { ColorKind, HArgument, HRootPageFn, Store } from "@/main";
+import { element, registerRootPage, style, unionRecords } from "@/core";
+import type { ColorKind, HArgument, HRootPageFn, Store } from "@/core";
 
 export default function Root(store: Store): HRootPageFn<HArgument> {
     const BText = element("b-text");

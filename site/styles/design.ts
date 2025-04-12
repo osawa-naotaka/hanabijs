@@ -13,9 +13,9 @@ import {
     S_TINY,
     TRANSITION,
     style,
-} from "@/main";
-import type { Selector, StyleRule } from "@/main";
-import type { ColorKind, HComponentFn, Store } from "@/main";
+} from "@/core";
+import type { Selector, StyleRule } from "@/core";
+import type { ColorKind, HComponentFn, Store } from "@/core";
 
 export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T>): StyleRule[] {
     return [

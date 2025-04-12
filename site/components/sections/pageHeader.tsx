@@ -8,8 +8,8 @@ import {
 } from "@/lib/stylerules";
 import type { HSvgBrandsIconName } from "@/lib/ui/svgIconFont";
 import { hSvgIconFont } from "@/lib/ui/svgIconFont";
-import { component, element, registerComponent, style } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { component, element, registerComponent, style } from "@/core";
+import type { HComponentFn, Store } from "@/core";
 import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
 import { popover } from "@site/components/module/popover";

@@ -1,5 +1,4 @@
-import { existsSync } from "node:fs";
-import { rmdir } from "node:fs/promises";
+import { existsSync, rmdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { cwd } from "node:process";
 import { loadConfig } from "@/cli/config";
@@ -12,7 +11,9 @@ import type { Attribute, HRootPageFn } from "@/lib/component";
 import { Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
 import type { HComponentAsset, Store } from "@/lib/repository";
-import { globExt, replaceExt } from "@/lib/util";
+import { replaceExt } from "@/lib/coreutil";
+import { globExt } from "@/server";
+import { glob } from "glob";
 
 export async function build(conf_file: string | undefined) {
     const start = performance.now();
@@ -28,13 +29,13 @@ export async function build(conf_file: string | undefined) {
     const asset_store = new Map<string, HComponentAsset[]>();
 
     if (config.output.clean_befor_build && existsSync(dist_dir)) {
-        await rmdir(dist_dir, { recursive: true });
+        rmdirSync(dist_dir, { recursive: true });
     }
 
     if (!existsSync(page_dir)) {
         throw new Error(`hanabi: no page directory found at ${page_dir}.`);
     }
-    for await (const filename_in_dir of globExt(page_dir, ".{ts,tsx}")) {
+    for (const filename_in_dir of await globExt(page_dir, ".{ts,tsx}")) {
         const import_start = performance.now();
         const page_fn = await import(path.join(page_dir, filename_in_dir));
         console.log(`import ${filename_in_dir} in ${(performance.now() - import_start).toFixed(2)}ms`);
@@ -81,18 +82,16 @@ export async function build(conf_file: string | undefined) {
 }
 
 async function copyFiles(root: string, pattern: string, dist_dir: string) {
-    const glob = new Bun.Glob(pattern);
-    for await (const src of glob.scan(root)) {
-        const content = Bun.file(path.join(root, src));
-        await Bun.write(path.join(dist_dir, path.parse(src).base), content);
+    for (const src of await glob(pattern, { cwd: root })) {
+        const content = readFileSync(path.join(root, src));
+        ensureDirWrite(path.join(dist_dir, path.parse(src).base), content);
     }
 }
 
 async function copyDir(root: string, dist_dir: string) {
-    const glob = new Bun.Glob("**/*");
-    for await (const src of glob.scan(root)) {
-        const content = Bun.file(path.join(root, src));
-        await Bun.write(path.join(dist_dir, src), content);
+    for (const src of await glob("**/*", { cwd: root })) {
+        const content = readFileSync(path.join(root, src));
+        ensureDirWrite(path.join(dist_dir, src), content);
     }
 }
 
@@ -133,7 +132,7 @@ async function processAnyDotTs(
     const start = performance.now();
     const output_string = await page_fn.default(repository);
     const absolute_path = path.join(dist_dir, relative_path);
-    Bun.write(absolute_path, output_string);
+    writeFileSync(absolute_path, output_string);
     console.log(`process ${relative_path} in ${(performance.now() - start).toFixed(2)}ms`);
 }
 
@@ -200,8 +199,26 @@ function writeToFile(
 ): string {
     const file_ext = replaceExt(file_name, ext);
     const absolute_path = path.join(dist_dir, file_ext);
-    Bun.write(absolute_path, content);
+    const base = path.dirname(absolute_path);
+    if(!existsSync(base)) {
+        mkdirSync(base);
+    }
+    ensureDirWrite(absolute_path, content);
     console.log(`process ${file_ext} in ${(performance.now() - start).toFixed(2)}ms`);
 
     return file_ext;
+}
+
+function ensureDirWrite(absolute_path: string, content: string | Buffer<ArrayBufferLike>) {
+    const base = path.dirname(absolute_path);
+    ensureDir(base);
+    writeFileSync(absolute_path, content);
+}
+
+function ensureDir(base: string) {
+    if(!existsSync(base)) {
+        const pdir = base.endsWith('/') ? base.slice(0, -1) : base;
+        ensureDir(path.dirname(pdir));
+        mkdirSync(base);
+    }
 }

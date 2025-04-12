@@ -1,9 +1,10 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { cwd } from "node:process";
-import type { HComponentAsset } from "@/main";
+import type { HComponentAsset } from "@/core";
 import type { Attribute } from "../lib/component";
-import { globExt } from "../lib/util";
+import { globExt } from "../lib/serverutil";
+import { glob } from "glob";
 
 export type RouteTable = {
     path_regexp: RegExp;
@@ -74,7 +75,7 @@ export async function createPageRouteTable(rootdir: string): Promise<RouteTable[
         }
     }
 
-    for (const file of await Array.fromAsync(globExt(rootdir, ".{ts,tsx}"))) {
+    for (const file of await globExt(rootdir, ".{ts,tsx}")) {
         const target_file = path.join("/", file);
         const path_without_ts = withoutExt(target_file);
         const path_without_ts_p = path.parse(path_without_ts);
@@ -139,7 +140,7 @@ function createHtmlRegExp(path: string): [RegExp, boolean] {
 }
 
 async function createStaticRouteTable(rootdir: string): Promise<RouteTable[]> {
-    return (await Array.fromAsync(globExt(rootdir, ""))).map((name) => {
+    return (await globExt(rootdir, "")).map((name) => {
         const target_file = path.join("/", name);
         const path_exact = target_file;
         const path_regexp = new RegExp(`^${escapeForRegExp(path_exact)}$`);
@@ -158,8 +159,7 @@ async function createAssetRouteTable(asset_prefix: string, assets: HComponentAss
                 return (
                     await Promise.all(
                         entry.copy_files.map(async (file) => {
-                            const glob = new Bun.Glob(file.src);
-                            return (await Array.fromAsync(glob.scan(root_dir))).map((src) => {
+                            return (await glob(file.src, { cwd: root_dir })).map((src) => {
                                 const path_exact = path.join("/", asset_prefix, file.dist, path.basename(src));
 
                                 return {

@@ -10,8 +10,8 @@ import {
     S_SMALL,
     S_TINY,
 } from "@/lib/stylerules";
-import { component, element, registerComponent, style } from "@/main";
-import type { HComponentFn, HNode, Store } from "@/main";
+import { component, element, registerComponent, style } from "@/core";
+import type { HComponentFn, HNode, Store } from "@/core";
 
 export type ArticleHeaderArgument = {
     title: HNode;

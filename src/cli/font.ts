@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
-import type { Store } from "@/main";
+import type { Store } from "@/core";
 import type { Svg } from "svg2woff2";
 import { generateCss, svg2woff2 } from "svg2woff2";
 

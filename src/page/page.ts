@@ -1,5 +1,5 @@
-import { A, Body, H1, Head, Html, Link, Meta, Script, Title, element } from "@/main";
-import type { HArgument, HComponentFn } from "@/main";
+import { A, Body, H1, Head, Html, Link, Meta, Script, Title, element } from "@/core";
+import type { HArgument, HComponentFn } from "@/core";
 
 const site = {
     lang: "en",

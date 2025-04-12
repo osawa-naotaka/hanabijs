@@ -1,7 +1,7 @@
 import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 import type { HSvgIconArg } from "@/lib/ui/svgIconFont";
-import type { Attribute, HComponentFn, Store } from "@/main";
-import { hash_djb2 } from "@/main";
+import type { Attribute, HComponentFn, Store } from "@/core";
+import { hash_djb2 } from "@/core";
 
 export function hSvgIconStore(store: Store, icons: HSvgIconArg[]): HComponentFn<HSvgIconArg> {
     const icon_map = new Map<number, HComponentFn<Attribute>>();

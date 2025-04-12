@@ -1,7 +1,7 @@
 import type { Attribute, HAnyComponentFn, HElement, HNode } from "./component";
 import type { Properties } from "./properties";
 import type { HComponent } from "./repository";
-import { unionArrayOfRecords, validatePropertyName } from "./util";
+import { unionArrayOfRecords, validatePropertyName } from "./coreutil";
 
 export type PropertyOf<T extends keyof Properties> = Properties[T];
 

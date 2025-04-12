@@ -1,5 +1,5 @@
-import { component } from "@/main";
-import type { HComponentFn } from "@/main";
+import { component } from "@/core";
+import type { HComponentFn } from "@/core";
 
 export type PageHeadArgument = {
     title: string;

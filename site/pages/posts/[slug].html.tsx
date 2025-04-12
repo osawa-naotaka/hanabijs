@@ -1,8 +1,8 @@
 import path from "node:path";
 import { markdownToHtml } from "@/lib/markdown";
 import { DEFAULT_RESPONSIVE_PAGE_WIDTH, MARGIN_BLOCK, S_2XLARGE } from "@/lib/stylerules";
-import { RawHTML, element, registerRootPage, style } from "@/main";
-import type { HRootPageFn, Store } from "@/main";
+import { RawHTML, element, registerRootPage, style } from "@/core";
+import type { HRootPageFn, Store } from "@/core";
 import { getMarkdown, listFiles } from "@site/components/library/post";
 import { article } from "@site/components/module/article";
 import { page } from "@site/components/pages/page";

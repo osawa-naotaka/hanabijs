@@ -1,5 +1,5 @@
 import { type AttributeMap, Class, type HanabiTag, type Tag } from "./elements";
-import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./util";
+import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./coreutil";
 
 // Attribute of HTML Element
 export type AttributeValue = string | string[] | null | undefined;

@@ -1,6 +1,6 @@
 import { hSvgIconFont } from "@/lib/ui/svgIconFont";
-import { component, element } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { component, element } from "@/core";
+import type { HComponentFn, Store } from "@/core";
 
 export type ShareXArgument = {
     title: string;

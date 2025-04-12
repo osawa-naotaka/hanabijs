@@ -1,8 +1,8 @@
 import { BOLD, FONT_SIZE, F_XLARGE, JUSTIFY_CENTER, ROW, S_XLARGE } from "@/lib/stylerules";
 import type { HSvgBrandsIconName } from "@/lib/ui/svgIconFont";
 import { hSvgIconStore } from "@/lib/ui/svgIconStore";
-import { component, element, registerComponent, style } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { component, element, registerComponent, style } from "@/core";
+import type { HComponentFn, Store } from "@/core";
 import { hlink } from "../element/hlink";
 
 export type NavigationArgument = {

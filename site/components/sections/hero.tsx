@@ -8,8 +8,8 @@ import {
     S_2XLARGE,
     TEXT_COLOR,
 } from "@/lib/stylerules";
-import { component, element, registerComponent, style } from "@/main";
-import type { HArgument, HComponentFn, Store } from "@/main";
+import { component, element, registerComponent, style } from "@/core";
+import type { HArgument, HComponentFn, Store } from "@/core";
 
 export function hero(store: Store): HComponentFn<HArgument> {
     const Hero = element("hero");

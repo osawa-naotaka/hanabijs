@@ -12,7 +12,7 @@ import { Link, Script } from "@/lib/elements";
 import { clearStore, generateStore } from "@/lib/repository";
 import type { Store } from "@/lib/repository";
 import { stringifyToHtml } from "@/lib/serverfn";
-import { contentType } from "@/lib/util";
+import { contentType } from "@/lib/coreutil";
 import { ErrorPage } from "@/page/error";
 import hanabi_error_css from "@/page/hanabi-error.css" assert { type: "text" };
 import chokidar from "chokidar";

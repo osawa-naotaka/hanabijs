@@ -1,7 +1,7 @@
 import { DEFAULT_STYLES, INIT_CSS } from "@/lib/stylerules";
 import type { HSvgBrandsIconName } from "@/lib/ui/svgIconFont";
-import { component, registerComponent } from "@/main";
-import type { HComponentFn, Store } from "@/main";
+import { component, registerComponent } from "@/core";
+import type { HComponentFn, Store } from "@/core";
 import { pageHead } from "@site/components/pages/pageHead";
 import { pageFooter } from "@site/components/sections/pageFooter";
 import { pageHeader } from "@site/components/sections/pageHeader";

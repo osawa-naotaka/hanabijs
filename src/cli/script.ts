@@ -1,5 +1,5 @@
 import { cwd } from "node:process";
-import type { Store } from "@/main";
+import type { Store } from "@/core";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
@@ -15,7 +15,7 @@ export async function bundleScriptEsbuild(store: Store): Promise<string | null> 
     if (script_files.length === 0) {
         return null;
     }
-    const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
+    const entry = `import { generateStore } from "@/core"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
     const bundle = await esbuild.build({
         stdin: {
             contents: entry,
@@ -47,7 +47,7 @@ export async function bundleScriptRollup(store: Store): Promise<string | null> {
         return null;
     }
 
-    const entry = `import { generateStore } from "@/main"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
+    const entry = `import { generateStore } from "@/core"; const store = generateStore(); ${script_files.map((x, idx) => `import scr${idx} from "${x}"; await scr${idx}(store)();`).join("\n")}`;
     const bundle = await rollup({
         input: "entry.ts",
         treeshake: "smallest",

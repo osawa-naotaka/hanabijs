@@ -1,5 +1,5 @@
-import type { AttributeOf, HComponentFn, Store } from "@/main";
-import { LIGHTEST, TEXT_COLOR, TRANSITION, component, element, registerComponent, style } from "@/main";
+import type { AttributeOf, HComponentFn, Store } from "@/core";
+import { LIGHTEST, TEXT_COLOR, TRANSITION, component, element, registerComponent, style } from "@/core";
 
 export function hlink(store: Store): HComponentFn<Partial<AttributeOf<"a">>> {
     const Link = element("link", { tag: "a" });
