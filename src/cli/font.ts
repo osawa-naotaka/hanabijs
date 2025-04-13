@@ -28,11 +28,11 @@ export async function bundleWoff2(store: Store): Promise<Buffer | null> {
     const woff2 = await svg2woff2(svgs, {
         svg_font_opt: {
             font_family: "fontawesome free generated",
-            ascent: 460,
-            descent: -74,
+            ascent: 592,
+            descent: 240,
             units_per_em: 512,
-            horiz_adv_x: 641,
-            vert_adv_y: 641,
+            offset_y: -16,
+            height_decrese: 128,
         },
         ttf_font_opt: {
             version: "1.0",
@@ -49,7 +49,6 @@ export function generateFontCss(store: Store, base_name: string): string {
 
     return generateCss(svg_names, {
         font_family: "fontawesome free generated",
-        vertical_align: "-.125em",
         font_url: `${base_name}.woff2`,
     });
 }

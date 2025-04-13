@@ -1758,7 +1758,7 @@ __metadata:
     remark-toc: "npm:^9.0.0"
     rollup: "npm:^4.39.0"
     staticseek: "npm:^2.7.1"
-    svg2woff2: "npm:^0.1.1"
+    svg2woff2: "npm:^0.2.0"
     tslib: "npm:^2.8.1"
     tsup: "npm:^8.4.0"
     tsx: "npm:^4.19.3"
@@ -3713,16 +3713,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svg2woff2@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "svg2woff2@npm:0.1.1"
+"svg2woff2@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "svg2woff2@npm:0.2.0"
   dependencies:
     element-to-path: "npm:^1.2.1"
     svg-path-commander: "npm:^2.1.10"
     svg2ttf: "npm:^6.0.3"
     svgson: "npm:^5.3.1"
     ttf2woff2: "npm:^6.0.1"
-  checksum: 10c0/fd847276b0afa7cc1aff973229ab83bb73cd4de25e67363c87666e1ec221da92ab6714de3f4aa51d20cd6820beccf3e7dee47616e203f5cba4bed4009050b766
+  checksum: 10c0/30db0b8b593c82285bb4c37895a20f40f6345227f3257dd746b2f3ee5ef328e8c28605092f43e6cd19083783572d33a3ee41957aea1987de43709aecea06a361
   languageName: node
   linkType: hard
 

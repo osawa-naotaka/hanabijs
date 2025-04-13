@@ -14,9 +14,7 @@ import {
     C_BG,
     C_TEXT,
     FONT_SIZE,
-    F_2XLARGE,
     F_XLARGE,
-    HEIGHT,
     LIST_DECIMAL,
     LIST_DISC,
     Link,
@@ -68,7 +66,6 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
         style(ArticleHeader, H2)(FONT_SIZE(F_XLARGE(store))),
         TAG_DESIGN(store, "text", ArticleTag),
         TAG_DESIGN(store, "text", ShareX),
-        style(Article, ShareX)(HEIGHT(F_2XLARGE(store))),
 
         style(ArticleText)(COLUMN("0"), TEXT_JUSTIFY, ALIGN_NOMAL),
         style(ArticleText, H3)(
