@@ -13,9 +13,8 @@ import {
     S_TINY,
     TRANSITION,
     style,
-} from "@/main";
-import type { Selector, StyleRule } from "@/main";
-import type { ColorKind, HComponentFn, Store } from "@/main";
+} from "hanabijs/core";
+import type { ColorKind, HComponentFn, Selector, Store, StyleRule } from "hanabijs/core";
 
 export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T>): StyleRule[] {
     return [

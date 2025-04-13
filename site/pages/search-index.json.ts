@@ -1,5 +1,5 @@
-import { getAllMarkdowns } from "@site/components/library/post";
-import { postFmSchema, posts_dir } from "@site/config/site.config";
+import { postFmSchema, posts_dir } from "@site/site.config";
+import { getAllMarkdowns } from "hanabijs/server";
 import { LinearIndex, StaticSeekError, createIndex, indexToObject } from "staticseek";
 
 export default async function createSearchIndex(): Promise<string> {

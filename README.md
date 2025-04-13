@@ -1,6 +1,6 @@
 # hanabi.js
 
-currently, hanabi.js is developed using bun.
+currently, hanabi.js is developed using node.js 23.
 prepare develop environment with [nix](https://nixos.org/download/) on WSL2:
 
 ```shell
@@ -14,20 +14,20 @@ nix develop
 for build bundle:
 
 ```shell
-bun install
-bun run build
+yarn install
+yarn build
 ```
 
 develop test site:
 ```shell
-bun install
-bun run dev
+yarn install
+yarn dev
 ```
 
 deploy test site:
 ```shell
-bun install
-bun run site
+yarn install
+yarn site
 ```
 
 ## コンセプト

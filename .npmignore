@@ -1,11 +1,15 @@
 /.vscode
+/.yarn
 /dist
+/doc
 /node_modules
 /site
 /src
 /test
+.pnp*
 biome.json
 bun.lock
-shell.nix
+flake.lock
+flake.nix
 tsconfig.json
 tsup.config.ts

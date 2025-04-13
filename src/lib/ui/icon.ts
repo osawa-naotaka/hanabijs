@@ -1,12 +1,14 @@
-import type { HComponentFn } from "../component";
-import { element } from "../component";
-import { component } from "../repository";
+import type { HComponentFn } from "@/lib/core/component";
+import { element } from "@/lib/core/component";
+import { Link } from "@/lib/core/elements";
+import { component, registerComponent } from "@/lib/core/store";
+import type { Store } from "@/lib/core/store";
 
 export type HIconType = "brands" | "solid";
 
-export type HBrandIconArg = {
+export type HBrandsIconArg = {
     type: "brands";
-    name: HBrandIconName;
+    name: HBrandsIconName;
 };
 
 export type HSolidIconArg = {
@@ -14,16 +16,57 @@ export type HSolidIconArg = {
     name: HSolidIconName;
 };
 
-export function hIcon(): HComponentFn<HBrandIconArg | HSolidIconArg> {
+export type HIconArg = HBrandsIconArg | HSolidIconArg;
+
+export function hIcon(store: Store): HComponentFn<HIconArg> {
     const Top = element("h-icon", { tag: "i" });
-    return component(Top)(
-        ({ type, name }) =>
-            () =>
-                Top({ class: [`fa-${type}`, `fa-${name}`] })(),
-    );
+
+    registerComponent(store, Top, [], {
+        inserts: [
+            {
+                selector: ["head"],
+                nodes: [
+                    Link({ href: `${store.asset.target_prefix}/css/fontawesome.min.css`, rel: "stylesheet" }),
+                    Link({ href: `${store.asset.target_prefix}/css/brands.min.css`, rel: "stylesheet" }),
+                    Link({ href: `${store.asset.target_prefix}/css/solid.min.css`, rel: "stylesheet" }),
+                ],
+            },
+        ],
+        assets: [
+            {
+                package_name: "@fortawesome/fontawesome-free",
+                copy_files: [
+                    {
+                        src: "webfonts/fa-brands-400.*",
+                        dist: "webfonts/",
+                    },
+                    {
+                        src: "webfonts/fa-solid-900.*",
+                        dist: "webfonts/",
+                    },
+                    {
+                        src: "css/fontawesome.min.css",
+                        dist: "css/",
+                    },
+                    {
+                        src: "css/brands.min.css",
+                        dist: "css/",
+                    },
+                    {
+                        src: "css/solid.min.css",
+                        dist: "css/",
+                    },
+                ],
+            },
+        ],
+    });
+
+    return component(Top, ({ type, name }) => {
+        return Top({ class: [`fa-${type}`, `fa-${name}`] });
+    });
 }
 
-export type HBrandIconName =
+export type HBrandsIconName =
     | "monero"
     | "hooli"
     | "yelp"

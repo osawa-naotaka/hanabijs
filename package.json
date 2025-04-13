@@ -3,15 +3,32 @@
   "version": "0.1.0",
   "description": "lightweight static site generator for typescript",
   "type": "module",
-  "main": "build/hanabi-lib.js",
+  "main": "build/client/main.js",
+  "exports": {
+    "./client": {
+      "require": "./build/client/main.js",
+      "types": "./build/client/main.d.ts"
+    },
+    "./server": {
+      "require": "./build/server/main.js",
+      "types": "./build/server/main.d.ts"
+    },
+    "./jsx-runtime": {
+      "require": "./build/jsx-runtime/main.js",
+      "types": "./build/jsx-runtime/main.d.ts"
+    },
+    "./jsx-dev-runtime": {
+      "require": "./build/jsx-dev-runtime/main.js",
+      "types": "./build/jsx-dev-runtime/main.d.ts"
+    }
+  },
   "bin": {
     "hanabi": "build/hanabi.js"
   },
-  "types": "build/hanabi-lib.d.ts",
   "scripts": {
     "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
-    "dev": "bun run --hot src/bin.ts dev",
-    "site": "tsc && bun run --hot src/bin.ts build",
+    "dev": "tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev",
+    "site": "tsx src/bin.ts build",
     "check": "biome check ./src ./site ./test",
     "check-write": "biome check --write ./src ./site ./test"
   },
@@ -27,14 +44,15 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@types/bun": "^1.2.4",
     "@types/node": "^22.13.10",
+    "@types/ws": "^8",
     "staticseek": "^2.7.1",
     "tslib": "^2.8.1",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
@@ -44,6 +62,7 @@
     "chokidar": "^4.0.3",
     "dompurify": "^3.2.4",
     "esbuild": "^0.25.1",
+    "glob": "^11.0.1",
     "gray-matter": "^4.0.3",
     "jsdom": "^26.0.0",
     "rehype-stringify": "^10.0.1",
@@ -53,11 +72,11 @@
     "remark-rehype": "^11.1.1",
     "remark-toc": "^9.0.0",
     "rollup": "^4.39.0",
+    "svg2woff2": "^0.1.0",
+    "tsx": "^4.19.3",
     "unified": "^11.0.5",
-    "valibot": "^1.0.0"
-  },
-  "resolutions": {
-    "@types/bun": "1.2.4"
+    "valibot": "^1.0.0",
+    "ws": "^8.18.1"
   },
   "packageManager": "yarn@4.7.0"
 }

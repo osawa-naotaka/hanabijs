@@ -1,5 +1,5 @@
 {
-  description = "Bun develop environment";
+  description = "node develop environment";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
@@ -12,7 +12,8 @@
   in {
     devShells.${system}.default = pkgs.mkShell {
       buildInputs = with pkgs; [
-        bun 
+        yarn-berry
+        nodejs_23 
       ];
     };
   };

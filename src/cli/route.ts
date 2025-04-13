@@ -1,7 +1,11 @@
 import { existsSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
-import type { Attribute } from "../lib/component";
-import { globExt } from "../lib/util";
+import { cwd } from "node:process";
+import type { HComponentAsset } from "@/core";
+import { glob } from "glob";
+import type { Attribute } from "../lib/core/component";
+import { globExt } from "../lib/server/serverutil";
 
 export type RouteTable = {
     path_regexp: RegExp;
@@ -26,7 +30,7 @@ export async function createPageRouter(rootdir: string): Promise<Router> {
         return (req) => pageRouter(page_route_table, new URL(req.url).pathname);
     }
 
-    return () => new Error("Path Not Found.");
+    throw new Error(`createPageRouter: directory "${rootdir}" not found.`);
 }
 
 export async function createStaticRouter(rootdir: string): Promise<Router> {
@@ -36,10 +40,16 @@ export async function createStaticRouter(rootdir: string): Promise<Router> {
         return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
     }
 
-    return () => new Error("Path Not Found.");
+    throw new Error(`createStaticRouter: directory "${rootdir}" not found.`);
 }
 
-function withoutExt(file: string): string {
+export async function createAssetRouter(asset_prefix: string, assets: HComponentAsset[]): Promise<Router> {
+    const asset_route_table = await createAssetRouteTable(asset_prefix, assets);
+
+    return (req) => pageRouter(asset_route_table, new URL(req.url).pathname);
+}
+
+export function withoutExt(file: string): string {
     const p = path.parse(file);
     return path.join(p.dir, p.name);
 }
@@ -66,7 +76,7 @@ export async function createPageRouteTable(rootdir: string): Promise<RouteTable[
         }
     }
 
-    for (const file of await Array.fromAsync(globExt(rootdir, ".ts"))) {
+    for (const file of await globExt(rootdir, ".{ts,tsx}")) {
         const target_file = path.join("/", file);
         const path_without_ts = withoutExt(target_file);
         const path_without_ts_p = path.parse(path_without_ts);
@@ -83,9 +93,9 @@ export async function createPageRouteTable(rootdir: string): Promise<RouteTable[
             continue;
         }
 
-        // .html is expanded to generated .css and .js
+        // .html is expanded to generated .css, .js and .woff2
         const path_base = withoutExt(path_without_ts);
-        for (const ext of [".css", ".js"]) {
+        for (const ext of [".css", ".js", ".woff2"]) {
             exact_route_table.push({
                 path_regexp: new RegExp(`^${escapeForRegExp(path_base)}${escapeForRegExp(ext)}$`),
                 target_file,
@@ -131,12 +141,43 @@ function createHtmlRegExp(path: string): [RegExp, boolean] {
 }
 
 async function createStaticRouteTable(rootdir: string): Promise<RouteTable[]> {
-    return (await Array.fromAsync(globExt(rootdir, ""))).map((name) => {
+    return (await globExt(rootdir, "")).map((name) => {
         const target_file = path.join("/", name);
         const path_exact = target_file;
         const path_regexp = new RegExp(`^${escapeForRegExp(path_exact)}$`);
         return { path_regexp, path_exact, target_file, target_ext: path.extname(name), auto_generate: false };
     });
+}
+
+async function createAssetRouteTable(asset_prefix: string, assets: HComponentAsset[]): Promise<RouteTable[]> {
+    return (
+        await Promise.all(
+            assets.map(async (entry) => {
+                const require = createRequire(import.meta.url);
+                const root_dir =
+                    entry.package_name === undefined
+                        ? cwd()
+                        : path.dirname(require.resolve(`${entry.package_name}/package.json`));
+                return (
+                    await Promise.all(
+                        entry.copy_files.map(async (file) => {
+                            return (await glob(file.src, { cwd: root_dir, nodir: true })).map((src) => {
+                                const path_exact = path.join("/", asset_prefix, file.dist, path.basename(src));
+
+                                return {
+                                    path_regexp: new RegExp(`^${escapeForRegExp(path_exact)}$`),
+                                    path_exact,
+                                    target_file: path.join(root_dir, src),
+                                    target_ext: path.extname(src),
+                                    auto_generate: false,
+                                };
+                            });
+                        }),
+                    )
+                ).flat();
+            }),
+        )
+    ).flat();
 }
 
 function pageRouter(route_table: RouteTable[], req_url_path: string): Route | Error {
@@ -148,7 +189,7 @@ function pageRouter(route_table: RouteTable[], req_url_path: string): Route | Er
         }
     }
 
-    return new Error("Path Not Found.");
+    return new Error(`Path for "${req_url_path}" Not Found.`);
 }
 
 function staticRouter(route_table: RouteTable[], req_url_path: string): Route | Error {
@@ -169,5 +210,5 @@ function staticRouter(route_table: RouteTable[], req_url_path: string): Route | 
             }
         }
     }
-    return new Error("Path Not Found.");
+    return new Error(`Path for "${req_url_path}" Not Found.`);
 }
