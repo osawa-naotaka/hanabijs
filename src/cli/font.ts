@@ -11,6 +11,8 @@ type SvgName = {
     src: string;
 };
 
+const font_family = "fontawesome free generated";
+
 export async function bundleWoff2(store: Store): Promise<Buffer | null> {
     const svg_names = listSvgNames(store);
 
@@ -27,7 +29,7 @@ export async function bundleWoff2(store: Store): Promise<Buffer | null> {
 
     const woff2 = await svg2woff2(svgs, {
         svg_font_opt: {
-            font_family: "fontawesome free generated",
+            font_family,
             ascent: 592,
             descent: 240,
             units_per_em: 512,
@@ -48,7 +50,7 @@ export function generateFontCss(store: Store, base_name: string): string {
     const svg_names: Svg[] = listSvgNames(store).map((n) => ({ name: n.name, content: "" }));
 
     return generateCss(svg_names, {
-        font_family: "fontawesome free generated",
+        font_family,
         font_url: `${base_name}.woff2`,
     });
 }
