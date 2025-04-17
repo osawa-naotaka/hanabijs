@@ -1,4 +1,4 @@
-import { element, registerRootPage, style, unionRecords } from "hanabijs/core";
+import { element, hIcon, registerRootPage, style, unionRecords } from "hanabijs/core";
 import type { ColorKind, HArgument, HRootPageFn, Properties, Store } from "hanabijs/core";
 import {
     BOLD,
@@ -21,6 +21,8 @@ import {
     CURSOR,
     DEFAULT_RESPONSIVE_PAGE_WIDTH,
     DEFAULT_STYLES,
+    DISPLAY,
+    GAP,
     INIT_CSS,
     INLINE_FLEX,
     LINE_HEIGHT,
@@ -37,6 +39,7 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const BTonal = element("b-tonal");
     const BFilled = element("b-filled");
     const BElevated = element("b-elevated");
+    const Icon = hIcon(store);
 
     const kind: ColorKind = "primary";
 
@@ -75,6 +78,9 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
         style(BElevated)(BOX_ELEVATED(store, kind), default_styles),
         style([BElevated, ":hover"])(BOX_ELEVATED_EM_LIGHT(store, kind)),
         style([BElevated, ":active"])(BOX_ELEVATED_EM_STRONG(store, kind)),
+
+        style(BFilled, ">", "*")(DISPLAY("block")),
+        style(BFilled)(GAP(S_SMALL(store))),
     ];
 
     registerRootPage(store, page_styles);
@@ -95,7 +101,10 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
                     <BText>text</BText>
                     <BOutlined>outlined</BOutlined>
                     <BTonal>tonal</BTonal>
-                    <BFilled>filled</BFilled>
+                    <BFilled>
+                        <Icon type="brands" name="github" />
+                        <div>filled</div>
+                    </BFilled>
                     <BElevated>elevated</BElevated>
                 </main>
             </body>
