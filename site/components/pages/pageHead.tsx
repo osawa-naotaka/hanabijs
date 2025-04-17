@@ -15,10 +15,10 @@ export function pageHead(): HComponentFn<PageHeadArgument> {
             <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
             <meta name="generator" content="template-engine" />
 
-            {/* // Canonical URL */}
+            {/* Canonical URL */}
             <link rel="canonical" href="https://template-engine.lulliecat.com" />
 
-            {/* // Primary Meta Tags */}
+            {/* Primary Meta Tags */}
             <title>{title}</title>
             <meta name="description" content={description} />
             <meta http-equiv="content-security-policy" content="default-src 'self' https://cdn.jsdelivr.net/;" />

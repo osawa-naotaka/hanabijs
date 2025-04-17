@@ -1,4 +1,4 @@
-import { element, hIcon, registerRootPage, style, unionRecords } from "hanabijs/core";
+import { FLEX_WRAP, element, hIcon, hSvgIconFont, registerRootPage, style, unionRecords } from "hanabijs/core";
 import type { ColorKind, HArgument, HRootPageFn, Properties, Store } from "hanabijs/core";
 import {
     BOLD,
@@ -40,6 +40,7 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const BFilled = element("b-filled");
     const BElevated = element("b-elevated");
     const Icon = hIcon(store);
+    const GithubIcon = hSvgIconFont(store, { type: "brands", name: "github" });
 
     const kind: ColorKind = "primary";
 
@@ -57,7 +58,7 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const page_styles = [
         INIT_CSS,
         DEFAULT_STYLES(store),
-        style("main")(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style("main")(DEFAULT_RESPONSIVE_PAGE_WIDTH(store), DISPLAY("flex"), FLEX_WRAP),
 
         style(BText)(BOX_TEXT(store, kind), default_styles),
         style([BText, ":hover"])(BOX_TEXT_EM_LIGHT(store, kind)),
@@ -96,12 +97,17 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
                 <title>ui test</title>
             </head>
             <body>
+                <h2>
+                    Buttons
+                    <GithubIcon />
+                    <Icon type="brands" name="github" />
+                </h2>
                 <main>
-                    <h2>Buttons</h2>
                     <BText>text</BText>
                     <BOutlined>outlined</BOutlined>
                     <BTonal>tonal</BTonal>
                     <BFilled>
+                        <GithubIcon />
                         <Icon type="brands" name="github" />
                         <div>filled</div>
                     </BFilled>
