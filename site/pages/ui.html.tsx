@@ -41,6 +41,8 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const BElevated = element("b-elevated");
     const Icon = hIcon(store);
     const GithubIcon = hSvgIconFont(store, { type: "brands", name: "github" });
+    const XIcon = hSvgIconFont(store, { type: "brands", name: "x-twitter" });
+    const YoutubeIcon = hSvgIconFont(store, { type: "brands", name: "youtube" });
 
     const kind: ColorKind = "primary";
 
@@ -107,7 +109,11 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
                     <BOutlined>outlined</BOutlined>
                     <BTonal>tonal</BTonal>
                     <BFilled>
+                        <YoutubeIcon />
+                        <XIcon />
                         <GithubIcon />
+                        <Icon type="brands" name="youtube" />
+                        <Icon type="brands" name="x-twitter" />
                         <Icon type="brands" name="github" />
                         <div>filled</div>
                     </BFilled>

@@ -9,9 +9,13 @@ export type ShareXArgument = {
 
 export function shareX(store: Store): HComponentFn<ShareXArgument> {
     const ShareX = element("share-x", { tag: "a" });
+    const Text = element("share-x-text");
     const XIcon = hSvgIconFont(store, { type: "brands", name: "x-twitter" });
 
-    const styles = [style(ShareX)(ROW(S_SMALL(store))), style(XIcon)(DISPLAY("block"), FONT_SIZE(F_TINY(store)))];
+    const styles = [
+        style(ShareX)(ROW(S_SMALL(store)), { align_items: "start" }),
+        style(XIcon)(DISPLAY("block"), FONT_SIZE(F_TINY(store))),
+    ];
 
     registerComponent(store, ShareX, styles);
 
@@ -21,7 +25,7 @@ export function shareX(store: Store): HComponentFn<ShareXArgument> {
         return (
             <ShareX href={href} target="__blank">
                 <XIcon />
-                <div>SHARE</div>
+                <Text>SHARE</Text>
             </ShareX>
         );
     });
