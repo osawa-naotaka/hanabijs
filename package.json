@@ -28,9 +28,11 @@
   "scripts": {
     "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
     "node-dev": "tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev",
-    "node-site": "tsx src/bin.ts build",
-    "bun-dev": "bun src/bin.ts dev",
-    "bun-site": "bun src/bin.ts build",
+    "node-build": "tsx src/bin.ts build",
+    "bun-dev": "bun --hot src/bin.ts dev",
+    "bun-build": "bun src/bin.ts build",
+    "deno-dev": "deno run -A src/bin.ts dev",
+    "deno-build": "deno run -A src/bin.ts build",
     "check": "biome check ./src ./site ./test",
     "check-write": "biome check --write ./src ./site ./test"
   },

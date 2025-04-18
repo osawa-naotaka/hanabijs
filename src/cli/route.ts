@@ -3,9 +3,9 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { cwd } from "node:process";
 import type { HComponentAsset } from "@/core";
-import { glob } from "glob";
 import type { Attribute } from "@/lib/core/component";
 import { globExt } from "@/lib/server/serverutil";
+import { glob } from "glob";
 
 export type RouteTable = {
     path_regexp: RegExp;
