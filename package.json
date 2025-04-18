@@ -27,8 +27,10 @@
   },
   "scripts": {
     "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
-    "dev": "tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev",
-    "site": "tsx src/bin.ts build",
+    "node-dev": "tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev",
+    "node-site": "tsx src/bin.ts build",
+    "bun-dev": "bun src/bin.ts dev",
+    "bun-site": "bun src/bin.ts build",
     "check": "biome check ./src ./site ./test",
     "check-write": "biome check --write ./src ./site ./test"
   },
