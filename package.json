@@ -5,9 +5,9 @@
   "type": "module",
   "main": "build/client/main.js",
   "exports": {
-    "./client": {
-      "require": "./build/client/main.js",
-      "types": "./build/client/main.d.ts"
+    "./core": {
+      "require": "./build/core/main.js",
+      "types": "./build/core/main.d.ts"
     },
     "./server": {
       "require": "./build/server/main.js",

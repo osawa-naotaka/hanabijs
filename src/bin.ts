@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node --watch
+#!/usr/bin/env -S tsx src/bin.ts
 
 import { readFileSync } from "node:fs";
 import path from "node:path";
