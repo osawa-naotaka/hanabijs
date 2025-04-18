@@ -1467,7 +1467,7 @@ __metadata:
 
 "hanabijs@file:../..::locator=integration-test%40workspace%3A.":
   version: 0.1.0
-  resolution: "hanabijs@file:../..#../..::hash=9d0543&locator=integration-test%40workspace%3A."
+  resolution: "hanabijs@file:../..#../..::hash=287242&locator=integration-test%40workspace%3A."
   dependencies:
     "@fortawesome/fontawesome-free": "npm:^6.7.2"
     "@rollup/plugin-commonjs": "npm:^28.0.3"
@@ -1496,7 +1496,7 @@ __metadata:
     ws: "npm:^8.18.1"
   bin:
     hanabi: build/hanabi.js
-  checksum: 10c0/19bbcd08085c3a0bef20724611e5552dc59b215182319be16550233ba830d3c6f79989e2d94e1165b065371f4cef27259410b7fa72686cb2fe87cfc84e9f666a
+  checksum: 10c0/5ad7790c0a9e10fb88f6b274f709382990bc3fa4c838881c4779e8b3769973301ffa20d2453fa3a46da904c11f9058cbe970ac1488d0a1623e7e3a4d670e2ae6
   languageName: node
   linkType: hard
 

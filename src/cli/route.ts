@@ -34,13 +34,9 @@ export async function createPageRouter(rootdir: string): Promise<Router> {
 }
 
 export async function createStaticRouter(rootdir: string): Promise<Router> {
-    if (existsSync(rootdir)) {
-        const static_route_table = await createStaticRouteTable(rootdir);
+    const static_route_table = await createStaticRouteTable(rootdir);
 
-        return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
-    }
-
-    throw new Error(`createStaticRouter: directory "${rootdir}" not found.`);
+    return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
 }
 
 export async function createAssetRouter(asset_prefix: string, assets: HComponentAsset[]): Promise<Router> {
