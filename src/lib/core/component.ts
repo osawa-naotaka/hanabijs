@@ -1,6 +1,6 @@
-import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "./coreutil";
-import type { AttributeMap, HanabiTag, Tag } from "./elements";
-import { Class } from "./elements";
+import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "@/lib/core/coreutil";
+import type { AttributeMap, HanabiTag, Tag } from "@/lib/core/elements";
+import { Class } from "@/lib/core/elements";
 
 // Attribute of HTML Element
 export type AttributeValue = string | string[] | null | undefined;

@@ -1,5 +1,5 @@
-import { attribute_names, hanabi_tags, tags } from "./elements";
-import { property_names } from "./properties";
+import { attribute_names, hanabi_tags, tags } from "@/lib/core/elements";
+import { property_names } from "@/lib/core/properties";
 
 export function replaceExt(filename: string, ext: string) {
     return filename.replace(/\.[^/.]+$/, ext);

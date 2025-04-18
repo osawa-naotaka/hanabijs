@@ -1,7 +1,7 @@
-import type { Properties } from "./properties";
-import type { Store } from "./store";
-import type { PropertyOf, StyleRule } from "./style";
-import { atStyle } from "./style";
+import type { Properties } from "@/lib/core/properties";
+import type { Store } from "@/lib/core/store";
+import type { PropertyOf, StyleRule } from "@/lib/core/style";
+import { atStyle } from "@/lib/core/style";
 
 export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
     atStyle(["@layer", "base"])("*")({

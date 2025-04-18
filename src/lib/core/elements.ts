@@ -1,4 +1,4 @@
-import type { AttributeOf, HElementFn, HNode } from "./component";
+import type { AttributeOf, HElementFn, HNode } from "@/lib/core/component";
 
 export type Tag =
     | "a"

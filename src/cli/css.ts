@@ -1,5 +1,6 @@
-import { type Store, stringifyToCss } from "@/core";
-import { generateFontCss } from "./font";
+import { stringifyToCss } from "@/lib/core/style";
+import type { Store } from "@/lib/core/store";
+import { generateFontCss } from "@/cli/font";
 
 export async function bundleCss(
     store: Store,
@@ -13,7 +14,7 @@ export async function bundleCss(
         .filter((x) => x !== undefined);
 
     for (const client of css_files) {
-        const client_fn = require(client);
+        const client_fn = require(client.replace("file://", ""));
         if (typeof client_fn.default === "function") {
             await client_fn.default(store);
         } else {

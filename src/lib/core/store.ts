@@ -1,8 +1,8 @@
 import type { AssetConfig } from "@/cli/config";
-import type { HComponentFn, HComponentFnArg, HNode } from "./component";
-import { default_design_rule } from "./design";
-import type { DesignRule } from "./design";
-import type { Selector, StyleRule } from "./style";
+import type { HComponentFn, HComponentFnArg, HNode } from "@/lib/core/component";
+import { default_design_rule } from "@/lib/core/design";
+import type { DesignRule } from "@/lib/core/design";
+import type { Selector, StyleRule } from "@/lib/core/style";
 
 // hanabi element data structure for register element to repository, internal use only.
 export type HComponent = {
