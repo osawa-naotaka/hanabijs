@@ -51,7 +51,7 @@ const RAW_RUNTIME_STATE =
           ["remark-toc", "npm:9.0.0"],\
           ["rollup", "npm:4.39.0"],\
           ["staticseek", "npm:2.7.1"],\
-          ["svg2woff2", "npm:0.2.1"],\
+          ["svg2woff2", "npm:0.3.0"],\
           ["tslib", "npm:2.8.1"],\
           ["tsup", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.4.0"],\
           ["tsx", "npm:4.19.3"],\
@@ -2144,7 +2144,7 @@ const RAW_RUNTIME_STATE =
           ["remark-toc", "npm:9.0.0"],\
           ["rollup", "npm:4.39.0"],\
           ["staticseek", "npm:2.7.1"],\
-          ["svg2woff2", "npm:0.2.1"],\
+          ["svg2woff2", "npm:0.3.0"],\
           ["tslib", "npm:2.8.1"],\
           ["tsup", "virtual:51364493b452122c7d89ab0ad452fdd5a03c2291d593052281d6eebcedb52e8aee841f954ac154b12f1fc6cf14bbc5e0ec6c1ae13ac6ab395188ca6d08ad93f0#npm:8.4.0"],\
           ["tsx", "npm:4.19.3"],\
@@ -4243,10 +4243,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["svg2woff2", [\
-      ["npm:0.2.1", {\
-        "packageLocation": "../.yarn/berry/cache/svg2woff2-npm-0.2.1-c69b605f6c-10c0.zip/node_modules/svg2woff2/",\
+      ["npm:0.3.0", {\
+        "packageLocation": "../.yarn/berry/cache/svg2woff2-npm-0.3.0-3cde9539cc-10c0.zip/node_modules/svg2woff2/",\
         "packageDependencies": [\
-          ["svg2woff2", "npm:0.2.1"],\
+          ["svg2woff2", "npm:0.3.0"],\
           ["element-to-path", "npm:1.2.1"],\
           ["svg-path-commander", "npm:2.1.10"],\
           ["svg2ttf", "npm:6.0.3"],\

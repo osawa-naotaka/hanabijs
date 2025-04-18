@@ -30,11 +30,6 @@ export async function bundleWoff2(store: Store): Promise<Buffer | null> {
     const woff2 = await svg2woff2(svgs, {
         svg_font_opt: {
             font_family,
-            ascent: 512,
-            descent: 0,
-            units_per_em: 512,
-            offset_y: 0,
-            height_decrese: 0,
         },
         ttf_font_opt: {
             version: "1.0",
