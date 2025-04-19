@@ -1668,7 +1668,7 @@ __metadata:
     valibot: "npm:^1.0.0"
     ws: "npm:^8.18.1"
   bin:
-    hanabi: build/hanabi.js
+    hanabi: build/bin.js
   languageName: unknown
   linkType: soft
 

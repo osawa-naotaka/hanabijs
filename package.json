@@ -23,10 +23,10 @@
     }
   },
   "bin": {
-    "hanabi": "build/hanabi.js"
+    "hanabi": "build/bin.js"
   },
   "scripts": {
-    "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
+    "build": "tsc && tsup --config tsup.config.ts && rm build/bin.d.ts",
     "node-dev": "tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev",
     "node-build": "tsx src/bin.ts build",
     "bun-dev": "bun --hot src/bin.ts dev",
