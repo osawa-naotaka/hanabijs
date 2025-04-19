@@ -24,32 +24,60 @@ import chokidar from "chokidar";
 import type { FSWatcher } from "chokidar";
 import { WebSocketServer } from "ws";
 
-export async function serve(conf_file: string | undefined) {
+export async function serve(conf_file: string | undefined): Promise<void> {
     const config = await loadConfig(conf_file);
     const watch_dir = path.join(cwd(), config.server.watch_dir);
     const watcher = chokidar.watch(watch_dir, { persistent: true });
 
-    const [proc, reload] = await createReqProcessor(config);
+    const [proc, reload] = createReqProcessor(config);
 
-    if (Bun !== undefined) {
-        await createAndStartBunSearver(config, proc, reload, watcher);
+    if (
+        typeof process !== "undefined" &&
+        process.versions &&
+        Object.prototype.hasOwnProperty.call(process.versions, "bun")
+    ) {
+        createAndStartBunServer(config, proc, reload, watcher);
+    } else if (typeof globalThis !== "undefined" && globalThis.Deno) {
+        createAndStartDenoServer(config, proc, reload, watcher);
     } else {
         createAndStartNodeServer(config, proc, reload, watcher);
     }
 }
 
-async function createAndStartBunSearver(
+function createAndStartDenoServer(
     config: HanabiConfig,
     proc: ReqProcessFn,
     reload: ReloadFn,
     watcher: FSWatcher,
-): Promise<void> {
+): void {
+    Deno.serve({ port: config.server.port, hostname: config.server.hostname }, async (req: Request) => {
+        if (req.headers.get("upgrade") === "websocket") {
+            const { socket, response } = Deno.upgradeWebSocket(req);
+            socket.addEventListener("open", () => {
+                watcher.removeAllListeners();
+                watcher.on("change", () => {
+                    reload();
+                    socket.send("reload");
+                });
+            });
+            socket.addEventListener("close", () => {
+                watcher.removeAllListeners();
+            });
+            return response;
+        }
+
+        const rv = await proc(req);
+        return new Response(rv.content, { status: rv.status, headers: { "Content-Type": rv.type } });
+    });
+}
+
+function createAndStartBunServer(config: HanabiConfig, proc: ReqProcessFn, reload: ReloadFn, watcher: FSWatcher): void {
     const server = Bun.serve({
         websocket: {
             open(ws) {
                 watcher.removeAllListeners();
-                watcher.on("change", async () => {
-                    await reload();
+                watcher.on("change", () => {
+                    reload();
                     ws.send("reload");
                 });
             },
@@ -103,9 +131,9 @@ function createAndStartNodeServer(
         const { pathname } = new URL(req.url || "", `wss://${config.server.hostname}`);
         if (pathname === "/reload") {
             wss.handleUpgrade(req, socket, head, (ws) => {
-                watcher.on("change", async () => {
+                watcher.on("change", () => {
                     watcher.removeAllListeners();
-                    await reload();
+                    reload();
                     ws.send("reload");
                 });
                 wss.emit("connection", ws, req);
@@ -118,11 +146,11 @@ function createAndStartNodeServer(
     http_server.listen(config.server.port, config.server.hostname);
 }
 
-async function createAssetRouterSet(store: Store, target_prefix: string): Promise<[string, Router][]> {
+function createAssetRouterSet(store: Store, target_prefix: string, require: NodeJS.Require): [string, Router][] {
     const asset_files: [string, Router][] = [];
     for (const [key, value] of store.components.entries()) {
         if (value.attachment?.assets !== undefined) {
-            asset_files.push([key, await createAssetRouter(target_prefix, value.attachment.assets)]);
+            asset_files.push([key, createAssetRouter(target_prefix, value.attachment.assets, require)]);
         }
     }
 
@@ -148,27 +176,27 @@ function errorResponse(status: number, cause: string): Resp {
 }
 
 type ReqProcessFn = (req: Request) => Promise<Resp>;
-type ReloadFn = () => Promise<void>;
+type ReloadFn = () => void;
 
-async function createReqProcessor(config: HanabiConfig): Promise<[ReqProcessFn, ReloadFn]> {
+function createReqProcessor(config: HanabiConfig): [ReqProcessFn, ReloadFn] {
     const root = cwd();
     const page_dir = path.join(root, config.input.page_dir);
     const public_dir = path.join(root, config.input.public_dir);
 
     const store = generateStore(config.asset, config.designrule);
 
-    let page_router = await createPageRouter(page_dir);
-    let public_router = await createStaticRouter(public_dir);
+    let page_router = createPageRouter(page_dir);
+    let public_router = createStaticRouter(public_dir);
     let asset_router = new Map<string, Router>();
 
     const require = createRequire(import.meta.url);
 
-    const reload_fn: ReloadFn = async () => {
+    const reload_fn: ReloadFn = () => {
         for (const key of Object.keys(require.cache)) {
             delete require.cache[key];
         }
-        page_router = await createPageRouter(page_dir);
-        public_router = await createStaticRouter(public_dir);
+        page_router = createPageRouter(page_dir);
+        public_router = createStaticRouter(public_dir);
         asset_router = new Map<string, Router>();
     };
 
@@ -208,7 +236,7 @@ async function createReqProcessor(config: HanabiConfig): Promise<[ReqProcessFn, 
 
                     switch (match_page.req_ext) {
                         case ".html": {
-                            const router_set = await createAssetRouterSet(store, config.asset.target_prefix);
+                            const router_set = createAssetRouterSet(store, config.asset.target_prefix, require);
                             for (const [key, router] of router_set) {
                                 asset_router.set(key, router);
                             }

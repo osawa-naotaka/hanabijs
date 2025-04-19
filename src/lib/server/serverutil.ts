@@ -1,5 +1,5 @@
-import { glob } from "glob";
+import { globSync } from "glob";
 
-export async function globExt(base: string, ext: string): Promise<string[]> {
-    return await glob(`**/*${ext}`, { cwd: base, nodir: true });
+export function globExt(base: string, ext: string): string[] {
+    return globSync(`**/*${ext}`, { cwd: base, nodir: true });
 }

@@ -1,11 +1,10 @@
 import { existsSync } from "node:fs";
-import { createRequire } from "node:module";
 import path from "node:path";
 import { cwd } from "node:process";
 import type { HComponentAsset } from "@/core";
 import type { Attribute } from "@/lib/core/component";
 import { globExt } from "@/lib/server/serverutil";
-import { glob } from "glob";
+import { globSync } from "glob";
 
 export type RouteTable = {
     path_regexp: RegExp;
@@ -23,9 +22,9 @@ export type Route = {
 
 export type Router = (req: Request) => Route | Error;
 
-export async function createPageRouter(rootdir: string): Promise<Router> {
+export function createPageRouter(rootdir: string): Router {
     if (existsSync(rootdir)) {
-        const page_route_table = await createPageRouteTable(rootdir);
+        const page_route_table = createPageRouteTable(rootdir);
 
         return (req) => pageRouter(page_route_table, new URL(req.url).pathname);
     }
@@ -33,14 +32,14 @@ export async function createPageRouter(rootdir: string): Promise<Router> {
     throw new Error(`createPageRouter: directory "${rootdir}" not found.`);
 }
 
-export async function createStaticRouter(rootdir: string): Promise<Router> {
-    const static_route_table = await createStaticRouteTable(rootdir);
+export function createStaticRouter(rootdir: string): Router {
+    const static_route_table = createStaticRouteTable(rootdir);
 
     return (req) => staticRouter(static_route_table, new URL(req.url).pathname);
 }
 
-export async function createAssetRouter(asset_prefix: string, assets: HComponentAsset[]): Promise<Router> {
-    const asset_route_table = await createAssetRouteTable(asset_prefix, assets);
+export function createAssetRouter(asset_prefix: string, assets: HComponentAsset[], require: NodeJS.Require): Router {
+    const asset_route_table = createAssetRouteTable(asset_prefix, assets, require);
 
     return (req) => pageRouter(asset_route_table, new URL(req.url).pathname);
 }
@@ -54,7 +53,7 @@ function escapeForRegExp(exp: string): string {
     return exp.replace(/[-^$\\\.*+?()[\]{}|/]/g, "\\$&");
 }
 
-export async function createPageRouteTable(rootdir: string): Promise<RouteTable[]> {
+export function createPageRouteTable(rootdir: string): RouteTable[] {
     const exact_route_table: RouteTable[] = [];
     const regexp_route_table: RouteTable[] = [];
 
@@ -72,7 +71,7 @@ export async function createPageRouteTable(rootdir: string): Promise<RouteTable[
         }
     }
 
-    for (const file of await globExt(rootdir, ".{ts,tsx}")) {
+    for (const file of globExt(rootdir, ".{ts,tsx}")) {
         const target_file = path.join("/", file);
         const path_without_ts = withoutExt(target_file);
         const path_without_ts_p = path.parse(path_without_ts);
@@ -136,8 +135,8 @@ function createHtmlRegExp(path: string): [RegExp, boolean] {
     return [new RegExp(`^${regexp_str}$`), param_names.size === 0];
 }
 
-async function createStaticRouteTable(rootdir: string): Promise<RouteTable[]> {
-    return (await globExt(rootdir, "")).map((name) => {
+function createStaticRouteTable(rootdir: string): RouteTable[] {
+    return globExt(rootdir, "").map((name) => {
         const target_file = path.join("/", name);
         const path_exact = target_file;
         const path_regexp = new RegExp(`^${escapeForRegExp(path_exact)}$`);
@@ -145,35 +144,26 @@ async function createStaticRouteTable(rootdir: string): Promise<RouteTable[]> {
     });
 }
 
-async function createAssetRouteTable(asset_prefix: string, assets: HComponentAsset[]): Promise<RouteTable[]> {
-    return (
-        await Promise.all(
-            assets.map(async (entry) => {
-                const require = createRequire(import.meta.url);
-                const root_dir =
-                    entry.package_name === undefined
-                        ? cwd()
-                        : path.dirname(require.resolve(`${entry.package_name}/package.json`));
-                return (
-                    await Promise.all(
-                        entry.copy_files.map(async (file) => {
-                            return (await glob(file.src, { cwd: root_dir, nodir: true })).map((src) => {
-                                const path_exact = path.join("/", asset_prefix, file.dist, path.basename(src));
+function createAssetRouteTable(asset_prefix: string, assets: HComponentAsset[], require: NodeJS.Require): RouteTable[] {
+    return assets.flatMap((entry) => {
+        const root_dir =
+            entry.package_name === undefined
+                ? cwd()
+                : path.dirname(require.resolve(`${entry.package_name}/package.json`));
+        return entry.copy_files.flatMap((file) => {
+            return globSync(file.src, { cwd: root_dir, nodir: true }).map((src) => {
+                const path_exact = path.join("/", asset_prefix, file.dist, path.basename(src));
 
-                                return {
-                                    path_regexp: new RegExp(`^${escapeForRegExp(path_exact)}$`),
-                                    path_exact,
-                                    target_file: path.join(root_dir, src),
-                                    target_ext: path.extname(src),
-                                    auto_generate: false,
-                                };
-                            });
-                        }),
-                    )
-                ).flat();
-            }),
-        )
-    ).flat();
+                return {
+                    path_regexp: new RegExp(`^${escapeForRegExp(path_exact)}$`),
+                    path_exact,
+                    target_file: path.join(root_dir, src),
+                    target_ext: path.extname(src),
+                    auto_generate: false,
+                };
+            });
+        });
+    });
 }
 
 function pageRouter(route_table: RouteTable[], req_url_path: string): Route | Error {

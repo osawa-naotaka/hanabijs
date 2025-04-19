@@ -729,6 +729,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/deno@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@types/deno@npm:2.2.0"
+  checksum: 10c0/cb45bbffe66a3008224a509c6bcb338921cc68b9045363f77ba5d84650d879b8fd4c810db24369a93fbce4a8e2855808bb141c0447feb47d911a7512ba374bde
+  languageName: node
+  linkType: hard
+
 "@types/estree@npm:*, @types/estree@npm:1.0.7, @types/estree@npm:^1.0.0":
   version: 1.0.7
   resolution: "@types/estree@npm:1.0.7"
@@ -1634,6 +1641,7 @@ __metadata:
     "@rollup/plugin-typescript": "npm:^12.1.2"
     "@rollup/plugin-virtual": "npm:^3.0.2"
     "@types/bun": "npm:^1.2.10"
+    "@types/deno": "npm:^2.2.0"
     "@types/jsdom": "npm:^21.1.7"
     "@types/node": "npm:^22.13.10"
     "@types/ws": "npm:^8"
