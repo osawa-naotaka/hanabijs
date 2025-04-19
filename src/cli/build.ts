@@ -202,10 +202,6 @@ function writeToFile(
 ): string {
     const file_ext = replaceExt(file_name, ext);
     const absolute_path = path.join(dist_dir, file_ext);
-    const base = path.dirname(absolute_path);
-    if (!existsSync(base)) {
-        mkdirSync(base);
-    }
     ensureDirWrite(absolute_path, content);
     console.log(`process ${file_ext} in ${(performance.now() - start).toFixed(2)}ms`);
 
