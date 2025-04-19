@@ -254,7 +254,7 @@ function createReqProcessor(config: HanabiConfig): [ReqProcessFn, ReloadFn] {
                             return normalResponse(html_text, ".html");
                         }
                         default:
-                            return normalResponse(await root_page_fn, match_page.req_ext);
+                            return normalResponse(root_page_fn, match_page.req_ext);
                     }
                 }
                 return errorResponse(500, `${match_page.target_file} does not have default export.`);

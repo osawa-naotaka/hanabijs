@@ -52,5 +52,5 @@ export async function getMarkdown<T>(
 }
 
 export async function listFiles(dir: string, ext: string): Promise<string[]> {
-    return await globExt(path.join(cwd(), dir), ext);
+    return globExt(path.join(cwd(), dir), ext);
 }
