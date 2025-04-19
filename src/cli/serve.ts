@@ -6,6 +6,7 @@ import path from "node:path";
 import { cwd } from "node:process";
 import type { Duplex } from "node:stream";
 import { loadConfig } from "@/cli/config";
+import type { HanabiConfig } from "@/cli/config";
 import { bundleCss } from "@/cli/css";
 import { bundleWoff2 } from "@/cli/font";
 import { bundleHtml } from "@/cli/html";
@@ -40,118 +41,20 @@ export async function serve(conf_file: string | undefined) {
     const require = createRequire(import.meta.url);
 
     const http_server = http.createServer(async (msg: IncomingMessage, resp: ServerResponse) => {
-        try {
-            const req: Request = new Request(new URL(`http://${msg.headers.host}${msg.url}`));
-
-            // Page router
-            const match_page = page_router(req);
-            if (!(match_page instanceof Error)) {
-                const page_fn = require(path.join(page_dir, match_page.target_file));
-                if (typeof page_fn.default === "function") {
-                    clearStore(store);
-                    const root_page_fn = await page_fn.default(store);
-
-                    // auto generation of .css , .js and .woff2 from .html.ts
-                    if (match_page.auto_generate) {
-                        switch (match_page.req_ext) {
-                            case ".css": {
-                                const css_name = withoutExt(withoutExt(match_page.target_file));
-                                const css = await bundleCss(store, css_name, require);
-                                if (css instanceof Error) {
-                                    await errorResponse(resp, 500, css.message);
-                                } else {
-                                    normalResponse(resp, css || "", match_page.req_ext);
-                                }
-                                break;
-                            }
-                            case ".js": {
-                                const js = await bundleScriptEsbuild(store);
-                                normalResponse(resp, js || "", match_page.req_ext);
-                                break;
-                            }
-                            case ".woff2": {
-                                const woff2 = await bundleWoff2(store);
-                                normalResponse(resp, woff2 || "", match_page.req_ext);
-                                break;
-                            }
-                            default:
-                                await errorResponse(
-                                    resp,
-                                    500,
-                                    `auto generation of ${match_page.req_ext} is not supported.`,
-                                );
-                        }
-                        return;
-                    }
-
-                    switch (match_page.req_ext) {
-                        case ".html": {
-                            const router_set = await createAssetRouterSet(store, config.asset.target_prefix);
-                            for (const [key, router] of router_set) {
-                                asset_router.set(key, router);
-                            }
-
-                            const css_name = `${withoutExt(withoutExt(match_page.target_file))}.css`;
-                            const js_name = `${withoutExt(withoutExt(match_page.target_file))}.js`;
-                            const insert_nodes = [
-                                Script({ type: "module", src: "/reload.js" }),
-                                Script({ type: "module", src: js_name }),
-                                Link({ href: css_name, rel: "stylesheet" }),
-                            ];
-
-                            const html_text = await bundleHtml(store, match_page.params, root_page_fn, insert_nodes);
-
-                            normalResponse(resp, html_text, ".html");
-                            break;
-                        }
-                        default:
-                            normalResponse(resp, await root_page_fn, match_page.req_ext);
-                    }
-                    return;
-                }
-                await errorResponse(resp, 500, `${match_page.target_file} does not have default export.`);
-            }
-
-            // Public router
-            const match_public = public_router(req);
-            if (!(match_public instanceof Error)) {
-                const content = await readFile(path.join(public_dir, match_public.target_file));
-                normalResponse(resp, content, match_public.req_ext);
-                return;
-            }
-
-            // Asset router
-            for (const router of asset_router.values()) {
-                const match_asset = router(req);
-                if (!(match_asset instanceof Error)) {
-                    const content = await readFile(match_asset.target_file);
-                    normalResponse(resp, content, match_asset.req_ext);
-                    return;
-                }
-            }
-
-            // reload plugin
-            if (new URL(req.url).pathname.endsWith("/reload.js")) {
-                const reload =
-                    "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { if (event.data === 'reload') { location.reload(); } }";
-                normalResponse(resp, reload, ".js");
-                return;
-            }
-
-            // css for error page
-            if (new URL(req.url).pathname.localeCompare("/hanabi-error.css") === 0) {
-                normalResponse(resp, hanabi_error_css, ".css");
-                return;
-            }
-
-            await errorResponse(resp, 404, `route for url "${req.url}" not found.`);
-        } catch (e) {
-            if (e instanceof Error) {
-                await errorResponse(resp, 500, e.toString());
-                return;
-            }
-            throw e;
-        }
+        const req: Request = new Request(new URL(`http://${msg.headers.host}${msg.url}`));
+        const rv = await processRequest(
+            req,
+            store,
+            page_router,
+            asset_router,
+            public_router,
+            page_dir,
+            public_dir,
+            config,
+            require,
+        );
+        resp.writeHead(rv.status, { "Content-Type": rv.type });
+        resp.end(rv.content);
     });
 
     const wss = new WebSocketServer({ noServer: true });
@@ -199,12 +102,127 @@ async function createAssetRouterSet(store: Store, target_prefix: string): Promis
     return asset_files;
 }
 
-function normalResponse(resp: ServerResponse, content: string | Buffer<ArrayBufferLike>, ext: string): void {
-    resp.writeHead(200, { "Content-Type": contentType(ext) });
-    resp.end(content);
+type Resp = {
+    status: number;
+    type: string;
+    content: string | Buffer<ArrayBufferLike>;
+};
+
+function normalResponse(content: string | Buffer<ArrayBufferLike>, ext: string): Resp {
+    return { status: 200, content, type: contentType(ext) };
 }
 
-async function errorResponse(resp: ServerResponse, status: number, cause: string): Promise<void> {
-    resp.writeHead(status, { "Content-Type": "text/html" });
-    resp.end(stringifyToHtml(0, [])(await ErrorPage({ name: status.toString(), cause })));
+function errorResponse(status: number, cause: string): Resp {
+    return {
+        status,
+        content: stringifyToHtml(0, [])(ErrorPage({ name: status.toString(), cause })),
+        type: "text/html",
+    };
+}
+
+async function processRequest(
+    req: Request,
+    store: Store,
+    page_router: Router,
+    asset_router: Map<string, Router>,
+    public_router: Router,
+    page_dir: string,
+    public_dir: string,
+    config: HanabiConfig,
+    require: NodeJS.Require,
+): Promise<Resp> {
+    try {
+        // Page router
+        const match_page = page_router(req);
+        if (!(match_page instanceof Error)) {
+            const page_fn = require(path.join(page_dir, match_page.target_file));
+            if (typeof page_fn.default === "function") {
+                clearStore(store);
+                const root_page_fn = await page_fn.default(store);
+
+                // auto generation of .css , .js and .woff2 from .html.ts
+                if (match_page.auto_generate) {
+                    switch (match_page.req_ext) {
+                        case ".css": {
+                            const css_name = withoutExt(withoutExt(match_page.target_file));
+                            const css = await bundleCss(store, css_name, require);
+                            if (css instanceof Error) {
+                                return errorResponse(500, css.message);
+                            }
+                            return normalResponse(css || "", match_page.req_ext);
+                        }
+                        case ".js": {
+                            const js = await bundleScriptEsbuild(store);
+                            return normalResponse(js || "", match_page.req_ext);
+                        }
+                        case ".woff2": {
+                            const woff2 = await bundleWoff2(store);
+                            return normalResponse(woff2 || "", match_page.req_ext);
+                        }
+                        default:
+                            return errorResponse(500, `auto generation of ${match_page.req_ext} is not supported.`);
+                    }
+                }
+
+                switch (match_page.req_ext) {
+                    case ".html": {
+                        const router_set = await createAssetRouterSet(store, config.asset.target_prefix);
+                        for (const [key, router] of router_set) {
+                            asset_router.set(key, router);
+                        }
+
+                        const css_name = `${withoutExt(withoutExt(match_page.target_file))}.css`;
+                        const js_name = `${withoutExt(withoutExt(match_page.target_file))}.js`;
+                        const insert_nodes = [
+                            Script({ type: "module", src: "/reload.js" }),
+                            Script({ type: "module", src: js_name }),
+                            Link({ href: css_name, rel: "stylesheet" }),
+                        ];
+
+                        const html_text = await bundleHtml(store, match_page.params, root_page_fn, insert_nodes);
+
+                        return normalResponse(html_text, ".html");
+                    }
+                    default:
+                        return normalResponse(await root_page_fn, match_page.req_ext);
+                }
+            }
+            return errorResponse(500, `${match_page.target_file} does not have default export.`);
+        }
+
+        // Public router
+        const match_public = public_router(req);
+        if (!(match_public instanceof Error)) {
+            const content = await readFile(path.join(public_dir, match_public.target_file));
+            return normalResponse(content, match_public.req_ext);
+        }
+
+        // Asset router
+        for (const router of asset_router.values()) {
+            const match_asset = router(req);
+            if (!(match_asset instanceof Error)) {
+                const content = await readFile(match_asset.target_file);
+                return normalResponse(content, match_asset.req_ext);
+            }
+        }
+
+        // reload plugin
+        if (new URL(req.url).pathname.endsWith("/reload.js")) {
+            const reload =
+                "const ws = new WebSocket(`ws://${location.host}/reload`); ws.onmessage = (event) => { if (event.data === 'reload') { location.reload(); } }";
+            return normalResponse(reload, ".js");
+        }
+
+        // css for error page
+        if (new URL(req.url).pathname.localeCompare("/hanabi-error.css") === 0) {
+            return normalResponse(hanabi_error_css, ".css");
+        }
+
+        return errorResponse(404, `route for url "${req.url}" not found.`);
+    } catch (e) {
+        if (e instanceof Error) {
+            return errorResponse(500, e.toString());
+        }
+        throw e;
+    }
 }
