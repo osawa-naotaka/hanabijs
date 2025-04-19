@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@types/bun": "^1.2.10",
     "@types/node": "^22.13.10",
     "@types/ws": "^8",
     "staticseek": "^2.7.1",

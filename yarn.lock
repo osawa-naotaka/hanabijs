@@ -711,6 +711,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bun@npm:^1.2.10":
+  version: 1.2.10
+  resolution: "@types/bun@npm:1.2.10"
+  dependencies:
+    bun-types: "npm:1.2.10"
+  checksum: 10c0/222e56e306913f4c720b62bcd1a309ac60bc8f639015090c63325e8d9da3338753afea16609b919fcb368b0bc70663a9ea5b17ce38c6a7153b584b91837607f3
+  languageName: node
+  linkType: hard
+
 "@types/debug@npm:^4.0.0":
   version: 4.1.12
   resolution: "@types/debug@npm:4.1.12"
@@ -969,6 +978,15 @@ __metadata:
     readable-stream: "npm:^3.4.0"
     yerror: "npm:^8.0.0"
   checksum: 10c0/a7a80d090de648f01974fe1b90ad001ed85aed9ba4f60a0e7bf7b255c8f3f23649682c703894c3928dfa7916653aa37eaab7c11fe4dcee37968592eda3b28a52
+  languageName: node
+  linkType: hard
+
+"bun-types@npm:1.2.10":
+  version: 1.2.10
+  resolution: "bun-types@npm:1.2.10"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/e42fd8f0eccbd6c9d5cbdc2ab7bce7a61b0eca68a0243d90a9d86058239d7fb2d68437e051081cd10bbfa4678e59f7e5141e1bd460fbc56d4a55446ee6afc812
   languageName: node
   linkType: hard
 
@@ -1615,6 +1633,7 @@ __metadata:
     "@rollup/plugin-terser": "npm:^0.4.4"
     "@rollup/plugin-typescript": "npm:^12.1.2"
     "@rollup/plugin-virtual": "npm:^3.0.2"
+    "@types/bun": "npm:^1.2.10"
     "@types/jsdom": "npm:^21.1.7"
     "@types/node": "npm:^22.13.10"
     "@types/ws": "npm:^8"
