@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { Body, Footer, H1, Head, Header, Html, Script, Title } from "../src/lib/elements";
-import { insertNodes } from "../src/lib/style";
-import { rulesToString } from "../src/lib/style";
+import { Body, Footer, H1, Head, Header, Html, Script, Title } from "../src/lib/core/elements";
+import { insertNodes } from "../src/lib/core/style";
+import { rulesToString } from "../src/lib/core/style";
 
 describe("ruleToString test", () => {
     test("Sigle Selector, string", () => {
@@ -43,34 +43,40 @@ describe("ruleToString test", () => {
 });
 
 describe("insertNodess test", () => {
-    const root = Html({ lang: "ja" })(
-        Head({})(Title({})("title")),
-        Body({})(
-            Header({ class: "page-header" })(H1({})("header")),
-            Footer({ class: "page-footer" })("&amp; lulliecat"),
+    const root = Html(
+        { lang: "ja" },
+        Head({}, Title({}, "title")),
+        Body(
+            {},
+            Header({ class: "page-header" }, H1({}, "header")),
+            Footer({ class: "page-footer" }, "&amp; lulliecat"),
         ),
     );
 
-    const insert = [Script({ type: "module", src: ".hmr.js" })()];
+    const insert = [Script({ type: "module", src: ".hmr.js" })];
 
     test("insert script to head", () =>
         expect(insertNodes(root, ["head"], insert, true)).toEqual(
-            Html({ lang: "ja" })(
-                Head({})(Title({})("title"), Script({ type: "module", src: ".hmr.js" })()),
-                Body({})(
-                    Header({ class: "page-header" })(H1({})("header")),
-                    Footer({ class: "page-footer" })("&amp; lulliecat"),
+            Html(
+                { lang: "ja" },
+                Head({}, Title({}, "title"), Script({ type: "module", src: ".hmr.js" })),
+                Body(
+                    {},
+                    Header({ class: "page-header" }, H1({}, "header")),
+                    Footer({ class: "page-footer" }, "&amp; lulliecat"),
                 ),
             ),
         ));
 
     test("insert script to header", () =>
         expect(insertNodes(root, ["body", ">", "header"], insert, true)).toEqual(
-            Html({ lang: "ja" })(
-                Head({})(Title({})("title")),
-                Body({})(
-                    Header({ class: "page-header" })(H1({})("header"), Script({ type: "module", src: ".hmr.js" })()),
-                    Footer({ class: "page-footer" })("&amp; lulliecat"),
+            Html(
+                { lang: "ja" },
+                Head({}, Title({}, "title")),
+                Body(
+                    {},
+                    Header({ class: "page-header" }, H1({}, "header"), Script({ type: "module", src: ".hmr.js" })),
+                    Footer({ class: "page-footer" }, "&amp; lulliecat"),
                 ),
             ),
         ));
