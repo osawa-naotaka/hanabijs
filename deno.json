@@ -30,7 +30,6 @@
       
       "@/lib/server/inserter": "./src/lib/server/inserter.ts",
       "@/lib/server/markdown": "./src/lib/server/markdown.ts",
-      "@/lib/server/stringify": "./src/lib/server/stringify.ts",
       "@/lib/server/util": "./src/lib/server/util.ts",
       
       "@/lib/ui/icon": "./src/lib/ui/icon.ts",
