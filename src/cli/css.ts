@@ -1,6 +1,6 @@
 import { generateFontCss } from "@/cli/font";
 import type { Store } from "@/lib/core/store";
-import { stringifyToCss } from "@/lib/core/style";
+import { stringifyToCss } from "@/lib/server/stringify";
 
 export async function bundleCss(
     store: Store,

@@ -1,17 +1,21 @@
 import { attribute_names, hanabi_tags, tags } from "@/lib/core/elements";
+import { property_names } from "@/lib/core/properties";
 
+// HTML Element
 const allowed_elements = /* @__PURE__*/ new Set<string>([...tags, ...hanabi_tags]);
 
 export function validateElementName(name: string): boolean {
     return allowed_elements.has(name.toLowerCase());
 }
 
+// HTML Attribute Key
 const allowed_attribute_names = /* @__PURE__*/ new Set<string>(attribute_names);
 
 export function validateAttributeKey(key: string): boolean {
     return allowed_attribute_names.has(key.toLowerCase()) || key.toLowerCase().startsWith("data-");
 }
 
+// HTML Attribute Value
 export function sanitizeAttributeValue(key: string): (value: string) => string {
     return (value: string) => {
         if (!validateAttributeKey(key)) {
@@ -51,7 +55,7 @@ export function sanitizeAttributeValue(key: string): (value: string) => string {
     };
 }
 
-export function sanitizeURLAttribute(value: string): string {
+function sanitizeURLAttribute(value: string): string {
     const decodedValue = decodeURIComponent(value);
 
     const forbiddenPattern = /(^|\/)\.\.(\/|$)/;
@@ -87,6 +91,7 @@ export function sanitizeURLAttribute(value: string): string {
     return value;
 }
 
+// HTML text
 export function sanitizeBasic(input: string): string {
     return input
         .replace(/&/g, "&amp;")
@@ -94,4 +99,11 @@ export function sanitizeBasic(input: string): string {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
+}
+
+// CSS Property
+const allowed_property_names = /* @__PURE__*/ new Set<string>(property_names);
+
+export function validatePropertyName(name: string): boolean {
+    return allowed_property_names.has(name);
 }
