@@ -1,5 +1,4 @@
 import type { Attribute, HNode } from "@/lib/core/component";
-import { addClassInRecord } from "@/lib/core/component";
 import type { Properties } from "@/lib/core/properties";
 import {
     sanitizeAttributeValue,
@@ -11,6 +10,7 @@ import {
 import type { HComponent } from "@/lib/core/store";
 import { isCompoundSelector, normalizeSelector } from "@/lib/core/style";
 import type { Selector, SelectorContext } from "@/lib/core/style";
+import { addClassInRecord } from "@/lib/core/util";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 

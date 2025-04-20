@@ -1,5 +1,5 @@
 import type { AssetConfig } from "@/cli/config";
-import type { HComponentFn, HComponentFnArg, HNode } from "@/lib/core/component";
+import type { HComponentFn, HNode } from "@/lib/core/component";
 import { default_design_rule } from "@/lib/core/design";
 import type { DesignRule } from "@/lib/core/design";
 import type { Selector, StyleRule } from "@/lib/core/style";
@@ -51,13 +51,6 @@ export function generateStore(asset: AssetConfig, rule: Partial<DesignRule> = {}
         designrule: { ...default_design_rule, ...rule },
         asset,
     };
-}
-
-export function component<K, T>(name_fn: HComponentFn<K> | string, component_fn: HComponentFn<T>): HComponentFn<T> {
-    const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
-    return {
-        [component_name]: (argument: HComponentFnArg<T>, ...child: HNode[]) => component_fn(argument, ...child),
-    }[component_name];
 }
 
 export function registerComponent<K>(

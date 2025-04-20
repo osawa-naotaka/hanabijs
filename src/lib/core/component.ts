@@ -1,5 +1,6 @@
 import type { AttributeMap, HanabiTag, Tag } from "@/lib/core/elements";
 import { Class } from "@/lib/core/elements";
+import { addClassInRecord } from "@/lib/core/util";
 
 // Attribute of HTML Element
 export type AttributeValue = string | string[] | null | undefined;
@@ -36,30 +37,17 @@ export function element<K extends Tag | HanabiTag>(element_name: string, arg: El
     }[dot_name];
 }
 
-// add class string to record.
-export function addClassInRecord<T extends { class?: string | string[] }>(record: T, className: string | string[]): T {
-    const new_record = JSON.parse(JSON.stringify(record));
-    new_record.class = addClassToHead(record, className);
-    return new_record;
-}
-
-function addClassToHead<T extends { class?: string | string[] }>(
-    attribute: T,
-    className: string | string[],
-): string | string[] {
-    if (attribute.class !== undefined) {
-        if (typeof className === "string") {
-            return Array.isArray(attribute.class) ? [className, ...attribute.class] : [className, attribute.class];
-        }
-        return Array.isArray(attribute.class) ? [...className, ...attribute.class] : [...className, attribute.class];
-    }
-    return className;
-}
-
 // hanabi Component (is function)
 export type HComponentFn<T> = (argument: HComponentFnArg<T>, ...child: HNode[]) => HNode;
 // biome-ignore lint: using any.
 export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string; children?: any; key?: any };
+
+export function component<K, T>(name_fn: HComponentFn<K> | string, component_fn: HComponentFn<T>): HComponentFn<T> {
+    const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
+    return {
+        [component_name]: (argument: HComponentFnArg<T>, ...child: HNode[]) => component_fn(argument, ...child),
+    }[component_name];
+}
 
 // biome-ignore lint/suspicious/noExplicitAny: HAnyComponent uses only for function.name
 export type HAnyComponentFn = HComponentFn<any>;

@@ -6,7 +6,7 @@ import type { Attribute } from "@/lib/core/component";
 import { globExt } from "@/lib/server/util";
 import { globSync } from "glob";
 
-export type RouteTable = {
+type RouteTable = {
     path_regexp: RegExp;
     target_file: string;
     target_ext: string;
@@ -53,7 +53,7 @@ function escapeForRegExp(exp: string): string {
     return exp.replace(/[-^$\\\.*+?()[\]{}|/]/g, "\\$&");
 }
 
-export function createPageRouteTable(rootdir: string): RouteTable[] {
+function createPageRouteTable(rootdir: string): RouteTable[] {
     const exact_route_table: RouteTable[] = [];
     const regexp_route_table: RouteTable[] = [];
 

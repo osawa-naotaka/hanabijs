@@ -35,6 +35,26 @@ export function hash_djb2(...jsons: Record<string, unknown>[]) {
     return hash >>> 0;
 }
 
+// add class string to record.
+export function addClassInRecord<T extends { class?: string | string[] }>(record: T, className: string | string[]): T {
+    const new_record = JSON.parse(JSON.stringify(record));
+    new_record.class = addClassToHead(record, className);
+    return new_record;
+}
+
+function addClassToHead<T extends { class?: string | string[] }>(
+    attribute: T,
+    className: string | string[],
+): string | string[] {
+    if (attribute.class !== undefined) {
+        if (typeof className === "string") {
+            return Array.isArray(attribute.class) ? [className, ...attribute.class] : [className, attribute.class];
+        }
+        return Array.isArray(attribute.class) ? [...className, ...attribute.class] : [...className, attribute.class];
+    }
+    return className;
+}
+
 const contentTypes: [string, string][] = [
     [".aac", "audio/aac"],
     [".abw", "application/x-abiword"],

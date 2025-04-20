@@ -44,6 +44,9 @@ export async function serve(conf_file: string | undefined): Promise<void> {
     }
 }
 
+type ReqProcessFn = (req: Request) => Promise<Resp>;
+type ReloadFn = () => void;
+
 function createAndStartDenoServer(
     config: HanabiConfig,
     proc: ReqProcessFn,
@@ -174,9 +177,6 @@ function errorResponse(status: number, cause: string): Resp {
         type: "text/html",
     };
 }
-
-type ReqProcessFn = (req: Request) => Promise<Resp>;
-type ReloadFn = () => void;
 
 function createReqProcessor(config: HanabiConfig): [ReqProcessFn, ReloadFn] {
     const root = cwd();
