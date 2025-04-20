@@ -9,10 +9,10 @@ import { bundleHtml } from "@/cli/html";
 import { withoutExt } from "@/cli/route";
 import { bundleScriptEsbuild } from "@/cli/script";
 import type { Attribute, HRootPageFn } from "@/lib/core/component";
-import { replaceExt } from "@/lib/core/coreutil";
 import { Link, Script } from "@/lib/core/elements";
 import { clearStore, generateStore } from "@/lib/core/store";
 import type { HComponentAsset, Store } from "@/lib/core/store";
+import { replaceExt } from "@/lib/core/util";
 import { globExt } from "@/server";
 import { globSync } from "glob";
 

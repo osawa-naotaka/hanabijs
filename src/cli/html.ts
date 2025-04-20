@@ -2,7 +2,7 @@ import type { Attribute, HNode, HRootPageFn } from "@/lib/core/component";
 import { DOCTYPE } from "@/lib/core/elements";
 import type { HComponentInsert, Store } from "@/lib/core/store";
 import { insertNodes } from "@/lib/core/style";
-import { stringifyToHtml } from "@/lib/server/serverfn";
+import { stringifyToHtml } from "@/lib/server/stringify";
 
 export async function bundleHtml(
     store: Store,

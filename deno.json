@@ -17,18 +17,20 @@
       "@/cli/serve": "./src/cli/serve.ts",
 
       "@/lib/core/component": "./src/lib/core/component.ts",
-      "@/lib/core/coreutil": "./src/lib/core/coreutil.ts",
+      "@/lib/core/util": "./src/lib/core/util.ts",
       "@/lib/core/design": "./src/lib/core/design.ts",
+      "@/lib/core/dom": "./src/lib/core/dom.ts",
       "@/lib/core/elements": "./src/lib/core/elements.ts",
       "@/lib/core/properties": "./src/lib/core/properties.ts",
+      "@/lib/core/sanityze": "./src/lib/core/sanityze.ts",
       "@/lib/core/store": "./src/lib/core/store.ts",
       "@/lib/core/style": "./src/lib/core/style.ts",
       "@/lib/core/stylerules": "./src/lib/core/stylerules.ts",
       "@/lib/core/types": "./src/lib/core/types.ts",
       
       "@/lib/server/markdown": "./src/lib/server/markdown.ts",
-      "@/lib/server/serverfn": "./src/lib/server/serverfn.ts",
-      "@/lib/server/serverutil": "./src/lib/server/serverutil.ts",
+      "@/lib/server/stringify": "./src/lib/server/stringify.ts",
+      "@/lib/server/util": "./src/lib/server/util.ts",
       
       "@/lib/ui/icon": "./src/lib/ui/icon.ts",
       "@/lib/ui/svgIconFont": "./src/lib/ui/svgIconFont.ts",

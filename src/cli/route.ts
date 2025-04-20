@@ -3,7 +3,7 @@ import path from "node:path";
 import { cwd } from "node:process";
 import type { HComponentAsset } from "@/core";
 import type { Attribute } from "@/lib/core/component";
-import { globExt } from "@/lib/server/serverutil";
+import { globExt } from "@/lib/server/util";
 import { globSync } from "glob";
 
 export type RouteTable = {

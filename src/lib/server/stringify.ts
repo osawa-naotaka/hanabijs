@@ -1,6 +1,6 @@
 import type { Attribute, HNode } from "@/lib/core/component";
 import { addClassInRecord } from "@/lib/core/component";
-import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "@/lib/core/coreutil";
+import { sanitizeAttributeValue, sanitizeBasic, validateAttributeKey, validateElementName } from "@/lib/core/sanityze";
 import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
 

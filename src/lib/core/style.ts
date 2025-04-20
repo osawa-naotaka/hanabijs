@@ -1,7 +1,8 @@
 import type { Attribute, HAnyComponentFn, HElement, HNode } from "@/lib/core/component";
-import { unionArrayOfRecords, validatePropertyName } from "@/lib/core/coreutil";
 import type { Properties } from "@/lib/core/properties";
+import { property_names } from "@/lib/core/properties";
 import type { HComponent } from "@/lib/core/store";
+import { unionArrayOfRecords } from "@/lib/core/util";
 
 export type PropertyOf<T extends keyof Properties> = Properties[T];
 
@@ -235,4 +236,10 @@ function propertiesToString(properties: Properties): string {
             return `${key}: ${value};`;
         })
         .join(" ");
+}
+
+const allowed_property_names = /* @__PURE__*/ new Set<string>(property_names);
+
+function validatePropertyName(name: string): boolean {
+    return allowed_property_names.has(name);
 }
