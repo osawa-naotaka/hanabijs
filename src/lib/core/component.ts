@@ -20,17 +20,20 @@ export type HElement<K> = {
 // hanabi Element (is function), expressing HTML element
 export type HElementFn<K> = (attribute: AttributeOf<K>, ...child: HNode[]) => HNode;
 
-export type ElementArg = {
+export type ElementArg<K> = {
     class?: string | string[];
-    tag?: Tag | HanabiTag;
+    tag?: K;
 };
 
-export function element<K extends Tag | HanabiTag>(element_name: string, arg: ElementArg = {}): HElementFn<K> {
+export function element<K extends Tag | HanabiTag = "div">(
+    element_name: string,
+    arg: ElementArg<K> = {},
+): HElementFn<K> {
     const dot_name = `.${element_name}`;
     const class_name = arg.class === undefined ? [] : typeof arg.class === "string" ? [arg.class] : arg.class;
     return {
         [dot_name]: (attribute: AttributeOf<K>, ...child: HNode[]) => ({
-            tag: arg.tag || "div",
+            tag: arg.tag || ("div" as const),
             attribute: addClassInRecord(attribute, [element_name, ...class_name]),
             child,
         }),
