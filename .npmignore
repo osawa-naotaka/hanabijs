@@ -1,5 +1,7 @@
 /.vscode
 /.yarn
+/.yarnrc.yml
+/build/bin.d.ts
 /dist
 /doc
 /node_modules
@@ -9,7 +11,10 @@
 .pnp*
 biome.json
 bun.lock
+deno.json
 flake.lock
 flake.nix
+hanabijs-*.tgz
+package.tgz
 tsconfig.json
 tsup.config.ts

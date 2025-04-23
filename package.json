@@ -26,15 +26,16 @@
     "hanabi": "build/bin.js"
   },
   "scripts": {
-    "build": "tsc && tsup --config tsup.config.ts && rm build/bin.d.ts",
-    "node-dev": "tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev",
-    "node-build": "tsx src/bin.ts build",
-    "bun-dev": "bun --hot src/bin.ts dev",
-    "bun-build": "bun src/bin.ts build",
-    "deno-dev": "deno run -A src/bin.ts dev",
-    "deno-build": "deno run -A src/bin.ts build",
-    "check": "biome check ./src ./site ./test",
-    "check-write": "biome check --write ./src ./site ./test"
+    "clean": "rm -rf build dist package.tgz hanabijs-*.tgz",
+    "build": "biome check --write ./src ./site ./test && tsc && tsup --config tsup.config.ts",
+    "dev": "concurrently \"tsc --watch\" \"tsup --watch --config tsup.config.ts\" \"tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev\"",
+    "node-dev": "concurrently \"tsc --watch\" \"tsup --watch --config tsup.config.ts\" \"tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev\"",
+    "node-build": "tsc && tsx src/bin.ts build",
+    "bun-dev": "concurrently \"tsc --watch\" \"tsup --watch --config tsup.config.ts\" \"bun --hot src/bin.ts dev\"",
+    "bun-build": "tsc && bun src/bin.ts build",
+    "deno-dev": "deno check ./site/**/*.{ts,tsx} && deno run -A src/bin.ts dev",
+    "deno-build": "deno check ./site/**/*.{ts,tsx} && deno run -A src/bin.ts build",
+    "check": "biome check --write ./src ./site ./test"
   },
   "author": "osawa naotaka",
   "license": "MIT",
@@ -52,6 +53,7 @@
     "@types/deno": "^2.2.0",
     "@types/node": "^22.13.10",
     "@types/ws": "^8",
+    "concurrently": "^9.1.2",
     "staticseek": "^2.7.1",
     "tslib": "^2.8.1",
     "tsup": "^8.4.0",

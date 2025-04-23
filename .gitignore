@@ -31,3 +31,6 @@ ref/bitap-wasm/target
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+hanabijs-*.tgz
+package.tgz

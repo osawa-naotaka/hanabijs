@@ -68,6 +68,7 @@
     },
     "compilerOptions": {
       "jsx": "react-jsx",
-      "jsxImportSource": "hanabijs"
+      "jsxImportSource": "hanabijs",
+      "lib": ["deno.window", "dom", "dom.iterable", "dom.asynciterable"]
     }
   }
