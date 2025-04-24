@@ -31,7 +31,7 @@ yarn dev
 deploy test site:
 ```shell
 yarn install
-yarn site
+yarn node-build
 ```
 
 ## コンセプト
