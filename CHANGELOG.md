@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0-alpha.3] - 2025-08-11
+### Fixed
+- Fixed bin field format from string to object for better npm compatibility
+
 ## [0.1.0-alpha.2] - 2025-08-11
 ### Changed
 - Renamed project from "hanabi" to "zephblaze"
@@ -32,5 +36,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Component-level asset management with tree shaking
 - Unified development experience for server-side and client-side
 
-[Unreleased]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.2...HEAD
+[Unreleased]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.3...HEAD
+[0.1.0-alpha.3]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.2...v0.1.0-alpha.3
 [0.1.0-alpha.2]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.1...v0.1.0-alpha.2
