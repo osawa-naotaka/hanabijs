@@ -1,23 +1,27 @@
 {
   "name": "zephblaze",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "lightweight static site generator for typescript",
   "type": "module",
   "main": "build/client/main.js",
   "exports": {
     "./core": {
+      "import": "./build/core/main.js",
       "require": "./build/core/main.js",
       "types": "./build/core/main.d.ts"
     },
     "./server": {
+      "import": "./build/server/main.js",
       "require": "./build/server/main.js",
       "types": "./build/server/main.d.ts"
     },
     "./jsx-runtime": {
+      "import": "./build/jsx-runtime/main.js",
       "require": "./build/jsx-runtime/main.js",
       "types": "./build/jsx-runtime/main.d.ts"
     },
     "./jsx-dev-runtime": {
+      "import": "./build/jsx-dev-runtime/main.js",
       "require": "./build/jsx-dev-runtime/main.js",
       "types": "./build/jsx-dev-runtime/main.d.ts"
     }
