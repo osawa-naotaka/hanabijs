@@ -1,130 +1,190 @@
 # hanabi.js
 
-hanabi.jsは、軽量で型安全な静的サイトジェネレーター（SSG）です。モダンなWeb開発の手法を取り入れながら、コンポーネントとデザインの再利用性を高めることを目指しています。
+軽量で型安全な静的サイトジェネレーター（SSG）です。小規模サイトに向けたツールとして、TypeScriptとTSX記法を活用した型安全なサイト構築を可能にします。
 
-## hanabi.js ビルド方法
+## 特徴
 
-currently, hanabi.js is developed using node.js 23.
-prepare develop environment with [nix](https://nixos.org/download/) on WSL2:
+- **軽量** - 最小限の依存関係と最適化されたビルド
+- **型安全** - TypeScriptによる堅牢な型システム
+- **TSX記法対応** - React風の構文でコンポーネントを定義
+- **Markdownサポート** - Gray Matterによるフロントマター対応
+- **ファイルベースルーティング** - ディレクトリ構造に基づいたルーティング
+- **開発サーバー** - ホットリロード対応でリアルタイム反映
+- **FontAwesome対応** - SVGアイコンの最適化ビルド
+- **フルスタック対応** - サーバーサイドとクライアントサイドで統一された作法
+- **高速デプロイ** - 効率的なビルドプロセス
 
-```shell
+## インストール
+
+### Node.js環境
+
+```bash
+# Node.js 23推奨
+yarn add hanabijs
+```
+
+### Nix環境（推奨開発環境）
+
+```bash
+# WSL2でNixを使用した開発環境のセットアップ
 sh <(curl -L https://nixos.org/nix/install) --no-daemon
 mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+
 git clone https://github.com/osawa-naotaka/hanabijs.git
 cd hanabijs
 nix develop
 ```
 
-for build bundle:
+## 使用方法
 
-```shell
+### プロジェクトセットアップ
+
+```bash
+# 依存関係のインストール
 yarn install
+
+# 本番ビルド
 yarn build
-```
 
-develop test site:
-```shell
-yarn install
+# 開発サーバー起動
 yarn dev
-```
 
-deploy test site:
-```shell
-yarn install
+# サイト生成（Node.js）
 yarn node-build
 ```
 
-## コンセプト
+### 基本的なサイト構造
 
-hanabi.jsは以下のコンセプトに基づいて設計されています：
+```
+site/
+├── pages/           # ページファイル（TSX）
+│   ├── index.html.tsx
+│   └── posts/
+│       └── [slug].html.tsx
+├── components/      # 再利用可能なコンポーネント
+├── contents/        # Markdownコンテンツ
+│   └── posts/
+├── public/          # 静的ファイル
+└── site.config.ts   # サイト設定
+```
 
-### テーマの切り替えが可能なアーキテクチャ
+### ページの作成例
 
-WordPressのように、テーマを後から切り替え可能なアーキテクチャを採用しています。コンテンツ、構造、スタイルを論理的に分離することで、デザインの変更をコンテンツに影響を与えることなく行えます。
+```tsx
+// site/pages/index.html.tsx
+import type { HRootPageFn } from "hanabijs/core";
 
-#### 構成要素の分離
+const IndexPage: HRootPageFn<{}> = async () => {
+  return (
+    <div>
+      <h1>Welcome to hanabi.js</h1>
+      <p>型安全な静的サイトジェネレーター</p>
+    </div>
+  );
+};
 
-- **コンテンツ（文章・画像）**: JSONで表現し、マークダウンもJSONに変換して操作します
-- **スキーマ**: HTML要素を意味的に拡張したhanabiスキーマにより、コンテンツの構造を定義します
-- **レイアウト**: 縦・横・グリッドなどの配置を指定します
-- **装飾**: フォント・色・輪郭などの視覚的要素を定義します
-- **アニメーション**: 動的な変化を定義します
-- **スクリプト**: インタラクション要素を定義します
+export default IndexPage;
+```
 
-### 型安全なスタイリングシステム
+### Markdownページの活用
 
-CSS in JSをさらに進化させ、TypeScriptの型システムを最大限に活用したスタイリングシステムを構築しています。
+```tsx
+// site/pages/posts/[slug].html.tsx
+import type { HRootPageFn } from "hanabijs/core";
 
-- **関数ベースのスタイル定義**: CSSプロパティを関数として定義し、型チェックを活用
-- **クラスセレクタの関数化**: 文字列ではなく関数でクラスセレクタを統一することで、タイプミスによるスタイル適用エラーを防止
-- **コンポーネント単位のスタイル登録**: 各コンポーネントが自身のスタイルを登録し、使用されるコンポーネントのスタイルのみが出力される
+interface PostPageProps {
+  slug: string;
+}
 
-### デザインシステムの階層化
+const PostPage: HRootPageFn<PostPageProps> = async ({ slug }) => {
+  // Markdownファイルからデータを取得
+  const post = await loadMarkdown(`site/contents/posts/${slug}.md`);
+  
+  return (
+    <article>
+      <h1>{post.data.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    </article>
+  );
+};
 
-デザイントークンからコンポーネントスタイルまで、一貫したデザインシステムを構築できます。
+export default PostPage;
+```
 
-- **デザインルール**: 色、サイズ、スペーシングなどの基本要素を定義
-- **スタイルの合成**: 基本スタイルを組み合わせて複雑なスタイルを構築
-- **CSS変数の生成**: デザインルールから自動的にCSS変数を生成
+## CLIコマンド
 
-### 関数型アプローチによるコンポーネント設計
+```bash
+# ビルド
+hanabi build
 
-関数型プログラミングのアプローチを活用し、コンポーネントの合成と再利用を促進します。
+# 開発サーバー
+hanabi dev
 
-- **純粋関数としてのコンポーネント**: サイドエフェクトを最小限に抑えたコンポーネント設計
-- **明示的な依存関係**: グローバル状態への依存を引数として明示
-- **コンポーネントの合成**: 小さなコンポーネントから複雑なUIを構築
+# カスタム設定ファイル指定
+hanabi build --config custom.config.ts
 
-### リソース最適化
+# ヘルプ表示
+hanabi --help
 
-必要なリソースのみを含める最適化を自動的に行います。
+# バージョン確認
+hanabi --version
+```
 
-- **フォントサブセット**: 使用されているアイコンやフォントのみを抽出してwoff2ファイルを生成
-- **スタイルの最適化**: 未使用のスタイルを除外
-- **アセット管理**: コンポーネントごとに必要なアセットを登録し、重複を排除
+## 設定
 
-### 開発体験の向上
+`site/site.config.ts`でサイトの設定を行います：
 
-迅速な開発サイクルをサポートする仕組みを提供します。
+```typescript
+export const site = {
+  lang: "ja",
+  name: "My Site",
+  description: "サイトの説明",
+};
 
-- **開発サーバー**: 変更をリアルタイムで反映するホットリロード機能
-- **タイプセーフ**: TypeScriptの型システムを活用した開発時の安全性
-- **エラーハンドリング**: 明確なエラーメッセージとデバッグ情報
+export const posts_dir = "site/contents/posts/";
+```
 
-## 特徴
+## アーキテクチャ
 
-- **軽量**: 最小限の依存関係と最適化されたビルド
-- **型安全**: TypeScriptを活用した堅牢な型システム
-- **モジュラー**: 機能ごとに分離されたモジュール構造
-- **拡張可能**: 柔軟なAPIによる機能拡張
-- **パフォーマンス重視**: 効率的なビルドプロセスと最適化された出力
+hanabi.jsは以下の設計原則に基づいています：
 
-## 技術的な特徴
+- **表現と構造の分離** - コンテンツ、レイアウト、スタイル、挙動の論理的分離
+- **型安全なスタイリング** - CSS-in-JSの進化版による型チェック
+- **関数型アプローチ** - 純粋関数によるコンポーネント設計
+- **リソース最適化** - 使用されるアセットのみを含める自動最適化
 
-hanabi.jsは以下の技術的特徴を持っています：
+### コアコンポーネント
 
-1. **JSXサポート**: Reactライクな構文でコンポーネントを定義
-2. **独自のコンポーネントシステム**: 仮想DOMを使用せず、直接HTMLを生成
-3. **デザイントークンシステム**: デザイン変数を一元管理
-4. **ツリーシェイキング**: 使用されるコードのみをバンドル
-5. **ファイルベースのルーティング**: ディレクトリ構造に基づいたルーティング
+- **Component System** - 仮想DOMを使わない直接HTML生成
+- **Routing** - ファイルベースの動的ルーティング（`[param]`記法対応）
+- **Markdown Processing** - unified ecosystem（remark/rehype）活用
+- **Asset Management** - フォントサブセットとSVG最適化
+- **Development Server** - WebSocketベースのホットリロード
 
-## 設計思想
+## 対応ランタイム
 
-hanabi.jsは「表現と構造の分離」という原則に基づいています。これはHTMLを構造、CSSをスタイル、JavaScriptを挙動として分離するという従来のWeb開発の原則を拡張し、より柔軟な形でこれらを管理します。
-
-コンポーネントごとにスタイル、挙動、構造を定義しながらも、これらを論理的に分離することで、テーマの切り替えやデザインシステムの変更を容易にしています。
-
-また、関数型プログラミングの概念を取り入れ、副作用を最小限に抑えたコンポーネント設計を推奨しています。これにより、コードの予測可能性と再利用性が向上します。
-
-## ロードマップ
-
-- [ ] アニメーションシステムの強化
-- [ ] インタラクティブコンポーネントライブラリの拡充
-- [ ] ビルドパフォーマンスの最適化
-- [ ] プラグインシステムの導入
-- [ ] 国際化サポートの強化
+- **Node.js** - メイン対応（v23推奨）
+- **Bun** - 高速実行対応
+- **Deno** - TypeScript native対応
 
 ## ライセンス
 
-MIT
+MIT License
+
+## 開発・コントリビューション
+
+```bash
+# テスト実行
+yarn test
+
+# コード整形
+yarn check
+
+# パッケージビルド
+yarn pack
+```
+
+## リポジトリ
+
+- GitHub: [osawa-naotaka/hanabijs](https://github.com/osawa-naotaka/hanabijs)
+- Issues: [GitHub Issues](https://github.com/osawa-naotaka/hanabijs/issues)

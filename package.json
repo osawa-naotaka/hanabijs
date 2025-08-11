@@ -1,6 +1,6 @@
 {
   "name": "hanabijs",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.1",
   "description": "lightweight static site generator for typescript",
   "type": "module",
   "main": "build/client/main.js",
@@ -35,7 +35,8 @@
     "bun-build": "tsc && bun src/bin.ts build",
     "deno-dev": "deno check ./site/**/*.{ts,tsx} && deno run -A src/bin.ts dev",
     "deno-build": "deno check ./site/**/*.{ts,tsx} && deno run -A src/bin.ts build",
-    "check": "biome check --write ./src ./site ./test"
+    "check": "biome check --write ./src ./site ./test",
+    "pack": "npm pack"
   },
   "author": "osawa naotaka",
   "license": "MIT",
@@ -48,6 +49,7 @@
     "url": "git+https://github.com/osawa-naotaka/hanabijs.git"
   },
   "devDependencies": {
+    "@anthropic-ai/claude-code": "^1.0.72",
     "@biomejs/biome": "1.9.4",
     "@types/bun": "^1.2.10",
     "@types/deno": "^2.2.0",
