@@ -1,6 +1,6 @@
 {
   "name": "zephblaze",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "lightweight static site generator for typescript",
   "type": "module",
   "main": "build/client/main.js",
@@ -26,7 +26,9 @@
       "types": "./build/jsx-dev-runtime/main.d.ts"
     }
   },
-  "bin": "build/bin.js",
+  "bin": {
+    "zephblaze": "build/bin.js"
+  },
   "scripts": {
     "clean": "rm -rf build dist package.tgz zephblaze-*.tgz",
     "build": "biome check --write ./src ./site ./test && tsc && tsup --config tsup.config.ts",
