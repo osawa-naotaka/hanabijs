@@ -1,15 +1,17 @@
 {
     "name": "integration-test",
     "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
         "@types/node": "^22.13.10",
         "typescript": "^5.8.2"
     },
     "packageManager": "yarn@4.7.0",
     "scripts": {
         "build": "tsc && hanabi build",
-        "dev": "hanabi dev"
+        "dev": "tsc --watch & hanabi dev",
+        "check": "biome check --write ./site"
     },
     "dependencies": {
-        "hanabijs": "../.."
+        "hanabijs": "../../hanabijs-0.1.0.tgz"
     }
 }

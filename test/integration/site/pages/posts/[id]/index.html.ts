@@ -1,5 +1,5 @@
-import { H2, element, registerComponent, style } from "hanabijs";
-import type { HRootPageFn, Store } from "hanabijs";
+import { H2, element, registerComponent, style } from "hanabijs/core";
+import type { HRootPageFn, Store } from "hanabijs/core";
 import page from "../../../components/page";
 import { site } from "../../../config";
 
@@ -23,6 +23,6 @@ export default function Root(store: Store): HRootPageFn<RootParameter> {
     return async (parameter) => {
         const title = `Post Page ${parameter.id}`;
 
-        return Page({ title: site.title, description: site.description })(PageMainArea({})(H2({})(title)));
+        return Page({ title: site.title, description: site.description }, PageMainArea({}, H2({}, title)));
     };
 }

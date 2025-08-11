@@ -1,75 +1,190 @@
 # hanabi.js
 
-currently, hanabi.js is developed using node.js 23.
-prepare develop environment with [nix](https://nixos.org/download/) on WSL2:
+軽量で型安全な静的サイトジェネレーター（SSG）です。小規模サイトに向けたツールとして、TypeScriptとTSX記法を活用した型安全なサイト構築を可能にします。
 
-```shell
+## 特徴
+
+- **軽量** - 最小限の依存関係と最適化されたビルド
+- **型安全** - TypeScriptによる堅牢な型システム
+- **TSX記法対応** - React風の構文でコンポーネントを定義
+- **Markdownサポート** - Gray Matterによるフロントマター対応
+- **ファイルベースルーティング** - ディレクトリ構造に基づいたルーティング
+- **開発サーバー** - ホットリロード対応でリアルタイム反映
+- **FontAwesome対応** - SVGアイコンの最適化ビルド
+- **フルスタック対応** - サーバーサイドとクライアントサイドで統一された作法
+- **高速デプロイ** - 効率的なビルドプロセス
+
+## インストール
+
+### Node.js環境
+
+```bash
+# Node.js 23推奨
+yarn add hanabijs
+```
+
+### Nix環境（推奨開発環境）
+
+```bash
+# WSL2でNixを使用した開発環境のセットアップ
 sh <(curl -L https://nixos.org/nix/install) --no-daemon
 mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+
 git clone https://github.com/osawa-naotaka/hanabijs.git
 cd hanabijs
 nix develop
 ```
 
-for build bundle:
+## 使用方法
 
-```shell
+### プロジェクトセットアップ
+
+```bash
+# 依存関係のインストール
 yarn install
+
+# 本番ビルド
 yarn build
-```
 
-develop test site:
-```shell
-yarn install
+# 開発サーバー起動
 yarn dev
+
+# サイト生成（Node.js）
+yarn node-build
 ```
 
-deploy test site:
-```shell
-yarn install
-yarn site
+### 基本的なサイト構造
+
+```
+site/
+├── pages/           # ページファイル（TSX）
+│   ├── index.html.tsx
+│   └── posts/
+│       └── [slug].html.tsx
+├── components/      # 再利用可能なコンポーネント
+├── contents/        # Markdownコンテンツ
+│   └── posts/
+├── public/          # 静的ファイル
+└── site.config.ts   # サイト設定
 ```
 
-## コンセプト
+### ページの作成例
 
-**WordPressのように、テーマを後から切り替えられるようにする**
+```tsx
+// site/pages/index.html.tsx
+import type { HRootPageFn } from "hanabijs/core";
 
-- ウェブページの構成要素をいくつかにカテゴライズして論理的に分離する
-  - コンテンツ（文章・画像）
-    - jsonで表す。markdownはjsonに変換して操作する
-  - hanabiスキーマ
-    - main, aside, section, header, footer, h1~6, pなどを使ってjsonを意味づけする
-    - 実体はhanabiのComponent？
-    - 他の独自のhanabiスキーマを定義できるようにする？
-      - divタグで実体を作り、classにより分類できるようにする
-      - もしくは本当に独自タグにし、最後のstringify時にdivに変換する
-    - hanabiスキーマを型へ。型から自動的にhanabスキーマを生成する
-  - レイアウト（縦・横・グリッド・[絶対位置(layout:absolute)](https://github.com/osawa-naotaka/lulliecat-musics/blob/main/index-02-absolute.html)・相対位置(position: relative. 絶対位置の基準用の使い方以外はいらないかも)・固定位置(layout:fixed)）
-    - レイアウトコンポーネントを作る？型にする？
-    - ボックス（親）とコンテナ（子）の関係を陽にする
-      - ボックスはコンテナだけを含む
-      - コンテナは1~n個のスキーマ要素を含む
-    - 絶対位置と固定位置は通常のレイアウトフローから逸脱するので、親子関係ではない
-        - どう実装するか要検討
-    - hanabiスキーマの親子関係のある箇所にレイアウトコンポーネントを挿入する
-      - stringify時に、省略できるレイアウトコンポーネントは削除する
-        - 削除できないものはdiv要素にする
-    - ウィンドウ幅などによるレイアウトの変化
-      - CSSのメディアクエリを使うもの
-      - JavaScriptで変更するもの
-  - 装飾（フォント・色・輪郭・アイコン？）
-    - スキーマ要素に装飾を割り当てる
-    - メインカラー、アクセントカラー、フォントサイズ、ボーダースタイルなどを指定すると、自動的に名前付きの色や各種変数を複数生成する
-      - main, accent, main-dark, main-light, accent-dark, accent-light
-      - border-thin, border-thick, border-round, border-sharp, shadow-xxx
-      - これらを明示的に値で指定もでき、また、テーマとしてセットで提供・入れ替える仕組みも入れる
-    - hanabiスキーマに装飾を割り当てる
-      - どうやって割り当てるかは未定
+const IndexPage: HRootPageFn<{}> = async () => {
+  return (
+    <div>
+      <h1>Welcome to hanabi.js</h1>
+      <p>型安全な静的サイトジェネレーター</p>
+    </div>
+  );
+};
 
-  - アニメーション
-  - スクリプト
-    - イベントとその応答
-    - 状態（jsonなど）と、それに結びついた自動レンダリング（json配列をli要素展開し、元の状態が変更したら自動的に再レンダリング）
-    - その他動的な要素
+export default IndexPage;
+```
 
+### Markdownページの活用
 
+```tsx
+// site/pages/posts/[slug].html.tsx
+import type { HRootPageFn } from "hanabijs/core";
+
+interface PostPageProps {
+  slug: string;
+}
+
+const PostPage: HRootPageFn<PostPageProps> = async ({ slug }) => {
+  // Markdownファイルからデータを取得
+  const post = await loadMarkdown(`site/contents/posts/${slug}.md`);
+  
+  return (
+    <article>
+      <h1>{post.data.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+    </article>
+  );
+};
+
+export default PostPage;
+```
+
+## CLIコマンド
+
+```bash
+# ビルド
+hanabi build
+
+# 開発サーバー
+hanabi dev
+
+# カスタム設定ファイル指定
+hanabi build --config custom.config.ts
+
+# ヘルプ表示
+hanabi --help
+
+# バージョン確認
+hanabi --version
+```
+
+## 設定
+
+`site/site.config.ts`でサイトの設定を行います：
+
+```typescript
+export const site = {
+  lang: "ja",
+  name: "My Site",
+  description: "サイトの説明",
+};
+
+export const posts_dir = "site/contents/posts/";
+```
+
+## アーキテクチャ
+
+hanabi.jsは以下の設計原則に基づいています：
+
+- **表現と構造の分離** - コンテンツ、レイアウト、スタイル、挙動の論理的分離
+- **型安全なスタイリング** - CSS-in-JSの進化版による型チェック
+- **関数型アプローチ** - 純粋関数によるコンポーネント設計
+- **リソース最適化** - 使用されるアセットのみを含める自動最適化
+
+### コアコンポーネント
+
+- **Component System** - 仮想DOMを使わない直接HTML生成
+- **Routing** - ファイルベースの動的ルーティング（`[param]`記法対応）
+- **Markdown Processing** - unified ecosystem（remark/rehype）活用
+- **Asset Management** - フォントサブセットとSVG最適化
+- **Development Server** - WebSocketベースのホットリロード
+
+## 対応ランタイム
+
+- **Node.js** - メイン対応（v23推奨）
+- **Bun** - 高速実行対応
+- **Deno** - TypeScript native対応
+
+## ライセンス
+
+MIT License
+
+## 開発・コントリビューション
+
+```bash
+# テスト実行
+yarn test
+
+# コード整形
+yarn check
+
+# パッケージビルド
+yarn pack
+```
+
+## リポジトリ
+
+- GitHub: [osawa-naotaka/hanabijs](https://github.com/osawa-naotaka/hanabijs)
+- Issues: [GitHub Issues](https://github.com/osawa-naotaka/hanabijs/issues)

@@ -24,6 +24,12 @@ describe("createPageRouteTable", async () => {
                     auto_generate: true,
                 },
                 {
+                    path_regexp: new RegExp(/^\/index\.woff2$/),
+                    target_file: "/index.html.ts",
+                    target_ext: ".woff2",
+                    auto_generate: true,
+                },
+                {
                     path_regexp: new RegExp(/^\/index\.html$/),
                     target_file: "/index.html.ts",
                     target_ext: ".html",
@@ -57,6 +63,12 @@ describe("createPageRouteTable", async () => {
                     path_regexp: new RegExp(/^\/\[id\]\/index\.js$/),
                     target_file: "/[id]/index.html.ts",
                     target_ext: ".js",
+                    auto_generate: true,
+                },
+                {
+                    path_regexp: new RegExp(/^\/\[id\]\/index\.woff2$/),
+                    target_file: "/[id]/index.html.ts",
+                    target_ext: ".woff2",
                     auto_generate: true,
                 },
                 {

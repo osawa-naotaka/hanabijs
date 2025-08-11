@@ -1,7 +1,7 @@
-import type { Properties } from "./properties";
-import type { Store } from "./store";
-import type { PropertyOf, StyleRule } from "./style";
-import { atStyle } from "./style";
+import type { Properties } from "@/lib/core/properties";
+import type { Store } from "@/lib/core/store";
+import type { PropertyOf, StyleRule } from "@/lib/core/style";
+import { atStyle } from "@/lib/core/style";
 
 export const INIT_CSS: StyleRule[] = /* @__PURE__*/ [
     atStyle(["@layer", "base"])("*")({
@@ -60,8 +60,8 @@ export const BOX_TEXT_EM_STRONG = (store: Store, kind: ColorKind): Properties =>
 export const BOX_OUTLINED = (store: Store, kind: ColorKind): Properties => ({
     color: COLOROF(store, kind),
     background_color: "transparent",
-    border: ["1px", "solid", `rgba(${SCOLOROF(store, kind)} / 0.2)`],
-    box_shadow: "none",
+    border: "none",
+    box_shadow: ["0", "0", "0", "1px", "inset", COLOROF(store, kind)],
 });
 
 export const BOX_OUTLINED_EM_LIGHT = (store: Store, kind: ColorKind): Properties => BOX_EM_LIGHT(store, kind);
@@ -91,11 +91,11 @@ export const BOX_FILLED = (store: Store, kind: ColorKind): Properties => ({
 });
 
 export const BOX_FILLED_EM_LIGHT = (store: Store, kind: ColorKind): Properties => ({
-    background_color: LIGHTER(store, kind),
+    background_color: DARKER(store, kind),
 });
 
 export const BOX_FILLED_EM_STRONG = (store: Store, kind: ColorKind): Properties => ({
-    background_color: LIGHTEST(store, kind),
+    background_color: DARKEST(store, kind),
 });
 
 export const BOX_ELEVATED = (store: Store, kind: ColorKind): Properties => ({
@@ -212,6 +212,12 @@ export const BORDER_NONE: Properties = {
 export const INLINE_FLEX: Properties = {
     display: "inline-flex",
 };
+
+export function GAP(gap: PropertyOf<"gap">): Properties {
+    return {
+        gap,
+    };
+}
 
 export function COLUMN(gap: PropertyOf<"gap">): Properties {
     return {

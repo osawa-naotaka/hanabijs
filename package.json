@@ -1,13 +1,13 @@
 {
   "name": "hanabijs",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.1",
   "description": "lightweight static site generator for typescript",
   "type": "module",
   "main": "build/client/main.js",
   "exports": {
-    "./client": {
-      "require": "./build/client/main.js",
-      "types": "./build/client/main.d.ts"
+    "./core": {
+      "require": "./build/core/main.js",
+      "types": "./build/core/main.d.ts"
     },
     "./server": {
       "require": "./build/server/main.js",
@@ -23,14 +23,20 @@
     }
   },
   "bin": {
-    "hanabi": "build/hanabi.js"
+    "hanabi": "build/bin.js"
   },
   "scripts": {
-    "build": "tsc && tsup --config tsup.config.ts && rm build/hanabi.d.ts",
-    "dev": "tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev",
-    "site": "tsx src/bin.ts build",
-    "check": "biome check ./src ./site ./test",
-    "check-write": "biome check --write ./src ./site ./test"
+    "clean": "rm -rf build dist package.tgz hanabijs-*.tgz",
+    "build": "biome check --write ./src ./site ./test && tsc && tsup --config tsup.config.ts",
+    "dev": "concurrently \"tsc --watch\" \"tsup --watch --config tsup.config.ts\" \"tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev\"",
+    "node-dev": "concurrently \"tsc --watch\" \"tsup --watch --config tsup.config.ts\" \"tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev\"",
+    "node-build": "tsc && tsx src/bin.ts build",
+    "bun-dev": "concurrently \"tsc --watch\" \"tsup --watch --config tsup.config.ts\" \"bun --hot src/bin.ts dev\"",
+    "bun-build": "tsc && bun src/bin.ts build",
+    "deno-dev": "deno check ./site/**/*.{ts,tsx} && deno run -A src/bin.ts dev",
+    "deno-build": "deno check ./site/**/*.{ts,tsx} && deno run -A src/bin.ts build",
+    "check": "biome check --write ./src ./site ./test",
+    "pack": "npm pack"
   },
   "author": "osawa naotaka",
   "license": "MIT",
@@ -43,9 +49,13 @@
     "url": "git+https://github.com/osawa-naotaka/hanabijs.git"
   },
   "devDependencies": {
+    "@anthropic-ai/claude-code": "^1.0.72",
     "@biomejs/biome": "1.9.4",
+    "@types/bun": "^1.2.10",
+    "@types/deno": "^2.2.0",
     "@types/node": "^22.13.10",
     "@types/ws": "^8",
+    "concurrently": "^9.1.2",
     "staticseek": "^2.7.1",
     "tslib": "^2.8.1",
     "tsup": "^8.4.0",
@@ -72,11 +82,11 @@
     "remark-rehype": "^11.1.1",
     "remark-toc": "^9.0.0",
     "rollup": "^4.39.0",
-    "svg2woff2": "^0.1.0",
+    "svg2woff2": "^0.3.0",
     "tsx": "^4.19.3",
     "unified": "^11.0.5",
     "valibot": "^1.0.0",
     "ws": "^8.18.1"
   },
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "yarn@4.9.1"
 }

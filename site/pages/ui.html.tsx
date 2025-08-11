@@ -1,4 +1,4 @@
-import { element, registerRootPage, style, unionRecords } from "hanabijs/core";
+import { FLEX_WRAP, element, hIcon, hSvgIconFont, registerRootPage, style, unionRecords } from "hanabijs/core";
 import type { ColorKind, HArgument, HRootPageFn, Properties, Store } from "hanabijs/core";
 import {
     BOLD,
@@ -21,6 +21,8 @@ import {
     CURSOR,
     DEFAULT_RESPONSIVE_PAGE_WIDTH,
     DEFAULT_STYLES,
+    DISPLAY,
+    GAP,
     INIT_CSS,
     INLINE_FLEX,
     LINE_HEIGHT,
@@ -37,6 +39,10 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const BTonal = element("b-tonal");
     const BFilled = element("b-filled");
     const BElevated = element("b-elevated");
+    const Icon = hIcon(store);
+    const GithubIcon = hSvgIconFont(store, { type: "brands", name: "github" });
+    const XIcon = hSvgIconFont(store, { type: "brands", name: "x-twitter" });
+    const YoutubeIcon = hSvgIconFont(store, { type: "brands", name: "youtube" });
 
     const kind: ColorKind = "primary";
 
@@ -54,7 +60,7 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
     const page_styles = [
         INIT_CSS,
         DEFAULT_STYLES(store),
-        style("main")(DEFAULT_RESPONSIVE_PAGE_WIDTH(store)),
+        style("main")(DEFAULT_RESPONSIVE_PAGE_WIDTH(store), DISPLAY("flex"), FLEX_WRAP),
 
         style(BText)(BOX_TEXT(store, kind), default_styles),
         style([BText, ":hover"])(BOX_TEXT_EM_LIGHT(store, kind)),
@@ -75,6 +81,9 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
         style(BElevated)(BOX_ELEVATED(store, kind), default_styles),
         style([BElevated, ":hover"])(BOX_ELEVATED_EM_LIGHT(store, kind)),
         style([BElevated, ":active"])(BOX_ELEVATED_EM_STRONG(store, kind)),
+
+        style(BFilled, ">", "*")(DISPLAY("block")),
+        style(BFilled)(GAP(S_SMALL(store))),
     ];
 
     registerRootPage(store, page_styles);
@@ -90,12 +99,24 @@ export default function Root(store: Store): HRootPageFn<HArgument> {
                 <title>ui test</title>
             </head>
             <body>
+                <h2>
+                    Buttons
+                    <GithubIcon />
+                    <Icon type="brands" name="github" />
+                </h2>
                 <main>
-                    <h2>Buttons</h2>
                     <BText>text</BText>
                     <BOutlined>outlined</BOutlined>
                     <BTonal>tonal</BTonal>
-                    <BFilled>filled</BFilled>
+                    <BFilled>
+                        <YoutubeIcon />
+                        <XIcon />
+                        <GithubIcon />
+                        <Icon type="brands" name="youtube" />
+                        <Icon type="brands" name="x-twitter" />
+                        <Icon type="brands" name="github" />
+                        <div>filled</div>
+                    </BFilled>
                     <BElevated>elevated</BElevated>
                 </main>
             </body>

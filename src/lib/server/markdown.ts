@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { cwd } from "node:process";
-import type { Markdown } from "@/lib/core/types";
+import type { Markdown } from "@/lib/core/markdown";
 import { globExt } from "@/server";
 import { posts_dir } from "@site/site.config";
 import matter from "gray-matter";
@@ -52,5 +52,5 @@ export async function getMarkdown<T>(
 }
 
 export async function listFiles(dir: string, ext: string): Promise<string[]> {
-    return await globExt(path.join(cwd(), dir), ext);
+    return globExt(path.join(cwd(), dir), ext);
 }

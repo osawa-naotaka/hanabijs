@@ -1,8 +1,8 @@
 import type { AssetConfig } from "@/cli/config";
-import type { HComponentFn, HComponentFnArg, HNode } from "./component";
-import { default_design_rule } from "./design";
-import type { DesignRule } from "./design";
-import type { Selector, StyleRule } from "./style";
+import type { HComponentFn, HNode } from "@/lib/core/component";
+import { default_design_rule } from "@/lib/core/design";
+import type { DesignRule } from "@/lib/core/design";
+import type { Selector, StyleRule } from "@/lib/core/style";
 
 // hanabi element data structure for register element to repository, internal use only.
 export type HComponent = {
@@ -51,13 +51,6 @@ export function generateStore(asset: AssetConfig, rule: Partial<DesignRule> = {}
         designrule: { ...default_design_rule, ...rule },
         asset,
     };
-}
-
-export function component<K, T>(name_fn: HComponentFn<K> | string, component_fn: HComponentFn<T>): HComponentFn<T> {
-    const component_name = typeof name_fn === "string" ? name_fn : name_fn.name;
-    return {
-        [component_name]: (argument: HComponentFnArg<T>, ...child: HNode[]) => component_fn(argument, ...child),
-    }[component_name];
 }
 
 export function registerComponent<K>(

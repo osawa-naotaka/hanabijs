@@ -1,4 +1,4 @@
-import type { HRootPageFn, Store } from "hanabijs";
+import type { HRootPageFn, Store } from "hanabijs/core";
 
 export default function Root(_store: Store): HRootPageFn<void> {
     return async () => (

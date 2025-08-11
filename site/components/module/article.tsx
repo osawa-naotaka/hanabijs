@@ -14,9 +14,7 @@ import {
     C_BG,
     C_TEXT,
     FONT_SIZE,
-    F_2XLARGE,
     F_XLARGE,
-    HEIGHT,
     LIST_DECIMAL,
     LIST_DISC,
     Link,
@@ -32,23 +30,8 @@ import {
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
 } from "hanabijs/core";
-import {
-    A,
-    H2,
-    H3,
-    H4,
-    H5,
-    Li,
-    Ol,
-    P,
-    Script,
-    Ul,
-    as,
-    component,
-    element,
-    registerComponent,
-    style,
-} from "hanabijs/core";
+import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul } from "hanabijs/core";
+import { as, component, element, registerComponent, style } from "hanabijs/core";
 import type { HComponentFn, Markdown, Store } from "hanabijs/core";
 
 export type ArticleArgument = Markdown<PostFm>;
@@ -67,8 +50,6 @@ export function article(store: Store): HComponentFn<ArticleArgument> {
 
         style(ArticleHeader, H2)(FONT_SIZE(F_XLARGE(store))),
         TAG_DESIGN(store, "text", ArticleTag),
-        TAG_DESIGN(store, "text", ShareX),
-        style(Article, ShareX)(HEIGHT(F_2XLARGE(store))),
 
         style(ArticleText)(COLUMN("0"), TEXT_JUSTIFY, ALIGN_NOMAL),
         style(ArticleText, H3)(

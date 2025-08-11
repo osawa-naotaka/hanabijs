@@ -9,14 +9,12 @@ import { bundleHtml } from "@/cli/html";
 import { withoutExt } from "@/cli/route";
 import { bundleScriptEsbuild } from "@/cli/script";
 import type { Attribute, HRootPageFn } from "@/lib/core/component";
-import { replaceExt } from "@/lib/core/coreutil";
 import { Link, Script } from "@/lib/core/elements";
 import { clearStore, generateStore } from "@/lib/core/store";
 import type { HComponentAsset, Store } from "@/lib/core/store";
+import { replaceExt } from "@/lib/core/util";
 import { globExt } from "@/server";
-import { glob } from "glob";
-
-const require = createRequire(import.meta.url);
+import { globSync } from "glob";
 
 export async function build(conf_file: string | undefined) {
     const start = performance.now();
@@ -38,7 +36,7 @@ export async function build(conf_file: string | undefined) {
     if (!existsSync(page_dir)) {
         throw new Error(`hanabi: no page directory found at ${page_dir}.`);
     }
-    for (const filename_in_dir of await globExt(page_dir, ".{ts,tsx}")) {
+    for (const filename_in_dir of globExt(page_dir, ".{ts,tsx}")) {
         const import_start = performance.now();
         const page_fn = await import(path.join(page_dir, filename_in_dir));
         console.log(`import ${filename_in_dir} in ${(performance.now() - import_start).toFixed(2)}ms`);
@@ -62,6 +60,7 @@ export async function build(conf_file: string | undefined) {
     }
 
     // copy assets
+    const require = createRequire(import.meta.url);
     for (const statics of asset_store.values()) {
         for (const entry of statics) {
             const root_dir =
@@ -69,7 +68,7 @@ export async function build(conf_file: string | undefined) {
                     ? cwd()
                     : path.dirname(require.resolve(`${entry.package_name}/package.json`));
             for (const file of entry.copy_files) {
-                await copyFiles(root_dir, file.src, path.join(dist_dir, config.asset.target_prefix, file.dist));
+                copyFiles(root_dir, file.src, path.join(dist_dir, config.asset.target_prefix, file.dist));
             }
         }
     }
@@ -77,22 +76,22 @@ export async function build(conf_file: string | undefined) {
     // copy public
     if (existsSync(public_dir)) {
         const start = performance.now();
-        await copyDir(public_dir, dist_dir);
+        copyDir(public_dir, dist_dir);
         console.log(`process public in ${(performance.now() - start).toFixed(2)}ms`);
     }
 
     console.log(`build in ${(performance.now() - start).toFixed(2)}ms`);
 }
 
-async function copyFiles(root: string, pattern: string, dist_dir: string) {
-    for (const src of await glob(pattern, { cwd: root, nodir: true })) {
+function copyFiles(root: string, pattern: string, dist_dir: string) {
+    for (const src of globSync(pattern, { cwd: root, nodir: true })) {
         const content = readFileSync(path.join(root, src));
         ensureDirWrite(path.join(dist_dir, path.parse(src).base), content);
     }
 }
 
-async function copyDir(root: string, dist_dir: string) {
-    for (const src of await glob("**/*", { cwd: root, nodir: true })) {
+function copyDir(root: string, dist_dir: string) {
+    for (const src of globSync("**/*", { cwd: root, nodir: true })) {
         const content = readFileSync(path.join(root, src));
         ensureDirWrite(path.join(dist_dir, src), content);
     }
@@ -179,6 +178,7 @@ async function bundleAndWriteCssJs(relative_path: string, dist_dir: string, stor
     // process css
     const css_start = performance.now();
 
+    const require = createRequire(import.meta.url);
     const css = await bundleCss(store, withoutExt(relative_path), require);
     if (css instanceof Error) {
         console.warn(css);
@@ -202,10 +202,6 @@ function writeToFile(
 ): string {
     const file_ext = replaceExt(file_name, ext);
     const absolute_path = path.join(dist_dir, file_ext);
-    const base = path.dirname(absolute_path);
-    if (!existsSync(base)) {
-        mkdirSync(base);
-    }
     ensureDirWrite(absolute_path, content);
     console.log(`process ${file_ext} in ${(performance.now() - start).toFixed(2)}ms`);
 

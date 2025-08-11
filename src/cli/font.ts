@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { cwd } from "node:process";
-import type { Store } from "@/core";
+import type { Store } from "hanabijs/core";
 import type { Svg } from "svg2woff2";
 import { generateCss, svg2woff2 } from "svg2woff2";
 
@@ -10,6 +10,8 @@ type SvgName = {
     name: string;
     src: string;
 };
+
+const font_family = "fontawesome free generated";
 
 export async function bundleWoff2(store: Store): Promise<Buffer | null> {
     const svg_names = listSvgNames(store);
@@ -27,12 +29,7 @@ export async function bundleWoff2(store: Store): Promise<Buffer | null> {
 
     const woff2 = await svg2woff2(svgs, {
         svg_font_opt: {
-            font_family: "fontawesome free generated",
-            ascent: 460,
-            descent: -74,
-            units_per_em: 512,
-            horiz_adv_x: 641,
-            vert_adv_y: 641,
+            font_family,
         },
         ttf_font_opt: {
             version: "1.0",
@@ -48,9 +45,9 @@ export function generateFontCss(store: Store, base_name: string): string {
     const svg_names: Svg[] = listSvgNames(store).map((n) => ({ name: n.name, content: "" }));
 
     return generateCss(svg_names, {
-        font_family: "fontawesome free generated",
-        vertical_align: "-.125em",
+        font_family,
         font_url: `${base_name}.woff2`,
+        vertical_align: "-0.125em",
     });
 }
 

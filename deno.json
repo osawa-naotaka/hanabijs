@@ -1,0 +1,74 @@
+{
+    "imports": {
+      "@/": "./src/",
+      "@site/": "./site/",
+      "hanabijs/core": "./src/core.ts",
+      "hanabijs/server": "./src/server.ts",
+      "hanabijs/jsx-dev-runtime": "./src/jsx-dev-runtime.ts",
+      "hanabijs/jsx-runtime": "./src/jsx-runtime.ts",
+
+      "@/cli/build": "./src/cli/build.ts",
+      "@/cli/config": "./src/cli/config.ts",
+      "@/cli/css": "./src/cli/css.ts",
+      "@/cli/font": "./src/cli/font.ts",
+      "@/cli/html": "./src/cli/html.ts",
+      "@/cli/route": "./src/cli/route.ts",
+      "@/cli/script": "./src/cli/script.ts",
+      "@/cli/serve": "./src/cli/serve.ts",
+
+      "@/lib/core/component": "./src/lib/core/component.ts",
+      "@/lib/core/util": "./src/lib/core/util.ts",
+      "@/lib/core/design": "./src/lib/core/design.ts",
+      "@/lib/core/dom": "./src/lib/core/dom.ts",
+      "@/lib/core/elements": "./src/lib/core/elements.ts",
+      "@/lib/core/markdown": "./src/lib/core/markdown.ts",
+      "@/lib/core/properties": "./src/lib/core/properties.ts",
+      "@/lib/core/sanityze": "./src/lib/core/sanityze.ts",
+      "@/lib/core/store": "./src/lib/core/store.ts",
+      "@/lib/core/style": "./src/lib/core/style.ts",
+      "@/lib/core/stylerules": "./src/lib/core/stylerules.ts",
+      
+      "@/lib/server/inserter": "./src/lib/server/inserter.ts",
+      "@/lib/server/markdown": "./src/lib/server/markdown.ts",
+      "@/lib/server/util": "./src/lib/server/util.ts",
+      
+      "@/lib/ui/icon": "./src/lib/ui/icon.ts",
+      "@/lib/ui/svgIconFont": "./src/lib/ui/svgIconFont.ts",
+      "@/lib/ui/svgIconStore": "./src/lib/ui/svgIconStore.ts",
+
+      "@site/components/element/dateTime": "./site/components/element/dateTime.tsx",
+      "@site/components/element/hlink": "./site/components/element/hlink.ts",
+      "@site/components/element/shareX": "./site/components/element/shareX.tsx",
+      "@site/components/element/tag": "./site/components/element/tag.tsx",
+      
+      "@site/components/module/article": "./site/components/module/article.tsx",
+      "@site/components/module/articleHeader": "./site/components/module/articleHeader.tsx",
+      "@site/components/module/drawer": "./site/components/module/drawer.tsx", 
+      "@site/components/module/navigation": "./site/components/module/navigation.tsx",
+      "@site/components/module/popover": "./site/components/module/popover.tsx",
+      "@site/components/module/search": "./site/components/module/search.tsx",
+      "@site/components/module/summary": "./site/components/module/summary.tsx",
+      
+      "@site/components/pages/page": "./site/components/pages/page.tsx",
+      "@site/components/pages/pageHead": "./site/components/pages/pageHead.tsx",
+      
+      "@site/components/sections/hero": "./site/components/sections/hero.tsx",
+      "@site/components/sections/pageFooter": "./site/components/sections/pageFooter.tsx",
+      "@site/components/sections/pageHeader": "./site/components/sections/pageHeader.tsx",
+      "@site/components/sections/summaries": "./site/components/sections/summaries.tsx",
+      
+      "@site/site.config": "./site/site.config.ts",
+      "@site/styles/design": "./site/styles/design.ts",      
+
+      "@/core": "./src/core.ts",
+      "@/server": "./src/server.ts",
+      "@/page/error": "./src/page/error.ts",
+      "@/page/hanabi-error": "./src/page/hanabi-error.ts",
+      "@/page/page": "./src/page/page.ts"
+    },
+    "compilerOptions": {
+      "jsx": "react-jsx",
+      "jsxImportSource": "hanabijs",
+      "lib": ["deno.window", "dom", "dom.iterable", "dom.asynciterable"]
+    }
+  }
