@@ -3,15 +3,18 @@
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
         "@types/node": "^22.13.10",
+        "tsx": "^4.19.3",
         "typescript": "^5.8.2"
     },
     "packageManager": "yarn@4.7.0",
     "scripts": {
+        "node-build": "tsc && NODE_OPTIONS='--import tsx' zephblaze build",
+        "node-dev": "tsc --watch & NODE_OPTIONS='--import tsx' zephblaze dev",
         "build": "tsc && zephblaze build",
         "dev": "tsc --watch & zephblaze dev",
         "check": "biome check --write ./site"
     },
     "dependencies": {
-        "zephblaze": "../../zephblaze-0.1.0.tgz"
+        "zephblaze": "../../zephblaze-0.1.0-alpha.2.tgz"
     }
 }
