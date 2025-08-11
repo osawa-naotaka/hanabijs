@@ -1,5 +1,5 @@
-import type { AttributeOf, HComponentFn, Store } from "hanabijs/core";
-import { LIGHTEST, TEXT_COLOR, TRANSITION, component, element, registerComponent, style } from "hanabijs/core";
+import type { AttributeOf, HComponentFn, Store } from "zephblaze/core";
+import { LIGHTEST, TEXT_COLOR, TRANSITION, component, element, registerComponent, style } from "zephblaze/core";
 
 export function hlink(store: Store): HComponentFn<Partial<AttributeOf<"a">>> {
     const Link = element("link", { tag: "a" });

@@ -1,5 +1,5 @@
-import { component, element } from "hanabijs/core";
-import type { HComponentFn } from "hanabijs/core";
+import { component, element } from "zephblaze/core";
+import type { HComponentFn } from "zephblaze/core";
 
 export type DateTimeArgument = {
     datetime: string | Date;

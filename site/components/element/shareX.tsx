@@ -1,8 +1,8 @@
 import { hSvgIconFont } from "@/lib/ui/svgIconFont";
 import { TAG_DESIGN } from "@site/styles/design";
-import { BG_COLOR, C_TEXT, DISPLAY, PADDING, ROW, S_SMALL, S_TINY, TEXT_COLOR } from "hanabijs/core";
-import { as, component, element, registerComponent, style } from "hanabijs/core";
-import type { HComponentFn, Store } from "hanabijs/core";
+import { BG_COLOR, C_TEXT, DISPLAY, PADDING, ROW, S_SMALL, S_TINY, TEXT_COLOR } from "zephblaze/core";
+import { as, component, element, registerComponent, style } from "zephblaze/core";
+import type { HComponentFn, Store } from "zephblaze/core";
 
 export type ShareXArgument = {
     title: string;

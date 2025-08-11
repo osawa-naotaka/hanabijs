@@ -6,20 +6,20 @@
 
 ## プロジェクト基本情報
 
-# hanabi.js
+# zephblaze
 
-hanabi.jsは、軽量で型安全な静的サイトジェネレーター（SSG）です。モダンなWeb開発の手法を取り入れながら、コンポーネントとデザインの再利用性を高めることを目指しています。
+zephblazeは、軽量で型安全な静的サイトジェネレーター（SSG）です。モダンなWeb開発の手法を取り入れながら、コンポーネントとデザインの再利用性を高めることを目指しています。
 
-## hanabi.js ビルド方法
+## zephblaze ビルド方法
 
-currently, hanabi.js is developed using node.js 23.
+currently, zephblaze is developed using node.js 23.
 prepare develop environment with [nix](https://nixos.org/download/) on WSL2:
 
 ```shell
 sh <(curl -L https://nixos.org/nix/install) --no-daemon
 mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
-git clone https://github.com/osawa-naotaka/hanabijs.git
-cd hanabijs
+git clone https://github.com/osawa-naotaka/zephblaze.git
+cd zephblaze
 nix develop
 ```
 

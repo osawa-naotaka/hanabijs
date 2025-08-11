@@ -1,5 +1,5 @@
-import { H2, element, registerComponent, style } from "hanabijs/core";
-import type { HRootPageFn, Store } from "hanabijs/core";
+import { H2, element, registerComponent, style } from "zephblaze/core";
+import type { HRootPageFn, Store } from "zephblaze/core";
 import page from "../../../components/page";
 import { site } from "../../../config";
 

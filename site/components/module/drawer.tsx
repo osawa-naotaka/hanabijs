@@ -9,8 +9,8 @@ import {
     element,
     registerComponent,
     style,
-} from "hanabijs/core";
-import type { HComponentFn, HNode, Store } from "hanabijs/core";
+} from "zephblaze/core";
+import type { HComponentFn, HNode, Store } from "zephblaze/core";
 
 export type DrawerArgument = {
     title: HNode;

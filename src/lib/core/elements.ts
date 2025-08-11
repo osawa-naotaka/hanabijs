@@ -226,9 +226,9 @@ export const tags: Tag[] = [
     "wbr",
 ] as const;
 
-export type HanabiTag = "raw" | "unwrap" | "class";
+export type ZephblazeTag = "raw" | "unwrap" | "class";
 
-export const hanabi_tags: HanabiTag[] = ["raw", "unwrap", "class"] as const;
+export const zephblaze_tags: ZephblazeTag[] = ["raw", "unwrap", "class"] as const;
 
 // HTML要素の共通属性
 export type GlobalAttributes = {
@@ -1942,7 +1942,7 @@ export function printDefine() {
     }
 }
 
-function gt<K extends Tag | HanabiTag>(tag: K): HElementFn<K> {
+function gt<K extends Tag | ZephblazeTag>(tag: K): HElementFn<K> {
     return {
         [tag]: (attribute: AttributeOf<K>, ...child: HNode[]) => ({ tag, attribute, child }),
     }[tag];

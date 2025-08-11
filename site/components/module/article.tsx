@@ -29,10 +29,10 @@ import {
     TEXT_COLOR,
     TEXT_JUSTIFY,
     TEXT_UNDERLINE,
-} from "hanabijs/core";
-import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul } from "hanabijs/core";
-import { as, component, element, registerComponent, style } from "hanabijs/core";
-import type { HComponentFn, Markdown, Store } from "hanabijs/core";
+} from "zephblaze/core";
+import { A, H2, H3, H4, H5, Li, Ol, P, Script, Ul } from "zephblaze/core";
+import { as, component, element, registerComponent, style } from "zephblaze/core";
+import type { HComponentFn, Markdown, Store } from "zephblaze/core";
 
 export type ArticleArgument = Markdown<PostFm>;
 

@@ -2,9 +2,9 @@ import { page } from "@site/components/pages/page";
 import { hero } from "@site/components/sections/hero";
 import { summaries } from "@site/components/sections/summaries";
 import { navitem, postFmSchema, posts_dir, site } from "@site/site.config";
-import { DEFAULT_RESPONSIVE_PAGE_WIDTH, element, registerRootPage, style } from "hanabijs/core";
-import type { HRootPageFn, Store } from "hanabijs/core";
-import { getAllMarkdowns } from "hanabijs/server";
+import { DEFAULT_RESPONSIVE_PAGE_WIDTH, element, registerRootPage, style } from "zephblaze/core";
+import type { HRootPageFn, Store } from "zephblaze/core";
+import { getAllMarkdowns } from "zephblaze/server";
 
 export default function Root(store: Store): HRootPageFn<void> {
     const Page = page(store);

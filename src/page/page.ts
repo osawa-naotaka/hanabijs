@@ -4,7 +4,7 @@ import { A, Body, H1, Head, Html, Link, Meta, Script, Title } from "@/lib/core/e
 
 const site = {
     lang: "en",
-    name: "hanabi.js",
+    name: "zephblaze",
     description: "fast, light-weight static site generator",
 };
 
@@ -26,7 +26,7 @@ export function page(): HComponentFn<HArgument> {
 
                 Title({}, site.name),
                 Script({ type: "module", src: "/reload.js" }),
-                Link({ href: "/hanabi-error.css", rel: "stylesheet" }),
+                Link({ href: "/zephblaze-error.css", rel: "stylesheet" }),
             ),
             Body(
                 { id: "top-of-page" },

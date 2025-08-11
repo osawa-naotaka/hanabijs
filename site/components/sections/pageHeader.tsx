@@ -2,8 +2,8 @@ import { drawer } from "@site/components/module/drawer";
 import { navigation } from "@site/components/module/navigation";
 import { popover } from "@site/components/module/popover";
 import { search } from "@site/components/module/search";
-import { component, element, hSvgIconFont, registerComponent, style } from "hanabijs/core";
-import type { HComponentFn, HSvgBrandsIconName, Store } from "hanabijs/core";
+import { component, element, hSvgIconFont, registerComponent, style } from "zephblaze/core";
+import type { HComponentFn, HSvgBrandsIconName, Store } from "zephblaze/core";
 import {
     DEFAULT_RESPONSIVE_PAGE_WIDTH,
     DEFAULT_TEXT_BG,
@@ -11,7 +11,7 @@ import {
     FONT_SIZE,
     F_3XLARGE,
     OPACITY,
-} from "hanabijs/core";
+} from "zephblaze/core";
 
 export type PageHeaderArgument = {
     title: string;

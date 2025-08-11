@@ -14,7 +14,7 @@ bun.lock
 deno.json
 flake.lock
 flake.nix
-hanabijs-*.tgz
+zephblaze-*.tgz
 package.tgz
 tsconfig.json
 tsup.config.ts

@@ -8,8 +8,8 @@ import {
     S_2XLARGE,
     TEXT_COLOR,
 } from "@/core";
-import { component, element, registerComponent, style } from "hanabijs/core";
-import type { HArgument, HComponentFn, Store } from "hanabijs/core";
+import { component, element, registerComponent, style } from "zephblaze/core";
+import type { HArgument, HComponentFn, Store } from "zephblaze/core";
 
 export function hero(store: Store): HComponentFn<HArgument> {
     const Hero = element("hero");

@@ -6,7 +6,7 @@ import path from "node:path";
 import { cwd } from "node:process";
 import type { Duplex } from "node:stream";
 import { loadConfig } from "@/cli/config";
-import type { HanabiConfig } from "@/cli/config";
+import type { ZephblazeConfig } from "@/cli/config";
 import { bundleCss } from "@/cli/css";
 import { bundleWoff2 } from "@/cli/font";
 import { bundleHtml } from "@/cli/html";
@@ -19,7 +19,7 @@ import { clearStore, generateStore } from "@/lib/core/store";
 import type { Store } from "@/lib/core/store";
 import { contentType } from "@/lib/core/util";
 import { ErrorPage } from "@/page/error";
-import { hanabi_error_css } from "@/page/hanabi-error";
+import { zephblaze_error_css } from "@/page/zephblaze-error";
 import chokidar from "chokidar";
 import type { FSWatcher } from "chokidar";
 import { WebSocketServer } from "ws";
@@ -48,7 +48,7 @@ type ReqProcessFn = (req: Request) => Promise<Resp>;
 type ReloadFn = () => void;
 
 function createAndStartDenoServer(
-    config: HanabiConfig,
+    config: ZephblazeConfig,
     proc: ReqProcessFn,
     reload: ReloadFn,
     watcher: FSWatcher,
@@ -74,7 +74,12 @@ function createAndStartDenoServer(
     });
 }
 
-function createAndStartBunServer(config: HanabiConfig, proc: ReqProcessFn, reload: ReloadFn, watcher: FSWatcher): void {
+function createAndStartBunServer(
+    config: ZephblazeConfig,
+    proc: ReqProcessFn,
+    reload: ReloadFn,
+    watcher: FSWatcher,
+): void {
     const server = Bun.serve({
         websocket: {
             open(ws) {
@@ -108,7 +113,7 @@ function createAndStartBunServer(config: HanabiConfig, proc: ReqProcessFn, reloa
 }
 
 function createAndStartNodeServer(
-    config: HanabiConfig,
+    config: ZephblazeConfig,
     proc: ReqProcessFn,
     reload: ReloadFn,
     watcher: FSWatcher,
@@ -178,7 +183,7 @@ function errorResponse(status: number, cause: string): Resp {
     };
 }
 
-function createReqProcessor(config: HanabiConfig): [ReqProcessFn, ReloadFn] {
+function createReqProcessor(config: ZephblazeConfig): [ReqProcessFn, ReloadFn] {
     const root = cwd();
     const page_dir = path.join(root, config.input.page_dir);
     const public_dir = path.join(root, config.input.public_dir);
@@ -284,8 +289,8 @@ function createReqProcessor(config: HanabiConfig): [ReqProcessFn, ReloadFn] {
             }
 
             // css for error page
-            if (new URL(req.url).pathname.localeCompare("/hanabi-error.css") === 0) {
-                return normalResponse(hanabi_error_css, ".css");
+            if (new URL(req.url).pathname.localeCompare("/zephblaze-error.css") === 0) {
+                return normalResponse(zephblaze_error_css, ".css");
             }
 
             return errorResponse(404, `route for url "${req.url}" not found.`);

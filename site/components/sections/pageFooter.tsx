@@ -1,5 +1,5 @@
-import { component, element, registerComponent, style } from "hanabijs/core";
-import type { HComponentFn, Store } from "hanabijs/core";
+import { component, element, registerComponent, style } from "zephblaze/core";
+import type { HComponentFn, Store } from "zephblaze/core";
 import {
     ABSOLUTE_ANCHOR,
     BG_COLOR,
@@ -9,7 +9,7 @@ import {
     FIX_BOTTOM,
     TEXT_ALIGN_CENTER,
     TEXT_COLOR,
-} from "hanabijs/core";
+} from "zephblaze/core";
 
 export type PageFooterArgument = {
     site_name: string;

@@ -4,7 +4,7 @@ import { default_design_rule } from "@/lib/core/design";
 import type { DesignRule } from "@/lib/core/design";
 import type { Selector, StyleRule } from "@/lib/core/style";
 
-// hanabi element data structure for register element to repository, internal use only.
+// zephblaze element data structure for register element to repository, internal use only.
 export type HComponent = {
     component_name: string;
     style: StyleRule[];
@@ -70,7 +70,7 @@ export function registerRootPage(
     raw_style: (StyleRule | StyleRule[])[],
     attachment?: HComponentAttachment,
 ): void {
-    const component_name = "hanabi-root-page";
+    const component_name = "zephblaze-root-page";
     const style = raw_style.flatMap((x) => (Array.isArray(x) ? x : [x]));
 
     store.components.set(component_name, { component_name, style, attachment });

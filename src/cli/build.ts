@@ -34,7 +34,7 @@ export async function build(conf_file: string | undefined) {
     }
 
     if (!existsSync(page_dir)) {
-        throw new Error(`hanabi: no page directory found at ${page_dir}.`);
+        throw new Error(`zephblaze: no page directory found at ${page_dir}.`);
     }
     for (const filename_in_dir of globExt(page_dir, ".{ts,tsx}")) {
         const import_start = performance.now();

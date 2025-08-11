@@ -1,4 +1,4 @@
-import type { AttributeMap, HanabiTag, Tag } from "@/lib/core/elements";
+import type { AttributeMap, Tag, ZephblazeTag } from "@/lib/core/elements";
 import { Class } from "@/lib/core/elements";
 import { addClassInRecord } from "@/lib/core/util";
 
@@ -12,12 +12,12 @@ export type HNode<T extends Attribute = Attribute> = string | HElement<T>;
 
 // HTML Element, with custom element name
 export type HElement<K> = {
-    tag: Tag | HanabiTag;
+    tag: Tag | ZephblazeTag;
     attribute: Partial<K>;
     child: HNode[];
 };
 
-// hanabi Element (is function), expressing HTML element
+// zephblaze Element (is function), expressing HTML element
 export type HElementFn<K> = (attribute: AttributeOf<K>, ...child: HNode[]) => HNode;
 
 export type ElementArg<K> = {
@@ -25,7 +25,7 @@ export type ElementArg<K> = {
     tag?: K;
 };
 
-export function element<K extends Tag | HanabiTag = "div">(
+export function element<K extends Tag | ZephblazeTag = "div">(
     element_name: string,
     arg: ElementArg<K> = {},
 ): HElementFn<K> {
@@ -40,7 +40,7 @@ export function element<K extends Tag | HanabiTag = "div">(
     }[dot_name];
 }
 
-// hanabi Component (is function)
+// zephblaze Component (is function)
 export type HComponentFn<T> = (argument: HComponentFnArg<T>, ...child: HNode[]) => HNode;
 // biome-ignore lint: using any.
 export type HComponentFnArg<T> = T & { class?: string | string[]; id?: string; children?: any; key?: any };
@@ -65,8 +65,8 @@ export function as<T>(class_name: string, fn: HComponentFn<T>): HComponentFn<T> 
     }[dot_name];
 }
 
-// hanabi HTML Top export function
+// zephblaze HTML Top export function
 export type HRootPageFn<T> = (parameter: T) => Promise<HNode>;
 
-// hanabi Client FUnction
+// zephblaze Client FUnction
 export type HClientFn = () => Promise<void>;

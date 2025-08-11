@@ -1,4 +1,4 @@
-export const hanabi_error_css = `
+export const zephblaze_error_css = `
 @charset "utf-8";
 
 * {
