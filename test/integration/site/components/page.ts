@@ -1,5 +1,5 @@
-import { A, Body, H1, Html, Link, Meta, Title, element, registerComponent, style } from "hanabijs/core";
-import type { HComponentFn, Store } from "hanabijs/core";
+import { A, Body, H1, Html, Link, Meta, Title, element, registerComponent, style } from "zephblaze/core";
+import type { HComponentFn, Store } from "zephblaze/core";
 
 export type PageAttribute = {
     title: string;

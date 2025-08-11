@@ -13,8 +13,8 @@ import {
     S_TINY,
     TRANSITION,
     style,
-} from "hanabijs/core";
-import type { ColorKind, HComponentFn, Selector, Store, StyleRule } from "hanabijs/core";
+} from "zephblaze/core";
+import type { ColorKind, HComponentFn, Selector, Store, StyleRule } from "zephblaze/core";
 
 export function TAG_DESIGN<T>(store: Store, kind: ColorKind, top: HComponentFn<T>): StyleRule[] {
     return [

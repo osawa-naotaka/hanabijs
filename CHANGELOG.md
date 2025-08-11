@@ -22,8 +22,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Development server with hot reload using WebSocket
 - FontAwesome SVG icon optimization and woff2 font generation
 - Multi-runtime support (Node.js/Bun/Deno)
-- CLI tools (`hanabi build`, `hanabi dev` commands)
+- CLI tools (`zephblaze build`, `zephblaze dev` commands)
 - Component-level asset management with tree shaking
 - Unified development experience for server-side and client-side
 
-[Unreleased]: https://github.com/osawa-naotaka/hanabijs/compare/v0.1.0-alpha.1...HEAD
+[Unreleased]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.1...HEAD

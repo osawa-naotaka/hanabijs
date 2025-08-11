@@ -1,4 +1,4 @@
-import type { HRootPageFn, Store } from "hanabijs/core";
+import type { HRootPageFn, Store } from "zephblaze/core";
 import page from "../components/page";
 import { site } from "../config";
 

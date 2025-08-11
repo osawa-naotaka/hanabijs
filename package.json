@@ -1,5 +1,5 @@
 {
-  "name": "hanabijs",
+  "name": "zephblaze",
   "version": "0.1.0-alpha.1",
   "description": "lightweight static site generator for typescript",
   "type": "module",
@@ -22,11 +22,9 @@
       "types": "./build/jsx-dev-runtime/main.d.ts"
     }
   },
-  "bin": {
-    "hanabi": "build/bin.js"
-  },
+  "bin": "build/bin.js",
   "scripts": {
-    "clean": "rm -rf build dist package.tgz hanabijs-*.tgz",
+    "clean": "rm -rf build dist package.tgz zephblaze-*.tgz",
     "build": "biome check --write ./src ./site ./test && tsc && tsup --config tsup.config.ts",
     "dev": "concurrently \"tsc --watch\" \"tsup --watch --config tsup.config.ts\" \"tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev\"",
     "node-dev": "concurrently \"tsc --watch\" \"tsup --watch --config tsup.config.ts\" \"tsx watch --exclude './site/**/*' --clear-screen=false src/bin.ts dev\"",
@@ -40,13 +38,13 @@
   },
   "author": "osawa naotaka",
   "license": "MIT",
-  "homepage": "https://github.com/osawa-naotaka/hanabijs",
+  "homepage": "https://github.com/osawa-naotaka/zephblaze",
   "bugs": {
-    "url": "https://github.com/osawa-naotaka/hanabijs/issues"
+    "url": "https://github.com/osawa-naotaka/zephblaze/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/osawa-naotaka/hanabijs.git"
+    "url": "git+https://github.com/osawa-naotaka/zephblaze.git"
   },
   "devDependencies": {
     "@anthropic-ai/claude-code": "^1.0.72",

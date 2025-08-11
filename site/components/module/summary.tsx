@@ -4,9 +4,9 @@ import { tag } from "@site/components/element/tag";
 import { articleHeader } from "@site/components/module/articleHeader";
 import type { PostFm } from "@site/site.config";
 import { TAG_DESIGN } from "@site/styles/design";
-import { H2, as, component, element, registerComponent, style } from "hanabijs/core";
-import type { HComponentFn, Markdown, Store, StyleRule } from "hanabijs/core";
-import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "hanabijs/core";
+import { H2, as, component, element, registerComponent, style } from "zephblaze/core";
+import type { HComponentFn, Markdown, Store, StyleRule } from "zephblaze/core";
+import { FONT_SIZE, F_XLARGE, MARGIN_BLOCK, S_XLARGE } from "zephblaze/core";
 
 export type SummaryArgument = Markdown<PostFm>;
 

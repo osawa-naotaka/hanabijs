@@ -127,7 +127,7 @@ function createHtmlRegExp(path: string): [RegExp, boolean] {
             regexp_str += `(?<${r.groups.key}>.+)`;
             start_pos = r.index + r[0].length;
         } else {
-            throw new Error("hanabi: createPageRouteTable internal error.");
+            throw new Error("zephblaze: createPageRouteTable internal error.");
         }
     }
     regexp_str += escapeForRegExp(path.slice(start_pos));

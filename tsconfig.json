@@ -8,7 +8,7 @@
 
     // JSX
     "jsx": "react-jsx",
-    "jsxImportSource": "hanabijs",
+    "jsxImportSource": "zephblaze",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -28,10 +28,10 @@
     "paths": {
       "@/*": ["./src/*"],
       "@site/*": ["./site/*"],
-      "hanabijs/core": ["./src/core.ts"],
-      "hanabijs/server": ["./src/server.ts"],
-      "hanabijs/jsx-dev-runtime": ["./src/jsx-dev-runtime.ts"],
-      "hanabijs/jsx-runtime": ["./src/jsx-runtime.ts"]
+      "zephblaze/core": ["./src/core.ts"],
+      "zephblaze/server": ["./src/server.ts"],
+      "zephblaze/jsx-dev-runtime": ["./src/jsx-dev-runtime.ts"],
+      "zephblaze/jsx-runtime": ["./src/jsx-runtime.ts"]
     },
   },
   "include": ["./src/**/*", "./site/**/*"],

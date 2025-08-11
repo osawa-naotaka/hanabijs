@@ -1,5 +1,5 @@
-import type { HSvgBrandsIconName } from "hanabijs/core";
 import * as v from "valibot";
+import type { HSvgBrandsIconName } from "zephblaze/core";
 
 export const site = {
     lang: "ja",

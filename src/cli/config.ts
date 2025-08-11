@@ -7,7 +7,7 @@ export type AssetConfig = {
     target_prefix: string;
 };
 
-export type HanabiConfig = {
+export type ZephblazeConfig = {
     server: {
         hostname: string;
         port: number;
@@ -25,7 +25,7 @@ export type HanabiConfig = {
     designrule: DesignRule;
 };
 
-const defaultConfig: HanabiConfig = {
+const defaultConfig: ZephblazeConfig = {
     server: {
         hostname: "localhost",
         port: 4132,
@@ -45,15 +45,15 @@ const defaultConfig: HanabiConfig = {
     designrule: default_design_rule,
 };
 
-export function defineConfig(config: Partial<HanabiConfig>): HanabiConfig {
+export function defineConfig(config: Partial<ZephblazeConfig>): ZephblazeConfig {
     return { ...config, ...defaultConfig };
 }
 
-export async function loadConfig(relative_path?: string): Promise<HanabiConfig> {
-    const abs_path = path.join(cwd(), relative_path || "hanabi.config.ts");
+export async function loadConfig(relative_path?: string): Promise<ZephblazeConfig> {
+    const abs_path = path.join(cwd(), relative_path || "zephblaze.config.ts");
     if (!existsSync(abs_path)) {
         if (relative_path !== undefined) {
-            console.warn(`hanabi.js: config file "${abs_path}" is not found. use default.`);
+            console.warn(`zephblaze: config file "${abs_path}" is not found. use default.`);
         }
         return defaultConfig;
     }
@@ -61,12 +61,12 @@ export async function loadConfig(relative_path?: string): Promise<HanabiConfig> 
     try {
         const config = await import(abs_path);
         if (typeof config.default !== "object") {
-            console.warn(`hanabi.js: config file "${abs_path}" has no default export. use default configuration.`);
+            console.warn(`zephblaze: config file "${abs_path}" has no default export. use default configuration.`);
             return defaultConfig;
         }
         return config.default;
     } catch (_e) {
-        console.warn(`hanabi.js: fail to read config file "${abs_path}". use default.`);
+        console.warn(`zephblaze: fail to read config file "${abs_path}". use default.`);
         return defaultConfig;
     }
 }

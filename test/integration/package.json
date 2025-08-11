@@ -7,11 +7,11 @@
     },
     "packageManager": "yarn@4.7.0",
     "scripts": {
-        "build": "tsc && hanabi build",
-        "dev": "tsc --watch & hanabi dev",
+        "build": "tsc && zephblaze build",
+        "dev": "tsc --watch & zephblaze dev",
         "check": "biome check --write ./site"
     },
     "dependencies": {
-        "hanabijs": "../../hanabijs-0.1.0.tgz"
+        "zephblaze": "../../zephblaze-0.1.0.tgz"
     }
 }

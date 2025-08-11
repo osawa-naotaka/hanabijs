@@ -9,5 +9,5 @@ build
 !.yarn/sdks
 !.yarn/versions
 
-hanabijs-*.tgz
+zephblaze-*.tgz
 package.tgz

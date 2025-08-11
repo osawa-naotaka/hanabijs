@@ -1,4 +1,4 @@
-# hanabi.js
+# zephblaze
 
 軽量で型安全な静的サイトジェネレーター（SSG）です。小規模サイトに向けたツールとして、TypeScriptとTSX記法を活用した型安全なサイト構築を可能にします。
 
@@ -20,7 +20,7 @@
 
 ```bash
 # Node.js 23推奨
-yarn add hanabijs
+yarn add zephblaze
 ```
 
 ### Nix環境（推奨開発環境）
@@ -30,8 +30,8 @@ yarn add hanabijs
 sh <(curl -L https://nixos.org/nix/install) --no-daemon
 mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 
-git clone https://github.com/osawa-naotaka/hanabijs.git
-cd hanabijs
+git clone https://github.com/osawa-naotaka/zephblaze.git
+cd zephblaze
 nix develop
 ```
 
@@ -72,12 +72,12 @@ site/
 
 ```tsx
 // site/pages/index.html.tsx
-import type { HRootPageFn } from "hanabijs/core";
+import type { HRootPageFn } from "zephblaze/core";
 
 const IndexPage: HRootPageFn<{}> = async () => {
   return (
     <div>
-      <h1>Welcome to hanabi.js</h1>
+      <h1>Welcome to zephblaze</h1>
       <p>型安全な静的サイトジェネレーター</p>
     </div>
   );
@@ -90,7 +90,7 @@ export default IndexPage;
 
 ```tsx
 // site/pages/posts/[slug].html.tsx
-import type { HRootPageFn } from "hanabijs/core";
+import type { HRootPageFn } from "zephblaze/core";
 
 interface PostPageProps {
   slug: string;
@@ -115,19 +115,19 @@ export default PostPage;
 
 ```bash
 # ビルド
-hanabi build
+zephblaze build
 
 # 開発サーバー
-hanabi dev
+zephblaze dev
 
 # カスタム設定ファイル指定
-hanabi build --config custom.config.ts
+zephblaze build --config custom.config.ts
 
 # ヘルプ表示
-hanabi --help
+zephblaze --help
 
 # バージョン確認
-hanabi --version
+zephblaze --version
 ```
 
 ## 設定
@@ -146,7 +146,7 @@ export const posts_dir = "site/contents/posts/";
 
 ## アーキテクチャ
 
-hanabi.jsは以下の設計原則に基づいています：
+zephblaze.jsは以下の設計原則に基づいています：
 
 - **表現と構造の分離** - コンテンツ、レイアウト、スタイル、挙動の論理的分離
 - **型安全なスタイリング** - CSS-in-JSの進化版による型チェック
@@ -186,5 +186,5 @@ yarn pack
 
 ## リポジトリ
 
-- GitHub: [osawa-naotaka/hanabijs](https://github.com/osawa-naotaka/hanabijs)
-- Issues: [GitHub Issues](https://github.com/osawa-naotaka/hanabijs/issues)
+- GitHub: [osawa-naotaka/zephblaze](https://github.com/osawa-naotaka/zephblaze)
+- Issues: [GitHub Issues](https://github.com/osawa-naotaka/zephblaze/issues)
