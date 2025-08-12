@@ -6,29 +6,27 @@
   "main": "build/client/main.js",
   "exports": {
     "./core": {
+      "types": "./build/core/main.d.ts",
       "import": "./build/core/main.js",
-      "require": "./build/core/main.js",
-      "types": "./build/core/main.d.ts"
+      "require": "./build/core/main.js"
     },
     "./server": {
+      "types": "./build/server/main.d.ts",
       "import": "./build/server/main.js",
-      "require": "./build/server/main.js",
-      "types": "./build/server/main.d.ts"
+      "require": "./build/server/main.js"
     },
     "./jsx-runtime": {
+      "types": "./build/jsx-runtime/main.d.ts",
       "import": "./build/jsx-runtime/main.js",
-      "require": "./build/jsx-runtime/main.js",
-      "types": "./build/jsx-runtime/main.d.ts"
+      "require": "./build/jsx-runtime/main.js"
     },
     "./jsx-dev-runtime": {
+      "types": "./build/jsx-dev-runtime/main.d.ts",
       "import": "./build/jsx-dev-runtime/main.js",
-      "require": "./build/jsx-dev-runtime/main.js",
-      "types": "./build/jsx-dev-runtime/main.d.ts"
+      "require": "./build/jsx-dev-runtime/main.js"
     }
   },
-  "bin": {
-    "zephblaze": "build/bin.js"
-  },
+  "bin": "build/bin.js",
   "scripts": {
     "clean": "rm -rf build dist package.tgz zephblaze-*.tgz",
     "build": "biome check --write ./src ./site ./test && tsc && tsup --config tsup.config.ts",
