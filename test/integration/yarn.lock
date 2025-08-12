@@ -1701,7 +1701,7 @@ __metadata:
     "@types/node": "npm:^22.13.10"
     tsx: "npm:^4.19.3"
     typescript: "npm:^5.8.2"
-    zephblaze: ../../zephblaze-0.1.0-alpha.2.tgz
+    zephblaze: ../../zephblaze-0.1.0-alpha.3.tgz
   languageName: unknown
   linkType: soft
 
@@ -3873,9 +3873,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zephblaze@file:../../zephblaze-0.1.0-alpha.2.tgz::locator=integration-test%40workspace%3A.":
-  version: 0.1.0-alpha.2
-  resolution: "zephblaze@file:../../zephblaze-0.1.0-alpha.2.tgz#../../zephblaze-0.1.0-alpha.2.tgz::hash=7dd54b&locator=integration-test%40workspace%3A."
+"zephblaze@file:../../zephblaze-0.1.0-alpha.3.tgz::locator=integration-test%40workspace%3A.":
+  version: 0.1.0-alpha.3
+  resolution: "zephblaze@file:../../zephblaze-0.1.0-alpha.3.tgz#../../zephblaze-0.1.0-alpha.3.tgz::hash=93721f&locator=integration-test%40workspace%3A."
   dependencies:
     "@fortawesome/fontawesome-free": "npm:^6.7.2"
     "@rollup/plugin-commonjs": "npm:^28.0.3"
@@ -3904,7 +3904,7 @@ __metadata:
     ws: "npm:^8.18.1"
   bin:
     zephblaze: build/bin.js
-  checksum: 10c0/e99d64182fe7441b16bca54a56120de909854ae672c9ea1fbd701866c61bda0de6ea8c522e5b320551d65cec72f85ebdac37afef52490f464594382a2a98fd25
+  checksum: 10c0/f8e4f27abd9287ac0e8a7dfae684b50e95f921fbd6e2d7439d089c73a4dd9f75ad94e794e1661e281da921ef0b1bf79a21ec97b50722444acd1d6396d8c1cb84
   languageName: node
   linkType: hard
 
