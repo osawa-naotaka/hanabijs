@@ -5,9 +5,9 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@anthropic-ai/claude-code@npm:^1.0.72":
-  version: 1.0.72
-  resolution: "@anthropic-ai/claude-code@npm:1.0.72"
+"@anthropic-ai/claude-code@npm:^1.0.73":
+  version: 1.0.73
+  resolution: "@anthropic-ai/claude-code@npm:1.0.73"
   dependencies:
     "@img/sharp-darwin-arm64": "npm:^0.33.5"
     "@img/sharp-darwin-x64": "npm:^0.33.5"
@@ -30,7 +30,7 @@ __metadata:
       optional: true
   bin:
     claude: cli.js
-  checksum: 10c0/4614cc04665d6b83e0aac2086221c3836ca7afd719114585068e042feeed57001901ad3952e6286fb777ad31ad8ec0f3ce982efc6db451e199a10f596c9c1184
+  checksum: 10c0/6b836808386e3bd5392ba37033f35f6a0d0d4c08a5b3f83d1d529a8e5269da9515ea20142deb47494ef122b77bc6c2039edf56f064e5e739ec4fc4e997f77f55
   languageName: node
   linkType: hard
 
@@ -4414,7 +4414,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "zephblaze@workspace:."
   dependencies:
-    "@anthropic-ai/claude-code": "npm:^1.0.72"
+    "@anthropic-ai/claude-code": "npm:^1.0.73"
     "@biomejs/biome": "npm:1.9.4"
     "@fortawesome/fontawesome-free": "npm:^6.7.2"
     "@rollup/plugin-commonjs": "npm:^28.0.3"
