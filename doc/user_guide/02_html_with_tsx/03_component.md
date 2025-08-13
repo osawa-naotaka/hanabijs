@@ -1,16 +1,21 @@
 # Zephblazeのコンポーネント
 
-前述のドキュメントでは、element()関数を使うことにより、html要素に相当する新たな要素を作成することができました。この要素はそのままhtml要素に対応するため、子要素・孫要素などと組み合わされた、複雑な再利用可能の要素は定義できませんでした。
+前述のドキュメントでは、element()関数を使うことにより、html要素に相当する新たな要素を作成することができました。この要素はそのまま1つのhtml要素に対応するため、子要素・孫要素などと組み合わされた、複雑な再利用可能の要素は定義できませんでした。
 
 Zephblazeでは、再利用可能なコンポーネントを作成して、複雑なUIを構築できます。このガイドでは、コンポーネントの基本的な作り方と使い方について説明します。
 
+## コンポーネントの作成
+
+以下に、サイトタイトルを表すコンポーネントの例を示します。このコンポーネントの名前はSiteTitleで、
+<SiteTitle>site name</SiteTitle>とすることで、site titleをh1要素の子要素として指定するとともに、
+site titleに対し「/」へのリンクを張ります。
 
 ```typescript
 import { component, element } from "zephblaze/core";
-import type { HComponentFn } from "zephblaze/core";
+import type { H1Attribute, HComponentFn } from "zephblaze/core";
 
-export function siteTitle(): HComponentFn<{}> {
-    const SiteTitle = element("site-title", { tag: "h1" })
+export function siteTitle(): HComponentFn<Partial<H1Attribute>> {
+    const SiteTitle = element("site-title", { tag: "h1" });
     return component(SiteTitle, (_attr, ...child) => (
         <SiteTitle>
             <a href="/">{child}</a>
@@ -18,6 +23,11 @@ export function siteTitle(): HComponentFn<{}> {
     ));
 }
 ```
+
+1. コンポーネント名を決める。Camel Caseを利用することをお勧めする。この例では、SiteTitleというコンポーネント名にした。
+2. コンポーネント生成関数を作成する。関数名は何でもよい。1で決めたコンポーネント名の、最初の1文字を小文字にしたものを関数名とすることをお勧めする。この例では、siteTitle()という関数名にした。
+3. element()関数を使って、このコンポーネントのTop要素を作成する。Top要素の名前（変数名）は実際は何でもよいが、コンポーネント名にすることをお勧めする。また、この要素のクラス名は何でもよい。前述のドキュメントの勧めに従い、site-titleというクラス名にした。
+4. component()関数を使って、名前のついたコンポーネントを作成する。componenet()の第一引数に、作成するコンポーネントのTOP要素を指定する。ここでは、SiteTitleを指定した。第二引数には、コンポーネントの実体の要素を返す関数を指定する。この関数の引数は2個存在する。1個目は属性名とその値をkey-valueとしたObjectが渡される。これは、このコンポーネントを実体化した時に、属性として指定したものが代入される。例えば、<SiteTitle id="hoge">とtsxで実体化した場合、第一引数には{ id: "hoge" }が指定される。2個目の引数はrest引数で、コンポーネントを実体化した場合に、その子要素として指定された要素が指定される。
 
 ```typescript
 import type { HRootPageFn, Store } from "zephblaze/core";
@@ -38,6 +48,12 @@ export default function Root(_store: Store): HRootPageFn<void> {
     );
 }
 ```
+
+1. コンポーネント生成関数を呼び出し、戻り値を変数に格納する。戻り値は関数である。この関数がコンポーネントとなる。変数名はなんでもよいが、コンポーネント名を指定することをお勧めする。ここでは、最初に決めたSiteTitleという変数名にしてある。
+
+2. コンポーネントを代入した変数を利用してコンポーネントを実体化する。ここでは、<SiteTitle>Hello, Zephblaze!</SiteTitle>と記述することで実体化している。
+
+下記は、このtsx記述から生成されるhtml文章である。
 
 ```html
 <!DOCTYPE html>
