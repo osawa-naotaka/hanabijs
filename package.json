@@ -51,7 +51,7 @@
     "url": "git+https://github.com/osawa-naotaka/zephblaze.git"
   },
   "devDependencies": {
-    "@anthropic-ai/claude-code": "^1.0.73",
+    "@anthropic-ai/claude-code": "^1.0.80",
     "@biomejs/biome": "1.9.4",
     "@types/bun": "^1.2.10",
     "@types/deno": "^2.2.0",
