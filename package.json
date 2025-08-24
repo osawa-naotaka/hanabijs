@@ -1,6 +1,6 @@
 {
   "name": "zephblaze",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.4",
   "description": "lightweight static site generator for typescript",
   "type": "module",
   "main": "build/client/main.js",

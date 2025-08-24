@@ -172,7 +172,8 @@ function createAssetRouterSet(store: Store, target_prefix: string, require: Node
 }
 
 function normalResponse(content_arg: string | Buffer<ArrayBufferLike>, ext: string): Resp {
-    const content = typeof content_arg === "string" ? Buffer.from(content_arg).buffer : new Uint8Array(content_arg).buffer;
+    const content =
+        typeof content_arg === "string" ? Buffer.from(content_arg).buffer : new Uint8Array(content_arg).buffer;
     return { status: 200, content, type: contentType(ext) };
 }
 
