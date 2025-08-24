@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0-alpha.4] - 2025-08-24
+### Added
+- Added user guide documentation
+
+### Changed
+- Updated development environment versions for Node.js, Deno, and Bun
+
+### Fixed
+- Fixed bug where `zephblaze build` processAnyDotTs() function would fail to create the dist directory
+- Fixed Response() constructor arguments to be compatible with updated runtime environments
+
 ## [0.1.0-alpha.3] - 2025-08-11
 ### Fixed
 - Fixed bin field format from string to object for better npm compatibility
@@ -36,6 +47,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Component-level asset management with tree shaking
 - Unified development experience for server-side and client-side
 
-[Unreleased]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.3...HEAD
+[Unreleased]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.4...HEAD
+[0.1.0-alpha.4]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.3...v0.1.0-alpha.4
 [0.1.0-alpha.3]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.2...v0.1.0-alpha.3
 [0.1.0-alpha.2]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.1...v0.1.0-alpha.2
