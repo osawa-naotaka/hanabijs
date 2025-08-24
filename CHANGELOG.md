@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0-alpha.5] - 2025-08-24
+### Added
+- Comprehensive release process documentation in CLAUDE.md
+
+### Fixed
+- Fixed buffer reference range bug in Response() constructor in serve.ts
+
+### Changed
+- Removed package-lock.json in favor of yarn.lock
+
 ## [0.1.0-alpha.4] - 2025-08-24
 ### Added
 - Added user guide documentation
@@ -47,7 +57,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Component-level asset management with tree shaking
 - Unified development experience for server-side and client-side
 
-[Unreleased]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.4...HEAD
+[Unreleased]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.5...HEAD
+[0.1.0-alpha.5]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.4...v0.1.0-alpha.5
 [0.1.0-alpha.4]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.3...v0.1.0-alpha.4
 [0.1.0-alpha.3]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.2...v0.1.0-alpha.3
 [0.1.0-alpha.2]: https://github.com/osawa-naotaka/zephblaze/compare/v0.1.0-alpha.1...v0.1.0-alpha.2

@@ -171,9 +171,19 @@ function createAssetRouterSet(store: Store, target_prefix: string, require: Node
     return asset_files;
 }
 
+function toArrayBuffer(content_arg: string | Buffer<ArrayBufferLike>): ArrayBuffer {
+    if (typeof content_arg === "string") {
+        return new TextEncoder().encode(content_arg).buffer;
+    }
+
+    return new Uint8Array(content_arg).buffer.slice(
+        content_arg.byteOffset,
+        content_arg.byteOffset + content_arg.byteLength,
+    );
+}
+
 function normalResponse(content_arg: string | Buffer<ArrayBufferLike>, ext: string): Resp {
-    const content =
-        typeof content_arg === "string" ? Buffer.from(content_arg).buffer : new Uint8Array(content_arg).buffer;
+    const content = toArrayBuffer(content_arg);
     return { status: 200, content, type: contentType(ext) };
 }
 
