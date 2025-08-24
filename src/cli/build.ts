@@ -134,7 +134,7 @@ async function processAnyDotTs(
     const start = performance.now();
     const output_string = await page_fn.default(repository);
     const absolute_path = path.join(dist_dir, relative_path);
-    writeFileSync(absolute_path, output_string);
+    ensureDirWrite(absolute_path, output_string);
     console.log(`process ${relative_path} in ${(performance.now() - start).toFixed(2)}ms`);
 }
 

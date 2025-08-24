@@ -1,34 +1,32 @@
 {
   "name": "zephblaze",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.4",
   "description": "lightweight static site generator for typescript",
   "type": "module",
   "main": "build/client/main.js",
   "exports": {
     "./core": {
+      "types": "./build/core/main.d.ts",
       "import": "./build/core/main.js",
-      "require": "./build/core/main.js",
-      "types": "./build/core/main.d.ts"
+      "require": "./build/core/main.js"
     },
     "./server": {
+      "types": "./build/server/main.d.ts",
       "import": "./build/server/main.js",
-      "require": "./build/server/main.js",
-      "types": "./build/server/main.d.ts"
+      "require": "./build/server/main.js"
     },
     "./jsx-runtime": {
+      "types": "./build/jsx-runtime/main.d.ts",
       "import": "./build/jsx-runtime/main.js",
-      "require": "./build/jsx-runtime/main.js",
-      "types": "./build/jsx-runtime/main.d.ts"
+      "require": "./build/jsx-runtime/main.js"
     },
     "./jsx-dev-runtime": {
+      "types": "./build/jsx-dev-runtime/main.d.ts",
       "import": "./build/jsx-dev-runtime/main.js",
-      "require": "./build/jsx-dev-runtime/main.js",
-      "types": "./build/jsx-dev-runtime/main.d.ts"
+      "require": "./build/jsx-dev-runtime/main.js"
     }
   },
-  "bin": {
-    "zephblaze": "build/bin.js"
-  },
+  "bin": "build/bin.js",
   "scripts": {
     "clean": "rm -rf build dist package.tgz zephblaze-*.tgz",
     "build": "biome check --write ./src ./site ./test && tsc && tsup --config tsup.config.ts",
@@ -53,9 +51,9 @@
     "url": "git+https://github.com/osawa-naotaka/zephblaze.git"
   },
   "devDependencies": {
-    "@anthropic-ai/claude-code": "^1.0.72",
+    "@anthropic-ai/claude-code": "^1.0.80",
     "@biomejs/biome": "1.9.4",
-    "@types/bun": "^1.2.10",
+    "@types/bun": "^1.2.20",
     "@types/deno": "^2.2.0",
     "@types/node": "^22.13.10",
     "@types/ws": "^8",

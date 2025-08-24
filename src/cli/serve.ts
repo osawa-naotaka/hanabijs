@@ -44,6 +44,12 @@ export async function serve(conf_file: string | undefined): Promise<void> {
     }
 }
 
+type Resp = {
+    status: number;
+    type: string;
+    content: ArrayBuffer;
+};
+
 type ReqProcessFn = (req: Request) => Promise<Resp>;
 type ReloadFn = () => void;
 
@@ -122,7 +128,7 @@ function createAndStartNodeServer(
         const req: Request = new Request(new URL(`http://${msg.headers.host}${msg.url}`));
         const rv = await proc(req);
         resp.writeHead(rv.status, { "Content-Type": rv.type });
-        resp.end(rv.content);
+        resp.end(Buffer.from(rv.content));
     });
 
     const wss = new WebSocketServer({ noServer: true });
@@ -165,20 +171,16 @@ function createAssetRouterSet(store: Store, target_prefix: string, require: Node
     return asset_files;
 }
 
-type Resp = {
-    status: number;
-    type: string;
-    content: string | Buffer<ArrayBufferLike>;
-};
-
-function normalResponse(content: string | Buffer<ArrayBufferLike>, ext: string): Resp {
+function normalResponse(content_arg: string | Buffer<ArrayBufferLike>, ext: string): Resp {
+    const content =
+        typeof content_arg === "string" ? Buffer.from(content_arg).buffer : new Uint8Array(content_arg).buffer;
     return { status: 200, content, type: contentType(ext) };
 }
 
 function errorResponse(status: number, cause: string): Resp {
     return {
         status,
-        content: stringifyToHtml(0, [])(ErrorPage({ name: status.toString(), cause })),
+        content: Buffer.from(stringifyToHtml(0, [])(ErrorPage({ name: status.toString(), cause }))).buffer,
         type: "text/html",
     };
 }
